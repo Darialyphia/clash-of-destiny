@@ -1,0 +1,14 @@
+{
+  "extends": "@game/tsconfig/base.json",
+  "include": [
+    "src/**/*.ts",
+    "__test__/**/*.ts",
+    "tsup.config.ts",
+    "../client/src/utils/pixi-elements.ts"
+  ],
+  "exclude": [".git", "node_modules"],
+  "compilerOptions": {
+    "module": "ESNext",
+    "types": ["vitest/importMeta"]
+  }
+}
