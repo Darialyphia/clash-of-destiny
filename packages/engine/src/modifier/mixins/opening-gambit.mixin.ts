@@ -18,7 +18,7 @@ export class OpeningGambitModifierMixin extends ModifierMixin<UnitCard> {
 
   onBeforePlay() {
     this.modifier.target.unit.once(UNIT_EVENTS.CREATED, event => {
-      if (this.modifier.target.player.currentlyPlayedCard?.equals(this.modifier.target)) {
+      if (this.modifier.target.unit.currentlyPlayedCard?.equals(this.modifier.target)) {
         this.handler(event);
       }
     });

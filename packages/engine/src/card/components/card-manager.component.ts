@@ -1,13 +1,17 @@
 import { isDefined } from '@game/shared';
 import type { Game } from '../../game/game';
 import type { Player } from '../../player/player.entity';
-import type { ArtifactBlueprint, SpellBlueprint, UnitBlueprint } from '../card-blueprint';
 import { createCard } from '../card.factory';
 import type { CardOptions } from '../entities/card.entity';
 import { Deck, type DeckCard } from '../entities/deck.entity';
+import type {
+  AbilityBlueprint,
+  ArtifactBlueprint,
+  QuestBlueprint
+} from '../card-blueprint';
 
 export type CardManagerComponentOptions = {
-  deck: CardOptions<UnitBlueprint | SpellBlueprint | ArtifactBlueprint>[];
+  deck: CardOptions<QuestBlueprint | AbilityBlueprint | ArtifactBlueprint>[];
   maxHandSize: number;
   shouldShuffleDeck: boolean;
 };

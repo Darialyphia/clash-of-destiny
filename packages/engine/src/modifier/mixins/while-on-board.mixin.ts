@@ -18,7 +18,7 @@ export class WhileOnBoardModifierMixin extends ModifierMixin<Unit> {
   onApplied(target: Unit, modifier: Modifier<Unit>): void {
     this.options.onApplied(modifier);
 
-    [UNIT_EVENTS.AFTER_DESTROY, UNIT_EVENTS.AFTER_BOUNCE].forEach(event => {
+    [UNIT_EVENTS.AFTER_DESTROY].forEach(event => {
       target.once(event, () => {
         this.options.onRemoved(modifier);
       });

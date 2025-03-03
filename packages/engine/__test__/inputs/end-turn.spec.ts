@@ -1,6 +1,6 @@
 import { test, describe, expect } from 'vitest';
 import { makeTestUnitCardBlueprint, testGameBuilder } from '../test-utils';
-import { FACTIONS, UNIT_TYPES } from '../../src/card/card.enums';
+import { FACTIONS, UNIT_KINDS } from '../../src/card/card.enums';
 import { NotActivePlayerError, WrongGamePhaseError } from '../../src/input/input-errors';
 
 describe('Input: end turn', () => {
@@ -9,7 +9,7 @@ describe('Input: end turn', () => {
       'test-general': makeTestUnitCardBlueprint({
         id: 'test-general',
         faction: FACTIONS.F1,
-        unitType: UNIT_TYPES.GENERAL
+        unitType: UNIT_KINDS.GENERAL
       }),
       'test-minion': makeTestUnitCardBlueprint({
         id: 'test-minion',
@@ -60,6 +60,6 @@ describe('Input: end turn', () => {
       type: 'endTurn',
       payload: { playerId: 'p1' }
     });
-    expect(game.turnSystem.activePlayer).toBe(player2);
+    expect(game.turnSystem.activeUnit.player).toBe(player2);
   });
 });

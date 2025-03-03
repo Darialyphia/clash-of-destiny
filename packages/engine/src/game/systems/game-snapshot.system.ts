@@ -5,7 +5,6 @@ import type { SerializedUnit } from '../../unit/entities/unit.entity';
 import type { SerializedPlayer } from '../../player/player.entity';
 import type { GamePhase } from './game-phase.system';
 import type { SerializedInteractionContext } from './interaction.system';
-import type { SerializedBoard } from '../../board/board-system';
 
 export type GameStateSnapshot<T> = {
   id: number;
@@ -14,11 +13,11 @@ export type GameStateSnapshot<T> = {
 };
 
 export type SerializedOmniscientState = {
-  board: SerializedBoard;
-  units: SerializedUnit[];
-  players: [SerializedPlayer, SerializedPlayer];
-  activePlayer: SerializedPlayer;
-  elapsedTurns: number;
+  // board: SerializedBoard;
+  // units: SerializedUnit[];
+  // players: [SerializedPlayer, SerializedPlayer];
+  activeUnit: SerializedUnit;
+  turnCount: number;
   interactionState: SerializedInteractionContext;
   phase: GamePhase;
 };
@@ -26,11 +25,10 @@ export type SerializedOmniscientState = {
 type SerializedOpponent = Override<SerializedPlayer, { hand: number }>;
 
 export type SerializedPlayerState = Override<
-  BetterOmit<SerializedOmniscientState, 'players'>,
+  SerializedOmniscientState,
   {
-    opponent: SerializedOpponent;
-    player: SerializedPlayer;
-    activePlayer: SerializedPlayer | SerializedOpponent;
+    // opponent: SerializedOpponent;
+    // player: SerializedPlayer;
   }
 >;
 
@@ -87,37 +85,18 @@ export class GameSnaphotSystem extends System<EmptyObject> {
 
   serializeOmniscientState(): SerializedOmniscientState {
     return {
-      board: this.game.boardSystem.serialize(),
-      units: this.game.unitSystem.units.map(unit => unit.serialize()),
-      players: [
-        this.game.playerSystem.player1.serialize(),
-        this.game.playerSystem.player2.serialize()
-      ],
-      activePlayer: this.game.turnSystem.activePlayer.serialize(),
-      elapsedTurns: this.game.turnSystem.elapsedTurns,
+      activeUnit: this.game.turnSystem.activeUnit.serialize(),
+      turnCount: this.game.turnSystem.turnCount,
       interactionState: this.game.interaction.serialize(),
       phase: this.game.phase
     };
   }
 
   serializePlayerState(playerId: string): SerializedPlayerState {
-    const { players, ...state } = this.serializeOmniscientState();
-    const opponent = players.find(player => player.id !== playerId)!;
+    const { ...state } = this.serializeOmniscientState();
 
     return {
-      ...state,
-      player: players.find(player => player.id === playerId) as SerializedPlayer,
-      opponent: {
-        ...opponent,
-        hand: opponent.hand.length
-      },
-      activePlayer:
-        state.activePlayer.id === playerId
-          ? state.activePlayer
-          : {
-              ...opponent,
-              hand: opponent.hand.length
-            }
+      ...state
     };
   }
 

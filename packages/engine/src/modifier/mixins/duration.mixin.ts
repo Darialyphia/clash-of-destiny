@@ -25,11 +25,11 @@ export class DurationModifierMixin extends ModifierMixin<Unit | AnyCard> {
 
   onApplied(target: Unit | AnyCard, modifier: Modifier<Unit | AnyCard>): void {
     this.modifier = modifier;
-    this.game.on(GAME_EVENTS.PLAYER_END_TURN, this.onTurnStart);
+    this.game.on(GAME_EVENTS.TURN_START, this.onTurnStart);
   }
 
   onRemoved() {
-    this.game.off(GAME_EVENTS.PLAYER_END_TURN, this.onTurnStart);
+    this.game.off(GAME_EVENTS.TURN_END, this.onTurnStart);
   }
 
   onReapplied(): void {}

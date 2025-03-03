@@ -1,6 +1,6 @@
 import { test, describe, expect } from 'vitest';
 import { makeTestUnitCardBlueprint, testGameBuilder } from '../test-utils';
-import { FACTIONS, UNIT_TYPES } from '../../src/card/card.enums';
+import { FACTIONS, UNIT_KINDS } from '../../src/card/card.enums';
 import {
   NotActivePlayerError,
   TooManyReplacesError,
@@ -13,7 +13,7 @@ describe('Input: replace card', () => {
       'test-general': makeTestUnitCardBlueprint({
         id: 'test-general',
         faction: FACTIONS.F1,
-        unitType: UNIT_TYPES.GENERAL
+        unitType: UNIT_KINDS.GENERAL
       }),
       'test-minion': makeTestUnitCardBlueprint({
         id: 'test-minion',

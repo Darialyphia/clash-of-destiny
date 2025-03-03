@@ -4,8 +4,8 @@ import {
   CARD_KINDS,
   CARD_SETS,
   RARITIES,
-  UNIT_TYPES,
-  type UnitType
+  UNIT_KINDS,
+  type UnitKind
 } from '../src/card/card.enums';
 import type { Faction } from '../src/card/entities/faction.entity';
 import { GAME_EVENTS } from '../src/game/game.events';
@@ -115,7 +115,7 @@ export const makeTestUnitCardBlueprint = ({
   manaCost = 1,
   maxHp = 1,
   abilities = [],
-  unitType = UNIT_TYPES.MINION,
+  unitType = UNIT_KINDS.MINION,
   followup = {
     getTargets(game, card) {
       return [
@@ -145,7 +145,7 @@ export const makeTestUnitCardBlueprint = ({
   job?: string;
   abilities?: UnitBlueprint['abilities'];
   followup?: UnitBlueprint['followup'];
-  unitType?: UnitType;
+  unitType?: UnitKind;
   getAoe?: UnitBlueprint['getAoe'];
   onPlay?: UnitBlueprint['onPlay'];
   onInit?: UnitBlueprint['onInit'];

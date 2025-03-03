@@ -1,20 +1,24 @@
-import { Vec2, type Point, type Serializable } from '@game/shared';
+import {
+  isDefined,
+  Vec2,
+  type Nullable,
+  type Point,
+  type Serializable
+} from '@game/shared';
 import { Entity, INTERCEPTOR_EVENTS } from '../../entity';
-import { type AnyCard } from '../../card/entities/card.entity';
+import { type AnyCard, type CardOptions } from '../../card/entities/card.entity';
 import { type Game } from '../../game/game';
 import { Interceptable } from '../../utils/interceptable';
 import { MOVE_EVENTS, MovementComponent } from '../components/movement.component';
-import type { Player, SerializedPlayer } from '../../player/player.entity';
+import type { Player } from '../../player/player.entity';
 import type { AOEShape } from '../../aoe/aoe-shapes';
 import {
   TARGETING_TYPE,
   type TargetingStrategy,
   type TargetingType
 } from '../../targeting/targeting-strategy';
-import type { SerializedUnitCard, UnitCard } from '../../card/entities/unit-card.entity';
 import { UNIT_EVENTS } from '../unit-enums';
 import { KeywordManagerComponent } from '../../card/components/keyword-manager.component';
-import { PLAYER_EVENTS } from '../../player/player-enums';
 import {
   UnitAfterDestroyEvent,
   UnitAfterMoveEvent,
@@ -23,82 +27,80 @@ import {
   UnitBeforeMoveEvent,
   UnitCreatedEvent,
   UnitDealDamageEvent,
+  UnitPlayCardEvent,
   UnitReceiveDamageEvent,
   UnitReceiveHealEvent,
+  UnitTurnEvent,
   type UnitEventMap
 } from '../unit.events';
 import type { Damage } from '../../combat/damage';
 import { COMBAT_EVENTS, CombatComponent } from '../../combat/combat.component';
 import { PathfinderComponent } from '../../pathfinding/pathfinder.component';
 import { SolidBodyPathfindingStrategy } from '../../pathfinding/strategies/solid-pathfinding.strategy';
-import { CARD_KINDS, UNIT_TYPES } from '../../card/card.enums';
+import { CARD_EVENTS, UNIT_KINDS } from '../../card/card.enums';
 import { HealthComponent } from '../components/health.component';
 import { GameUnitEvent } from '../../game/game.events';
 import type { Cell } from '../../board/cell';
-import type { Modifier, SerializedModifier } from '../../modifier/modifier.entity';
+import type { Modifier } from '../../modifier/modifier.entity';
 import { ModifierManager } from '../../modifier/modifier-manager.component';
-import {
-  SingleCounterAttackParticipantStrategy,
-  type CounterAttackParticipantStrategy
-} from '../../combat/counterattack-participants';
+import { ApComponent } from '../components/ap.component';
+import type { UnitCard } from '../../card/entities/unit-card.entity';
+import { MeleeTargetingStrategy } from '../../targeting/melee-targeting.straegy';
+import { PointAOEShape } from '../../aoe/point.aoe-shape';
+import { CardManagerComponent } from '../../card/components/card-manager.component';
+import type {
+  AbilityBlueprint,
+  ArtifactBlueprint,
+  QuestBlueprint
+} from '../../card/card-blueprint';
+import { ManaComponent } from '../components/mana.component';
+import type { DeckCard } from '../../card/entities/deck.entity';
+import { ArtifactManagerComponent } from '../components/artifact-manager.component';
 
 export type SerializedUnit = {
   id: string;
-  card: SerializedUnitCard;
   position: Point;
-  baseAtk: number;
-  atk: number;
-  isGeneral: boolean;
-  baseMaxHp: number;
-  maxHp: number;
-  currentHp: number;
-  isFullHp: boolean;
-  player: SerializedPlayer;
-  keywords: Array<{ id: string; name: string; description: string }>;
-  isExhausted: boolean;
-  isDead: boolean;
-  moveZone: Point[];
-  dangerZone: Point[];
-  attackableCells: Point[];
-  modifiers: SerializedModifier[];
 };
 
 export type UnitOptions = {
   id: string;
   position: Point;
   player: Player;
+  deck: {
+    cards: Array<CardOptions<AbilityBlueprint | ArtifactBlueprint | QuestBlueprint>>;
+  };
 };
 
 type UnitInterceptors = {
   canMove: Interceptable<boolean>;
   canMoveThrough: Interceptable<boolean, { unit: Unit }>;
-  canMoveAfterAttacking: Interceptable<boolean>;
+  apCostPerMovement: Interceptable<number>;
+
   canAttack: Interceptable<boolean, { unit: Unit }>;
-  canCounterAttack: Interceptable<boolean, { attacker: Unit }>;
   canBeAttackTarget: Interceptable<boolean, { attacker: Unit }>;
-  canBeCounterattackTarget: Interceptable<boolean, { attacker: Unit }>;
+  apCostPerAttack: Interceptable<number>;
+
+  canPlayCard: Interceptable<boolean, { card: AnyCard }>;
   canBeCardTarget: Interceptable<boolean, { card: AnyCard }>;
-  canBeDestroyed: Interceptable<boolean>;
+  apCostPerCard: Interceptable<number>;
+  abilityPower: Interceptable<number>;
+
   canReceiveModifier: Interceptable<boolean, { modifier: Modifier<Unit> }>;
 
-  shouldDeactivateWhenSummoned: Interceptable<boolean>;
-
   maxHp: Interceptable<number>;
-  attack: Interceptable<number>;
-  speed: Interceptable<number>;
+  maxAp: Interceptable<number>;
+  maxMp: Interceptable<number>;
+
+  mpRegen: Interceptable<number>;
+
+  initiative: Interceptable<number>;
 
   attackTargetingPattern: Interceptable<TargetingStrategy>;
   attackTargetType: Interceptable<TargetingType>;
   attackAOEShape: Interceptable<AOEShape>;
-  attackCounterattackParticipants: Interceptable<CounterAttackParticipantStrategy>;
-
-  counterattackTargetingPattern: Interceptable<TargetingStrategy>;
-  counterattackTargetType: Interceptable<TargetingType>;
-  counterattackAOEShape: Interceptable<AOEShape>;
 
   maxAttacksPerTurn: Interceptable<number>;
   maxMovementsPerTurn: Interceptable<number>;
-  maxCounterattacksPerTurn: Interceptable<number>;
 
   player: Interceptable<Player>;
 
@@ -107,40 +109,41 @@ type UnitInterceptors = {
     number,
     { amount: number; source: AnyCard; damage: Damage<AnyCard> }
   >;
+
+  healReceived: Interceptable<number, { source: AnyCard }>;
+  healDealt: Interceptable<number, { target: Unit }>;
 };
 
 const makeInterceptors = (): UnitInterceptor => {
   return {
     canMove: new Interceptable<boolean>(),
-    canMoveAfterAttacking: new Interceptable<boolean>(),
     canMoveThrough: new Interceptable<boolean, { unit: Unit }>(),
+    apCostPerMovement: new Interceptable<number>(),
+
     canAttack: new Interceptable<boolean, { unit: Unit }>(),
-    canCounterAttack: new Interceptable<boolean, { attacker: Unit }>(),
     canBeAttackTarget: new Interceptable<boolean, { attacker: Unit }>(),
-    canBeCounterattackTarget: new Interceptable<boolean, { attacker: Unit }>(),
+    apCostPerAttack: new Interceptable<number>(),
+
+    canPlayCard: new Interceptable<boolean, { card: AnyCard }>(),
     canBeCardTarget: new Interceptable<boolean, { card: AnyCard }>(),
-    canBeDestroyed: new Interceptable<boolean>(),
+    apCostPerCard: new Interceptable<number>(),
+    abilityPower: new Interceptable<number>(),
+
     canReceiveModifier: new Interceptable<boolean, { modifier: Modifier<Unit> }>(),
 
-    shouldDeactivateWhenSummoned: new Interceptable<boolean>(),
-
     maxHp: new Interceptable<number>(),
-    attack: new Interceptable<number>(),
-    speed: new Interceptable<number>(),
+    maxAp: new Interceptable<number>(),
+    maxMp: new Interceptable<number>(),
+
+    mpRegen: new Interceptable<number>(),
+    initiative: new Interceptable<number>(),
 
     attackTargetingPattern: new Interceptable<TargetingStrategy>(),
     attackTargetType: new Interceptable<TargetingType>(),
     attackAOEShape: new Interceptable<AOEShape>(),
-    attackCounterattackParticipants:
-      new Interceptable<CounterAttackParticipantStrategy>(),
-
-    counterattackTargetingPattern: new Interceptable<TargetingStrategy>(),
-    counterattackTargetType: new Interceptable<TargetingType>(),
-    counterattackAOEShape: new Interceptable<AOEShape>(),
 
     maxAttacksPerTurn: new Interceptable<number>(),
     maxMovementsPerTurn: new Interceptable<number>(),
-    maxCounterattacksPerTurn: new Interceptable<number>(),
 
     player: new Interceptable<Player>(),
 
@@ -148,7 +151,9 @@ const makeInterceptors = (): UnitInterceptor => {
     damageReceived: new Interceptable<
       number,
       { amount: number; source: AnyCard; damage: Damage<AnyCard> }
-    >()
+    >(),
+    healDealt: new Interceptable<number, { target: Unit }>(),
+    healReceived: new Interceptable<number, { source: AnyCard }>()
   };
 };
 
@@ -164,15 +169,29 @@ export class Unit
 
   readonly card: UnitCard;
 
-  private modifierManager: ModifierManager<Unit>;
+  private readonly modifierManager: ModifierManager<Unit>;
 
-  private health: HealthComponent;
+  private readonly hpManager: HealthComponent;
+
+  private readonly apManager: ApComponent;
+
+  private readonly mpManager: ManaComponent;
+
+  private readonly cards: CardManagerComponent;
+
+  private readonly artifacts: ArtifactManagerComponent;
 
   readonly movement: MovementComponent;
 
   readonly keywordManager: KeywordManagerComponent;
 
   private readonly combat: CombatComponent;
+
+  currentlyPlayedCard: Nullable<DeckCard> = null;
+
+  currentyPlayedCardIndexInHand: Nullable<number> = null;
+
+  private cancelCardCleanups: Array<() => void> = [];
 
   constructor(game: Game, card: UnitCard, options: UnitOptions) {
     super(`${options.id}_${card.blueprintId}`, makeInterceptors());
@@ -181,7 +200,15 @@ export class Unit
     this.originalPlayer = options.player;
     this.modifierManager = new ModifierManager(this);
     this.keywordManager = new KeywordManagerComponent();
-    this.health = new HealthComponent({ initialValue: card.maxHp });
+    this.hpManager = new HealthComponent({ initialValue: card.maxHp });
+    this.apManager = new ApComponent({ initialValue: game.config.MAX_AP });
+    this.mpManager = new ManaComponent({ initialValue: game.config.INITIAL_MP });
+    this.cards = new CardManagerComponent(this.game, this.player, {
+      deck: options.deck.cards,
+      maxHandSize: this.game.config.MAX_HAND_SIZE,
+      shouldShuffleDeck: this.game.config.SHUFFLE_DECK_ON_GAME_START
+    });
+    this.artifacts = new ArtifactManagerComponent(this.game, this);
     this.movement = new MovementComponent({
       position: options.position,
       pathfinding: new PathfinderComponent(
@@ -191,319 +218,29 @@ export class Unit
     });
     this.combat = new CombatComponent(this.game, this);
 
-    this.player.on(PLAYER_EVENTS.START_TURN, () => {
-      this.onTurnStart();
-    });
+    // this.player.on(PLAYER_EVENTS.START_TURN, () => {
+    //   this.onTurnStart();
+    // });
     this.on(INTERCEPTOR_EVENTS.ADD_INTERCEPTOR, event => {
       if (event.key === 'maxHp') {
         this.checkHp({ source: this.card });
       }
     });
 
-    this.forwardListeners();
     this.forwardEvents();
   }
 
-  serialize() {
-    // calculate this upfront as this can be an expensive operation if we call it many times
-    // moves the unit could make if she wasnt exhausted / provoked / etc
-    const potentialMoves = this.getPossibleMoves(this.speed, true);
-    // moves the unit can actually make
-    const possibleMoves = this.getPossibleMoves(this.speed);
+  serialize(): SerializedUnit {
+    // // calculate this upfront as this can be an expensive operation if we call it many times
+    // // moves the unit could make if she wasnt exhausted / provoked / etc
+    // const potentialMoves = this.getPossibleMoves(this.speed, true);
+    // // moves the unit can actually make
+    // const possibleMoves = this.getPossibleMoves(this.speed);
 
     return {
       id: this.id,
-      card: this.card.serialize(),
-      position: this.position.serialize(),
-      baseAtk: this.card.baseAtk,
-      atk: this.atk,
-      baseMaxHp: this.card.baseMaxHp,
-      maxHp: this.maxHp,
-      currentHp: this.hp,
-      isFullHp: this.isFullHp,
-      isGeneral: this.isGeneral,
-      player: this.player.serialize(),
-      keywords: this.keywords.map(keyword => ({
-        id: keyword.id,
-        name: keyword.name,
-        description: keyword.description
-      })),
-      isExhausted: this.isExhausted,
-      isDead: this.isDead,
-      moveZone: possibleMoves,
-      dangerZone: this.game.boardSystem.cells
-        .filter(cell => {
-          return potentialMoves
-            .filter(move => cell.isNeightbor(move))
-            .some(point => this.canAttackFromSimulatedPosition(cell.position, point));
-        })
-        .map(cell => cell.position.serialize()),
-      attackableCells: this.game.boardSystem.cells
-        .filter(cell => this.canAttackAt(cell.position))
-        .map(cell => cell.position.serialize()),
-      modifiers: this.modifiers.map(modifier => modifier.serialize())
+      position: this.position.serialize()
     };
-  }
-
-  private forwardListeners() {
-    Object.values(UNIT_EVENTS).forEach(eventName => {
-      this.on(eventName, event => {
-        this.game.emit(
-          `unit.${eventName}`,
-          new GameUnitEvent({ unit: this, event }) as any
-        );
-      });
-    });
-  }
-
-  get player() {
-    return this.interceptors.player.getValue(this.originalPlayer, {});
-  }
-
-  get position() {
-    return this.movement.position;
-  }
-
-  get keywords() {
-    return [...new Set([...this.keywordManager.keywords, ...this.card.keywords])];
-  }
-
-  get addKeyword() {
-    return this.keywordManager.add.bind(this.keywordManager);
-  }
-
-  get removeKeyword() {
-    return this.keywordManager.remove.bind(this.keywordManager);
-  }
-
-  get x() {
-    return this.movement.x;
-  }
-
-  get y() {
-    return this.movement.y;
-  }
-
-  get isUnit() {
-    return this.card.kind === CARD_KINDS.UNIT;
-  }
-
-  get on() {
-    return this.emitter.on.bind(this.emitter);
-  }
-
-  get once() {
-    return this.emitter.once.bind(this.emitter);
-  }
-
-  get off() {
-    return this.emitter.off.bind(this.emitter);
-  }
-
-  get name() {
-    return this.card.name;
-  }
-
-  get description() {
-    return this.card.description;
-  }
-
-  get isGeneral() {
-    return this.card.unitType === UNIT_TYPES.GENERAL;
-  }
-
-  canBeAttackedBy(unit: Unit): boolean {
-    return this.interceptors.canBeAttackTarget.getValue(!this.isDead, { attacker: unit });
-  }
-
-  canBeCounterattackedBy(unit: Unit): boolean {
-    return this.interceptors.canBeCounterattackTarget.getValue(!this.isDead, {
-      attacker: unit
-    });
-  }
-
-  canBeTargetedByCard(card: AnyCard): boolean {
-    return this.interceptors.canBeCardTarget.getValue(!this.isDead, { card });
-  }
-
-  getCounterattackParticipants(initialTarget: Unit) {
-    return this.interceptors.attackCounterattackParticipants
-      .getValue(new SingleCounterAttackParticipantStrategy(), {})
-      .getCounterattackParticipants({
-        attacker: this,
-        initialTarget,
-        affectedUnits: this.attackAOEShape.getUnits([initialTarget])
-      });
-  }
-
-  get shouldDeactivateWhenSummoned(): boolean {
-    return this.interceptors.shouldDeactivateWhenSummoned.getValue(!this.isGeneral, {});
-  }
-
-  get enemiesInRange() {
-    return this.player.enemyUnits.filter(unit =>
-      this.attackTargettingPattern.canTargetAt(unit.position)
-    );
-  }
-
-  get isExhausted() {
-    if (this.player.isActive) {
-      return (
-        this.attacksPerformedThisTurn === this.maxAttacksPerTurn &&
-        // this replicates Duelyst's behavior where a unit appears greyed out if she can attack but nobody is in range
-        this.movementsMadeThisTurn === this.maxMovementsPerTurn
-      );
-    } else {
-      return this.counterAttacksPerformedThisTurn === this.maxCounterattacksPerTurn;
-    }
-  }
-
-  get isDead() {
-    return this.health.current <= 0;
-  }
-
-  get maxHp() {
-    return this.interceptors.maxHp.getValue(this.card.maxHp, {});
-  }
-
-  get hp() {
-    return this.interceptors.maxHp.getValue(this.health.current, {});
-  }
-
-  get atk() {
-    return this.interceptors.attack.getValue(this.card.atk, {});
-  }
-
-  get speed() {
-    return this.interceptors.speed.getValue(this.game.config.BASE_UNIT_SPEED, {});
-  }
-
-  get maxMovementsPerTurn() {
-    return this.interceptors.maxMovementsPerTurn.getValue(
-      this.game.config.MAX_MOVEMENT_PER_TURN,
-      {}
-    );
-  }
-
-  get maxAttacksPerTurn() {
-    return this.interceptors.maxAttacksPerTurn.getValue(
-      this.game.config.MAX_ATTACKS_PER_TURN,
-      {}
-    );
-  }
-
-  get maxCounterattacksPerTurn() {
-    return this.interceptors.maxCounterattacksPerTurn.getValue(
-      this.game.config.MAX_COUNTERATTACKS_PER_TURN,
-      {}
-    );
-  }
-
-  get attackTargettingPattern(): TargetingStrategy {
-    return this.interceptors.attackTargetingPattern.getValue(this.card.attackPattern, {});
-  }
-
-  get attackTargetType(): TargetingType {
-    return this.interceptors.attackTargetType.getValue(TARGETING_TYPE.ENEMY_UNIT, {});
-  }
-
-  get attackAOEShape(): AOEShape {
-    return this.interceptors.attackAOEShape.getValue(this.card.attackAOEShape, {});
-  }
-
-  get counterattackTargetingPattern(): TargetingStrategy {
-    return this.interceptors.counterattackTargetingPattern.getValue(
-      this.card.counterattackPattern,
-      {}
-    );
-  }
-
-  get counterattackTargetType(): TargetingType {
-    return this.interceptors.counterattackTargetType.getValue(
-      TARGETING_TYPE.ENEMY_UNIT,
-      {}
-    );
-  }
-
-  get counterattackAOEShape(): AOEShape {
-    return this.interceptors.counterattackAOEShape.getValue(
-      this.card.counterattackAOEShape,
-      {}
-    );
-  }
-
-  get attacksPerformedThisTurn() {
-    return this.combat.attacksCount;
-  }
-
-  get counterAttacksPerformedThisTurn() {
-    return this.combat.counterAttacksCount;
-  }
-
-  get movementsMadeThisTurn() {
-    return this.movement.movementsCount;
-  }
-
-  get canMoveAfterAttacking() {
-    return this.interceptors.canMoveAfterAttacking.getValue(false, {});
-  }
-
-  get canMove(): boolean {
-    return this.interceptors.canMove.getValue(
-      this.movementsMadeThisTurn < this.maxMovementsPerTurn &&
-        (this.attacksPerformedThisTurn > 0 ? this.canMoveAfterAttacking : true),
-      {}
-    );
-  }
-
-  canMoveThrough(unit: Unit) {
-    return this.interceptors.canMoveThrough.getValue(this.isAlly(unit), { unit });
-  }
-
-  get canBeDestroyed(): boolean {
-    return this.interceptors.canBeDestroyed.getValue(true, {});
-  }
-
-  canAttack(unit: Unit): boolean {
-    return this.interceptors.canAttack.getValue(
-      this.attacksPerformedThisTurn < this.maxAttacksPerTurn,
-      { unit }
-    );
-  }
-
-  canCounterAttack(unit: Unit): boolean {
-    return this.interceptors.canCounterAttack.getValue(
-      this.combat.counterAttacksCount < this.maxCounterattacksPerTurn,
-      { attacker: unit }
-    );
-  }
-
-  get isAt() {
-    return this.movement.isAt.bind(this.movement);
-  }
-
-  isBehind(unit: Unit) {
-    return this.game.unitSystem.getEntityBehind(unit)?.equals(this);
-  }
-
-  isInFront(unit: Unit) {
-    return this.game.unitSystem.getEntityInFront(unit)?.equals(this);
-  }
-
-  isAbove(unit: Unit) {
-    return this.game.unitSystem.getEntityAbove(unit)?.equals(this);
-  }
-
-  isBelow(unit: Unit) {
-    return this.game.unitSystem.getEntityBelow(unit)?.equals(this);
-  }
-
-  private checkHp({ source }: { source: AnyCard }) {
-    if (this.hp <= 0) {
-      this.game.inputSystem.schedule(() => {
-        this.destroy(source);
-      });
-    }
   }
 
   private forwardEvents() {
@@ -543,6 +280,280 @@ export class Unit
         new UnitReceiveDamageEvent({ ...e.data, target: this })
       )
     );
+    Object.values(UNIT_EVENTS).forEach(eventName => {
+      this.on(eventName, event => {
+        this.game.emit(
+          `unit.${eventName}`,
+          new GameUnitEvent({ unit: this, event }) as any
+        );
+      });
+    });
+  }
+
+  get player() {
+    return this.interceptors.player.getValue(this.originalPlayer, {});
+  }
+
+  get isActive() {
+    return this.game.turnSystem.activeUnit.equals(this);
+  }
+
+  get hand() {
+    return this.cards.hand;
+  }
+
+  get deck() {
+    return this.cards.deck;
+  }
+
+  get discardPile() {
+    return this.cards.discardPile;
+  }
+
+  get deckSize() {
+    return this.cards.deckSize;
+  }
+
+  get remainingCardsInDeck() {
+    return this.cards.remainingCardsInDeck;
+  }
+
+  get abilityPower() {
+    return this.interceptors.abilityPower.getValue(0, {});
+  }
+
+  get mp() {
+    return this.mpManager.current;
+  }
+
+  get maxMp() {
+    return this.interceptors.maxMp.getValue(this.game.config.MAX_MP, {});
+  }
+
+  spendMp(amount: number) {
+    if (amount === 0) return;
+    this.mpManager.remove(amount);
+  }
+
+  gainMp(amount: number) {
+    if (amount === 0) return;
+    this.mpManager.add(amount, this.maxMp);
+  }
+
+  get mpRegen() {
+    return this.interceptors.mpRegen.getValue(this.game.config.MP_REGEN_PER_TURN, {});
+  }
+
+  canSpendMp(amount: number) {
+    return this.mp >= amount;
+  }
+
+  get ap() {
+    return this.apManager.current;
+  }
+
+  get maxAp() {
+    return this.interceptors.maxAp.getValue(this.game.config.MAX_AP, {});
+  }
+
+  spendAp(amount: number) {
+    if (amount === 0) return;
+    this.apManager.remove(amount);
+  }
+
+  gainAp(amount: number) {
+    if (amount === 0) return;
+    this.apManager.add(amount, this.maxAp);
+  }
+
+  canSpendAp(amount: number) {
+    return this.ap >= amount;
+  }
+  get position() {
+    return this.movement.position;
+  }
+
+  get keywords() {
+    return [...new Set([...this.keywordManager.keywords, ...this.card.keywords])];
+  }
+
+  get addKeyword() {
+    return this.keywordManager.add.bind(this.keywordManager);
+  }
+
+  get removeKeyword() {
+    return this.keywordManager.remove.bind(this.keywordManager);
+  }
+
+  get x() {
+    return this.movement.x;
+  }
+
+  get y() {
+    return this.movement.y;
+  }
+
+  get on() {
+    return this.emitter.on.bind(this.emitter);
+  }
+
+  get once() {
+    return this.emitter.once.bind(this.emitter);
+  }
+
+  get off() {
+    return this.emitter.off.bind(this.emitter);
+  }
+
+  get name() {
+    return this.card.name;
+  }
+
+  get description() {
+    return this.card.description;
+  }
+
+  get isHero() {
+    return this.card.blueprint.unitKind === UNIT_KINDS.HERO;
+  }
+
+  canBeAttackedBy(unit: Unit): boolean {
+    return this.interceptors.canBeAttackTarget.getValue(!this.isDead, { attacker: unit });
+  }
+
+  canBeTargetedByCard(card: AnyCard): boolean {
+    return this.interceptors.canBeCardTarget.getValue(!this.isDead, { card });
+  }
+
+  get enemiesInRange() {
+    return this.player.enemyUnits.filter(unit =>
+      this.attackTargettingPattern.canTargetAt(unit.position)
+    );
+  }
+
+  get isDead() {
+    return this.hpManager.current <= 0;
+  }
+
+  get maxHp() {
+    return this.interceptors.maxHp.getValue(this.card.maxHp, {});
+  }
+
+  get hp() {
+    return this.interceptors.maxHp.getValue(this.hpManager.current, {});
+  }
+
+  get initiative() {
+    return this.interceptors.initiative.getValue(this.card.initiative, {});
+  }
+
+  get maxMovementsPerTurn() {
+    return this.interceptors.maxMovementsPerTurn.getValue(
+      this.game.config.MAX_MOVEMENT_PER_TURN,
+      {}
+    );
+  }
+
+  get maxAttacksPerTurn() {
+    return this.interceptors.maxAttacksPerTurn.getValue(
+      this.game.config.MAX_ATTACKS_PER_TURN,
+      {}
+    );
+  }
+
+  get attackTargettingPattern(): TargetingStrategy {
+    return this.interceptors.attackTargetingPattern.getValue(
+      new MeleeTargetingStrategy(this.game, this, {
+        type: this.attackTargetType,
+        allowCenter: false,
+        allowDiagonals: false
+      }),
+      {}
+    );
+  }
+
+  get attackTargetType(): TargetingType {
+    return this.interceptors.attackTargetType.getValue(TARGETING_TYPE.ENEMY, {});
+  }
+
+  get attackAOEShape(): AOEShape {
+    return this.interceptors.attackAOEShape.getValue(
+      new PointAOEShape(this.game, this.player, this.attackTargetType),
+      {}
+    );
+  }
+
+  get attacksPerformedThisTurn() {
+    return this.combat.attacksCount;
+  }
+
+  get movementsMadeThisTurn() {
+    return this.movement.movementsCount;
+  }
+
+  get apCostPerMovement() {
+    return this.interceptors.apCostPerMovement.getValue(
+      this.game.config.AP_COST_PER_MOVE,
+      {}
+    );
+  }
+
+  get canMove(): boolean {
+    return this.interceptors.canMove.getValue(
+      this.remainingMovement > 0 && this.apManager.current >= this.apCostPerMovement,
+      {}
+    );
+  }
+
+  canMoveThrough(unit: Unit) {
+    return this.interceptors.canMoveThrough.getValue(this.isAlly(unit), { unit });
+  }
+
+  get canBeDestroyed(): boolean {
+    return true;
+  }
+
+  get apCostPerAttack() {
+    return this.interceptors.apCostPerAttack.getValue(
+      this.game.config.AP_COST_PER_ATTACK,
+      {}
+    );
+  }
+
+  canAttack(unit: Unit): boolean {
+    return this.interceptors.canAttack.getValue(
+      this.attacksPerformedThisTurn < this.maxAttacksPerTurn &&
+        this.apManager.current >= this.apCostPerAttack,
+      { unit }
+    );
+  }
+
+  get isAt() {
+    return this.movement.isAt.bind(this.movement);
+  }
+
+  isBehind(unit: Unit) {
+    return this.game.unitSystem.getEntityBehind(unit)?.equals(this);
+  }
+
+  isInFront(unit: Unit) {
+    return this.game.unitSystem.getEntityInFront(unit)?.equals(this);
+  }
+
+  isAbove(unit: Unit) {
+    return this.game.unitSystem.getEntityAbove(unit)?.equals(this);
+  }
+
+  isBelow(unit: Unit) {
+    return this.game.unitSystem.getEntityBelow(unit)?.equals(this);
+  }
+
+  private checkHp({ source }: { source: AnyCard }) {
+    if (this.hp <= 0) {
+      this.game.inputSystem.schedule(() => {
+        this.destroy(source);
+      });
+    }
   }
 
   get remainingMovement() {
@@ -568,17 +579,14 @@ export class Unit
 
   canMoveTo(point: Point) {
     if (!this.canMove) return false;
-    return this.movement.canMoveTo(point, this.speed);
+    return this.movement.canMoveTo(
+      point,
+      this.remainingMovement / this.apCostPerMovement
+    );
   }
 
   move(to: Point) {
     this.movement.move(to);
-    // also check attacks made and increase to always be at least 1 less than moves
-    // this enforces celerity rules of not allowing more than one move per attack
-    const minAttacks = this.movementsMadeThisTurn - 1;
-    if (this.attacksPerformedThisTurn < minAttacks) {
-      this.combat.setAttackCount(minAttacks);
-    }
   }
 
   teleport(to: Point) {
@@ -608,14 +616,16 @@ export class Unit
 
   getPossibleMoves(max?: number, force = false) {
     if (!this.canMove && !force) return [];
-    return this.movement.getAllPossibleMoves(max ?? this.speed).filter(point => {
-      const cell = this.game.boardSystem.getCellAt(point)!;
-      return cell.isWalkable && !cell.unit;
-    });
+    return this.movement
+      .getAllPossibleMoves(max ?? this.remainingMovement / this.apCostPerMovement)
+      .filter(point => {
+        const cell = this.game.boardSystem.getCellAt(point)!;
+        return cell.isWalkable && !cell.unit;
+      });
   }
 
   getDealtDamage(target: Unit) {
-    return this.interceptors.damageDealt.getValue(this.atk, {
+    return this.interceptors.damageDealt.getValue(this.game.config.BASE_ATTACK_DAMAGE, {
       source: this.card,
       target
     });
@@ -655,21 +665,17 @@ export class Unit
   }
 
   addHp(amount: number, source: AnyCard) {
-    this.health.add(amount, this.maxHp);
+    this.hpManager.add(amount, this.maxHp);
     this.checkHp({ source });
   }
 
   removeHp(amount: number, source: AnyCard) {
-    this.health.remove(amount);
+    this.hpManager.remove(amount);
     this.checkHp({ source });
   }
 
   attack(point: Point) {
     this.combat.attack(point);
-  }
-
-  counterAttack(unit: Unit) {
-    this.combat.counterAttack(unit);
   }
 
   canAttackAt(point: Point) {
@@ -695,20 +701,6 @@ export class Unit
     return canAttack;
   }
 
-  canCounterAttackAt(point: Point) {
-    if (this.position.equals(point)) {
-      return false;
-    }
-
-    const target = this.game.unitSystem.getUnitAt(point);
-    if (!target) return false;
-
-    return (
-      this.canCounterAttack(target) &&
-      this.counterattackTargetingPattern.canTargetAt(point)
-    );
-  }
-
   removeFromBoard() {
     for (const modifier of this.modifiers) {
       this.removeModifier(modifier.id);
@@ -727,18 +719,11 @@ export class Unit
     );
   }
 
-  activate() {
+  onTurnStart() {
     this.combat.resetAttackCount();
     this.movement.resetMovementsCount();
-  }
-
-  deactivate() {
-    this.combat.setAttackCount(this.maxAttacksPerTurn);
-    this.movement.setMovementCount(this.maxMovementsPerTurn);
-  }
-
-  onTurnStart() {
-    this.activate();
+    this.apManager.setTo(this.maxAp, this.maxAp);
+    this.mpManager.add(this.mpRegen, this.maxMp);
   }
 
   get removeModifier() {
@@ -765,5 +750,64 @@ export class Unit
     this.modifierManager.add(modifier);
 
     return () => this.removeModifier(modifier.id);
+  }
+
+  playCardAtIndex(index: number) {
+    const card = this.cards.getCardAt(index);
+    if (!card) return;
+
+    this.playCardFromHand(card);
+  }
+
+  private onBeforePlayFromHand(card: DeckCard) {
+    this.emitter.emit(UNIT_EVENTS.BEFORE_PLAY_CARD, new UnitPlayCardEvent({ card }));
+    this.spendMp(card.manaCost);
+  }
+
+  private onAfterPlayFromHand(card: DeckCard) {
+    this.currentlyPlayedCard = null;
+    this.currentyPlayedCardIndexInHand = null;
+    this.emitter.emit(UNIT_EVENTS.AFTER_PLAY_CARD, new UnitPlayCardEvent({ card }));
+  }
+
+  playCardFromHand(card: DeckCard) {
+    this.currentlyPlayedCard = card;
+    this.currentyPlayedCardIndexInHand = this.cards.hand.indexOf(card);
+    this.cancelCardCleanups = [
+      card.once(CARD_EVENTS.BEFORE_PLAY, this.onBeforePlayFromHand.bind(this, card)),
+      card.once(CARD_EVENTS.AFTER_PLAY, this.onAfterPlayFromHand.bind(this, card))
+    ];
+    this.cards.play(card);
+  }
+
+  cancelCardPlayed() {
+    if (!isDefined(this.currentlyPlayedCard)) return;
+    if (!isDefined(this.currentyPlayedCardIndexInHand)) return;
+    this.game.interaction.cancelSelectingTargets();
+    this.cards.addToHand(this.currentlyPlayedCard, this.currentyPlayedCardIndexInHand);
+    this.cancelCardCleanups.forEach(cleanup => cleanup());
+    this.cancelCardCleanups = [];
+    this.currentlyPlayedCard = null;
+    this.currentyPlayedCardIndexInHand = null;
+  }
+
+  sendToDiscardPile(card: DeckCard) {
+    this.cards.sendToDiscardPile(card);
+  }
+
+  get equipArtifact() {
+    return this.artifacts.equipArtifact.bind(this.artifacts);
+  }
+
+  get unequipArtifact() {
+    return this.artifacts.unequipArtifact.bind(this.artifacts);
+  }
+
+  starturn() {
+    this.emitter.emit(UNIT_EVENTS.START_TURN, new UnitTurnEvent({}));
+  }
+
+  endTurn() {
+    this.emitter.emit(UNIT_EVENTS.END_TURN, new UnitTurnEvent({}));
   }
 }

@@ -6,34 +6,35 @@ import { CARD_KINDS } from './card.enums';
 import type {
   ArtifactBlueprint,
   CardBlueprint,
-  SpellBlueprint,
-  UnitBlueprint
+  UnitBlueprint,
+  AbilityBlueprint,
+  QuestBlueprint
 } from './card-blueprint';
 import { UnitCard } from './entities/unit-card.entity';
-import { SpellCard } from './entities/spell-card.entity';
+import { AbilityCard } from './entities/ability-card.entity';
 import { ArtifactCard } from './entities/artifact-card.entity';
+import { QuestCard } from './entities/quest-card.entity';
 
 export type GameFactory = <T extends CardBlueprint = CardBlueprint>(
   game: Game,
   player: Player,
-  options: CardOptions
+  options: CardOptions<T>
 ) => T extends UnitBlueprint
   ? UnitCard
-  : T extends SpellBlueprint
-    ? SpellCard
+  : T extends AbilityBlueprint
+    ? AbilityCard
     : T extends ArtifactBlueprint
       ? ArtifactCard
-      : AnyCard;
+      : T extends QuestBlueprint
+        ? QuestCard
+        : AnyCard;
 
-export const createCard: GameFactory = (
-  game: Game,
-  player: Player,
-  options: CardOptions
-) => {
+export const createCard: GameFactory = (game, player, options) => {
   const card = match(options.blueprint.kind)
-    .with(CARD_KINDS.UNIT, () => new UnitCard(game, player, options))
-    .with(CARD_KINDS.SPELL, () => new SpellCard(game, player, options))
-    .with(CARD_KINDS.ARTIFACT, () => new ArtifactCard(game, player, options))
+    .with(CARD_KINDS.UNIT, () => new UnitCard(game, player, options as any))
+    .with(CARD_KINDS.ABILITY, () => new AbilityCard(game, player, options as any))
+    .with(CARD_KINDS.QUEST, () => new QuestCard(game, player, options as any))
+    .with(CARD_KINDS.ARTIFACT, () => new ArtifactCard(game, player, options as any))
     .exhaustive();
 
   return card as any;

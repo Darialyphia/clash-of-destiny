@@ -9,27 +9,27 @@ import type { Player, SerializedPlayer } from '../player/player.entity';
 import { PLAYER_EVENTS } from '../player/player-enums';
 import type { AnyCard } from '../card/entities/card.entity';
 import type { CardEventMap } from '../card/card.events';
-import type { SerializedUnitCard, UnitCard } from '../card/entities/unit-card.entity';
-import type { SerializedSpellCard, SpellCard } from '../card/entities/spell-card.entity';
-import type {
-  ArtifactCard,
-  SerializedArtifactCard
-} from '../card/entities/artifact-card.entity';
 import type { SerializedUnit, Unit } from '../unit/entities/unit.entity';
 import type { UnitEventMap } from '../unit/unit.events';
 import { CARD_EVENTS } from '../card/card.enums';
 import { UNIT_EVENTS } from '../unit/unit-enums';
+
+import { TURN_EVENTS } from './game.enums';
+import { type Modifier, type SerializedModifier } from '../modifier/modifier.entity';
+import type {
+  AbilityCard,
+  SerializedAbilityCard
+} from '../card/entities/ability-card.entity';
+import type { QuestCard, SerializedQuestCard } from '../card/entities/quest-card.entity';
+import type {
+  ArtifactCard,
+  SerializedArtifactCard
+} from '../card/entities/artifact-card.entity';
 import {
   ARTIFACT_EVENTS,
-  type ArtifactEventMap,
-  type PlayerArtifact
-} from '../player/player-artifact.entity';
-import { TURN_EVENTS } from './game.enums';
-import {
-  MODIFIER_EVENTS,
-  type Modifier,
-  type SerializedModifier
-} from '../modifier/modifier.entity';
+  type Artifact,
+  type ArtifactEventMap
+} from '../unit/entities/artifact.entity';
 
 export class GameInputStartEvent extends TypedSerializableEvent<
   { input: Input<any> },
@@ -109,10 +109,10 @@ export class GameStarEvent<
   }
 }
 
-type GameCardEventSerialized<TCard extends AnyCard> = TCard extends UnitCard
-  ? SerializedUnitCard
-  : TCard extends SpellCard
-    ? SerializedSpellCard
+type GameCardEventSerialized<TCard extends AnyCard> = TCard extends AbilityCard
+  ? SerializedAbilityCard
+  : TCard extends QuestCard
+    ? SerializedQuestCard
     : TCard extends ArtifactCard
       ? SerializedArtifactCard
       : `TCard needs to be an instance of UnitCard, SpellCard or ArtiactCard`;
@@ -149,7 +149,7 @@ export class GameCardEvent<
 
 type GameCardEventMap = {
   [Event in keyof CardEventMap as `card.${Event}`]: GameCardEvent<
-    UnitCard | SpellCard | ArtifactCard,
+    AbilityCard | QuestCard | ArtifactCard,
     CardEventMap,
     CardEventMap[Event]
   >;
@@ -196,7 +196,7 @@ type GameUnitEventMap = {
 export class GameArtifactEvent<
   TEvent extends Values<ArtifactEventMap>
 > extends TypedSerializableEvent<
-  { artifact: PlayerArtifact; event: TEvent },
+  { artifact: Artifact; event: TEvent },
   ReturnType<TEvent['serialize']> & { artifact: SerializedArtifactCard }
 > {
   serialize() {

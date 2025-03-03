@@ -10,15 +10,8 @@ export type TargetingStrategy = {
 
 export const TARGETING_TYPE = {
   EMPTY: 'empty',
-  ALLY_UNIT: 'ally_unit',
-  ALLY_GENERAL: 'ally_general',
-  ALLY_MINION: 'ally_minion',
-  ENEMY_UNIT: 'enemy_unit',
-  ENEMY_GENERAL: 'enemy_general',
-  ENEMY_MINION: 'enemy_minion',
-  UNIT: 'unit',
-  GENERAL: 'general',
-  MINION: 'minion',
+  ALLY: 'ally_unit',
+  ENEMY: 'enemy_unit',
   ANYWHERE: 'anywhere'
 } as const;
 
@@ -39,26 +32,7 @@ export const isValidTargetingType = (
   return !!match(type)
     .with(TARGETING_TYPE.ANYWHERE, () => true)
     .with(TARGETING_TYPE.EMPTY, () => !unit)
-    .with(TARGETING_TYPE.ALLY_UNIT, () => unit?.player.equals(player))
-    .with(
-      TARGETING_TYPE.ALLY_GENERAL,
-      () => unit?.player.equals(player) && unit?.isGeneral
-    )
-    .with(
-      TARGETING_TYPE.ALLY_MINION,
-      () => unit?.player.equals(player) && !unit.isGeneral
-    )
-    .with(TARGETING_TYPE.ENEMY_UNIT, () => !unit?.player.equals(player))
-    .with(
-      TARGETING_TYPE.ENEMY_GENERAL,
-      () => !unit?.player.equals(player) && unit?.isGeneral
-    )
-    .with(
-      TARGETING_TYPE.ENEMY_MINION,
-      () => !unit?.player.equals(player) && !unit?.isGeneral
-    )
-    .with(TARGETING_TYPE.UNIT, () => isDefined(unit))
-    .with(TARGETING_TYPE.GENERAL, () => isDefined(unit) && unit?.isGeneral)
-    .with(TARGETING_TYPE.MINION, () => isDefined(unit) && !unit.isGeneral)
+    .with(TARGETING_TYPE.ALLY, () => isDefined(unit) && unit.player.equals(player))
+    .with(TARGETING_TYPE.ENEMY, () => isDefined(unit) && !unit.player.equals(player))
     .exhaustive();
 };

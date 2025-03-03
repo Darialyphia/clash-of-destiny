@@ -24,7 +24,7 @@ import { MAPS_DICTIONARY } from '../board/maps/_index';
 import { InteractionSystem } from './systems/interaction.system';
 
 export type GameOptionsPlayer = Prettify<
-  BetterOmit<PlayerOptions, 'deck' | 'generalPosition' | 'isPlayer1'> & {
+  BetterOmit<PlayerOptions, 'generalPosition' | 'isPlayer1'> & {
     deck: {
       general: string;
       cards: string[];
@@ -95,7 +95,7 @@ export class Game {
   }
 
   defaultWinCondition(game: Game, player: Player) {
-    return player.opponent.general.isDead;
+    return !player.enemyUnits.some(unit => unit.isHero);
   }
 
   // the event emitter doesnt provide the event name if you enable wildcards, so let's implement it ourselves

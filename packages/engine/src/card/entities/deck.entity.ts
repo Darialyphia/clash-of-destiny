@@ -4,9 +4,9 @@ import { shuffleArray } from '@game/shared';
 import type { Game } from '../../game/game';
 import { nanoid } from 'nanoid';
 import { Entity } from '../../entity';
-import type { SerializedUnitCard, UnitCard } from './unit-card.entity';
-import type { SerializedSpellCard, SpellCard } from './spell-card.entity';
+import type { AbilityCard, SerializedAbilityCard } from './ability-card.entity';
 import type { ArtifactCard, SerializedArtifactCard } from './artifact-card.entity';
+import type { QuestCard, SerializedQuestCard } from './quest-card.entity';
 
 export const DECK_EVENTS = {
   BEFORE_DRAW: 'before_draw',
@@ -15,10 +15,10 @@ export const DECK_EVENTS = {
 
 export type DeckEvent = Values<typeof DECK_EVENTS>;
 
-export type DeckCard = UnitCard | SpellCard | ArtifactCard;
+export type DeckCard = AbilityCard | QuestCard | ArtifactCard;
 export type SerializedDeckCard =
-  | SerializedUnitCard
-  | SerializedSpellCard
+  | SerializedAbilityCard
+  | SerializedQuestCard
   | SerializedArtifactCard;
 
 export class DeckBeforeDrawEvent extends TypedSerializableEvent<

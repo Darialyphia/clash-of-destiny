@@ -15,7 +15,7 @@ export class CommitPlayCardInput extends Input<typeof schema> {
 
   impl() {
     assert(
-      this.game.turnSystem.activePlayer.equals(this.player),
+      this.game.turnSystem.activeUnit.player.equals(this.player),
       new NotActivePlayerError()
     );
 

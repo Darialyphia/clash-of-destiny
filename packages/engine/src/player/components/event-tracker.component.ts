@@ -9,15 +9,15 @@ export class EventTrackerComponent {
     private game: Game,
     private player: Player
   ) {
-    let currentTurnEvents: StarEvent[] = [];
-    game.on('*', e => {
-      if (e.eventName === GAME_EVENTS.PLAYER_END_TURN) {
-        this.lastTurnEvents = currentTurnEvents;
-        currentTurnEvents = [];
-      } else {
-        currentTurnEvents.push(e);
-      }
-    });
+    // const currentTurnEvents: StarEvent[] = [];
+    // game.on('*', e => {
+    //   if (e.eventName === GAME_EVENTS.PLAYER_END_TURN) {
+    //     this.lastTurnEvents = currentTurnEvents;
+    //     currentTurnEvents = [];
+    //   } else {
+    //     currentTurnEvents.push(e);
+    //   }
+    // });
   }
 
   // get allyDiedLastTurn() {

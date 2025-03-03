@@ -5,11 +5,7 @@ import { assert } from '@game/shared';
 import { NotActivePlayerError } from '../input-errors';
 
 const schema = defaultInputSchema.extend({
-  index: z.number(),
-  target: z.object({
-    x: z.number(),
-    y: z.number()
-  })
+  index: z.number()
 });
 
 export class PlayCardInput extends Input<typeof schema> {
@@ -21,14 +17,10 @@ export class PlayCardInput extends Input<typeof schema> {
 
   impl() {
     assert(
-      this.game.turnSystem.activePlayer.equals(this.player),
+      this.game.turnSystem.activeUnit.player.equals(this.player),
       new NotActivePlayerError()
     );
 
-    this.player.playCardAtIndex(this.payload.index);
-    this.game.interaction.addTarget({
-      type: 'cell',
-      cell: this.payload.target
-    });
+    this.game.turnSystem.activeUnit.playCardAtIndex(this.payload.index);
   }
 }

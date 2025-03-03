@@ -18,8 +18,10 @@ export const UNIT_EVENTS = {
   AFTER_RECEIVE_HEAL: 'after_receive_heal',
   BEFORE_DESTROY: 'before_destroy',
   AFTER_DESTROY: 'after_destroy',
-  BEFORE_BOUNCE: 'before_bounce',
-  AFTER_BOUNCE: 'after_bounce'
+  BEFORE_PLAY_CARD: 'before_play_card',
+  AFTER_PLAY_CARD: 'after_play_card',
+  START_TURN: 'start_turn',
+  END_TURN: 'end_turn'
 } as const;
 
 export type UnitEvent = Values<typeof UNIT_EVENTS>;

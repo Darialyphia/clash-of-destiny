@@ -16,9 +16,7 @@ import { CommitCardSelectionCardInput } from './inputs/commit-card-selection.inp
 import { CommitPlayCardInput } from './inputs/commit-play-card.input';
 import { EndTurnInput } from './inputs/end-turn.input';
 import { MoveInput } from './inputs/move.input';
-import { MulliganInput } from './inputs/mulligan.input';
 import { PlayCardInput } from './inputs/play-card.input';
-import { ReplaceCardInput } from './inputs/replace-card.input';
 
 type GenericInputMap = Record<string, Constructor<Input<DefaultSchema>>>;
 
@@ -40,8 +38,6 @@ const inputMap = validateinputMap({
   addCardTarget: AddCardTargetCardInput,
   commitPlayCard: CommitPlayCardInput,
   endTurn: EndTurnInput,
-  mulligan: MulliganInput,
-  replaceCard: ReplaceCardInput,
   commitCardSelection: CommitCardSelectionCardInput
 });
 

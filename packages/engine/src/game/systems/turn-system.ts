@@ -1,14 +1,13 @@
 import type { Values } from '@game/shared';
-import type { Player } from '../../player/player.entity';
 import { System } from '../../system';
-import {
-  TypedSerializableEvent,
-  TypedSerializableEventEmitter
-} from '../../utils/typed-emitter';
+import type { Unit } from '../../unit/entities/unit.entity';
+import { TypedEventEmitter, TypedSerializableEvent } from '../../utils/typed-emitter';
 import { GAME_EVENTS } from '../game.events';
-import { TURN_EVENTS } from '../game.enums';
 
-export type TurnEvent = Values<typeof TURN_EVENTS>;
+export const TURN_EVENTS = {
+  TURN_START: 'turn_start',
+  TURN_END: 'turn_end'
+} as const;
 
 export class GameTurnEvent extends TypedSerializableEvent<
   { turnCount: number },
@@ -20,26 +19,27 @@ export class GameTurnEvent extends TypedSerializableEvent<
     };
   }
 }
+export type TurnEvent = Values<typeof TURN_EVENTS>;
 
 export type TurnEventMap = {
   [TURN_EVENTS.TURN_START]: GameTurnEvent;
   [TURN_EVENTS.TURN_END]: GameTurnEvent;
 };
+
 export class TurnSystem extends System<never> {
-  private _elapsedTurns = 0;
+  private _turnCount = 0;
 
-  private _activePlayer!: Player;
+  private _processedUnits = new Set<Unit>();
 
-  private firstPlayer!: Player;
+  queue: Unit[] = [];
 
-  private emitter = new TypedSerializableEventEmitter<TurnEventMap>();
+  private emitter = new TypedEventEmitter<TurnEventMap>();
 
   initialize() {
-    // const idx = this.game.rngSystem.nextInt(this.game.playerSystem.players.length);
-    this._activePlayer = this.game.playerSystem.players[0];
-    this.firstPlayer = this._activePlayer;
-
-    this.game.on(GAME_EVENTS.PLAYER_END_TURN, this.onPlayerTurnEnd.bind(this));
+    this.game.on(GAME_EVENTS.UNIT_END_TURN, this.onUnitTurnEnd.bind(this));
+    this.game.on(GAME_EVENTS.UNIT_AFTER_DESTROY, e => {
+      this.removeFromCurrentQueue(e.data.unit);
+    });
 
     this.on(TURN_EVENTS.TURN_START, e => {
       this.game.emit(GAME_EVENTS.TURN_START, e);
@@ -53,12 +53,16 @@ export class TurnSystem extends System<never> {
     this.emitter.removeAllListeners();
   }
 
-  get activePlayer() {
-    return this._activePlayer;
+  get turnCount() {
+    return this._turnCount;
   }
 
-  get elapsedTurns() {
-    return this._elapsedTurns;
+  get activeUnit() {
+    return [...this.queue][0];
+  }
+
+  get processedUnits() {
+    return this._processedUnits;
   }
 
   get on() {
@@ -74,30 +78,51 @@ export class TurnSystem extends System<never> {
   }
 
   startGameTurn() {
+    this._turnCount++;
+    this.queue = [];
+    this._processedUnits.clear();
+
+    this.game.unitSystem.units
+      .sort((a, b) => b.initiative - a.initiative)
+      .forEach(unit => this.queue.push(unit));
     this.emitter.emit(
       TURN_EVENTS.TURN_START,
-      new GameTurnEvent({ turnCount: this.elapsedTurns })
+      new GameTurnEvent({ turnCount: this.turnCount })
     );
-    this._activePlayer.startTurn();
+
+    this.activeUnit?.starturn();
+  }
+
+  removeFromCurrentQueue(unit: Unit) {
+    const idx = this.queue.findIndex(u => u.equals(unit));
+    if (idx === -1) return;
+    this.queue.splice(idx, 1);
+  }
+
+  insertInCurrentQueue(unit: Unit) {
+    let idx = this.queue.findIndex(u => u.initiative < unit.initiative);
+    if (idx === -1) idx = this.queue.length;
+    this.queue.splice(idx, 0, unit);
   }
 
   endGameTurn() {
-    this._elapsedTurns++;
     this.emitter.emit(
       TURN_EVENTS.TURN_END,
-      new GameTurnEvent({ turnCount: this.elapsedTurns })
+      new GameTurnEvent({ turnCount: this.turnCount })
     );
   }
 
-  onPlayerTurnEnd() {
-    const nextPlayer = this._activePlayer.opponent;
-    if (nextPlayer.equals(this.firstPlayer)) {
+  onUnitTurnEnd() {
+    this._processedUnits.add(
+      this.queue.splice(this.queue.indexOf(this.activeUnit), 1)[0]
+    );
+
+    if (!this.activeUnit) {
       this.endGameTurn();
-      this._activePlayer = nextPlayer;
       this.startGameTurn();
+      return;
     } else {
-      this._activePlayer = nextPlayer;
-      this._activePlayer.startTurn();
+      this.activeUnit.starturn();
     }
   }
 }

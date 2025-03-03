@@ -1,5 +1,5 @@
 import { type Point } from '@game/shared';
-import { Unit } from './entities/unit.entity';
+import { Unit, type UnitOptions } from './entities/unit.entity';
 import { System } from '../system';
 import { GAME_PHASES } from '../game/systems/game-phase.system';
 import type { UnitCard } from '../card/entities/unit-card.entity';
@@ -49,9 +49,9 @@ export class UnitSystem extends System<UnitSystemOptions> {
     ].filter
   }
 
-  addUnit(card: UnitCard, position: Point) {
+  addUnit(card: UnitCard, deck: UnitOptions['deck'], position: Point) {
     const id = `unit_${++this.nextUnitId}`;
-    const unit = new Unit(this.game, card, { id, player: card.player, position });
+    const unit = new Unit(this.game, card, { id, player: card.player, position, deck });
     this.unitMap.set(unit.id, unit);
 
     if (this.game.phase === GAME_PHASES.BATTLE) {
@@ -62,7 +62,6 @@ export class UnitSystem extends System<UnitSystemOptions> {
 
   removeUnit(unit: Unit) {
     this.unitMap.delete(unit.id);
-    unit.player.sendToDiscardPile(unit.card);
   }
 
   getEntityBehind(unit: Unit) {

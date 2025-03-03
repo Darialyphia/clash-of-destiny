@@ -52,23 +52,6 @@ export class UnitAfterMoveEvent extends TypedSerializableEvent<
   }
 }
 
-export class UnitBeforeBounce extends TypedSerializableEvent<EmptyObject, EmptyObject> {
-  serialize() {
-    return {};
-  }
-}
-
-export class UnitAfterBounce extends TypedSerializableEvent<
-  { successful: boolean },
-  { successful: boolean }
-> {
-  serialize() {
-    return {
-      successful: this.data.successful
-    };
-  }
-}
-
 export class UnitAttackEvent extends TypedSerializableEvent<
   { target: Vec2 },
   { target: Point }
@@ -145,6 +128,23 @@ export class UnitAfterDestroyEvent extends TypedSerializableEvent<
   }
 }
 
+export class UnitPlayCardEvent extends TypedSerializableEvent<
+  { card: AnyCard },
+  { card: SerializedCard }
+> {
+  serialize() {
+    return {
+      card: this.data.card.serialize()
+    };
+  }
+}
+
+export class UnitTurnEvent extends TypedSerializableEvent<EmptyObject, EmptyObject> {
+  serialize() {
+    return {};
+  }
+}
+
 export type UnitEventMap = {
   [UNIT_EVENTS.CREATED]: UnitCreatedEvent;
   [UNIT_EVENTS.BEFORE_MOVE]: UnitBeforeMoveEvent;
@@ -163,6 +163,8 @@ export type UnitEventMap = {
   [UNIT_EVENTS.AFTER_RECEIVE_HEAL]: UnitReceiveHealEvent;
   [UNIT_EVENTS.BEFORE_DESTROY]: UnitBeforeDestroyEvent;
   [UNIT_EVENTS.AFTER_DESTROY]: UnitAfterDestroyEvent;
-  [UNIT_EVENTS.BEFORE_BOUNCE]: UnitBeforeBounce;
-  [UNIT_EVENTS.AFTER_BOUNCE]: UnitAfterBounce;
+  [UNIT_EVENTS.BEFORE_PLAY_CARD]: UnitPlayCardEvent;
+  [UNIT_EVENTS.AFTER_PLAY_CARD]: UnitPlayCardEvent;
+  [UNIT_EVENTS.START_TURN]: UnitTurnEvent;
+  [UNIT_EVENTS.END_TURN]: UnitTurnEvent;
 };

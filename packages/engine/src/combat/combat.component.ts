@@ -1,4 +1,4 @@
-import { isDefined, Vec2, type Point, type Values } from '@game/shared';
+import { Vec2, type Point, type Values } from '@game/shared';
 import {} from '../config';
 import type { Game } from '../game/game';
 import type { SerializedUnit, Unit } from '../unit/entities/unit.entity';
@@ -109,31 +109,6 @@ export class CombatComponent {
     this._counterAttacksCount = 0;
   }
 
-  counterAttack(attacker: Unit) {
-    this.emitter.emit(
-      COMBAT_EVENTS.BEFORE_COUNTERATTACK,
-      new AttackEvent({
-        target: attacker.position
-      })
-    );
-    const targets = this.unit.counterattackAOEShape.getUnits([attacker]);
-
-    const damage = new CombatDamage({
-      baseAmount: 0,
-      source: this.unit.card
-    });
-
-    this.dealDamage(targets, damage);
-    this._counterAttacksCount++;
-
-    this.emitter.emit(
-      COMBAT_EVENTS.AFTER_COUNTERATTACK,
-      new AttackEvent({
-        target: attacker.position
-      })
-    );
-  }
-
   attack(target: Point) {
     this.emitter.emit(
       COMBAT_EVENTS.BEFORE_ATTACK,
@@ -152,16 +127,6 @@ export class CombatComponent {
 
     const unit = this.game.unitSystem.getUnitAt(target)!;
     if (!unit) return; // means unit died from attack
-    // we check counterattack before emitting AFTER_ATTACK event to enable effects that would prevent counter attack for one attack only
-    // ex: Fearsome
-    const counterAttackParticipants = this.unit
-      .getCounterattackParticipants(unit)
-      .filter(unit => {
-        return (
-          unit.canCounterAttackAt(this.unit.position) &&
-          this.unit.canBeCounterattackedBy(unit)
-        );
-      });
 
     this.emitter.emit(
       COMBAT_EVENTS.AFTER_ATTACK,
@@ -169,10 +134,6 @@ export class CombatComponent {
         target: Vec2.fromPoint(target)
       })
     );
-
-    counterAttackParticipants.forEach(unit => {
-      unit.counterAttack(this.unit);
-    });
   }
 
   dealDamage(targets: Unit[], damage: Damage) {

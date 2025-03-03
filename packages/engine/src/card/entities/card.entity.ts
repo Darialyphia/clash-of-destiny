@@ -1,13 +1,12 @@
-import { type JSONObject, type Point } from '@game/shared';
+import { type JSONObject } from '@game/shared';
 import { Entity } from '../../entity';
 import type { Game } from '../../game/game';
 import type { Player } from '../../player/player.entity';
 import type { CardBlueprint } from '../card-blueprint';
 import { CARD_EVENTS, type CardKind, type Rarity } from '../card.enums';
 import { CardAddtoHandEvent, type CardEventMap } from '../card.events';
-import type { SerializedFaction } from './faction.entity';
 import { KeywordManagerComponent } from '../components/keyword-manager.component';
-import type { Modifier, SerializedModifier } from '../../modifier/modifier.entity';
+import type { Modifier } from '../../modifier/modifier.entity';
 import { ModifierManager } from '../../modifier/modifier-manager.component';
 
 export type CardOptions<T extends CardBlueprint = CardBlueprint> = {
@@ -25,10 +24,6 @@ export type SerializedCard = {
   kind: CardKind;
   setId: string;
   rarity: Rarity;
-  faction: SerializedFaction | null;
-  elligibleFirstTarget: Point[];
-  canPlay: boolean;
-  modifiers: SerializedModifier[];
 };
 
 export abstract class Card<
@@ -39,7 +34,7 @@ export abstract class Card<
 > extends Entity<TEventMap, TInterceptors> {
   protected game: Game;
 
-  protected blueprint: TBlueprint;
+  readonly blueprint: TBlueprint;
 
   readonly player: Player;
 
@@ -79,10 +74,6 @@ export abstract class Card<
 
   get rarity() {
     return this.blueprint.rarity;
-  }
-
-  get faction() {
-    return this.blueprint.faction;
   }
 
   get keywords() {

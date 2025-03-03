@@ -32,8 +32,7 @@ export type SelectedTarget = {
 export const INTERACTION_STATES = {
   IDLE: 'idle',
   SELECTING_TARGETS: 'selecting_targets',
-  SELECTING_CARDS: 'selecting_cards',
-  SEARCHING_DECK: 'searching_deck'
+  SELECTING_CARDS: 'selecting_cards'
 } as const;
 export type InteractionState = Values<typeof INTERACTION_STATES>;
 
@@ -42,9 +41,7 @@ export const INTERACTION_STATE_TRANSITIONS = {
   CANCEL_SELECTING_TARGETS: 'cancel_selecting_targets',
   COMMIT_SELECTING_TARGETS: 'commit_selecting_targets',
   START_SELECTING_CARD: 'start_selecting_card',
-  COMMIT_CARD_SELECTION: 'commit_card_selection',
-  START_SEARCHING_DECK: 'start_searching_deck',
-  COMMIT_SEARCHING_DECK: 'commit_searching-deck'
+  COMMIT_CARD_SELECTION: 'commit_card_selection'
 } as const;
 export type InteractionStateTransition = Values<typeof INTERACTION_STATE_TRANSITIONS>;
 
@@ -71,16 +68,6 @@ export type InteractionStateContext =
         minChoices: number;
         maxChoices: number;
         onComplete: (selectedCards: AnyCard[]) => void;
-      };
-    }
-  | {
-      state: 'searching_deck';
-      ctx: {
-        player: Player;
-        minChoices: number;
-        maxChoices: number;
-        isElligible: (card: DeckCard) => boolean;
-        onComplete: (selectedCards: AnyCard[], player: Player) => void;
       };
     };
 
@@ -148,16 +135,6 @@ export class InteractionSystem
       stateTransition(
         INTERACTION_STATES.SELECTING_CARDS,
         INTERACTION_STATE_TRANSITIONS.COMMIT_CARD_SELECTION,
-        INTERACTION_STATES.IDLE
-      ),
-      stateTransition(
-        INTERACTION_STATES.IDLE,
-        INTERACTION_STATE_TRANSITIONS.START_SEARCHING_DECK,
-        INTERACTION_STATES.SEARCHING_DECK
-      ),
-      stateTransition(
-        INTERACTION_STATES.SEARCHING_DECK,
-        INTERACTION_STATE_TRANSITIONS.COMMIT_SEARCHING_DECK,
         INTERACTION_STATES.IDLE
       )
     ]
@@ -337,69 +314,6 @@ export class InteractionSystem
     };
   }
 
-  startSearchingDeck({
-    player,
-    minChoices,
-    maxChoices,
-    onComplete,
-    isElligible
-  }: {
-    player: Player;
-    minChoices: number;
-    maxChoices: number;
-    onComplete: (selectedCards: AnyCard[], player: Player) => void;
-    isElligible?: (card: DeckCard) => boolean;
-  }) {
-    assert(
-      this.stateMachine.can(INTERACTION_STATE_TRANSITIONS.START_SEARCHING_DECK),
-      'Cannot start searching deck'
-    );
-    this._context = {
-      state: 'searching_deck',
-      ctx: {
-        player,
-        minChoices,
-        maxChoices,
-        onComplete,
-        isElligible: isElligible ?? (() => true)
-      }
-    };
-
-    this.stateMachine.dispatch(INTERACTION_STATE_TRANSITIONS.START_SEARCHING_DECK);
-  }
-
-  commitSearchingDeck(selectedCardIds: string[]) {
-    assert(
-      this.stateMachine.can(INTERACTION_STATE_TRANSITIONS.COMMIT_SEARCHING_DECK),
-      'Cannot commit searching deck'
-    );
-
-    assert(
-      this._context.state === INTERACTION_STATES.SEARCHING_DECK,
-      'Invalid interaction state context'
-    );
-
-    assert(
-      selectedCardIds.length >= this._context.ctx.minChoices,
-      'Not enough cards selected'
-    );
-
-    assert(
-      selectedCardIds.length <= this._context.ctx.maxChoices,
-      'Too many cards selected'
-    );
-
-    const selectedCards = this._context.ctx.player.deck.cards.filter(card =>
-      selectedCardIds.includes(card.id)
-    );
-    this._context.ctx.onComplete(selectedCards, this._context.ctx.player);
-    this.stateMachine.dispatch(INTERACTION_STATE_TRANSITIONS.COMMIT_SEARCHING_DECK);
-    this._context = {
-      state: 'idle',
-      ctx: {}
-    };
-  }
-
   serialize() {
     return {
       state: this._context.state as any,
@@ -419,17 +333,7 @@ export class InteractionSystem
           minChoices: ctx.minChoices,
           maxChoices: ctx.maxChoices
         }))
-        .with({ state: 'searching_deck' }, ({ ctx }) => ({
-          player: ctx.player.id,
-          minChoices: ctx.minChoices,
-          maxChoices: ctx.maxChoices,
-          elligibleCards: ctx.player.deck.cards
-            .filter(card => ctx.isElligible(card))
-            .map(card => card.serialize()),
-          inelligibleCards: ctx.player.deck.cards
-            .filter(card => !ctx.isElligible(card))
-            .map(card => card.serialize())
-        }))
+
         .exhaustive()
     };
   }

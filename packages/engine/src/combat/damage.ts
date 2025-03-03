@@ -2,14 +2,12 @@ import type { BetterOmit, Values } from '@game/shared';
 import type { AnyCard } from '../card/entities/card.entity';
 import type { Unit } from '../unit/entities/unit.entity';
 import type { UnitCard } from '../card/entities/unit-card.entity';
-import type { SpellCard } from '../card/entities/spell-card.entity';
 import type { ArtifactCard } from '../card/entities/artifact-card.entity';
+import type { AbilityCard } from '../card/entities/ability-card.entity';
 
 export const DAMAGE_TYPES = {
   COMBAT: 'COMBAT',
-  ABILITY: 'ABILITY',
-  SPELL: 'SPELL',
-  LOYALTY: 'LOYALTY'
+  ABILITY: 'ABILITY'
 } as const;
 
 export type DamageType = Values<typeof DAMAGE_TYPES>;
@@ -57,18 +55,8 @@ export class CombatDamage extends Damage<UnitCard> {
   }
 }
 
-export class SpellDamage extends Damage<SpellCard> {
-  constructor(options: BetterOmit<DamageOptions<SpellCard>, 'type'>) {
-    super({ ...options, type: DAMAGE_TYPES.SPELL });
-  }
-
-  getFinalAmount(target: Unit) {
-    return target.getReceivedDamage(this.baseAmount, this, this._source);
-  }
-}
-
-export class AbilityDamage extends Damage<UnitCard | ArtifactCard> {
-  constructor(options: BetterOmit<DamageOptions<UnitCard | ArtifactCard>, 'type'>) {
+export class AbilityDamage extends Damage<AbilityCard> {
+  constructor(options: BetterOmit<DamageOptions<AbilityCard>, 'type'>) {
     super({ ...options, type: DAMAGE_TYPES.ABILITY });
   }
 
