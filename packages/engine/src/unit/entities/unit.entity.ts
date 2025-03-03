@@ -39,7 +39,7 @@ import { PathfinderComponent } from '../../pathfinding/pathfinder.component';
 import { SolidBodyPathfindingStrategy } from '../../pathfinding/strategies/solid-pathfinding.strategy';
 import { CARD_EVENTS, UNIT_KINDS } from '../../card/card.enums';
 import { HealthComponent } from '../components/health.component';
-import { GameUnitEvent } from '../../game/game.events';
+import { GAME_EVENTS, GameUnitEvent } from '../../game/game.events';
 import type { Cell } from '../../board/cell';
 import type { Modifier } from '../../modifier/modifier.entity';
 import { ModifierManager } from '../../modifier/modifier-manager.component';
@@ -86,6 +86,7 @@ type UnitInterceptors = {
   abilityPower: Interceptable<number>;
 
   canReceiveModifier: Interceptable<boolean, { modifier: Modifier<Unit> }>;
+  canBeDestroyed: Interceptable<boolean>;
 
   maxHp: Interceptable<number>;
   maxAp: Interceptable<number>;
@@ -130,6 +131,7 @@ const makeInterceptors = (): UnitInterceptor => {
     abilityPower: new Interceptable<number>(),
 
     canReceiveModifier: new Interceptable<boolean, { modifier: Modifier<Unit> }>(),
+    canBeDestroyed: new Interceptable<boolean>(),
 
     maxHp: new Interceptable<number>(),
     maxAp: new Interceptable<number>(),
@@ -218,9 +220,9 @@ export class Unit
     });
     this.combat = new CombatComponent(this.game, this);
 
-    // this.player.on(PLAYER_EVENTS.START_TURN, () => {
-    //   this.onTurnStart();
-    // });
+    this.game.on(GAME_EVENTS.TURN_START, () => {
+      this.onTurnStart();
+    });
     this.on(INTERCEPTOR_EVENTS.ADD_INTERCEPTOR, event => {
       if (event.key === 'maxHp') {
         this.checkHp({ source: this.card });
@@ -318,6 +320,14 @@ export class Unit
     return this.cards.remainingCardsInDeck;
   }
 
+  get draw() {
+    return this.cards.draw.bind(this.cards);
+  }
+
+  get discard() {
+    return this.cards.discard.bind(this.cards);
+  }
+
   get abilityPower() {
     return this.interceptors.abilityPower.getValue(0, {});
   }
@@ -369,8 +379,17 @@ export class Unit
   canSpendAp(amount: number) {
     return this.ap >= amount;
   }
+
   get position() {
     return this.movement.position;
+  }
+
+  get x() {
+    return this.movement.x;
+  }
+
+  get y() {
+    return this.movement.y;
   }
 
   get keywords() {
@@ -383,14 +402,6 @@ export class Unit
 
   get removeKeyword() {
     return this.keywordManager.remove.bind(this.keywordManager);
-  }
-
-  get x() {
-    return this.movement.x;
-  }
-
-  get y() {
-    return this.movement.y;
   }
 
   get on() {
@@ -419,6 +430,13 @@ export class Unit
 
   canBeAttackedBy(unit: Unit): boolean {
     return this.interceptors.canBeAttackTarget.getValue(!this.isDead, { attacker: unit });
+  }
+
+  canPlayCard(card: AnyCard): boolean {
+    return this.interceptors.canPlayCard.getValue(
+      card.canPlay() && this.ap < this.apCostPerCard,
+      { card }
+    );
   }
 
   canBeTargetedByCard(card: AnyCard): boolean {
@@ -510,7 +528,7 @@ export class Unit
   }
 
   get canBeDestroyed(): boolean {
-    return true;
+    return this.interceptors.canBeDestroyed.getValue(true, {});
   }
 
   get apCostPerAttack() {
@@ -579,14 +597,12 @@ export class Unit
 
   canMoveTo(point: Point) {
     if (!this.canMove) return false;
-    return this.movement.canMoveTo(
-      point,
-      this.remainingMovement / this.apCostPerMovement
-    );
+    return this.movement.canMoveTo(point, this.ap / this.apCostPerMovement);
   }
 
   move(to: Point) {
-    this.movement.move(to);
+    const path = this.movement.move(to);
+    this.spendAp(this.apCostPerMovement * (path?.distance ?? 0));
   }
 
   teleport(to: Point) {
@@ -617,7 +633,7 @@ export class Unit
   getPossibleMoves(max?: number, force = false) {
     if (!this.canMove && !force) return [];
     return this.movement
-      .getAllPossibleMoves(max ?? this.remainingMovement / this.apCostPerMovement)
+      .getAllPossibleMoves(max ?? this.ap / this.apCostPerMovement)
       .filter(point => {
         const cell = this.game.boardSystem.getCellAt(point)!;
         return cell.isWalkable && !cell.unit;
@@ -675,6 +691,7 @@ export class Unit
   }
 
   attack(point: Point) {
+    this.spendAp(this.apCostPerAttack);
     this.combat.attack(point);
   }
 
@@ -685,6 +702,9 @@ export class Unit
     const target = this.game.unitSystem.getUnitAt(point);
     if (!target) return false;
 
+    if (this.ap < this.apCostPerAttack) {
+      return false;
+    }
     if (!this.canAttack(target) || !target.canBeAttackedBy(this)) {
       return false;
     }
@@ -724,6 +744,7 @@ export class Unit
     this.movement.resetMovementsCount();
     this.apManager.setTo(this.maxAp, this.maxAp);
     this.mpManager.add(this.mpRegen, this.maxMp);
+    this.draw(this.game.config.CARDS_DRAWN_PER_TURN);
   }
 
   get removeModifier() {
@@ -752,6 +773,13 @@ export class Unit
     return () => this.removeModifier(modifier.id);
   }
 
+  get apCostPerCard() {
+    return this.interceptors.apCostPerCard.getValue(
+      this.game.config.AP_COST_PER_CARD,
+      {}
+    );
+  }
+
   playCardAtIndex(index: number) {
     const card = this.cards.getCardAt(index);
     if (!card) return;
@@ -762,6 +790,7 @@ export class Unit
   private onBeforePlayFromHand(card: DeckCard) {
     this.emitter.emit(UNIT_EVENTS.BEFORE_PLAY_CARD, new UnitPlayCardEvent({ card }));
     this.spendMp(card.manaCost);
+    this.spendAp(this.apCostPerCard);
   }
 
   private onAfterPlayFromHand(card: DeckCard) {

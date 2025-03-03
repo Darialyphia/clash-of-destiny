@@ -20,8 +20,12 @@ export class UnitCard extends Card<
 > {
   readonly unit!: Unit;
 
-  constructor(game: Game, player: Player, options: CardOptions<UnitBlueprint>) {
-    super(game, player, {}, options);
+  constructor(game: Game, unit: Unit, options: CardOptions<UnitBlueprint>) {
+    super(game, unit, {}, options);
+  }
+
+  canPlay(): boolean {
+    return true;
   }
 
   play() {}

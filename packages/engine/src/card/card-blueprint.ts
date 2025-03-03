@@ -1,3 +1,5 @@
+import type { Game } from '../game/game';
+import type { EffectTarget, SelectedTarget } from '../game/systems/interaction.system';
 import type {
   ArtifactKind,
   CARD_KINDS,
@@ -6,6 +8,7 @@ import type {
   Rarity,
   UnitKind
 } from './card.enums';
+import type { AbilityCard } from './entities/ability-card.entity';
 
 export type CardBlueprintBase = {
   id: string;
@@ -25,6 +28,10 @@ export type UnitBlueprint = CardBlueprintBase & {
 export type AbilityBlueprint = CardBlueprintBase & {
   kind: Extract<CardKind, typeof CARD_KINDS.ABILITY>;
   manaCost: number;
+  followup: {
+    getTargets(game: Game, card: AbilityCard): EffectTarget[];
+    canCommit: (targets: SelectedTarget[]) => boolean;
+  };
 };
 
 export type ArtifactBlueprint = CardBlueprintBase & {

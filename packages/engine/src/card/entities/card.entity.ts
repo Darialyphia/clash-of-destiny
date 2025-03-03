@@ -8,6 +8,7 @@ import { CardAddtoHandEvent, type CardEventMap } from '../card.events';
 import { KeywordManagerComponent } from '../components/keyword-manager.component';
 import type { Modifier } from '../../modifier/modifier.entity';
 import { ModifierManager } from '../../modifier/modifier-manager.component';
+import type { Unit } from '../../unit/entities/unit.entity';
 
 export type CardOptions<T extends CardBlueprint = CardBlueprint> = {
   id: string;
@@ -36,21 +37,16 @@ export abstract class Card<
 
   readonly blueprint: TBlueprint;
 
-  readonly player: Player;
+  readonly unit: Unit;
 
   protected keywordManager = new KeywordManagerComponent();
 
   protected modifierManager: ModifierManager<AnyCard>;
 
-  constructor(
-    game: Game,
-    player: Player,
-    interceptors: TInterceptors,
-    options: CardOptions
-  ) {
+  constructor(game: Game, unit: Unit, interceptors: TInterceptors, options: CardOptions) {
     super(options.id, interceptors);
     this.game = game;
-    this.player = player;
+    this.unit = unit;
     // @ts-expect-error
     this.blueprint = options.blueprint;
     this.modifierManager = new ModifierManager(this);
@@ -121,6 +117,8 @@ export abstract class Card<
   replace() {
     this.emitter.emit(CARD_EVENTS.REPLACE, new CardAddtoHandEvent({}));
   }
+
+  abstract canPlay(): boolean;
 
   abstract play(): void;
 

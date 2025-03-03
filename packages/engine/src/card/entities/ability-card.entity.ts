@@ -1,5 +1,6 @@
 import type { Game } from '../../game/game';
 import type { Player } from '../../player/player.entity';
+import type { Unit } from '../../unit/entities/unit.entity';
 import type { AbilityBlueprint } from '../card-blueprint';
 import { CARD_KINDS } from '../card.enums';
 import type { CardEventMap } from '../card.events';
@@ -15,8 +16,12 @@ export class AbilityCard extends Card<
   AbilityCardInterceptors,
   AbilityBlueprint
 > {
-  constructor(game: Game, player: Player, options: CardOptions<AbilityBlueprint>) {
-    super(game, player, {}, options);
+  constructor(game: Game, unit: Unit, options: CardOptions<AbilityBlueprint>) {
+    super(game, unit, {}, options);
+  }
+
+  canPlay(): boolean {
+    return this.manaCost <= this.unit.mp;
   }
 
   play() {}
