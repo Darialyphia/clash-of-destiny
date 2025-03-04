@@ -29,7 +29,7 @@ export class EverywhereAOEShape implements AOEShape {
         return isValidTargetingType(
           this.game,
           unit.position,
-          this.card.player,
+          this.card.unit.player,
           this.type
         );
       });

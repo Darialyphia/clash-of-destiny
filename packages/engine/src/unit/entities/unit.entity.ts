@@ -5,7 +5,7 @@ import {
   type Point,
   type Serializable
 } from '@game/shared';
-import { Entity, INTERCEPTOR_EVENTS } from '../../entity';
+import { Entity, InterceptableEvent, INTERCEPTOR_EVENTS } from '../../entity';
 import { type AnyCard, type CardOptions } from '../../card/entities/card.entity';
 import { type Game } from '../../game/game';
 import { Interceptable } from '../../utils/interceptable';
@@ -173,11 +173,11 @@ export class Unit
 
   private readonly modifierManager: ModifierManager<Unit>;
 
-  private readonly hpManager: HealthComponent;
+  readonly hp: HealthComponent;
 
-  private readonly apManager: ApComponent;
+  readonly ap: ApComponent;
 
-  private readonly mpManager: ManaComponent;
+  readonly mp: ManaComponent;
 
   private readonly cards: CardManagerComponent;
 
@@ -202,10 +202,16 @@ export class Unit
     this.originalPlayer = options.player;
     this.modifierManager = new ModifierManager(this);
     this.keywordManager = new KeywordManagerComponent();
-    this.hpManager = new HealthComponent({ initialValue: card.maxHp });
-    this.apManager = new ApComponent({ initialValue: game.config.MAX_AP });
-    this.mpManager = new ManaComponent({ initialValue: game.config.INITIAL_MP });
-    this.cards = new CardManagerComponent(this.game, this.player, {
+    this.hp = new HealthComponent({ initialValue: card.maxHp, max: card.maxHp });
+    this.ap = new ApComponent({
+      initialValue: game.config.MAX_AP,
+      max: game.config.MAX_AP
+    });
+    this.mp = new ManaComponent({
+      initialValue: game.config.INITIAL_MP,
+      max: game.config.MAX_MP
+    });
+    this.cards = new CardManagerComponent(this.game, this, {
       deck: options.deck.cards,
       maxHandSize: this.game.config.MAX_HAND_SIZE,
       shouldShuffleDeck: this.game.config.SHUFFLE_DECK_ON_GAME_START
@@ -223,11 +229,8 @@ export class Unit
     this.game.on(GAME_EVENTS.TURN_START, () => {
       this.onTurnStart();
     });
-    this.on(INTERCEPTOR_EVENTS.ADD_INTERCEPTOR, event => {
-      if (event.key === 'maxHp') {
-        this.checkHp({ source: this.card });
-      }
-    });
+    this.on(INTERCEPTOR_EVENTS.ADD_INTERCEPTOR, this.onInterceptorChange.bind(this));
+    this.on(INTERCEPTOR_EVENTS.REMOVE_INTERCEPTOR, this.onInterceptorChange.bind(this));
 
     this.forwardEvents();
   }
@@ -243,6 +246,23 @@ export class Unit
       id: this.id,
       position: this.position.serialize()
     };
+  }
+
+  private onInterceptorChange(event: InterceptableEvent) {
+    if (event.key === 'maxHp') {
+      this.hp.max = this.interceptors.maxHp.getValue(this.card.blueprint.maxHp, {});
+      if (this.isDead) {
+        this.game.inputSystem.schedule(() => {
+          this.destroy(this.card);
+        });
+      }
+    }
+    if (event.key === 'maxAp') {
+      this.ap.max = this.interceptors.maxAp.getValue(this.game.config.MAX_AP, {});
+    }
+    if (event.key === 'maxMp') {
+      this.mp.max = this.interceptors.maxMp.getValue(this.game.config.MAX_MP, {});
+    }
   }
 
   private forwardEvents() {
@@ -300,54 +320,8 @@ export class Unit
     return this.game.turnSystem.activeUnit.equals(this);
   }
 
-  get hand() {
-    return this.cards.hand;
-  }
-
-  get deck() {
-    return this.cards.deck;
-  }
-
-  get discardPile() {
-    return this.cards.discardPile;
-  }
-
-  get deckSize() {
-    return this.cards.deckSize;
-  }
-
-  get remainingCardsInDeck() {
-    return this.cards.remainingCardsInDeck;
-  }
-
-  get draw() {
-    return this.cards.draw.bind(this.cards);
-  }
-
-  get discard() {
-    return this.cards.discard.bind(this.cards);
-  }
-
   get abilityPower() {
     return this.interceptors.abilityPower.getValue(0, {});
-  }
-
-  get mp() {
-    return this.mpManager.current;
-  }
-
-  get maxMp() {
-    return this.interceptors.maxMp.getValue(this.game.config.MAX_MP, {});
-  }
-
-  spendMp(amount: number) {
-    if (amount === 0) return;
-    this.mpManager.remove(amount);
-  }
-
-  gainMp(amount: number) {
-    if (amount === 0) return;
-    this.mpManager.add(amount, this.maxMp);
   }
 
   get mpRegen() {
@@ -355,29 +329,11 @@ export class Unit
   }
 
   canSpendMp(amount: number) {
-    return this.mp >= amount;
-  }
-
-  get ap() {
-    return this.apManager.current;
-  }
-
-  get maxAp() {
-    return this.interceptors.maxAp.getValue(this.game.config.MAX_AP, {});
-  }
-
-  spendAp(amount: number) {
-    if (amount === 0) return;
-    this.apManager.remove(amount);
-  }
-
-  gainAp(amount: number) {
-    if (amount === 0) return;
-    this.apManager.add(amount, this.maxAp);
+    return this.mp.current >= amount;
   }
 
   canSpendAp(amount: number) {
-    return this.ap >= amount;
+    return this.ap.current >= amount;
   }
 
   get position() {
@@ -434,7 +390,7 @@ export class Unit
 
   canPlayCard(card: AnyCard): boolean {
     return this.interceptors.canPlayCard.getValue(
-      card.canPlay() && this.ap < this.apCostPerCard,
+      card.canPlay() && this.ap.current < this.apCostPerCard,
       { card }
     );
   }
@@ -450,15 +406,7 @@ export class Unit
   }
 
   get isDead() {
-    return this.hpManager.current <= 0;
-  }
-
-  get maxHp() {
-    return this.interceptors.maxHp.getValue(this.card.maxHp, {});
-  }
-
-  get hp() {
-    return this.interceptors.maxHp.getValue(this.hpManager.current, {});
+    return this.hp.current <= 0;
   }
 
   get initiative() {
@@ -518,7 +466,7 @@ export class Unit
 
   get canMove(): boolean {
     return this.interceptors.canMove.getValue(
-      this.remainingMovement > 0 && this.apManager.current >= this.apCostPerMovement,
+      this.remainingMovement > 0 && this.ap.current >= this.apCostPerMovement,
       {}
     );
   }
@@ -541,7 +489,7 @@ export class Unit
   canAttack(unit: Unit): boolean {
     return this.interceptors.canAttack.getValue(
       this.attacksPerformedThisTurn < this.maxAttacksPerTurn &&
-        this.apManager.current >= this.apCostPerAttack,
+        this.ap.current >= this.apCostPerAttack,
       { unit }
     );
   }
@@ -564,14 +512,6 @@ export class Unit
 
   isBelow(unit: Unit) {
     return this.game.unitSystem.getEntityBelow(unit)?.equals(this);
-  }
-
-  private checkHp({ source }: { source: AnyCard }) {
-    if (this.hp <= 0) {
-      this.game.inputSystem.schedule(() => {
-        this.destroy(source);
-      });
-    }
   }
 
   get remainingMovement() {
@@ -597,12 +537,12 @@ export class Unit
 
   canMoveTo(point: Point) {
     if (!this.canMove) return false;
-    return this.movement.canMoveTo(point, this.ap / this.apCostPerMovement);
+    return this.movement.canMoveTo(point, this.ap.current / this.apCostPerMovement);
   }
 
   move(to: Point) {
     const path = this.movement.move(to);
-    this.spendAp(this.apCostPerMovement * (path?.distance ?? 0));
+    this.ap.remove(this.apCostPerMovement * (path?.distance ?? 0));
   }
 
   teleport(to: Point) {
@@ -633,7 +573,7 @@ export class Unit
   getPossibleMoves(max?: number, force = false) {
     if (!this.canMove && !force) return [];
     return this.movement
-      .getAllPossibleMoves(max ?? this.ap / this.apCostPerMovement)
+      .getAllPossibleMoves(max ?? this.ap.current / this.apCostPerMovement)
       .filter(point => {
         const cell = this.game.boardSystem.getCellAt(point)!;
         return cell.isWalkable && !cell.unit;
@@ -663,35 +603,21 @@ export class Unit
     return this.combat.takeDamage.bind(this.combat);
   }
 
-  get isFullHp() {
-    return this.hp === this.maxHp;
-  }
-
   heal(source: AnyCard, amount: number) {
-    if (this.isFullHp) return;
+    if (this.hp.current === this.hp.max) return;
     this.emitter.emit(
       UNIT_EVENTS.BEFORE_RECEIVE_HEAL,
       new UnitReceiveHealEvent({ from: source, amount })
     );
-    this.addHp(amount, source);
+    this.hp.add(amount);
     this.emitter.emit(
       UNIT_EVENTS.AFTER_RECEIVE_HEAL,
       new UnitReceiveHealEvent({ from: source, amount })
     );
   }
 
-  addHp(amount: number, source: AnyCard) {
-    this.hpManager.add(amount, this.maxHp);
-    this.checkHp({ source });
-  }
-
-  removeHp(amount: number, source: AnyCard) {
-    this.hpManager.remove(amount);
-    this.checkHp({ source });
-  }
-
   attack(point: Point) {
-    this.spendAp(this.apCostPerAttack);
+    this.ap.remove(this.apCostPerAttack);
     this.combat.attack(point);
   }
 
@@ -702,7 +628,7 @@ export class Unit
     const target = this.game.unitSystem.getUnitAt(point);
     if (!target) return false;
 
-    if (this.ap < this.apCostPerAttack) {
+    if (this.ap.current < this.apCostPerAttack) {
       return false;
     }
     if (!this.canAttack(target) || !target.canBeAttackedBy(this)) {
@@ -742,9 +668,9 @@ export class Unit
   onTurnStart() {
     this.combat.resetAttackCount();
     this.movement.resetMovementsCount();
-    this.apManager.setTo(this.maxAp, this.maxAp);
-    this.mpManager.add(this.mpRegen, this.maxMp);
-    this.draw(this.game.config.CARDS_DRAWN_PER_TURN);
+    this.ap.setTo(this.ap.max);
+    this.mp.add(this.mpRegen);
+    this.cards.draw(this.game.config.CARDS_DRAWN_PER_TURN);
   }
 
   get removeModifier() {
@@ -789,8 +715,8 @@ export class Unit
 
   private onBeforePlayFromHand(card: DeckCard) {
     this.emitter.emit(UNIT_EVENTS.BEFORE_PLAY_CARD, new UnitPlayCardEvent({ card }));
-    this.spendMp(card.manaCost);
-    this.spendAp(this.apCostPerCard);
+    this.mp.remove(card.manaCost);
+    this.ap.remove(this.apCostPerCard);
   }
 
   private onAfterPlayFromHand(card: DeckCard) {
@@ -818,10 +744,6 @@ export class Unit
     this.cancelCardCleanups = [];
     this.currentlyPlayedCard = null;
     this.currentyPlayedCardIndexInHand = null;
-  }
-
-  sendToDiscardPile(card: DeckCard) {
-    this.cards.sendToDiscardPile(card);
   }
 
   get equipArtifact() {

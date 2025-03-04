@@ -1,6 +1,5 @@
 import { match } from 'ts-pattern';
 import type { Game } from '../game/game';
-import type { Player } from '../player/player.entity';
 import type { AnyCard, CardOptions } from './entities/card.entity';
 import { CARD_KINDS } from './card.enums';
 import type {
@@ -14,10 +13,11 @@ import { UnitCard } from './entities/unit-card.entity';
 import { AbilityCard } from './entities/ability-card.entity';
 import { ArtifactCard } from './entities/artifact-card.entity';
 import { QuestCard } from './entities/quest-card.entity';
+import type { Unit } from '../unit/entities/unit.entity';
 
 export type GameFactory = <T extends CardBlueprint = CardBlueprint>(
   game: Game,
-  player: Player,
+  unit: Unit,
   options: CardOptions<T>
 ) => T extends UnitBlueprint
   ? UnitCard
@@ -29,12 +29,12 @@ export type GameFactory = <T extends CardBlueprint = CardBlueprint>(
         ? QuestCard
         : AnyCard;
 
-export const createCard: GameFactory = (game, player, options) => {
+export const createCard: GameFactory = (game, unit, options) => {
   const card = match(options.blueprint.kind)
-    .with(CARD_KINDS.UNIT, () => new UnitCard(game, player, options as any))
-    .with(CARD_KINDS.ABILITY, () => new AbilityCard(game, player, options as any))
-    .with(CARD_KINDS.QUEST, () => new QuestCard(game, player, options as any))
-    .with(CARD_KINDS.ARTIFACT, () => new ArtifactCard(game, player, options as any))
+    .with(CARD_KINDS.UNIT, () => new UnitCard(game, unit, options as any))
+    .with(CARD_KINDS.ABILITY, () => new AbilityCard(game, unit, options as any))
+    .with(CARD_KINDS.QUEST, () => new QuestCard(game, unit, options as any))
+    .with(CARD_KINDS.ARTIFACT, () => new ArtifactCard(game, unit, options as any))
     .exhaustive();
 
   return card as any;

@@ -9,7 +9,7 @@ export type EmptyEventMap = Record<string, never>;
 export type EmptyInterceptables = Record<string, never>;
 export type AnyEntity = Entity<AnyObject, AnyObject>;
 
-class InterceptableEvent extends TypedSerializableEvent<
+export class InterceptableEvent extends TypedSerializableEvent<
   { key: string },
   { key: string }
 > {

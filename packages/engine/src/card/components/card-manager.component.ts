@@ -9,6 +9,7 @@ import type {
   ArtifactBlueprint,
   QuestBlueprint
 } from '../card-blueprint';
+import type { Unit } from '../../unit/entities/unit.entity';
 
 export type CardManagerComponentOptions = {
   deck: CardOptions<QuestBlueprint | AbilityBlueprint | ArtifactBlueprint>[];
@@ -27,13 +28,13 @@ export class CardManagerComponent {
 
   constructor(
     game: Game,
-    player: Player,
+    unit: Unit,
     private options: CardManagerComponentOptions
   ) {
     this.game = game;
     this.deck = new Deck(
       this.game,
-      options.deck.map(card => createCard(this.game, player, card))
+      options.deck.map(card => createCard(this.game, unit, card))
     );
     if (options.shouldShuffleDeck) {
       this.deck.shuffle();

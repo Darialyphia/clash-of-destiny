@@ -51,7 +51,12 @@ export class UnitSystem extends System<UnitSystemOptions> {
 
   addUnit(card: UnitCard, deck: UnitOptions['deck'], position: Point) {
     const id = `unit_${++this.nextUnitId}`;
-    const unit = new Unit(this.game, card, { id, player: card.player, position, deck });
+    const unit = new Unit(this.game, card, {
+      id,
+      player: card.unit.player,
+      position,
+      deck
+    });
     this.unitMap.set(unit.id, unit);
 
     if (this.game.phase === GAME_PHASES.BATTLE) {

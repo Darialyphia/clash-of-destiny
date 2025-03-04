@@ -36,6 +36,6 @@ export class RangedTargetingStrategy implements TargetingStrategy {
   canTargetAt(point: Point3D) {
     if (!this.isWithinRange(point)) return false;
 
-    return isValidTargetingType(this.game, point, this.card.player, this.type);
+    return isValidTargetingType(this.game, point, this.card.unit.player, this.type);
   }
 }
