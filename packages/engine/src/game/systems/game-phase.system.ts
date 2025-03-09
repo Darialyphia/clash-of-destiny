@@ -54,7 +54,7 @@ export class GamePhaseSystem extends System<EmptyObject> {
     );
 
     this.game.playerSystem.players.forEach(player => {
-      //player.deploy()
+      player.deploy();
     });
     this.stateMachine.dispatch(GAME_PHASE_TRANSITIONS.START_BATTLE);
     this.game.emit(GAME_EVENTS.START_BATTLE, new GamePhaseChangeEvent({}));

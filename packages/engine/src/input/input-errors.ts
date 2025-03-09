@@ -89,3 +89,9 @@ export class IllegalTargetError extends InputError {
     super('Illegal target');
   }
 }
+
+export class InvalidDeploymentError extends InputError {
+  constructor() {
+    super('Invalid deployment');
+  }
+}

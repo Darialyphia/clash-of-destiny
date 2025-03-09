@@ -1,6 +1,13 @@
 import { Entity } from '../entity';
 import { type Game } from '../game/game';
-import { type EmptyObject, type Serializable } from '@game/shared';
+import {
+  assert,
+  isDefined,
+  type EmptyObject,
+  type Nullable,
+  type Point,
+  type Serializable
+} from '@game/shared';
 import { type PlayerEventMap } from './player.events';
 import type { Cell, SerializedCell } from '../board/cell';
 import { Unit } from '../unit/entities/unit.entity';
@@ -11,6 +18,7 @@ import type {
   UnitBlueprint
 } from '../card/card-blueprint';
 import type { UNIT_KINDS } from '../card/card.enums';
+import { NoDeploymentError } from './player-errors';
 
 export type PlayerOptions = {
   id: string;
@@ -34,9 +42,11 @@ export class Player
 {
   private game: Game;
 
-  private heroes: Array<{
+  readonly heroes: Array<{
     unit: Unit;
   }>;
+
+  private deployMent: Nullable<Array<{ heroId: string } & Point>> = null;
 
   constructor(
     game: Game,
@@ -89,6 +99,21 @@ export class Player
     return this.game.playerSystem.players.find(p => !p.equals(this))!;
   }
 
+  get isReadyToDeploy() {
+    return isDefined(this.deployMent);
+  }
+
+  commitDeployment(deployment: Array<{ heroId: string } & Point>) {
+    this.deployMent = deployment;
+  }
+
+  deploy() {
+    assert(this.isReadyToDeploy, new NoDeploymentError());
+    this.deployMent!.forEach(({ heroId, x, y }) => {
+      const hero = this.heroes.find(h => h.unit.id === heroId)!.unit;
+      hero.teleport({ x, y });
+    });
+  }
   // generateCard<T extends CardBlueprint = CardBlueprint>(blueprintId: string) {
   //   const blueprint = this.game.cardPool[blueprintId] as T;
   //   const card = this.game.cardFactory<T>(this.game, this, {

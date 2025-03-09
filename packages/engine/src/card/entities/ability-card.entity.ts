@@ -25,7 +25,7 @@ export class AbilityCard extends Card<
   }
 
   canPlay(): boolean {
-    return this.manaCost <= this.unit.mp.current;
+    return this.manaCost <= this.unit.mp.current && this.levelCost <= this.unit.level;
   }
 
   get exp() {
@@ -34,6 +34,10 @@ export class AbilityCard extends Card<
 
   get manaCost() {
     return this.blueprint.manaCost;
+  }
+
+  get levelCost() {
+    return this.blueprint.levelCost;
   }
 
   get followupTargets() {

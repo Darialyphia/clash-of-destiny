@@ -51,7 +51,9 @@ export type UnitBlueprint = CardBlueprintBase & {
 export type AbilityBlueprint = CardBlueprintBase & {
   kind: Extract<CardKind, typeof CARD_KINDS.ABILITY>;
   manaCost: number;
+  levelCost: 1 | 2 | 3;
   exp: number;
+  classIds: string[];
   followup: {
     getTargets(game: Game, card: AbilityCard): EffectTarget[];
     canCommit: (targets: SelectedTarget[]) => boolean;
@@ -68,12 +70,16 @@ export type AbilityBlueprint = CardBlueprintBase & {
 export type ArtifactBlueprint = CardBlueprintBase & {
   kind: Extract<CardKind, typeof CARD_KINDS.ARTIFACT>;
   manaCost: number;
+  levelCost: 1 | 2 | 3;
   artifactKind: ArtifactKind;
+  classIds: string[];
   onPlay(game: Game, card: ArtifactCard, artifact: Artifact): void;
 };
 
 export type QuestBlueprint = CardBlueprintBase & {
   kind: Extract<CardKind, typeof CARD_KINDS.QUEST>;
+  levelCost: 1 | 2 | 3;
+  classIds: string[];
   onPlay(game: Game, card: QuestCard): void;
   onCompleted(game: Game, card: QuestCard): void;
 };

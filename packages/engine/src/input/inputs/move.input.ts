@@ -1,13 +1,8 @@
 import { z } from 'zod';
 import { defaultInputSchema, Input } from '../input';
-import { assert, isDefined } from '@game/shared';
+import { assert } from '@game/shared';
 import { GAME_PHASES } from '../../game/systems/game-phase.system';
-import {
-  NotActivePlayerError,
-  UnknownUnitError,
-  UnitNotOwnedError,
-  IllegalMovementError
-} from '../input-errors';
+import { NotActivePlayerError, IllegalMovementError } from '../input-errors';
 
 const schema = defaultInputSchema.extend({
   x: z.number(),

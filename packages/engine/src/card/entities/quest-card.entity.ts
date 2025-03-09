@@ -24,7 +24,7 @@ export class QuestCard extends Card<
   }
 
   canPlay(): boolean {
-    return true;
+    return this.levelCost <= this.unit.level;
   }
 
   play() {
@@ -41,6 +41,10 @@ export class QuestCard extends Card<
 
   get manaCost() {
     return 0;
+  }
+
+  get levelCost() {
+    return this.blueprint.levelCost;
   }
 
   serialize(): SerializedQuestCard {
