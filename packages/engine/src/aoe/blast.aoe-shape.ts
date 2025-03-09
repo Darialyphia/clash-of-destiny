@@ -1,7 +1,6 @@
-import { assert, isDefined } from '@game/shared';
+import { isDefined } from '@game/shared';
 import type { Point } from 'honeycomb-grid';
 import type { Game } from '../game/game';
-import type { Player } from '../player/player.entity';
 import {
   type TargetingType,
   TARGETING_TYPE,
@@ -10,7 +9,6 @@ import {
 import type { Unit } from '../unit/entities/unit.entity';
 import type { AOEShape } from './aoe-shapes';
 import { Position } from '../utils/position.component';
-import { LineAOEShape } from './line.aoe-shape';
 import { PointAOEShape } from './point.aoe-shape';
 
 export class BlastAOEShape implements AOEShape {
@@ -22,23 +20,23 @@ export class BlastAOEShape implements AOEShape {
 
   getCells(points: Point[]) {
     const position = Position.fromPoint(points[0]);
-    if (!position.isAxisAligned(this.unit)) {
+    if (!position.isAxisAligned(this.unit.position)) {
       return new PointAOEShape(this.game, this.unit.player, this.type).getCells(points);
     }
 
     return this.game.boardSystem.cells.filter(cell => {
-      if (position.y === this.unit.y) {
-        if (position.x > this.unit.x) {
-          return cell.x > this.unit.x;
+      if (position.y === this.unit.position.y) {
+        if (position.x > this.unit.position.x) {
+          return cell.x > this.unit.position.x;
         } else {
-          return cell.x < this.unit.x;
+          return cell.x < this.unit.position.x;
         }
       }
-      if (position.x === this.unit.x) {
-        if (position.y > this.unit.y) {
-          return cell.y > this.unit.y;
+      if (position.x === this.unit.position.x) {
+        if (position.y > this.unit.position.y) {
+          return cell.y > this.unit.position.y;
         } else {
-          return cell.y < this.unit.y;
+          return cell.y < this.unit.position.y;
         }
       }
       return false;

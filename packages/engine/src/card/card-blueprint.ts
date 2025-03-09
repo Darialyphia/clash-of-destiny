@@ -10,9 +10,12 @@ import type {
   CardKind,
   CardSetId,
   Rarity,
-  UnitKind
+  UNIT_KINDS
 } from './card.enums';
 import type { AbilityCard } from './entities/ability-card.entity';
+import type { Artifact } from '../unit/entities/artifact.entity';
+import type { ArtifactCard } from './entities/artifact-card.entity';
+import type { QuestCard } from './entities/quest-card.entity';
 
 export type CardBlueprintBase = {
   id: string;
@@ -22,12 +25,28 @@ export type CardBlueprintBase = {
   rarity: Rarity;
 };
 
+export type HeroBlueprint = {
+  unitKind: typeof UNIT_KINDS.HERO;
+} & (
+  | {
+      level: 1;
+      previousClass: null;
+      neededExp?: never;
+    }
+  | {
+      level: 2 | 3;
+      previousClass: string;
+      neededExp: number;
+    }
+);
+
 export type UnitBlueprint = CardBlueprintBase & {
   kind: Extract<CardKind, typeof CARD_KINDS.UNIT>;
-  unitKind: UnitKind;
   maxHp: number;
   initiative: number;
-};
+  getAoe(game: Game, card: Unit, points: Point[]): AOEShape;
+  onPlay(game: Game, card: Unit): void;
+} & (HeroBlueprint | { unitKind: typeof UNIT_KINDS.MINION });
 
 export type AbilityBlueprint = CardBlueprintBase & {
   kind: Extract<CardKind, typeof CARD_KINDS.ABILITY>;
@@ -50,10 +69,13 @@ export type ArtifactBlueprint = CardBlueprintBase & {
   kind: Extract<CardKind, typeof CARD_KINDS.ARTIFACT>;
   manaCost: number;
   artifactKind: ArtifactKind;
+  onPlay(game: Game, card: ArtifactCard, artifact: Artifact): void;
 };
 
 export type QuestBlueprint = CardBlueprintBase & {
   kind: Extract<CardKind, typeof CARD_KINDS.QUEST>;
+  onPlay(game: Game, card: QuestCard): void;
+  onCompleted(game: Game, card: QuestCard): void;
 };
 
 export type CardBlueprint =

@@ -8,7 +8,6 @@ import {
 import { Entity, InterceptableEvent, INTERCEPTOR_EVENTS } from '../../entity';
 import { type AnyCard, type CardOptions } from '../../card/entities/card.entity';
 import { type Game } from '../../game/game';
-import { Interceptable } from '../../utils/interceptable';
 import { MOVE_EVENTS, MovementComponent } from '../components/movement.component';
 import type { Player } from '../../player/player.entity';
 import type { AOEShape } from '../../aoe/aoe-shapes';
@@ -44,18 +43,21 @@ import type { Cell } from '../../board/cell';
 import type { Modifier } from '../../modifier/modifier.entity';
 import { ModifierManager } from '../../modifier/modifier-manager.component';
 import { ApComponent } from '../components/ap.component';
-import type { UnitCard } from '../../card/entities/unit-card.entity';
 import { MeleeTargetingStrategy } from '../../targeting/melee-targeting.straegy';
 import { PointAOEShape } from '../../aoe/point.aoe-shape';
 import { CardManagerComponent } from '../../card/components/card-manager.component';
 import type {
   AbilityBlueprint,
   ArtifactBlueprint,
-  QuestBlueprint
+  HeroBlueprint,
+  QuestBlueprint,
+  UnitBlueprint
 } from '../../card/card-blueprint';
 import { ManaComponent } from '../components/mana.component';
 import type { DeckCard } from '../../card/entities/deck.entity';
 import { ArtifactManagerComponent } from '../components/artifact-manager.component';
+import { makeUnitInterceptors, type UnitInterceptors } from '../unit-interceptors';
+import { QuestManagerComponent } from '../components/quest-manager.component';
 
 export type SerializedUnit = {
   id: string;
@@ -71,96 +73,6 @@ export type UnitOptions = {
   };
 };
 
-type UnitInterceptors = {
-  canMove: Interceptable<boolean>;
-  canMoveThrough: Interceptable<boolean, { unit: Unit }>;
-  apCostPerMovement: Interceptable<number>;
-
-  canAttack: Interceptable<boolean, { unit: Unit }>;
-  canBeAttackTarget: Interceptable<boolean, { attacker: Unit }>;
-  apCostPerAttack: Interceptable<number>;
-
-  canPlayCard: Interceptable<boolean, { card: AnyCard }>;
-  canBeCardTarget: Interceptable<boolean, { card: AnyCard }>;
-  apCostPerCard: Interceptable<number>;
-  abilityPower: Interceptable<number>;
-
-  canReceiveModifier: Interceptable<boolean, { modifier: Modifier<Unit> }>;
-  canBeDestroyed: Interceptable<boolean>;
-
-  maxHp: Interceptable<number>;
-  maxAp: Interceptable<number>;
-  maxMp: Interceptable<number>;
-
-  mpRegen: Interceptable<number>;
-
-  initiative: Interceptable<number>;
-
-  attackTargetingPattern: Interceptable<TargetingStrategy>;
-  attackTargetType: Interceptable<TargetingType>;
-  attackAOEShape: Interceptable<AOEShape>;
-
-  maxAttacksPerTurn: Interceptable<number>;
-  maxMovementsPerTurn: Interceptable<number>;
-
-  player: Interceptable<Player>;
-
-  damageDealt: Interceptable<number, { source: AnyCard; target: Unit }>;
-  damageReceived: Interceptable<
-    number,
-    { amount: number; source: AnyCard; damage: Damage<AnyCard> }
-  >;
-
-  healReceived: Interceptable<number, { source: AnyCard }>;
-  healDealt: Interceptable<number, { target: Unit }>;
-};
-
-const makeInterceptors = (): UnitInterceptor => {
-  return {
-    canMove: new Interceptable<boolean>(),
-    canMoveThrough: new Interceptable<boolean, { unit: Unit }>(),
-    apCostPerMovement: new Interceptable<number>(),
-
-    canAttack: new Interceptable<boolean, { unit: Unit }>(),
-    canBeAttackTarget: new Interceptable<boolean, { attacker: Unit }>(),
-    apCostPerAttack: new Interceptable<number>(),
-
-    canPlayCard: new Interceptable<boolean, { card: AnyCard }>(),
-    canBeCardTarget: new Interceptable<boolean, { card: AnyCard }>(),
-    apCostPerCard: new Interceptable<number>(),
-    abilityPower: new Interceptable<number>(),
-
-    canReceiveModifier: new Interceptable<boolean, { modifier: Modifier<Unit> }>(),
-    canBeDestroyed: new Interceptable<boolean>(),
-
-    maxHp: new Interceptable<number>(),
-    maxAp: new Interceptable<number>(),
-    maxMp: new Interceptable<number>(),
-
-    mpRegen: new Interceptable<number>(),
-    initiative: new Interceptable<number>(),
-
-    attackTargetingPattern: new Interceptable<TargetingStrategy>(),
-    attackTargetType: new Interceptable<TargetingType>(),
-    attackAOEShape: new Interceptable<AOEShape>(),
-
-    maxAttacksPerTurn: new Interceptable<number>(),
-    maxMovementsPerTurn: new Interceptable<number>(),
-
-    player: new Interceptable<Player>(),
-
-    damageDealt: new Interceptable<number, { source: AnyCard; target: Unit }>(),
-    damageReceived: new Interceptable<
-      number,
-      { amount: number; source: AnyCard; damage: Damage<AnyCard> }
-    >(),
-    healDealt: new Interceptable<number, { target: Unit }>(),
-    healReceived: new Interceptable<number, { source: AnyCard }>()
-  };
-};
-
-export type UnitInterceptor = Unit['interceptors'];
-
 export class Unit
   extends Entity<UnitEventMap, UnitInterceptors>
   implements Serializable<SerializedUnit>
@@ -168,8 +80,6 @@ export class Unit
   private game: Game;
 
   readonly originalPlayer: Player;
-
-  readonly card: UnitCard;
 
   private readonly modifierManager: ModifierManager<Unit>;
 
@@ -179,11 +89,13 @@ export class Unit
 
   readonly mp: ManaComponent;
 
-  private readonly cards: CardManagerComponent;
+  readonly cards: CardManagerComponent;
 
-  private readonly artifacts: ArtifactManagerComponent;
+  readonly artifacts: ArtifactManagerComponent;
 
   readonly movement: MovementComponent;
+
+  readonly quests: QuestManagerComponent;
 
   readonly keywordManager: KeywordManagerComponent;
 
@@ -195,14 +107,24 @@ export class Unit
 
   private cancelCardCleanups: Array<() => void> = [];
 
-  constructor(game: Game, card: UnitCard, options: UnitOptions) {
-    super(`${options.id}_${card.blueprintId}`, makeInterceptors());
+  private _level = 1;
+
+  private _exp = 0;
+
+  constructor(
+    game: Game,
+    readonly blueprintChain: UnitBlueprint[],
+    options: UnitOptions
+  ) {
+    super(`${options.id}`, makeUnitInterceptors());
     this.game = game;
-    this.card = card;
     this.originalPlayer = options.player;
     this.modifierManager = new ModifierManager(this);
     this.keywordManager = new KeywordManagerComponent();
-    this.hp = new HealthComponent({ initialValue: card.maxHp, max: card.maxHp });
+    this.hp = new HealthComponent({
+      initialValue: this.blueprint.maxHp,
+      max: this.blueprint.maxHp
+    });
     this.ap = new ApComponent({
       initialValue: game.config.MAX_AP,
       max: game.config.MAX_AP
@@ -211,6 +133,7 @@ export class Unit
       initialValue: game.config.INITIAL_MP,
       max: game.config.MAX_MP
     });
+    this.quests = new QuestManagerComponent();
     this.cards = new CardManagerComponent(this.game, this, {
       deck: options.deck.cards,
       maxHandSize: this.game.config.MAX_HAND_SIZE,
@@ -250,10 +173,10 @@ export class Unit
 
   private onInterceptorChange(event: InterceptableEvent) {
     if (event.key === 'maxHp') {
-      this.hp.max = this.interceptors.maxHp.getValue(this.card.blueprint.maxHp, {});
+      this.hp.max = this.interceptors.maxHp.getValue(this.blueprint.maxHp, {});
       if (this.isDead) {
         this.game.inputSystem.schedule(() => {
-          this.destroy(this.card);
+          this.destroy(this);
         });
       }
     }
@@ -312,6 +235,10 @@ export class Unit
     });
   }
 
+  get blueprint() {
+    return this.blueprintChain[this._level - 1];
+  }
+
   get player() {
     return this.interceptors.player.getValue(this.originalPlayer, {});
   }
@@ -340,16 +267,8 @@ export class Unit
     return this.movement.position;
   }
 
-  get x() {
-    return this.movement.x;
-  }
-
-  get y() {
-    return this.movement.y;
-  }
-
   get keywords() {
-    return [...new Set([...this.keywordManager.keywords, ...this.card.keywords])];
+    return [...new Set([...this.keywordManager.keywords])];
   }
 
   get addKeyword() {
@@ -360,28 +279,16 @@ export class Unit
     return this.keywordManager.remove.bind(this.keywordManager);
   }
 
-  get on() {
-    return this.emitter.on.bind(this.emitter);
-  }
-
-  get once() {
-    return this.emitter.once.bind(this.emitter);
-  }
-
-  get off() {
-    return this.emitter.off.bind(this.emitter);
-  }
-
   get name() {
-    return this.card.name;
+    return this.blueprint.name;
   }
 
   get description() {
-    return this.card.description;
+    return this.blueprint.description;
   }
 
   get isHero() {
-    return this.card.blueprint.unitKind === UNIT_KINDS.HERO;
+    return this.blueprint.unitKind === UNIT_KINDS.HERO;
   }
 
   canBeAttackedBy(unit: Unit): boolean {
@@ -410,7 +317,7 @@ export class Unit
   }
 
   get initiative() {
-    return this.interceptors.initiative.getValue(this.card.initiative, {});
+    return this.interceptors.initiative.getValue(this.blueprint.initiative, {});
   }
 
   get maxMovementsPerTurn() {
@@ -553,9 +460,11 @@ export class Unit
         path: [this.position, Vec2.fromPoint(to)]
       })
     );
+
     const prevPosition = this.movement.position.clone();
     this.movement.position.x = to.x;
     this.movement.position.y = to.y;
+
     this.emitter.emit(
       UNIT_EVENTS.AFTER_TELEPORT,
       new UnitAfterMoveEvent({
@@ -582,12 +491,11 @@ export class Unit
 
   getDealtDamage(target: Unit) {
     return this.interceptors.damageDealt.getValue(this.game.config.BASE_ATTACK_DAMAGE, {
-      source: this.card,
       target
     });
   }
 
-  getReceivedDamage<T extends AnyCard>(amount: number, damage: Damage<T>, from: AnyCard) {
+  getReceivedDamage<T>(amount: number, damage: Damage<T>, from: Unit) {
     return this.interceptors.damageReceived.getValue(amount, {
       source: from,
       damage,
@@ -607,12 +515,12 @@ export class Unit
     if (this.hp.current === this.hp.max) return;
     this.emitter.emit(
       UNIT_EVENTS.BEFORE_RECEIVE_HEAL,
-      new UnitReceiveHealEvent({ from: source, amount })
+      new UnitReceiveHealEvent({ from: source.unit, amount })
     );
     this.hp.add(amount);
     this.emitter.emit(
       UNIT_EVENTS.AFTER_RECEIVE_HEAL,
-      new UnitReceiveHealEvent({ from: source, amount })
+      new UnitReceiveHealEvent({ from: source.unit, amount })
     );
   }
 
@@ -654,7 +562,7 @@ export class Unit
     this.game.unitSystem.removeUnit(this);
   }
 
-  destroy(source: AnyCard) {
+  destroy(source: Unit) {
     this.emitter.emit(UNIT_EVENTS.BEFORE_DESTROY, new UnitBeforeDestroyEvent({ source }));
     if (!this.canBeDestroyed) return;
     const position = this.position;
@@ -746,19 +654,51 @@ export class Unit
     this.currentyPlayedCardIndexInHand = null;
   }
 
-  get equipArtifact() {
-    return this.artifacts.equipArtifact.bind(this.artifacts);
-  }
-
-  get unequipArtifact() {
-    return this.artifacts.unequipArtifact.bind(this.artifacts);
-  }
-
   starturn() {
     this.emitter.emit(UNIT_EVENTS.START_TURN, new UnitTurnEvent({}));
   }
 
   endTurn() {
     this.emitter.emit(UNIT_EVENTS.END_TURN, new UnitTurnEvent({}));
+  }
+
+  get exp() {
+    return this._exp;
+  }
+
+  get level() {
+    return this._level;
+  }
+
+  get nextBlueprint() {
+    return this.blueprintChain[this._level];
+  }
+
+  get expToNextLevel() {
+    if (!this.nextBlueprint) return 0;
+    if (this.blueprint.unitKind === UNIT_KINDS.MINION) return 0;
+    if (this.nextBlueprint.unitKind === UNIT_KINDS.MINION) return 0;
+
+    return (
+      this.nextBlueprint as HeroBlueprint & { level: Exclude<HeroBlueprint['level'], 1> }
+    ).neededExp;
+  }
+
+  levelUp() {
+    if (!this.nextBlueprint) return;
+    if (this.exp < this.expToNextLevel) return;
+
+    this._exp -= this.expToNextLevel;
+    this._level += 1;
+
+    // this.emitter.emit(UNIT_EVENTS.LEVEL_UP, new UnitEventMap.LevelUp({}));
+  }
+
+  gainExp(amount: number) {
+    if (!this.nextBlueprint) return;
+    this._exp += amount;
+    if (this.exp >= this.expToNextLevel) {
+      this.levelUp();
+    }
   }
 }

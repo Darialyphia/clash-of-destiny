@@ -4,8 +4,6 @@ import type { Game } from '../game/game';
 import { Position } from '../utils/position.component';
 import { TERRAINS, type MapBlueprint, type Terrain } from './map-blueprint';
 import type { SerializedUnit } from '../unit/entities/unit.entity';
-// import { Obstacle } from '../obstacle/obstacle.entity';
-// import { makeObstacleId } from '../obstacle/obstacle.utils';
 
 export type SerializedCoords = `${string}:${string}`;
 

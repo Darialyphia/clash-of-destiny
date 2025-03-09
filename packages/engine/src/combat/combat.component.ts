@@ -7,7 +7,6 @@ import {
   TypedSerializableEvent,
   TypedSerializableEventEmitter
 } from '../utils/typed-emitter';
-import type { AnyCard, SerializedCard } from '../card/entities/card.entity';
 
 export const COMBAT_EVENTS = {
   BEFORE_ATTACK: 'before_attack',
@@ -34,7 +33,7 @@ export class AttackEvent extends TypedSerializableEvent<
 }
 
 export class DealDamageEvent extends TypedSerializableEvent<
-  { targets: Unit[]; damage: Damage },
+  { targets: Unit[]; damage: Damage<any> },
   { targets: SerializedUnit[] }
 > {
   serialize() {
@@ -45,8 +44,8 @@ export class DealDamageEvent extends TypedSerializableEvent<
 }
 
 export class ReceiveDamageEvent extends TypedSerializableEvent<
-  { from: AnyCard; damage: Damage },
-  { from: SerializedCard }
+  { from: Unit; damage: Damage<any> },
+  { from: SerializedUnit }
 > {
   serialize() {
     return {
@@ -119,7 +118,7 @@ export class CombatComponent {
     const targets = this.unit.attackAOEShape.getUnits([target]);
     const damage = new CombatDamage({
       baseAmount: 0,
-      source: this.unit.card
+      source: this.unit
     });
 
     this.dealDamage(targets, damage);
@@ -136,13 +135,13 @@ export class CombatComponent {
     );
   }
 
-  dealDamage(targets: Unit[], damage: Damage) {
+  dealDamage(targets: Unit[], damage: Damage<any>) {
     this.emitter.emit(
       COMBAT_EVENTS.BEFORE_DEAL_DAMAGE,
       new DealDamageEvent({ targets, damage })
     );
     targets.forEach(target => {
-      target.takeDamage(this.unit.card, damage);
+      target.takeDamage(this.unit, damage);
     });
     this.emitter.emit(
       COMBAT_EVENTS.AFTER_DEAL_DAMAGE,
@@ -150,7 +149,7 @@ export class CombatComponent {
     );
   }
 
-  takeDamage(from: AnyCard, damage: Damage) {
+  takeDamage(from: Unit, damage: Damage<any>) {
     this.emitter.emit(
       COMBAT_EVENTS.BEFORE_RECEIVE_DAMAGE,
       new ReceiveDamageEvent({
@@ -159,7 +158,7 @@ export class CombatComponent {
       })
     );
 
-    this.unit.removeHp(damage.getFinalAmount(this.unit), from);
+    this.unit.hp.remove(damage.getFinalAmount(this.unit));
     this.emitter.emit(
       COMBAT_EVENTS.AFTER_RECEIVE_DAMAGE,
       new ReceiveDamageEvent({

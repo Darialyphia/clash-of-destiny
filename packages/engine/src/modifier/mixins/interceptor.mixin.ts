@@ -1,16 +1,12 @@
 import type { Modifier, ModifierTarget } from '../modifier.entity';
 import { ModifierMixin } from '../modifier-mixin';
 import type { Game } from '../../game/game';
-import type { UnitInterceptor, Unit } from '../../unit/entities/unit.entity';
+import type { Unit } from '../../unit/entities/unit.entity';
 import type {
   inferInterceptorValue,
   inferInterceptorCtx,
   Interceptable
 } from '../../utils/interceptable';
-import type {
-  UnitCard,
-  UnitCardInterceptors
-} from '../../card/entities/unit-card.entity';
 import type {
   AbilityCard,
   AbilityCardInterceptors
@@ -24,6 +20,7 @@ import type {
   QuestCard,
   QuestCardInterceptors
 } from '../../card/entities/quest-card.entity';
+import type { UnitInterceptors } from '../../unit/unit-interceptors';
 
 type InterceptorMap = Record<string, Interceptable<any, any>>;
 export class InterceptorModifierMixin<
@@ -80,12 +77,8 @@ export class InterceptorModifierMixin<
 }
 
 export class UnitInterceptorModifierMixin<
-  TKey extends keyof UnitInterceptor
-> extends InterceptorModifierMixin<UnitInterceptor, TKey, Unit> {}
-
-export class UnitCardInterceptorModifierMixin<
-  TKey extends keyof UnitCardInterceptors
-> extends InterceptorModifierMixin<UnitCardInterceptors, TKey, UnitCard> {}
+  TKey extends keyof UnitInterceptors
+> extends InterceptorModifierMixin<UnitInterceptors, TKey, Unit> {}
 
 export class AbilityCardInterceptorModifierMixin<
   TKey extends keyof AbilityCardInterceptors

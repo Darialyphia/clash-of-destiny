@@ -9,7 +9,7 @@ import type { Game } from '../../game/game';
 export class ArtifactManagerComponent {
   private weapon: Nullable<Artifact> = null;
 
-  private amor: Nullable<Artifact> = null;
+  private armor: Nullable<Artifact> = null;
 
   private relic: Nullable<Artifact> = null;
 
@@ -21,46 +21,49 @@ export class ArtifactManagerComponent {
   get artifacts() {
     return {
       weapon: this.weapon,
-      amor: this.amor,
+      amor: this.armor,
       relic: this.relic
     };
   }
 
-  equipArtifact(artifact: ArtifactCard) {
+  equip(artifact: ArtifactCard) {
     return match(artifact.artifactKind)
       .with(ARTIFACT_KINDS.WEAPON, () => {
         this.weapon = new Artifact(this.game, {
           card: artifact,
           unitId: this.unit.id
         });
+        return this.weapon;
       })
       .with(ARTIFACT_KINDS.ARMOR, () => {
-        this.amor = new Artifact(this.game, { card: artifact, unitId: this.unit.id });
+        this.armor = new Artifact(this.game, { card: artifact, unitId: this.unit.id });
+        return this.armor;
       })
       .with(ARTIFACT_KINDS.RELIC, () => {
         this.relic = new Artifact(this.game, { card: artifact, unitId: this.unit.id });
+        return this.relic;
       })
       .exhaustive();
   }
 
-  unequipArtifact(artifactKind: ArtifactKind) {
+  unequip(artifactKind: ArtifactKind) {
     match(artifactKind)
       .with(ARTIFACT_KINDS.WEAPON, () => {
         if (!this.weapon) return;
 
-        this.unit.sendToDiscardPile(this.weapon.card);
+        this.unit.cards.sendToDiscardPile(this.weapon.card);
         this.weapon = null;
       })
       .with(ARTIFACT_KINDS.ARMOR, () => {
-        if (!this.amor) return;
+        if (!this.armor) return;
 
-        this.unit.sendToDiscardPile(this.amor.card);
-        this.amor = null;
+        this.unit.cards.sendToDiscardPile(this.armor.card);
+        this.armor = null;
       })
       .with(ARTIFACT_KINDS.RELIC, () => {
         if (!this.relic) return;
 
-        this.unit.sendToDiscardPile(this.relic.card);
+        this.unit.cards.sendToDiscardPile(this.relic.card);
         this.relic = null;
       })
       .exhaustive();

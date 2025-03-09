@@ -1,6 +1,5 @@
 import { isDefined } from '@game/shared';
 import type { Cell } from '../board/cell';
-import type { AnyCard } from '../card/entities/card.entity';
 import type { Game } from '../game/game';
 import {
   type TargetingType,
@@ -8,11 +7,12 @@ import {
 } from '../targeting/targeting-strategy';
 import type { Unit } from '../unit/entities/unit.entity';
 import type { AOEShape } from './aoe-shapes';
+import type { Player } from '../player/player.entity';
 
 export class EverywhereAOEShape implements AOEShape {
   constructor(
     private game: Game,
-    private card: AnyCard,
+    private player: Player,
     private type: TargetingType
   ) {}
 
@@ -26,12 +26,7 @@ export class EverywhereAOEShape implements AOEShape {
       .filter((unit): unit is Unit => {
         if (!isDefined(unit)) return false;
 
-        return isValidTargetingType(
-          this.game,
-          unit.position,
-          this.card.unit.player,
-          this.type
-        );
+        return isValidTargetingType(this.game, unit.position, this.player, this.type);
       });
   }
 }

@@ -68,7 +68,7 @@ export class UnitAttackEvent extends TypedSerializableEvent<
 }
 
 export class UnitDealDamageEvent extends TypedSerializableEvent<
-  { targets: Unit[]; damage: Damage },
+  { targets: Unit[]; damage: Damage<any> },
   { targets: Array<{ unit: SerializedUnit; damage: number }> }
 > {
   serialize() {
@@ -82,8 +82,8 @@ export class UnitDealDamageEvent extends TypedSerializableEvent<
 }
 
 export class UnitReceiveDamageEvent extends TypedSerializableEvent<
-  { from: AnyCard; target: Unit; damage: Damage },
-  { from: SerializedCard; damage: number }
+  { from: Unit; target: Unit; damage: Damage<any> },
+  { from: SerializedUnit; damage: number }
 > {
   serialize() {
     return {
@@ -94,8 +94,8 @@ export class UnitReceiveDamageEvent extends TypedSerializableEvent<
 }
 
 export class UnitReceiveHealEvent extends TypedSerializableEvent<
-  { from: AnyCard; amount: number },
-  { from: SerializedCard; amount: number }
+  { from: Unit; amount: number },
+  { from: SerializedUnit; amount: number }
 > {
   serialize() {
     return {
@@ -106,8 +106,8 @@ export class UnitReceiveHealEvent extends TypedSerializableEvent<
 }
 
 export class UnitBeforeDestroyEvent extends TypedSerializableEvent<
-  { source: AnyCard },
-  { source: SerializedCard }
+  { source: Unit },
+  { source: SerializedUnit }
 > {
   serialize() {
     return {
@@ -117,8 +117,8 @@ export class UnitBeforeDestroyEvent extends TypedSerializableEvent<
 }
 
 export class UnitAfterDestroyEvent extends TypedSerializableEvent<
-  { source: AnyCard; destroyedAt: Position },
-  { source: SerializedCard; destroyedAt: Point }
+  { source: Unit; destroyedAt: Position },
+  { source: SerializedUnit; destroyedAt: Point }
 > {
   serialize() {
     return {
@@ -140,6 +140,12 @@ export class UnitPlayCardEvent extends TypedSerializableEvent<
 }
 
 export class UnitTurnEvent extends TypedSerializableEvent<EmptyObject, EmptyObject> {
+  serialize() {
+    return {};
+  }
+}
+
+export class LevelUpEvent extends TypedSerializableEvent<EmptyObject, EmptyObject> {
   serialize() {
     return {};
   }
@@ -167,4 +173,6 @@ export type UnitEventMap = {
   [UNIT_EVENTS.AFTER_PLAY_CARD]: UnitPlayCardEvent;
   [UNIT_EVENTS.START_TURN]: UnitTurnEvent;
   [UNIT_EVENTS.END_TURN]: UnitTurnEvent;
+  [UNIT_EVENTS.BEFORE_LEVEL_UP]: LevelUpEvent;
+  [UNIT_EVENTS.AFTER_LEVEL_UP]: LevelUpEvent;
 };

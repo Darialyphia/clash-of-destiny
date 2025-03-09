@@ -2,7 +2,8 @@ import { type Point } from '@game/shared';
 import { Unit, type UnitOptions } from './entities/unit.entity';
 import { System } from '../system';
 import { GAME_PHASES } from '../game/systems/game-phase.system';
-import type { UnitCard } from '../card/entities/unit-card.entity';
+import type { UnitBlueprint } from '../card/card-blueprint';
+import type { Player } from '../player/player.entity';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type UnitSystemOptions = {};
@@ -49,11 +50,16 @@ export class UnitSystem extends System<UnitSystemOptions> {
     ].filter
   }
 
-  addUnit(card: UnitCard, deck: UnitOptions['deck'], position: Point) {
+  addUnit(
+    player: Player,
+    blueprintChain: UnitBlueprint[],
+    deck: UnitOptions['deck'],
+    position: Point
+  ) {
     const id = `unit_${++this.nextUnitId}`;
-    const unit = new Unit(this.game, card, {
+    const unit = new Unit(this.game, blueprintChain, {
       id,
-      player: card.unit.player,
+      player,
       position,
       deck
     });

@@ -21,7 +21,9 @@ export const UNIT_EVENTS = {
   BEFORE_PLAY_CARD: 'before_play_card',
   AFTER_PLAY_CARD: 'after_play_card',
   START_TURN: 'start_turn',
-  END_TURN: 'end_turn'
+  END_TURN: 'end_turn',
+  BEFORE_LEVEL_UP: 'before_level_up',
+  AFTER_LEVEL_UP: 'after_level_up'
 } as const;
 
 export type UnitEvent = Values<typeof UNIT_EVENTS>;

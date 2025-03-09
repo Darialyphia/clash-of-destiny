@@ -1,7 +1,6 @@
 import { type JSONObject } from '@game/shared';
 import { Entity } from '../../entity';
 import type { Game } from '../../game/game';
-import type { Player } from '../../player/player.entity';
 import type { CardBlueprint } from '../card-blueprint';
 import { CARD_EVENTS, type CardKind, type Rarity } from '../card.enums';
 import { CardAddtoHandEvent, type CardEventMap } from '../card.events';
@@ -35,9 +34,9 @@ export abstract class Card<
 > extends Entity<TEventMap, TInterceptors> {
   protected game: Game;
 
-  readonly blueprint: TBlueprint;
+  blueprint: TBlueprint;
 
-  readonly unit: Unit;
+  unit: Unit;
 
   protected keywordManager = new KeywordManagerComponent();
 

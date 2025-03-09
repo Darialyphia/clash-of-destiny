@@ -100,7 +100,7 @@ export class Artifact
   destroy() {
     this.emitter.emit(ARTIFACT_EVENTS.BEFORE_DESTROY, new ArtifactDestroyEvent({}));
 
-    this.unit.unequipArtifact(this.card.artifactKind);
+    this.unit.artifacts.unequip(this.card.artifactKind);
 
     this.emitter.emit(ARTIFACT_EVENTS.AFTER_DESTROY, new ArtifactDestroyEvent({}));
   }

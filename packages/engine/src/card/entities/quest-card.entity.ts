@@ -1,9 +1,12 @@
 import type { Game } from '../../game/game';
-import type { Player } from '../../player/player.entity';
 import type { Unit } from '../../unit/entities/unit.entity';
 import type { QuestBlueprint } from '../card-blueprint';
-import { CARD_KINDS } from '../card.enums';
-import type { CardEventMap } from '../card.events';
+import { CARD_EVENTS, CARD_KINDS } from '../card.enums';
+import {
+  CardAfterPlayEvent,
+  CardBeforePlayEvent,
+  type CardEventMap
+} from '../card.events';
 import { Card, type CardOptions, type SerializedCard } from './card.entity';
 
 export type SerializedQuestCard = SerializedCard & { kind: typeof CARD_KINDS.QUEST };
@@ -24,7 +27,17 @@ export class QuestCard extends Card<
     return true;
   }
 
-  play() {}
+  play() {
+    this.emitter.emit(CARD_EVENTS.BEFORE_PLAY, new CardBeforePlayEvent({ targets: [] }));
+    this.blueprint.onPlay(this.game, this);
+    this.unit.quests.start(this);
+    this.emitter.emit(CARD_EVENTS.AFTER_PLAY, new CardAfterPlayEvent({ targets: [] }));
+  }
+
+  complete() {
+    this.blueprint.onCompleted(this.game, this);
+    this.unit.quests.complete(this);
+  }
 
   get manaCost() {
     return 0;

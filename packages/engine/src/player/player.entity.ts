@@ -1,7 +1,16 @@
 import { Entity } from '../entity';
 import { type Game } from '../game/game';
-import { type EmptyObject, type Point, type Serializable } from '@game/shared';
+import { type EmptyObject, type Serializable } from '@game/shared';
 import { type PlayerEventMap } from './player.events';
+import type { Cell, SerializedCell } from '../board/cell';
+import { Unit } from '../unit/entities/unit.entity';
+import type {
+  AbilityBlueprint,
+  ArtifactBlueprint,
+  QuestBlueprint,
+  UnitBlueprint
+} from '../card/card-blueprint';
+import type { UNIT_KINDS } from '../card/card.enums';
 
 export type PlayerOptions = {
   id: string;
@@ -10,13 +19,12 @@ export type PlayerOptions = {
     blueprintId: string;
     deck: { cards: string[] };
   }>;
-  generalPosition: Point;
-  isPlayer1: boolean;
 };
 
 export type SerializedPlayer = {
   id: string;
   name: string;
+  deployZone: SerializedCell[];
 };
 
 type PlayerInterceptors = EmptyObject;
@@ -26,22 +34,43 @@ export class Player
 {
   private game: Game;
 
-  readonly isPlayer1: boolean;
+  private heroes: Array<{
+    unit: Unit;
+  }>;
+
   constructor(
     game: Game,
     private options: PlayerOptions
   ) {
     super(options.id, {});
     this.game = game;
-    this.isPlayer1 = options.isPlayer1;
-
+    this.heroes = options.heroes.map((hero, index) => {
+      const classChain = this.makeClassChainFrom(hero.blueprintId);
+      return {
+        unit: this.game.unitSystem.addUnit(
+          this,
+          classChain,
+          {
+            cards: hero.deck.cards.map(blueprintId => ({
+              id: this.game.cardIdFactory(blueprintId, this.id),
+              blueprint: this.game.cardPool[blueprintId] as
+                | AbilityBlueprint
+                | QuestBlueprint
+                | ArtifactBlueprint
+            }))
+          },
+          this.deployZone[index]
+        )
+      };
+    });
     this.forwardListeners();
   }
 
   serialize() {
     return {
       id: this.id,
-      name: this.options.name
+      name: this.options.name,
+      deployZone: this.deployZone.map(c => c.serialize())
     };
   }
 
@@ -70,11 +99,38 @@ export class Player
   //   return card;
   // }
 
+  makeClassChainFrom(blueprintId: string) {
+    const blueprint = this.game.cardPool[blueprintId] as UnitBlueprint & {
+      unitKind: typeof UNIT_KINDS.HERO;
+    };
+    if (!blueprint) {
+      throw new Error(`Blueprint not found: ${blueprintId}`);
+    }
+
+    const classChain = [blueprint];
+    let current = blueprint;
+    while (current.previousClass) {
+      current = this.game.cardPool[current.previousClass] as UnitBlueprint & {
+        unitKind: typeof UNIT_KINDS.HERO;
+      };
+      classChain.unshift(current);
+    }
+    return classChain;
+  }
+
+  get deployZone(): Cell[] {
+    return this.game.boardSystem.cells.filter(c => c.player?.equals(this));
+  }
+
   get units() {
     return this.game.unitSystem.units.filter(u => u.player.equals(this));
   }
 
   get enemyUnits() {
     return this.game.unitSystem.units.filter(u => !u.player.equals(this));
+  }
+
+  get isPlayer1() {
+    return this.game.playerSystem.players[0].equals(this);
   }
 }

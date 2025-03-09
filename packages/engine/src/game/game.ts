@@ -13,7 +13,7 @@ import {
   type GameEventMap
 } from './game.events';
 import { createCard, cardIdFactory } from '../card/card.factory';
-import type { BetterOmit, IndexedRecord, Prettify } from '@game/shared';
+import type { IndexedRecord } from '@game/shared';
 import type { CardBlueprint } from '../card/card-blueprint';
 import { BoardSystem } from '../board/board-system';
 import { UnitSystem } from '../unit/unit-system';
@@ -22,15 +22,6 @@ import type { MapBlueprint } from '../board/map-blueprint';
 import { CARDS_DICTIONARY } from '../card/sets';
 import { MAPS_DICTIONARY } from '../board/maps/_index';
 import { InteractionSystem } from './systems/interaction.system';
-
-export type GameOptionsPlayer = Prettify<
-  BetterOmit<PlayerOptions, 'generalPosition' | 'isPlayer1'> & {
-    deck: {
-      general: string;
-      cards: string[];
-    };
-  }
->;
 
 export type GameOptions = {
   id: string;
@@ -44,7 +35,7 @@ export type GameOptions = {
     winCondition: (game: Game, player: Player) => boolean;
   }>;
   isSimulation?: boolean;
-  players: [GameOptionsPlayer, GameOptionsPlayer];
+  players: [PlayerOptions, PlayerOptions];
 };
 
 export class Game {
@@ -117,16 +108,7 @@ export class Game {
       map: this.mapPool[this.options.mapId]
     });
     this.playerSystem.initialize({
-      players: this.options.players.map((player, index) => ({
-        ...player,
-        generalPosition: this.mapPool[this.options.mapId].generalPositions[index],
-        deck: {
-          general: this.makeCardBlueprint(player.deck.general, player.id),
-          cards: player.deck.cards.map(cardId =>
-            this.makeCardBlueprint(cardId, player.id)
-          )
-        }
-      }))
+      players: this.options.players
     });
     this.interaction.initialize();
     this.snapshotSystem.initialize();

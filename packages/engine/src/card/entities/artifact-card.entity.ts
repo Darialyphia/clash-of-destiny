@@ -1,9 +1,12 @@
 import type { Game } from '../../game/game';
-import type { Player } from '../../player/player.entity';
 import type { Unit } from '../../unit/entities/unit.entity';
 import type { ArtifactBlueprint } from '../card-blueprint';
-import { CARD_KINDS } from '../card.enums';
-import type { CardEventMap } from '../card.events';
+import { CARD_EVENTS, CARD_KINDS } from '../card.enums';
+import {
+  CardAfterPlayEvent,
+  CardBeforePlayEvent,
+  type CardEventMap
+} from '../card.events';
 import { Card, type CardOptions, type SerializedCard } from './card.entity';
 
 export type SerializedArtifactCard = SerializedCard & {
@@ -23,10 +26,18 @@ export class ArtifactCard extends Card<
   }
 
   canPlay(): boolean {
-    return this.manaCost <= this.unit.mp;
+    return this.manaCost <= this.unit.mp.current;
   }
 
-  play() {}
+  play() {
+    this.emitter.emit(CARD_EVENTS.BEFORE_PLAY, new CardBeforePlayEvent({ targets: [] }));
+
+    const artifact = this.unit.artifacts.equip(this);
+
+    this.blueprint.onPlay(this.game, this, artifact);
+
+    this.emitter.emit(CARD_EVENTS.AFTER_PLAY, new CardAfterPlayEvent({ targets: [] }));
+  }
 
   get manaCost() {
     return this.blueprint.manaCost;
