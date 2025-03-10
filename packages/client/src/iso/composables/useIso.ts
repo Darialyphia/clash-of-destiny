@@ -46,7 +46,6 @@ export const toIso = (
   dimensions: { width: number; height: number }
 ): Point => {
   const transformed = applyTransforms(point, angle, scale, dimensions);
-
   return transformed;
 };
 

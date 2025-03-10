@@ -5,7 +5,7 @@ const PIXEL_ART_ASSETS_SCALING = 3;
 export const config = {
   TILE_SIZE: {
     x: 96,
-    y: 80,
+    y: 48,
     z: 16
   },
 

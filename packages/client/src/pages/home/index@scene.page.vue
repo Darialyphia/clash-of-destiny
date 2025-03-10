@@ -15,6 +15,7 @@ const screen = useScreen();
     @render="
       graphics => {
         console.log('render');
+        console.log(screen);
         graphics.clear();
         graphics.beginFill(0xde3249);
         graphics.drawCircle(0, 0, 200);

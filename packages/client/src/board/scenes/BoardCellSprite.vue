@@ -8,10 +8,7 @@ const { cell } = defineProps<{ cell: SerializedCell }>();
 
 const sheet = useSpritesheet<'', 'tile'>(() => cell.spriteId);
 
-const { w, h } = {
-  w: config.TILE_SIZE.x,
-  h: config.TILE_SIZE.y - config.TILE_SIZE.z
-};
+const { w, h } = { w: 96, h: 80 };
 const { offsetW, offsetH } = {
   offsetW: -config.TILE_SIZE.x / 2,
   offsetH: -config.TILE_SIZE.z * 2.5
@@ -20,22 +17,22 @@ const hitArea = Hitbox.from(
   [
     [
       offsetW + w * 0,
-      offsetH + h * (1 / 3),
+      offsetH + h * 0.5,
 
       offsetW + w * 0.5,
-      offsetH + h * 0,
+      offsetH + h * 0.2,
 
       offsetW + w,
-      offsetH + h * (1 / 3),
+      offsetH + h * 0.5,
 
       offsetW + w,
-      offsetH + h * (2 / 3),
+      offsetH + h * 0.7,
 
       offsetW + w * 0.5,
       offsetH + h,
 
       offsetW + w * 0,
-      offsetH + h * (2 / 3)
+      offsetH + h * 0.7
     ]
   ],
   { width: 96, height: 80 },

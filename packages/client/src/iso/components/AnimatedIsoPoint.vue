@@ -5,7 +5,6 @@ import { useIsoPoint } from '../composables/useIsoPoint';
 import { useBattleStore } from '@/battle/stores/battle.store';
 
 const props = defineProps<{ position: Point; zIndexOffset?: number }>();
-
 const { isoPosition, zIndex } = useIsoPoint(toRefs(props));
 
 const containerRef = ref<Container>();
