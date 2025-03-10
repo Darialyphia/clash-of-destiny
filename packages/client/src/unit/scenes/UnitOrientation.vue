@@ -3,18 +3,15 @@ import type { UnitViewModel } from '../unit.model';
 import { useShaker } from '@/shared/composables/vfx/useShaker';
 import type { Container } from 'pixi.js';
 import { waitFor } from '@game/shared';
-import { GAME_EVENTS } from '@game/engine/src/game/game';
-import {
-  useBattleEvent,
-  useGameClientState,
-  useVFXEvent
-} from '@/battle/stores/battle.store';
+import { useBattleEvent, useGameState } from '@/battle/stores/battle.store';
+import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
+import { GAME_EVENTS } from '@game/engine/src/game/game.events';
 
-const { unit } = defineProps<{ unit: UnitViewModel }>();
+const { unit } = defineProps<{ unit: SerializedUnit }>();
 
-const state = useGameClientState();
+const { state } = useGameState();
 const scaleX = computed(() => {
-  let value = unit.player.equals(state.value.players[1]) ? -1 : 1;
+  let value = unit.playerId === state.value.players[1].id ? -1 : 1;
 
   return value;
 });
@@ -23,7 +20,7 @@ const container = ref<Container>();
 const shaker = useShaker(container);
 
 useBattleEvent(GAME_EVENTS.UNIT_BEFORE_RECEIVE_DAMAGE, async e => {
-  if (!e.unit.equals(unit.getUnit())) return;
+  if (e.unit.id !== unit.id) return;
   const duration = 200;
 
   shaker.trigger({
@@ -36,20 +33,19 @@ useBattleEvent(GAME_EVENTS.UNIT_BEFORE_RECEIVE_DAMAGE, async e => {
   await waitFor(duration);
 });
 
-useVFXEvent('SHAKE_UNIT', async params => {
-  if (!params.unit.equals(unit.getUnit())) return;
+// useVFXEvent('SHAKE_UNIT', async params => {
+//   if (!params.unit.equals(unit.getUnit())) return;
 
-  shaker.trigger({
-    isBidirectional: params.isBidirectional,
-    shakeAmount: params.amplitude,
-    shakeDelay: 35,
-    shakeCountMax: Math.round(params.duration / 35)
-  });
-});
+//   shaker.trigger({
+//     isBidirectional: params.isBidirectional,
+//     shakeAmount: params.amplitude,
+//     shakeDelay: 35,
+//     shakeCountMax: Math.round(params.duration / 35)
+//   });
+// });
 
 useBattleEvent(GAME_EVENTS.UNIT_BEFORE_DESTROY, async e => {
-  if (unit.isAltar) return;
-  if (!e.unit.equals(unit.getUnit())) return Promise.resolve();
+  if (e.unit.id !== unit.id) return;
   await gsap.to(container.value!, {
     pixi: {
       y: 30,
@@ -62,7 +58,7 @@ useBattleEvent(GAME_EVENTS.UNIT_BEFORE_DESTROY, async e => {
 </script>
 
 <template>
-  <container :scale-x="scaleX" ref="container" :y="-12">
+  <container :scale-x="scaleX" ref="container">
     <slot />
   </container>
 </template>

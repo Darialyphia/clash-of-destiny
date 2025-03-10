@@ -3,6 +3,7 @@ import type { Nullable, Point } from '@game/shared';
 import { useIso } from './useIso';
 import type { MaybeRefOrGetter } from 'vue';
 import { useBattleStore } from '@/battle/stores/battle.store';
+import { config } from '@/utils/config';
 
 export type UseIsoTileOptions = {
   position: MaybeRefOrGetter<Point>;
@@ -27,7 +28,7 @@ export const useAnimatedIsoPoint = ({ position }: UseIsoTileOptions) => {
 
   watch(isoPosition, newPos => {
     gsap.to(tweened.value, {
-      duration: store.isPlayingFx ? 0 : 0.5,
+      duration: store.isPlayingFx ? 0 : config.ISO_TILES_ROTATION_SPEED,
       x: newPos.x,
       y: newPos.y,
       ease: Power1.easeInOut

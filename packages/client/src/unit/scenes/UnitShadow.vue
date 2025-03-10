@@ -3,12 +3,12 @@ import { useSpritesheet } from '@/shared/composables/useSpritesheet';
 import { type Filter, BlurFilter } from 'pixi.js';
 import { config } from '@/utils/config';
 import { useMultiLayerTexture } from '@/shared/composables/useMultiLayerTexture';
-import type { UnitViewModel } from '../unit.model';
-import { GAME_EVENTS } from '@game/engine/src/game/game';
-import { useCamera } from '@/board/composables/useCamera';
 import { useBattleEvent, useBattleStore } from '@/battle/stores/battle.store';
+import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
+import { useIsoCamera } from '@/iso/composables/useIsoCamera';
+import { GAME_EVENTS } from '@game/engine/src/game/game.events';
 
-const { unit } = defineProps<{ unit: UnitViewModel }>();
+const { unit } = defineProps<{ unit: SerializedUnit }>();
 
 const spritesheet = useSpritesheet(() => unit.spriteId);
 
@@ -27,15 +27,16 @@ const textures = useMultiLayerTexture({
   dimensions: config.UNIT_SPRITE_SIZE
 });
 const battleStore = useBattleStore();
-const camera = useCamera();
+const camera = useIsoCamera();
 const isSpriteFlipped = computed(() => {
-  let value = unit
-    .getUnit()
-    .player.isEnemy(battleStore.state.userPlayer.getPlayer())
-    ? true
-    : false;
+  // let value = unit
+  //   .getUnit()
+  //   .player.isEnemy(battleStore.state.userPlayer.getPlayer())
+  //   ? true
+  //   : false;
 
-  return value;
+  // return value;
+  return false;
 });
 
 const skewX = computed(() => {
@@ -52,17 +53,14 @@ const y = computed(() => {
   return config.UNIT_SPRITE_SIZE.height * 0.3;
 });
 
-useBattleEvent(GAME_EVENTS.UNIT_AFTER_MOVE, e => {
-  return new Promise(resolve => {
-    if (!e.unit.equals(unit.getUnit())) return resolve();
+useBattleEvent(GAME_EVENTS.UNIT_AFTER_MOVE, async e => {
+  if (e.unit.id !== unit.id) return;
 
-    gsap.to(blurFilter, {
-      blur: 2,
-      duration: config.MOVEMENT_SPEED_PER_TILE / 2,
-      repeat: 1,
-      yoyo: true,
-      onComplete: resolve
-    });
+  await gsap.to(blurFilter, {
+    blur: 2,
+    duration: config.MOVEMENT_SPEED_PER_TILE / 2,
+    repeat: 1,
+    yoyo: true
   });
 });
 </script>

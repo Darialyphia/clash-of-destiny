@@ -151,3 +151,27 @@ export const useGameType = () => {
 
   return computed(() => store.gameType);
 };
+
+export const useUserPlayer = () => {
+  const store = useBattleStore();
+
+  return computed(() =>
+    store.playerId
+      ? store.state!.players.find(p => p.id === store.playerId)!
+      : store.state!.players.find(
+          p => p.id === store.state!.activeUnit.playerId
+        )!
+  );
+};
+
+export const useOpponentPlayer = () => {
+  const store = useBattleStore();
+
+  return computed(() =>
+    store.playerId
+      ? store.state!.players.find(p => p.id !== store.playerId)!
+      : store.state!.players.find(
+          p => p.id !== store.state!.activeUnit.playerId
+        )!
+  );
+};

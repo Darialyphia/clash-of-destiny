@@ -84,8 +84,8 @@ const spawnAnimation = (container: Container) => {
       :duration="{ enter: 1000, leave: 0 }"
       @enter="spawnAnimation"
     > -->
-    <!-- <UnitOrientation :unit="unit"> -->
-    <!-- <sprite
+    <UnitOrientation :unit="unit">
+      <!-- <sprite
         v-if="isSpawnAnimationDone"
         event-mode="none"
         :anchor="0.5"
@@ -96,9 +96,9 @@ const spawnAnimation = (container: Container) => {
             : '/assets/ui/enemy-indicator.png'
         "
       /> -->
-    <!-- <UnitShadow :unit="unit" /> -->
-    <UnitSprite :unit="unit" />
-    <!-- </UnitOrientation> -->
+      <UnitShadow :unit="unit" />
+      <UnitSprite :unit="unit" />
+    </UnitOrientation>
     <!-- </PTransition> -->
     <!-- <UnitVFX :unit="unit" /> -->
 

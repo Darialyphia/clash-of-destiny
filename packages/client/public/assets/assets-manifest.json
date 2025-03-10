@@ -691,6 +691,33 @@
               "m": true
             }
           }
+        },
+        {
+          "alias": [
+            "tile-highlights"
+          ],
+          "src": [
+            "/assets/ui/tile-highlights.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "tile-highlights.png"
+          ],
+          "src": [
+            "/assets/ui/tile-highlights.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
         }
       ]
     },

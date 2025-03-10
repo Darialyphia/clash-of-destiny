@@ -3,6 +3,7 @@ import type { Point } from '@game/shared';
 import { Container } from 'pixi.js';
 import { useIsoPoint } from '../composables/useIsoPoint';
 import { useBattleStore } from '@/battle/stores/battle.store';
+import { config } from '@/utils/config';
 
 const props = defineProps<{ position: Point; zIndexOffset?: number }>();
 const { isoPosition, zIndex } = useIsoPoint(toRefs(props));
@@ -16,7 +17,10 @@ watch(
   ([pos, z, container], [, , prevContainer]) => {
     if (!container) return;
     gsap.to(container, {
-      duration: prevContainer && !store.isPlayingFx ? 0.5 : 0,
+      duration:
+        prevContainer && !store.isPlayingFx
+          ? config.ISO_TILES_ROTATION_SPEED
+          : 0,
       pixi: {
         x: pos.x,
         y: pos.y,
