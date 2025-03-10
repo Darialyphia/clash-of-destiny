@@ -15,19 +15,16 @@ watch(
   [isoPosition, zIndex, containerRef],
   ([pos, z, container], [, , prevContainer]) => {
     if (!container) return;
-    console.log(container);
-    container.position.x = pos.x;
-    container.position.y = pos.y;
-    // gsap.to(container, {
-    //   duration: prevContainer && !store.isPlayingFx ? 0.5 : 0,
-    //   pixi: {
-    //     x: pos.x,
-    //     y: pos.y,
-    //     zOrder: z,
-    //     zIndex: z
-    //   },
-    //   ease: Power1.easeInOut
-    // });
+    gsap.to(container, {
+      duration: prevContainer && !store.isPlayingFx ? 0.5 : 0,
+      pixi: {
+        x: pos.x,
+        y: pos.y,
+        zOrder: z,
+        zIndex: z
+      },
+      ease: Power1.easeInOut
+    });
   },
   { immediate: true }
 );

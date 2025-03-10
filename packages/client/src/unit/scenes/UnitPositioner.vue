@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { config } from '@/utils/config';
-import { type Point, type Point3D } from '@game/shared';
+import { type Point } from '@game/shared';
 import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
 import { useBattleEvent, useGameState } from '@/battle/stores/battle.store';
 import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
 import { GAME_EVENTS } from '@game/engine/src/game/game.events';
 import AnimatedIsoPoint from '@/iso/components/AnimatedIsoPoint.vue';
 
-const { unit, bounce } = defineProps<{
+const { unit } = defineProps<{
   unit: SerializedUnit;
-  bounce?: boolean;
 }>();
 
 const offset = {

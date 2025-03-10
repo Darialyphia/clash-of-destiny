@@ -9,7 +9,7 @@ export type UseIsoTileOptions = {
   zIndexOffset?: MaybeRefOrGetter<Nullable<number>>;
 };
 
-export const useIsoPoint = ({ position }: UseIsoTileOptions) => {
+export const useAnimatedIsoPoint = ({ position }: UseIsoTileOptions) => {
   const grid = useIsoWorld();
 
   const isoPosition = useIso(
@@ -28,10 +28,8 @@ export const useIsoPoint = ({ position }: UseIsoTileOptions) => {
   watch(isoPosition, newPos => {
     gsap.to(tweened.value, {
       duration: store.isPlayingFx ? 0 : 0.5,
-      pixi: {
-        x: newPos.x,
-        y: newPos.y
-      },
+      x: newPos.x,
+      y: newPos.y,
       ease: Power1.easeInOut
     });
   });

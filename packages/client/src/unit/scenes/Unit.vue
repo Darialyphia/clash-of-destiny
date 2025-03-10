@@ -15,14 +15,16 @@ import UnitModifierSprite from './UnitModifierSprite.vue';
 import { useBattleEvent } from '@/battle/stores/battle.store';
 import { useIsoCamera } from '@/iso/composables/useIsoCamera';
 import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
-import { useIsoPoint } from '@/iso/composables/useAnimatedPoint';
+import { useAnimatedIsoPoint } from '@/iso/composables/useAnimatedPoint';
 import { GAME_EVENTS } from '@game/engine/src/game/game.events';
 
 const { unit } = defineProps<{ unit: SerializedUnit }>();
 
 const camera = useIsoCamera();
 
-const isoPosition = useIsoPoint({ position: computed(() => unit.position) });
+const isoPosition = useAnimatedIsoPoint({
+  position: computed(() => unit.position)
+});
 const centerCamera = () => {
   const viewport = camera.viewport.value;
   if (!viewport) return;
@@ -76,14 +78,14 @@ const spawnAnimation = (container: Container) => {
 </script>
 
 <template>
-  <UnitPositioner :unit="unit" bounce>
-    <PTransition
+  <UnitPositioner :unit="unit">
+    <!-- <PTransition
       appear
       :duration="{ enter: 1000, leave: 0 }"
       @enter="spawnAnimation"
-    >
-      <!-- <UnitOrientation :unit="unit"> -->
-      <!-- <sprite
+    > -->
+    <!-- <UnitOrientation :unit="unit"> -->
+    <!-- <sprite
         v-if="isSpawnAnimationDone"
         event-mode="none"
         :anchor="0.5"
@@ -94,10 +96,10 @@ const spawnAnimation = (container: Container) => {
             : '/assets/ui/enemy-indicator.png'
         "
       /> -->
-      <!-- <UnitShadow :unit="unit" /> -->
-      <UnitSprite :unit="unit" />
-      <!-- </UnitOrientation> -->
-    </PTransition>
+    <!-- <UnitShadow :unit="unit" /> -->
+    <UnitSprite :unit="unit" />
+    <!-- </UnitOrientation> -->
+    <!-- </PTransition> -->
     <!-- <UnitVFX :unit="unit" /> -->
 
     <!-- <AlphaTransition

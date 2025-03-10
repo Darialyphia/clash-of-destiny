@@ -25,9 +25,9 @@ const sheets = computed(() => {
     sheet
   }));
 
-  Object.entries(parts).forEach(([part, group]) => {
+  objectEntries(parts).forEach(([part, group]) => {
     if (!group) return;
-
+    console.log(part, group);
     result.push({
       //@ts-expect-error sorry I'm not Matt Pocock
       sheet: sheet.sheets[group][part]
@@ -73,9 +73,8 @@ watchEffect(() => {
 
 <template>
   <animated-sprite
-    v-if="textures.length > 10"
+    v-if="textures.length"
     :textures="textures"
-    event-mode="none"
     v-bind="props"
     :tint="props.tint ?? 'white'"
   />

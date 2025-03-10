@@ -6,6 +6,8 @@ import { type Filter } from 'pixi.js';
 import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
 import { useIsoCamera } from '@/iso/composables/useIsoCamera';
 import MultiLayerAnimatedSprite from '@/shared/components/MultiLayerAnimatedSprite.vue';
+import { useMultiLayerTexture } from '@/shared/composables/useMultiLayerTexture';
+import { config } from '@/utils/config';
 
 const { unit } = defineProps<{ unit: SerializedUnit }>();
 
@@ -39,32 +41,20 @@ const filters = computed(() => {
 
   return result;
 });
-
-// const modifierSpriteIds = computed(() => {
-//   return unit.modifierInfos.map(infos => infos?.spriteId).filter(isDefined);
-// });
+const textures = useMultiLayerTexture({
+  sheet,
+  parts: () => unit.spriteParts,
+  tag: 'idle',
+  dimensions: config.UNIT_SPRITE_SIZE
+});
 </script>
 
 <template>
-  <MultiLayerAnimatedSprite
-    v-if="sheet"
-    :sheet="sheet"
-    tag="idle"
-    :parts="unit.spriteParts"
-    :anchor="0.5"
-    event-mode="none"
-    :filters="filters"
-  />
-  <!-- <animated-sprite
+  <animated-sprite
+    v-if="textures.length"
     :textures="textures"
-    :anchor="0.5"
     event-mode="none"
     :filters="filters"
-  > -->
-  <!-- <UnitModifierSprite
-      v-for="modifier in modifierSpriteIds"
-      :key="modifier"
-      :sprite-id="modifier"
-    /> -->
-  <!-- </animated-sprite> -->
+    :anchor="0.5"
+  />
 </template>
