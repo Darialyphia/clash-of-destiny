@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import BoardCell from '@/board/scenes/BoardCell.vue';
 import { providePointLights } from '@/vfx/usePointLight';
-import { useCamera } from '../composables/useCamera';
 import { useGameState } from '@/battle/stores/battle.store';
+import { useIsoCamera } from '@/iso/composables/useIsoCamera';
 
 const { state } = useGameState();
 const readyCells = ref(0);
-const camera = useCamera();
+const camera = useIsoCamera();
 providePointLights(camera);
 </script>
 

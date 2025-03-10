@@ -103,13 +103,14 @@ export class Game {
   initialize() {
     this.rngSystem.initialize({ seed: this.options.rngSeed });
     this.inputSystem.initialize(this.options.history ?? []);
-    this.gamePhaseSystem.initialize();
     this.boardSystem.initialize({
       map: this.mapPool[this.options.mapId]
     });
+    this.unitSystem.initialize();
     this.playerSystem.initialize({
       players: this.options.players
     });
+    this.gamePhaseSystem.initialize();
     this.interaction.initialize();
     this.snapshotSystem.initialize();
     this.turnSystem.initialize();

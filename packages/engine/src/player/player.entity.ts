@@ -42,8 +42,13 @@ export class Player
 {
   private game: Game;
 
-  readonly heroes: Array<{
+  heroes: Array<{
     unit: Unit;
+  }> = [];
+
+  private heroesConfig: Array<{
+    blueprintId: string;
+    deck: { cards: string[] };
   }>;
 
   private deployMent: Nullable<Array<{ heroId: string } & Point>> = null;
@@ -54,25 +59,7 @@ export class Player
   ) {
     super(options.id, {});
     this.game = game;
-    this.heroes = options.heroes.map((hero, index) => {
-      const classChain = this.makeClassChainFrom(hero.blueprintId);
-      return {
-        unit: this.game.unitSystem.addUnit(
-          this,
-          classChain,
-          {
-            cards: hero.deck.cards.map(blueprintId => ({
-              id: this.game.cardIdFactory(blueprintId, this.id),
-              blueprint: this.game.cardPool[blueprintId] as
-                | AbilityBlueprint
-                | QuestBlueprint
-                | ArtifactBlueprint
-            }))
-          },
-          this.deployZone[index]
-        )
-      };
-    });
+    this.heroesConfig = options.heroes;
     this.forwardListeners();
   }
 
@@ -95,6 +82,28 @@ export class Player
     // });
   }
 
+  initialize() {
+    this.heroes = this.heroesConfig.map((hero, index) => {
+      const classChain = this.makeClassChainFrom(hero.blueprintId);
+      return {
+        unit: this.game.unitSystem.addUnit(
+          this,
+          classChain,
+          {
+            cards: hero.deck.cards.map(blueprintId => ({
+              id: this.game.cardIdFactory(blueprintId, this.id),
+              blueprint: this.game.cardPool[blueprintId] as
+                | AbilityBlueprint
+                | QuestBlueprint
+                | ArtifactBlueprint
+            }))
+          },
+          this.deployZone[index]
+        )
+      };
+    });
+  }
+
   get opponent() {
     return this.game.playerSystem.players.find(p => !p.equals(this))!;
   }
@@ -114,15 +123,6 @@ export class Player
       hero.teleport({ x, y });
     });
   }
-  // generateCard<T extends CardBlueprint = CardBlueprint>(blueprintId: string) {
-  //   const blueprint = this.game.cardPool[blueprintId] as T;
-  //   const card = this.game.cardFactory<T>(this.game, this, {
-  //     id: this.game.cardIdFactory(blueprint.id, this.id),
-  //     blueprint: blueprint
-  //   });
-
-  //   return card;
-  // }
 
   makeClassChainFrom(blueprintId: string) {
     const blueprint = this.game.cardPool[blueprintId] as UnitBlueprint & {

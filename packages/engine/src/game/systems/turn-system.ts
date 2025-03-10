@@ -52,6 +52,7 @@ export class TurnSystem
     this.on(TURN_EVENTS.TURN_END, e => {
       this.game.emit(GAME_EVENTS.TURN_END, e);
     });
+    this.buildQueue();
   }
 
   shutdown() {
@@ -86,14 +87,18 @@ export class TurnSystem
     return this.emitter.off.bind(this.emitter);
   }
 
+  private buildQueue() {
+    this.game.unitSystem.units
+      .sort((a, b) => b.initiative - a.initiative)
+      .forEach(unit => this.queue.push(unit));
+  }
+
   startGameTurn() {
     this._turnCount++;
     this.queue = [];
     this._processedUnits.clear();
 
-    this.game.unitSystem.units
-      .sort((a, b) => b.initiative - a.initiative)
-      .forEach(unit => this.queue.push(unit));
+    this.buildQueue();
     this.emitter.emit(
       TURN_EVENTS.TURN_START,
       new GameTurnEvent({ turnCount: this.turnCount })

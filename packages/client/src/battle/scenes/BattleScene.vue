@@ -7,6 +7,7 @@ import { useSettingsStore } from '@/shared/composables/useSettings';
 import { until } from '@vueuse/core';
 import { useBattleStore, useGameState } from '../stores/battle.store';
 import { useBattleUiStore } from '../stores/battle-ui.store';
+import Board from '@/board/scenes/Board.vue';
 
 const battleStore = useBattleStore();
 const settingsStore = useSettingsStore();
@@ -67,12 +68,8 @@ until(() => isoWorld.value)
       }
     "
   >
-    <IsoCamera
-      :columns="state.board.columns"
-      :rows="state.board.rows"
-      v-slot="{ worldSize }"
-    >
-      <Board :world-size="worldSize" />
+    <IsoCamera :columns="state.board.columns" :rows="state.board.rows">
+      <Board />
     </IsoCamera>
 
     <Layer :ref="(layer: any) => ui.registerLayer(layer, 'scene')" />
