@@ -72,6 +72,12 @@ During its turn, a hero can
 
 Once every hero has acted, the turn ends, and a new one begin
 
+## Victory Points
+
+Victory Points are awarded by reducing a hero's HP to 0. This awards 1 VP. When this happens, the hero is removed from play for the current turn, as well as the following turn. At the start of te turn after that, the hero is redeployed in its player deploy zone. When a hero is redeployed, they keep teir exp and class advancement, but lose the artifact they had equiped as well as other buffs and debuffs tey had on them before being destroyed.
+
 ## Additional units
 
-Some heroes may have abilities to summon other units on the board. These units do not need to be destroyed to win the game: only the heroes matter in this case.
+Some heroes may have abilities to summon other units on the board. These units do not award victory point when destroyed: only the heroes matter in this case. 
+
+Some summoned unit can have their own deck of cards that they're able to play, but they do not gain exp.
