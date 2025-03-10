@@ -26,7 +26,7 @@ export class ArtifactCard extends Card<
   }
 
   canPlay(): boolean {
-    return this.manaCost <= this.unit.mp.current && this.levelCost <= this.unit.level;
+    return this.levelCost <= this.unit.level;
   }
 
   play() {
@@ -40,7 +40,11 @@ export class ArtifactCard extends Card<
   }
 
   get manaCost() {
-    return this.blueprint.manaCost;
+    return 0;
+  }
+
+  get durability() {
+    return this.blueprint.durability;
   }
 
   get levelCost() {

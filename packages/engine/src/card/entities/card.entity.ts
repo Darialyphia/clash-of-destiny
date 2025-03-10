@@ -51,6 +51,10 @@ export abstract class Card<
     this.modifierManager = new ModifierManager(this);
   }
 
+  get player() {
+    return this.unit.player;
+  }
+
   get blueprintId() {
     return this.blueprint.id;
   }

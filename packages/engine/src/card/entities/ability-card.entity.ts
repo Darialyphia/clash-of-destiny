@@ -81,6 +81,7 @@ export class AbilityCard extends Card<
       CARD_EVENTS.AFTER_PLAY,
       new CardAfterPlayEvent({ targets: points })
     );
+    this.unit.gainExp(this.exp);
   }
 
   serialize(): SerializedAbilityCard {

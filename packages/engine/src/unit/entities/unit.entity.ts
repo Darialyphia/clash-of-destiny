@@ -6,7 +6,11 @@ import {
   type Serializable
 } from '@game/shared';
 import { Entity, InterceptableEvent, INTERCEPTOR_EVENTS } from '../../entity';
-import { type AnyCard, type CardOptions } from '../../card/entities/card.entity';
+import {
+  type AnyCard,
+  type CardOptions,
+  type SerializedCard
+} from '../../card/entities/card.entity';
 import { type Game } from '../../game/game';
 import { MOVE_EVENTS, MovementComponent } from '../components/movement.component';
 import type { Player } from '../../player/player.entity';
@@ -26,6 +30,7 @@ import {
   UnitBeforeMoveEvent,
   UnitCreatedEvent,
   UnitDealDamageEvent,
+  UnitLevelUpEvent,
   UnitPlayCardEvent,
   UnitReceiveDamageEvent,
   UnitReceiveHealEvent,
@@ -40,7 +45,7 @@ import { CARD_EVENTS, UNIT_KINDS } from '../../card/card.enums';
 import { HealthComponent } from '../components/health.component';
 import { GAME_EVENTS, GameUnitEvent } from '../../game/game.events';
 import type { Cell } from '../../board/cell';
-import type { Modifier } from '../../modifier/modifier.entity';
+import type { Modifier, SerializedModifier } from '../../modifier/modifier.entity';
 import { ModifierManager } from '../../modifier/modifier-manager.component';
 import { ApComponent } from '../components/ap.component';
 import { MeleeTargetingStrategy } from '../../targeting/melee-targeting.straegy';
@@ -49,6 +54,7 @@ import { CardManagerComponent } from '../../card/components/card-manager.compone
 import type {
   AbilityBlueprint,
   ArtifactBlueprint,
+  CardBlueprint,
   HeroBlueprint,
   QuestBlueprint,
   UnitBlueprint
@@ -62,6 +68,31 @@ import { QuestManagerComponent } from '../components/quest-manager.component';
 export type SerializedUnit = {
   id: string;
   position: Point;
+  playerId: string;
+  hand: SerializedCard[];
+  handSize: number;
+  remainingCardsInDeck: number;
+  discardPile: SerializedCard[];
+  hp: number;
+  maxHp: number;
+  ap: number;
+  maxAp: number;
+  mp: number;
+  maxMp: number;
+  level: number;
+  blueprintChain: Array<{
+    id: string;
+    name: string;
+    level: number;
+  }>;
+  exp: number;
+  expToNextLevel: number;
+  canLevelup: boolean;
+  keywords: Array<{ id: string; name: string; description: string }>;
+  isDead: boolean;
+  moveZone: Point[];
+  attackableCells: Point[];
+  modifiers: SerializedModifier[];
 };
 
 export type UnitOptions = {
@@ -159,15 +190,40 @@ export class Unit
   }
 
   serialize(): SerializedUnit {
-    // // calculate this upfront as this can be an expensive operation if we call it many times
-    // // moves the unit could make if she wasnt exhausted / provoked / etc
-    // const potentialMoves = this.getPossibleMoves(this.speed, true);
-    // // moves the unit can actually make
-    // const possibleMoves = this.getPossibleMoves(this.speed);
-
     return {
       id: this.id,
-      position: this.position.serialize()
+      position: this.position.serialize(),
+      playerId: this.player.id,
+      hand: this.cards.hand.map(card => card.serialize()),
+      handSize: this.cards.hand.length,
+      remainingCardsInDeck: this.cards.deck.cards.length,
+      discardPile: Array.from(this.cards.discardPile).map(card => card.serialize()),
+      hp: this.hp.current,
+      maxHp: this.hp.max,
+      ap: this.ap.current,
+      maxAp: this.ap.max,
+      mp: this.mp.current,
+      maxMp: this.mp.max,
+      level: this.level,
+      blueprintChain: this.blueprintChain.map(blueprint => ({
+        id: blueprint.id,
+        name: blueprint.name,
+        level: (blueprint as any).level
+      })),
+      exp: this.exp,
+      keywords: this.keywords.map(keyword => ({
+        id: keyword.id,
+        name: keyword.name,
+        description: keyword.description
+      })),
+      isDead: this.isDead,
+      moveZone: this.getPossibleMoves(),
+      attackableCells: this.game.boardSystem.cells
+        .filter(cell => this.canAttackAt(cell.position))
+        .map(cell => cell.position.serialize()),
+      modifiers: this.modifiers.map(modifier => modifier.serialize()),
+      expToNextLevel: this.expToNextLevel,
+      canLevelup: this.canLevelUp
     };
   }
 
@@ -345,6 +401,10 @@ export class Unit
     );
   }
 
+  get damage() {
+    return this.interceptors.damage.getValue(this.game.config.BASE_ATTACK_DAMAGE, {});
+  }
+
   get attackTargetType(): TargetingType {
     return this.interceptors.attackTargetType.getValue(TARGETING_TYPE.ENEMY, {});
   }
@@ -479,10 +539,9 @@ export class Unit
     return this.movement.getPathTo.bind(this.movement);
   }
 
-  getPossibleMoves(max?: number, force = false) {
-    if (!this.canMove && !force) return [];
+  getPossibleMoves() {
     return this.movement
-      .getAllPossibleMoves(max ?? this.ap.current / this.apCostPerMovement)
+      .getAllPossibleMoves(this.ap.current / this.apCostPerMovement)
       .filter(point => {
         const cell = this.game.boardSystem.getCellAt(point)!;
         return cell.isWalkable && !cell.unit;
@@ -490,7 +549,7 @@ export class Unit
   }
 
   getDealtDamage(target: Unit) {
-    return this.interceptors.damageDealt.getValue(this.game.config.BASE_ATTACK_DAMAGE, {
+    return this.interceptors.damageDealt.getValue(this.damage, {
       target
     });
   }
@@ -527,6 +586,7 @@ export class Unit
   attack(point: Point) {
     this.ap.remove(this.apCostPerAttack);
     this.combat.attack(point);
+    this.gainExp(this.game.config.EXP_REWARD_PER_ATTACK);
   }
 
   canAttackAt(point: Point) {
@@ -654,6 +714,16 @@ export class Unit
     this.currentyPlayedCardIndexInHand = null;
   }
 
+  generateCard<T extends CardBlueprint = CardBlueprint>(blueprintId: string) {
+    const blueprint = this.game.cardPool[blueprintId] as T;
+    const card = this.game.cardFactory<T>(this.game, this, {
+      id: this.game.cardIdFactory(blueprint.id, this.id),
+      blueprint: blueprint
+    });
+
+    return card;
+  }
+
   starturn() {
     this.emitter.emit(UNIT_EVENTS.START_TURN, new UnitTurnEvent({}));
   }
@@ -684,21 +754,23 @@ export class Unit
     ).neededExp;
   }
 
+  get canLevelUp() {
+    return this.exp >= this.expToNextLevel && isDefined(this.nextBlueprint);
+  }
+
   levelUp() {
-    if (!this.nextBlueprint) return;
-    if (this.exp < this.expToNextLevel) return;
+    if (!this.canLevelUp) return;
+
+    this.emitter.emit(UNIT_EVENTS.BEFORE_LEVEL_UP, new UnitLevelUpEvent({}));
 
     this._exp -= this.expToNextLevel;
     this._level += 1;
 
-    // this.emitter.emit(UNIT_EVENTS.LEVEL_UP, new UnitEventMap.LevelUp({}));
+    this.emitter.emit(UNIT_EVENTS.AFTER_LEVEL_UP, new UnitLevelUpEvent({}));
   }
 
   gainExp(amount: number) {
     if (!this.nextBlueprint) return;
     this._exp += amount;
-    if (this.exp >= this.expToNextLevel) {
-      this.levelUp();
-    }
   }
 }

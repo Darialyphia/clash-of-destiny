@@ -1,0 +1,702 @@
+{
+  "bundles": [
+    {
+      "name": "default",
+      "assets": [
+        {
+          "alias": [
+            "undefinedlogo.svg"
+          ],
+          "src": [
+            "/assets/logo.svg"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "fx",
+      "assets": [
+        {
+          "alias": [
+            "fx-frozen"
+          ],
+          "src": [
+            "/assets/fx/frozen.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "fx-frozen.png"
+          ],
+          "src": [
+            "/assets/fx/frozen.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "fx-light-mask"
+          ],
+          "src": [
+            "/assets/fx/light-mask.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "fx-light-mask.png"
+          ],
+          "src": [
+            "/assets/fx/light-mask.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "fx-shadow.png"
+          ],
+          "src": [
+            "/assets/fx/shadow.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "fx-stasis"
+          ],
+          "src": [
+            "/assets/fx/stasis.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "fx-stasis.png"
+          ],
+          "src": [
+            "/assets/fx/stasis.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "icons",
+      "assets": [
+        {
+          "alias": [
+            "icon-keyword-altar"
+          ],
+          "src": [
+            "/assets/icons/keyword-altar.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-attack-buff"
+          ],
+          "src": [
+            "/assets/icons/keyword-attack-buff.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-attack-debuff"
+          ],
+          "src": [
+            "/assets/icons/keyword-attack-debuff.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-burn"
+          ],
+          "src": [
+            "/assets/icons/keyword-burn.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-commander"
+          ],
+          "src": [
+            "/assets/icons/keyword-commander.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-double-attack"
+          ],
+          "src": [
+            "/assets/icons/keyword-double-attack.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-fearsome"
+          ],
+          "src": [
+            "/assets/icons/keyword-fearsome.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-frame-negative"
+          ],
+          "src": [
+            "/assets/icons/keyword-frame-negative.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-frame-positive"
+          ],
+          "src": [
+            "/assets/icons/keyword-frame-positive.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-frozen"
+          ],
+          "src": [
+            "/assets/icons/keyword-frozen.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-hp-buff"
+          ],
+          "src": [
+            "/assets/icons/keyword-hp-buff.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-hp-debuff"
+          ],
+          "src": [
+            "/assets/icons/keyword-hp-debuff.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-immunity"
+          ],
+          "src": [
+            "/assets/icons/keyword-immunity.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-rage"
+          ],
+          "src": [
+            "/assets/icons/keyword-rage.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-ranged"
+          ],
+          "src": [
+            "/assets/icons/keyword-ranged.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-rush"
+          ],
+          "src": [
+            "/assets/icons/keyword-rush.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-spellcaster"
+          ],
+          "src": [
+            "/assets/icons/keyword-spellcaster.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-splash-attack"
+          ],
+          "src": [
+            "/assets/icons/keyword-splash-attack.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-stasis"
+          ],
+          "src": [
+            "/assets/icons/keyword-stasis.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-structure"
+          ],
+          "src": [
+            "/assets/icons/keyword-structure.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-vigilant"
+          ],
+          "src": [
+            "/assets/icons/keyword-vigilant.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-placeholder"
+          ],
+          "src": [
+            "/assets/icons/placeholder.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "obstacles",
+      "assets": []
+    },
+    {
+      "name": "tiles",
+      "assets": [
+        {
+          "alias": [
+            "grass"
+          ],
+          "src": [
+            "/assets/tiles/grass.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "grass.png"
+          ],
+          "src": [
+            "/assets/tiles/grass.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "ui",
+      "assets": [
+        {
+          "alias": [
+            "active-unit-indicator"
+          ],
+          "src": [
+            "/assets/ui/active-unit-indicator.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "active-unit-indicator.png"
+          ],
+          "src": [
+            "/assets/ui/active-unit-indicator.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "ally-indicator.png"
+          ],
+          "src": [
+            "/assets/ui/ally-indicator.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "ap-indicator"
+          ],
+          "src": [
+            "/assets/ui/ap-indicator.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "ap-indicator.png"
+          ],
+          "src": [
+            "/assets/ui/ap-indicator.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "ap.png"
+          ],
+          "src": [
+            "/assets/ui/ap.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "atk.png"
+          ],
+          "src": [
+            "/assets/ui/atk.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "cursor-disabled.png"
+          ],
+          "src": [
+            "/assets/ui/cursor-disabled.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "cursor-hover.png"
+          ],
+          "src": [
+            "/assets/ui/cursor-hover.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "cursor.png"
+          ],
+          "src": [
+            "/assets/ui/cursor.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "deck-big.png"
+          ],
+          "src": [
+            "/assets/ui/deck-big.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "deck.png"
+          ],
+          "src": [
+            "/assets/ui/deck.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "enemy-indicator.png"
+          ],
+          "src": [
+            "/assets/ui/enemy-indicator.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "hovered-cell"
+          ],
+          "src": [
+            "/assets/ui/hovered-cell.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "hovered-cell.png"
+          ],
+          "src": [
+            "/assets/ui/hovered-cell.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "hp.png"
+          ],
+          "src": [
+            "/assets/ui/hp.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "quest-icon-empty.png"
+          ],
+          "src": [
+            "/assets/ui/quest-icon-empty.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "quest-icon-filled.png"
+          ],
+          "src": [
+            "/assets/ui/quest-icon-filled.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "speed.png"
+          ],
+          "src": [
+            "/assets/ui/speed.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "units",
+      "assets": []
+    }
+  ]
+}

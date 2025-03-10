@@ -30,7 +30,7 @@ export type HeroBlueprint = {
 } & (
   | {
       level: 1;
-      previousClass: null;
+      previousClass?: null;
       neededExp?: never;
     }
   | {
@@ -44,8 +44,8 @@ export type UnitBlueprint = CardBlueprintBase & {
   kind: Extract<CardKind, typeof CARD_KINDS.UNIT>;
   maxHp: number;
   initiative: number;
-  getAoe(game: Game, card: Unit, points: Point[]): AOEShape;
-  onPlay(game: Game, card: Unit): void;
+  getAoe(game: Game, unit: Unit, points: Point[]): AOEShape;
+  onPlay(game: Game, unit: Unit): void;
 } & (HeroBlueprint | { unitKind: typeof UNIT_KINDS.MINION });
 
 export type AbilityBlueprint = CardBlueprintBase & {
@@ -69,7 +69,7 @@ export type AbilityBlueprint = CardBlueprintBase & {
 
 export type ArtifactBlueprint = CardBlueprintBase & {
   kind: Extract<CardKind, typeof CARD_KINDS.ARTIFACT>;
-  manaCost: number;
+  durability: number;
   levelCost: 1 | 2 | 3;
   artifactKind: ArtifactKind;
   classIds: string[];

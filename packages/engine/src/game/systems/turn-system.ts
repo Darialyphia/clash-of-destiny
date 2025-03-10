@@ -1,6 +1,6 @@
-import type { Values } from '@game/shared';
+import type { Serializable, Values } from '@game/shared';
 import { System } from '../../system';
-import type { Unit } from '../../unit/entities/unit.entity';
+import type { SerializedUnit, Unit } from '../../unit/entities/unit.entity';
 import { TypedEventEmitter, TypedSerializableEvent } from '../../utils/typed-emitter';
 import { GAME_EVENTS } from '../game.events';
 
@@ -26,7 +26,12 @@ export type TurnEventMap = {
   [TURN_EVENTS.TURN_END]: GameTurnEvent;
 };
 
-export class TurnSystem extends System<never> {
+export type SerializedTurnOrder = SerializedUnit[];
+
+export class TurnSystem
+  extends System<never>
+  implements Serializable<SerializedTurnOrder>
+{
   private _turnCount = 0;
 
   private _processedUnits = new Set<Unit>();
@@ -51,6 +56,10 @@ export class TurnSystem extends System<never> {
 
   shutdown() {
     this.emitter.removeAllListeners();
+  }
+
+  serialize() {
+    return this.queue.map(unit => unit.serialize());
   }
 
   get turnCount() {

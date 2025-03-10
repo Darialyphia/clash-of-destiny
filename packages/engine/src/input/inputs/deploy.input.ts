@@ -27,6 +27,21 @@ export class DeployInput extends Input<typeof schema> {
       new InvalidDeploymentError()
     );
 
+    const isDistinctPoints =
+      new Set(
+        this.payload.deployment.map(deployment => `${deployment.x}:${deployment.y}`)
+      ).size === this.payload.deployment.length;
+    assert(isDistinctPoints, new InvalidDeploymentError());
+
+    const isValid = this.payload.deployment.every(deployment => {
+      const hero = this.player.heroes.find(h => h.unit.id === deployment.heroId);
+      if (!hero) return false;
+      const cell = this.game.boardSystem.getCellAt(deployment);
+
+      return cell?.player?.equals(this.player);
+    });
+
+    assert(isValid, new InvalidDeploymentError());
     this.player.commitDeployment(this.payload.deployment);
 
     if (this.game.playerSystem.players.every(p => p.isReadyToDeploy)) {

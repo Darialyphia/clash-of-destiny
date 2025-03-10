@@ -145,7 +145,7 @@ export class UnitTurnEvent extends TypedSerializableEvent<EmptyObject, EmptyObje
   }
 }
 
-export class LevelUpEvent extends TypedSerializableEvent<EmptyObject, EmptyObject> {
+export class UnitLevelUpEvent extends TypedSerializableEvent<EmptyObject, EmptyObject> {
   serialize() {
     return {};
   }
@@ -173,6 +173,6 @@ export type UnitEventMap = {
   [UNIT_EVENTS.AFTER_PLAY_CARD]: UnitPlayCardEvent;
   [UNIT_EVENTS.START_TURN]: UnitTurnEvent;
   [UNIT_EVENTS.END_TURN]: UnitTurnEvent;
-  [UNIT_EVENTS.BEFORE_LEVEL_UP]: LevelUpEvent;
-  [UNIT_EVENTS.AFTER_LEVEL_UP]: LevelUpEvent;
+  [UNIT_EVENTS.BEFORE_LEVEL_UP]: UnitLevelUpEvent;
+  [UNIT_EVENTS.AFTER_LEVEL_UP]: UnitLevelUpEvent;
 };

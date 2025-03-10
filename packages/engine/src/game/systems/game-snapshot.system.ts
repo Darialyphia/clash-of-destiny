@@ -5,6 +5,8 @@ import type { SerializedUnit } from '../../unit/entities/unit.entity';
 import type { SerializedPlayer } from '../../player/player.entity';
 import type { GamePhase } from './game-phase.system';
 import type { SerializedInteractionContext } from './interaction.system';
+import type { SerializedBoard } from '../../board/board-system';
+import type { SerializedTurnOrder } from './turn-system';
 
 export type GameStateSnapshot<T> = {
   id: number;
@@ -13,22 +15,21 @@ export type GameStateSnapshot<T> = {
 };
 
 export type SerializedOmniscientState = {
-  // board: SerializedBoard;
-  // units: SerializedUnit[];
-  // players: [SerializedPlayer, SerializedPlayer];
+  board: SerializedBoard;
+  units: SerializedUnit[];
+  players: [SerializedPlayer, SerializedPlayer];
   activeUnit: SerializedUnit;
   turnCount: number;
   interactionState: SerializedInteractionContext;
   phase: GamePhase;
+  turnOrder: SerializedTurnOrder;
 };
 
-type SerializedOpponent = Override<SerializedPlayer, { hand: number }>;
-
+export type SerializedOpponentUnit = BetterOmit<SerializedUnit, 'hand'>;
 export type SerializedPlayerState = Override<
   SerializedOmniscientState,
   {
-    // opponent: SerializedOpponent;
-    // player: SerializedPlayer;
+    units: Array<SerializedUnit | SerializedOpponentUnit>;
   }
 >;
 
@@ -88,15 +89,31 @@ export class GameSnaphotSystem extends System<EmptyObject> {
       activeUnit: this.game.turnSystem.activeUnit.serialize(),
       turnCount: this.game.turnSystem.turnCount,
       interactionState: this.game.interaction.serialize(),
-      phase: this.game.phase
+      phase: this.game.phase,
+      board: this.game.boardSystem.serialize(),
+      units: this.game.unitSystem.units.map(unit => unit.serialize()),
+      players: this.game.playerSystem.players.map(player => player.serialize()) as [
+        SerializedPlayer,
+        SerializedPlayer
+      ],
+      turnOrder: this.game.turnSystem.serialize()
     };
   }
 
   serializePlayerState(playerId: string): SerializedPlayerState {
-    const { ...state } = this.serializeOmniscientState();
+    const { units, ...state } = this.serializeOmniscientState();
 
     return {
-      ...state
+      ...state,
+      units: units.map(unit => {
+        if (unit.playerId === playerId) {
+          return unit;
+        }
+        return {
+          ...unit,
+          hand: undefined
+        };
+      })
     };
   }
 

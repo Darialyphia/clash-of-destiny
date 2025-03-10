@@ -18,6 +18,7 @@ import { EndTurnInput } from './inputs/end-turn.input';
 import { MoveInput } from './inputs/move.input';
 import { PlayCardInput } from './inputs/play-card.input';
 import { DeployInput } from './inputs/deploy.input';
+import { LevelUpInput } from './inputs/level-up.input';
 
 type GenericInputMap = Record<string, Constructor<Input<DefaultSchema>>>;
 
@@ -33,6 +34,7 @@ const validateinputMap = <T extends GenericInputMap>(data: ValidatedInputMap<T>)
 
 const inputMap = validateinputMap({
   deploy: DeployInput,
+  levelUp: LevelUpInput,
   move: MoveInput,
   attack: AttackInput,
   playCard: PlayCardInput,

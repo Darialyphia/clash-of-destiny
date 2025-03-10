@@ -19,6 +19,7 @@ export type SerializedCell = {
   player: 'p1' | 'p2' | null;
   isWalkable: boolean;
   unit: SerializedUnit | null;
+  spriteId: string;
 };
 
 export class Cell
@@ -47,7 +48,8 @@ export class Cell
       terrain: this.terrain,
       player: this.options.player,
       isWalkable: this.isWalkable,
-      unit: this.unit?.serialize() ?? null
+      unit: this.unit?.serialize() ?? null,
+      spriteId: this.options.spriteId
     };
   }
 

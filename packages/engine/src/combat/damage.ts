@@ -48,7 +48,7 @@ export class CombatDamage extends Damage<Unit> {
   getFinalAmount(target: Unit) {
     const scaled = this._source.getDealtDamage(target);
 
-    return target.getReceivedDamage(scaled, this, this._source);
+    return Math.max(0, target.getReceivedDamage(scaled, this, this._source));
   }
 }
 
@@ -58,6 +58,9 @@ export class AbilityDamage extends Damage<AbilityCard> {
   }
 
   getFinalAmount(target: Unit) {
-    return target.getReceivedDamage(this.baseAmount, this, this._source.unit);
+    return Math.max(
+      0,
+      target.getReceivedDamage(this.baseAmount, this, this._source.unit)
+    );
   }
 }

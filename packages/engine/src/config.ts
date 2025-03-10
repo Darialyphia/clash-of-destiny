@@ -22,6 +22,9 @@ export type Config = {
   AP_COST_PER_CARD: number;
 
   BASE_ATTACK_DAMAGE: number;
+
+  EXP_REWARD_PER_ATTACK: number;
+  EXP_REWARD_PER_TURN: number;
 };
 
 export const defaultConfig: Config = {
@@ -47,5 +50,8 @@ export const defaultConfig: Config = {
   AP_COST_INCREASE_PER_ATTACK: 1,
   AP_COST_PER_CARD: 1,
 
-  BASE_ATTACK_DAMAGE: 1
+  BASE_ATTACK_DAMAGE: 1,
+
+  EXP_REWARD_PER_ATTACK: 1,
+  EXP_REWARD_PER_TURN: 1
 };

@@ -4,10 +4,8 @@ import {
   type Constructor,
   type EmptyObject,
   type Serializable,
-  type TuplifyUnion,
   type Values
 } from '@game/shared';
-
 import type { ModifierMixin } from './modifier-mixin';
 import type { AnyCard } from '../card/entities/card.entity';
 import { Entity } from '../entity';

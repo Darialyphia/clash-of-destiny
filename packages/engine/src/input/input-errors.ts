@@ -95,3 +95,9 @@ export class InvalidDeploymentError extends InputError {
     super('Invalid deployment');
   }
 }
+
+export class CannotLevelUpError extends InputError {
+  constructor() {
+    super('Cannot level up');
+  }
+}
