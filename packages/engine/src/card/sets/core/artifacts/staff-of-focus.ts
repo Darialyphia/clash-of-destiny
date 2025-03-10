@@ -20,13 +20,14 @@ export const staffOfFocus: ArtifactBlueprint = {
     artifact.addModifier(
       new Modifier('staff-of-focus', game, card, {
         name: 'Staff of Focus',
-        description: 'At the start of your turn, gain 1 mana.',
+        description: 'At the start of your turn, gain 1 mana. This loses 1 durability',
         stackable: false,
         mixins: [
           new GameEventModifierMixin(game, {
             eventName: GAME_EVENTS.TURN_START,
             handler() {
               card.unit.mp.add(1);
+              artifact.loseDurability(1);
             }
           })
         ]

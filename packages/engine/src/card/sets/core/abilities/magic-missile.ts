@@ -3,6 +3,7 @@ import { AbilityDamage } from '../../../../combat/damage';
 import { TARGETING_TYPE } from '../../../../targeting/targeting-strategy';
 import type { AbilityBlueprint } from '../../../card-blueprint';
 import { RARITIES, CARD_SETS, CARD_KINDS } from '../../../card.enums';
+import { ProjectileFollowup } from '../../../followups/projectile-followup';
 import { mage } from '../heroes/mage';
 
 export const magicMissile: AbilityBlueprint = {
@@ -16,21 +17,7 @@ export const magicMissile: AbilityBlueprint = {
   levelCost: 1,
   exp: 1,
   classIds: [mage.id],
-  followup: {
-    getTargets(game, card) {
-      return [
-        {
-          type: 'cell',
-          isElligible(cell) {
-            return card.unit.position.isAxisAligned(cell);
-          }
-        }
-      ];
-    },
-    canCommit(targets) {
-      return targets.length > 0;
-    }
-  },
+  followup: new ProjectileFollowup(),
   getAoe(game, card) {
     return new PointAOEShape(game, card.player, TARGETING_TYPE.ANYWHERE);
   },

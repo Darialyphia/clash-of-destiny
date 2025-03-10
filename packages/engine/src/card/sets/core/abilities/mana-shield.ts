@@ -1,5 +1,4 @@
 import { PointAOEShape } from '../../../../aoe/point.aoe-shape';
-import { AbilityDamage } from '../../../../combat/damage';
 import { UnitInterceptorModifierMixin } from '../../../../modifier/mixins/interceptor.mixin';
 import { UnitSelfEventModifierMixin } from '../../../../modifier/mixins/self-event.mixin';
 import { Modifier } from '../../../../modifier/modifier.entity';
@@ -7,6 +6,7 @@ import { TARGETING_TYPE } from '../../../../targeting/targeting-strategy';
 import { UNIT_EVENTS } from '../../../../unit/unit-enums';
 import type { AbilityBlueprint } from '../../../card-blueprint';
 import { RARITIES, CARD_SETS, CARD_KINDS } from '../../../card.enums';
+import { NoFollowup } from '../../../followups/no-followup';
 import { mage } from '../heroes/mage';
 
 export const manaShield: AbilityBlueprint = {
@@ -20,14 +20,7 @@ export const manaShield: AbilityBlueprint = {
   levelCost: 1,
   exp: 1,
   classIds: [mage.id],
-  followup: {
-    getTargets() {
-      return [];
-    },
-    canCommit() {
-      return true;
-    }
-  },
+  followup: new NoFollowup(),
   getAoe(game, card) {
     return new PointAOEShape(game, card.player, TARGETING_TYPE.ALLY);
   },

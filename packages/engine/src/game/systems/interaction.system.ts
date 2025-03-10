@@ -21,7 +21,7 @@ import {
 
 export type EffectTarget = {
   type: 'cell';
-  isElligible: (cell: Point) => boolean;
+  isElligible: (point: Point) => boolean;
 };
 
 export type SelectedTarget = {

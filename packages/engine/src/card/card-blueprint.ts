@@ -16,6 +16,7 @@ import type { AbilityCard } from './entities/ability-card.entity';
 import type { Artifact } from '../unit/entities/artifact.entity';
 import type { ArtifactCard } from './entities/artifact-card.entity';
 import type { QuestCard } from './entities/quest-card.entity';
+import type { AbilityFollowup } from './followups/ability-followup';
 
 export type CardBlueprintBase = {
   id: string;
@@ -54,10 +55,7 @@ export type AbilityBlueprint = CardBlueprintBase & {
   levelCost: 1 | 2 | 3;
   exp: number;
   classIds: string[];
-  followup: {
-    getTargets(game: Game, card: AbilityCard): EffectTarget[];
-    canCommit: (targets: SelectedTarget[]) => boolean;
-  };
+  followup: AbilityFollowup;
   getAoe(game: Game, card: AbilityCard, points: Point[]): AOEShape;
   onPlay(
     game: Game,

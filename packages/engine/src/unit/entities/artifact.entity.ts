@@ -9,12 +9,18 @@ import { Entity } from '../../entity';
 import type { Game } from '../../game/game';
 import { ModifierManager } from '../../modifier/modifier-manager.component';
 import { TypedSerializableEvent } from '../../utils/typed-emitter';
+import { Interceptable } from '../../utils/interceptable';
+import type { Damage } from '../../combat/damage';
+import { UNIT_EVENTS } from '../unit-enums';
+import { ARTIFACT_KINDS } from '../../card/card.enums';
 
 export const ARTIFACT_EVENTS = {
   EQUIPED: 'equiped',
 
   BEFORE_DESTROY: 'before_destroy',
-  AFTER_DESTROY: 'after_destroy'
+  AFTER_DESTROY: 'after_destroy',
+
+  DURABILITY_CHANGE: 'durability_change'
 } as const;
 
 export type ArtifactEvent = Values<typeof ARTIFACT_EVENTS>;
@@ -24,6 +30,8 @@ export type ArtifactEventMap = {
 
   [ARTIFACT_EVENTS.BEFORE_DESTROY]: ArtifactDestroyEvent;
   [ARTIFACT_EVENTS.AFTER_DESTROY]: ArtifactDestroyEvent;
+
+  [ARTIFACT_EVENTS.DURABILITY_CHANGE]: ArtifactDurabilityChangeEvent;
 };
 
 export type ArtifactOptions = {
@@ -31,7 +39,19 @@ export type ArtifactOptions = {
   unitId: string;
 };
 
-export type ArtifactInterceptor = EmptyObject;
+export type ArtifactInterceptor = {
+  shouldLosedurabilityOnAttack: Interceptable<boolean>;
+  shouldLosedurabilityOnDamage: Interceptable<boolean, Damage<any>>;
+  maxDurability: Interceptable<number>;
+  canLoseDurability: Interceptable<boolean>;
+};
+
+const makeInterceptors = (): ArtifactInterceptor => ({
+  shouldLosedurabilityOnAttack: new Interceptable(),
+  shouldLosedurabilityOnDamage: new Interceptable(),
+  maxDurability: new Interceptable(),
+  canLoseDurability: new Interceptable()
+});
 
 export type SerializedArtifact = {
   id: string;
@@ -49,14 +69,32 @@ export class Artifact
 
   private modifierManager: ModifierManager<Artifact>;
 
+  private _durability: number;
+
+  private cleanups: Array<() => void> = [];
   constructor(
     protected game: Game,
     options: ArtifactOptions
   ) {
-    super(`${options.unitId}-artifact-${nanoid(6)}`, {});
+    super(`${options.unitId}-artifact-${nanoid(6)}`, makeInterceptors());
     this.card = options.card;
+    this._durability = this.card.durability;
     this.unitId = options.unitId;
     this.modifierManager = new ModifierManager(this);
+    this.cleanups.push(
+      this.unit.on(UNIT_EVENTS.AFTER_ATTACK, () => {
+        if (this.shouldLosedurabilityOnAttack) {
+          this.loseDurability(1);
+        }
+      })
+    );
+    this.cleanups.push(
+      this.unit.on(UNIT_EVENTS.AFTER_RECEIVE_DAMAGE, event => {
+        if (this.shouldLosedurabilityOnDamage(event.data.damage)) {
+          this.loseDurability(1);
+        }
+      })
+    );
   }
 
   serialize() {
@@ -71,6 +109,24 @@ export class Artifact
     return this.game.unitSystem.getUnitById(this.unitId)!;
   }
 
+  get canLoseDurability() {
+    return this.interceptors.canLoseDurability.getValue(true, {});
+  }
+
+  get shouldLosedurabilityOnAttack() {
+    return this.interceptors.shouldLosedurabilityOnAttack.getValue(
+      this.canLoseDurability && this.card.artifactKind === ARTIFACT_KINDS.WEAPON,
+      {}
+    );
+  }
+
+  shouldLosedurabilityOnDamage(damage: Damage<any>) {
+    return this.interceptors.shouldLosedurabilityOnDamage.getValue(
+      this.canLoseDurability && this.card.artifactKind === ARTIFACT_KINDS.ARMOR,
+      damage
+    );
+  }
+
   get removeModifier() {
     return this.modifierManager.remove.bind(this.modifierManager);
   }
@@ -83,8 +139,43 @@ export class Artifact
     return this.modifierManager.get.bind(this.modifierManager);
   }
 
+  get durability() {
+    return this._durability;
+  }
+
+  get maxDurability() {
+    return this.interceptors.maxDurability.getValue(this.card.durability, {});
+  }
+
   get modifiers() {
     return this.modifierManager.modifiers;
+  }
+
+  gainDurability(amount: number) {
+    const previousDurability = this.durability;
+    this._durability = Math.min(this.maxDurability, this._durability + amount);
+    this.emitter.emit(
+      ARTIFACT_EVENTS.DURABILITY_CHANGE,
+      new ArtifactDurabilityChangeEvent({
+        durability: this.durability,
+        previousDurability
+      })
+    );
+  }
+
+  loseDurability(amount: number) {
+    const previousDurability = this.durability;
+    this._durability = Math.max(0, this._durability - amount);
+    this.emitter.emit(
+      ARTIFACT_EVENTS.DURABILITY_CHANGE,
+      new ArtifactDurabilityChangeEvent({
+        durability: this.durability,
+        previousDurability
+      })
+    );
+    if (this.durability === 0) {
+      this.destroy();
+    }
   }
 
   addModifier(modifier: Modifier<Artifact>) {
@@ -121,5 +212,17 @@ export class ArtifactDestroyEvent extends TypedSerializableEvent<
 > {
   serialize() {
     return {};
+  }
+}
+
+export class ArtifactDurabilityChangeEvent extends TypedSerializableEvent<
+  { durability: number; previousDurability: number },
+  { durability: number; previousDurability: number }
+> {
+  serialize() {
+    return {
+      durability: this.data.durability,
+      previousDurability: this.data.previousDurability
+    };
   }
 }

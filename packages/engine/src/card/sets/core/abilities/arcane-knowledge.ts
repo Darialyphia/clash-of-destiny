@@ -1,6 +1,7 @@
 import { NoAOEShape } from '../../../../aoe/no-aoe.aoe-shape';
 import type { AbilityBlueprint } from '../../../card-blueprint';
 import { RARITIES, CARD_SETS, CARD_KINDS } from '../../../card.enums';
+import { NoFollowup } from '../../../followups/no-followup';
 import { mage } from '../heroes/mage';
 
 export const arcaneKnowledge: AbilityBlueprint = {
@@ -14,14 +15,7 @@ export const arcaneKnowledge: AbilityBlueprint = {
   levelCost: 1,
   exp: 1,
   classIds: [mage.id],
-  followup: {
-    getTargets() {
-      return [];
-    },
-    canCommit() {
-      return true;
-    }
-  },
+  followup: new NoFollowup(),
   getAoe() {
     return new NoAOEShape();
   },
