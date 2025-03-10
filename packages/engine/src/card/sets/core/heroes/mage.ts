@@ -14,6 +14,13 @@ export const mage: UnitBlueprint = {
   rarity: RARITIES.COMMON,
   setId: CARD_SETS.CORE,
   unitKind: UNIT_KINDS.HERO,
+  spriteId: 'wizard',
+  spriteParts: {
+    armor: 'tier1',
+    weapon: 'tier1',
+    helm: 'tier3',
+    vfx: 'tier1'
+  },
   getAoe(game, unit) {
     return new PointAOEShape(game, unit.player, TARGETING_TYPE.EMPTY);
   },

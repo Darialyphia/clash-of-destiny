@@ -8,8 +8,6 @@ export const UNIT_EVENTS = {
   AFTER_TELEPORT: 'after_teleport',
   BEFORE_ATTACK: 'before_attack',
   AFTER_ATTACK: 'after_attack',
-  BEFORE_COUNTERATTACK: 'before_counterattack',
-  AFTER_COUNTERATTACK: 'after_counterattack',
   BEFORE_DEAL_DAMAGE: 'before_deal_damage',
   AFTER_DEAL_DAMAGE: 'after_deal_damage',
   BEFORE_RECEIVE_DAMAGE: 'before_receive_damage',

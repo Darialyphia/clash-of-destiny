@@ -1,11 +1,11 @@
 import { useIsoWorld } from './useIsoWorld';
-import type { Nullable, Point3D } from '@game/shared';
+import type { Nullable, Point } from '@game/shared';
 import { useIso } from './useIso';
 import type { MaybeRefOrGetter } from 'vue';
 import { useBattleStore } from '@/battle/stores/battle.store';
 
 export type UseIsoTileOptions = {
-  position: MaybeRefOrGetter<Point3D>;
+  position: MaybeRefOrGetter<Point>;
   zIndexOffset?: MaybeRefOrGetter<Nullable<number>>;
 };
 

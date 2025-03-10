@@ -4,30 +4,32 @@ import UnitSprite from './UnitSprite.vue';
 import UnitShadow from './UnitShadow.vue';
 import UnitStatsIndicators from './UnitStatsIndicators.vue';
 import UnitPositioner from './UnitPositioner.vue';
-import type { UnitViewModel } from '../unit.model';
 import UnitVFX from './vfx/UnitVFX.vue';
 
 import { PTransition } from 'vue3-pixi';
 import type { Container } from 'pixi.js';
 import AlphaTransition from '@/ui/scenes/AlphaTransition.vue';
 import { waitFor } from '@game/shared';
-import { GAME_EVENTS } from '@game/engine/src/game/game';
-import { useCamera } from '@/board/composables/useCamera';
 import UnitResourceIndicator from './UnitResourceIndicator.vue';
 import UnitModifierSprite from './UnitModifierSprite.vue';
-import { useBattleEvent, useUserPlayer } from '@/battle/stores/battle.store';
+import { useBattleEvent } from '@/battle/stores/battle.store';
+import { useIsoCamera } from '@/iso/composables/useIsoCamera';
+import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
+import { useIsoPoint } from '@/iso/composables/useAnimatedPoint';
+import { GAME_EVENTS } from '@game/engine/src/game/game.events';
 
-const { unit } = defineProps<{ unit: UnitViewModel }>();
+const { unit } = defineProps<{ unit: SerializedUnit }>();
 
-const camera = useCamera();
+const camera = useIsoCamera();
 
+const isoPosition = useIsoPoint({ position: computed(() => unit.position) });
 const centerCamera = () => {
   const viewport = camera.viewport.value;
   if (!viewport) return;
 
   const position = {
-    x: unit.screenPosition.x + camera.offset.value.x,
-    y: unit.screenPosition.y + camera.offset.value.y
+    x: isoPosition.value.x + camera.offset.value.x,
+    y: isoPosition.value.y + camera.offset.value.y
   };
 
   const isWithinViewport =
@@ -47,12 +49,12 @@ const centerCamera = () => {
 };
 
 useBattleEvent(GAME_EVENTS.UNIT_BEFORE_ATTACK, async e => {
-  if (e.unit.equals(unit.getUnit())) {
+  if (e.unit.id === e.unit.id) {
     await centerCamera();
   }
 });
 useBattleEvent(GAME_EVENTS.UNIT_BEFORE_RECEIVE_DAMAGE, async e => {
-  if (e.unit.equals(unit.getUnit())) {
+  if (e.unit.id === e.unit.id) {
     await centerCamera();
   }
 });
@@ -71,8 +73,6 @@ const spawnAnimation = (container: Container) => {
     }
   });
 };
-
-const player = useUserPlayer();
 </script>
 
 <template>
@@ -82,25 +82,25 @@ const player = useUserPlayer();
       :duration="{ enter: 1000, leave: 0 }"
       @enter="spawnAnimation"
     >
-      <UnitOrientation :unit="unit">
-        <sprite
-          v-if="isSpawnAnimationDone"
-          event-mode="none"
-          :anchor="0.5"
-          :y="28"
-          :texture="
-            player.equals(unit.player)
-              ? '/assets/ui/ally-indicator.png'
-              : '/assets/ui/enemy-indicator.png'
-          "
-        />
-        <UnitShadow :unit="unit" />
-        <UnitSprite :unit="unit" />
-      </UnitOrientation>
+      <!-- <UnitOrientation :unit="unit"> -->
+      <!-- <sprite
+        v-if="isSpawnAnimationDone"
+        event-mode="none"
+        :anchor="0.5"
+        :y="28"
+        :texture="
+          player.equals(unit.player)
+            ? '/assets/ui/ally-indicator.png'
+            : '/assets/ui/enemy-indicator.png'
+        "
+      /> -->
+      <!-- <UnitShadow :unit="unit" /> -->
+      <UnitSprite :unit="unit" />
+      <!-- </UnitOrientation> -->
     </PTransition>
-    <UnitVFX :unit="unit" />
+    <!-- <UnitVFX :unit="unit" /> -->
 
-    <AlphaTransition
+    <!-- <AlphaTransition
       :duration="{ enter: 200, leave: 200 }"
       v-if="isSpawnAnimationDone"
     >
@@ -118,6 +118,6 @@ const player = useUserPlayer();
           :index="index"
         />
       </container>
-    </AlphaTransition>
+    </AlphaTransition> -->
   </UnitPositioner>
 </template>

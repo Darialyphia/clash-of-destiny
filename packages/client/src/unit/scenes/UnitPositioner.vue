@@ -1,17 +1,14 @@
 <script setup lang="ts">
 import { config } from '@/utils/config';
-import type { UnitViewModel } from '../unit.model';
-import { clamp, type Point3D } from '@game/shared';
+import { type Point, type Point3D } from '@game/shared';
 import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
-import type { Unit } from '@game/engine/src/unit/unit.entity';
-import { GAME_EVENTS } from '@game/engine/src/game/game';
-import {
-  useBattleEvent,
-  useGameClientState
-} from '@/battle/stores/battle.store';
+import { useBattleEvent, useGameState } from '@/battle/stores/battle.store';
+import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
+import { GAME_EVENTS } from '@game/engine/src/game/game.events';
+import AnimatedIsoPoint from '@/iso/components/AnimatedIsoPoint.vue';
 
 const { unit, bounce } = defineProps<{
-  unit: UnitViewModel;
+  unit: SerializedUnit;
   bounce?: boolean;
 }>();
 
@@ -19,91 +16,71 @@ const offset = {
   x: 0,
   y: -24
 };
-const state = useGameClientState();
-useBattleEvent(GAME_EVENTS.UNIT_AFTER_MOVE, e => {
-  return new Promise(resolve => {
-    if (!e.unit.equals(unit.getUnit())) return resolve();
+const { state } = useGameState();
+useBattleEvent(GAME_EVENTS.UNIT_AFTER_MOVE, async e => {
+  if (e.unit.id !== unit.id) return;
 
-    const start = state.value.cells.find(c =>
-      c.getCell().position.equals(e.previousPosition)
-    )!.screenPosition;
-    const end = state.value.cells.find(c =>
-      c.getCell().position.equals(e.position)
-    )!.screenPosition;
+  const start = e.previousPosition;
+  const end = e.position;
+  const midPoint = {
+    x: (start.x + end.x) / 2,
+    y: (start.y + end.y) / 2
+    // z: (start.z + end.z) / 2 + (bounce ? config.MOVEMENT_BOUNCE_HEIGHT : 0)
+  };
 
-    const midPoint = {
-      x: (start.x + end.x) / 2,
-      y: (start.y + end.y) / 2 - (bounce ? config.MOVEMENT_BOUNCE_HEIGHT : 0)
-    };
-
-    gsap.to(unit.screenPosition, {
-      motionPath: [start, midPoint, end],
-      duration: config.MOVEMENT_SPEED_PER_TILE,
-      onComplete: resolve
-    });
+  await gsap.to(unit.position, {
+    motionPath: [start, midPoint, end],
+    duration: config.MOVEMENT_SPEED_PER_TILE
   });
 });
 
-const attackAnimation = async (e: { unit: Unit; target: Point3D }) => {
-  if (!e.unit.equals(unit.getUnit())) return;
+const attackAnimation = async (e: { unit: SerializedUnit; target: Point }) => {
+  if (e.unit.id !== unit.id) return;
 
-  const start = state.value.cells.find(c =>
-    c.getCell().position.equals(e.unit.position)
-  )!.screenPosition;
-  const end = state.value.cells.find(c =>
-    c.getCell().position.equals(e.target)
-  )!.screenPosition;
-
+  const start = e.unit.position;
+  const end = e.target;
   const impactPoint = {
-    x:
-      start.x +
-      clamp((end.x - start.x) * 0.55, -config.TILE_SIZE.x, config.TILE_SIZE.x),
-    y:
-      start.y +
-      clamp((end.y - start.y) * 0.55, -config.TILE_SIZE.y, config.TILE_SIZE.y)
+    x: start.x + (end.x - start.x) * 0.55,
+    y: start.y + (end.y - start.y) * 0.55
+    // z: start.z + (end.z - start.z) * 0.55
   };
   const anticipation = {
     x: start.x - (end.x - start.x) * 0.2,
     y: start.y - (end.y - start.y) * 0.2
+    // z: start.z - (end.z - start.z) * 0.2
   };
   const tl = gsap.timeline();
 
-  tl.to(unit.screenPosition, {
+  tl.to(unit.position, {
     ...anticipation,
     duration: 0.15
   })
-    .to(unit.screenPosition, {
+    .to(unit.position, {
       ...impactPoint,
       duration: 0.05,
       ease: Power1.easeIn
     })
 
-    .to(unit.screenPosition, {
+    .to(unit.position, {
       ...start,
       duration: 0.1
     });
   await tl.play();
 };
 useBattleEvent(GAME_EVENTS.UNIT_BEFORE_ATTACK, attackAnimation);
-useBattleEvent(GAME_EVENTS.UNIT_BEFORE_COUNTERATTACK, attackAnimation);
 
 const ui = useBattleUiStore();
 </script>
 
 <template>
-  <container
-    :x="unit.screenPosition.x"
-    :y="unit.screenPosition.y"
-    :z-order="unit.screenPosition.y + 1"
-    :z-index="unit.screenPosition.y + 1"
-  >
+  <AnimatedIsoPoint :position="unit.position" :z-index-offset="32">
     <container
       :position="offset"
       :ref="(container: any) => ui.assignLayer(container, 'scene')"
     >
       <slot />
     </container>
-  </container>
+  </AnimatedIsoPoint>
 </template>
 
 <style scoped lang="postcss"></style>

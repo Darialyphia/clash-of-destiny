@@ -69,6 +69,8 @@ export type SerializedUnit = {
   id: string;
   position: Point;
   playerId: string;
+  spriteId: string;
+  spriteParts: Record<string, string>;
   hand: SerializedCard[];
   handSize: number;
   remainingCardsInDeck: number;
@@ -194,6 +196,8 @@ export class Unit
       id: this.id,
       position: this.position.serialize(),
       playerId: this.player.id,
+      spriteId: this.blueprint.spriteId,
+      spriteParts: this.blueprint.spriteParts,
       hand: this.cards.hand.map(card => card.serialize()),
       handSize: this.cards.hand.length,
       remainingCardsInDeck: this.cards.deck.cards.length,
@@ -256,12 +260,6 @@ export class Unit
     );
     this.combat.on(COMBAT_EVENTS.AFTER_ATTACK, e =>
       this.emitter.emit(UNIT_EVENTS.AFTER_ATTACK, new UnitAttackEvent(e.data))
-    );
-    this.combat.on(COMBAT_EVENTS.BEFORE_COUNTERATTACK, e =>
-      this.emitter.emit(UNIT_EVENTS.BEFORE_COUNTERATTACK, new UnitAttackEvent(e.data))
-    );
-    this.combat.on(COMBAT_EVENTS.AFTER_COUNTERATTACK, e =>
-      this.emitter.emit(UNIT_EVENTS.AFTER_COUNTERATTACK, new UnitAttackEvent(e.data))
     );
     this.combat.on(COMBAT_EVENTS.BEFORE_DEAL_DAMAGE, e =>
       this.emitter.emit(UNIT_EVENTS.BEFORE_DEAL_DAMAGE, new UnitDealDamageEvent(e.data))

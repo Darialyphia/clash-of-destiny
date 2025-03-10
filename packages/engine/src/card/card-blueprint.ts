@@ -45,6 +45,8 @@ export type UnitBlueprint = CardBlueprintBase & {
   kind: Extract<CardKind, typeof CARD_KINDS.UNIT>;
   maxHp: number;
   initiative: number;
+  spriteId: string;
+  spriteParts: Record<string, string>;
   getAoe(game: Game, unit: Unit, points: Point[]): AOEShape;
   onPlay(game: Game, unit: Unit): void;
 } & (HeroBlueprint | { unitKind: typeof UNIT_KINDS.MINION });

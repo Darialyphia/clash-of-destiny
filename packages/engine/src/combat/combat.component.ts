@@ -11,8 +11,6 @@ import {
 export const COMBAT_EVENTS = {
   BEFORE_ATTACK: 'before_attack',
   AFTER_ATTACK: 'after_attack',
-  BEFORE_COUNTERATTACK: 'before_counterattack',
-  AFTER_COUNTERATTACK: 'after_counterattack',
   BEFORE_DEAL_DAMAGE: 'before_deal_damage',
   AFTER_DEAL_DAMAGE: 'after_deal_damage',
   BEFORE_RECEIVE_DAMAGE: 'before_receive_damage',
@@ -57,8 +55,6 @@ export class ReceiveDamageEvent extends TypedSerializableEvent<
 export type CombatEventMap = {
   [COMBAT_EVENTS.BEFORE_ATTACK]: AttackEvent;
   [COMBAT_EVENTS.AFTER_ATTACK]: AttackEvent;
-  [COMBAT_EVENTS.BEFORE_COUNTERATTACK]: AttackEvent;
-  [COMBAT_EVENTS.AFTER_COUNTERATTACK]: AttackEvent;
   [COMBAT_EVENTS.BEFORE_DEAL_DAMAGE]: DealDamageEvent;
   [COMBAT_EVENTS.AFTER_DEAL_DAMAGE]: DealDamageEvent;
   [COMBAT_EVENTS.BEFORE_RECEIVE_DAMAGE]: ReceiveDamageEvent;

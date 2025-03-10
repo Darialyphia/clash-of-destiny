@@ -3,6 +3,7 @@ import BoardCell from '@/board/scenes/BoardCell.vue';
 import { providePointLights } from '@/vfx/usePointLight';
 import { useGameState } from '@/battle/stores/battle.store';
 import { useIsoCamera } from '@/iso/composables/useIsoCamera';
+import Unit from '@/unit/scenes/Unit.vue';
 
 const { state } = useGameState();
 const readyCells = ref(0);
@@ -11,16 +12,16 @@ providePointLights(camera);
 </script>
 
 <template>
-  <BoardCell
-    v-for="cell in state.board.cells"
-    :key="cell.id"
-    :cell
-    @ready="readyCells++"
-  />
+  <template v-if="camera.viewport.value">
+    <BoardCell
+      v-for="cell in state.board.cells"
+      :key="cell.id"
+      :cell
+      @ready="readyCells++"
+    />
 
-  <!-- <template v-if="ui.isBoardAppearAnimationDone">
-    <Unit v-for="unit in battleStore.state.units" :key="unit.id" :unit="unit" />
-  </template> -->
+    <Unit v-for="unit in state.units" :key="unit.id" :unit="unit" />
 
-  <!-- <AmbientLight :world-size="worldSize" /> -->
+    <!-- <AmbientLight :world-size="worldSize" /> -->
+  </template>
 </template>

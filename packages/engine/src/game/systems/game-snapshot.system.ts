@@ -1,4 +1,4 @@
-import type { BetterOmit, EmptyObject, Override } from '@game/shared';
+import type { EmptyObject, Override } from '@game/shared';
 import { System } from '../../system';
 import type { GameStarEvent, SerializedStarEvent } from '../game.events';
 import type { SerializedUnit } from '../../unit/entities/unit.entity';
@@ -25,7 +25,7 @@ export type SerializedOmniscientState = {
   turnOrder: SerializedTurnOrder;
 };
 
-export type SerializedOpponentUnit = BetterOmit<SerializedUnit, 'hand'>;
+export type SerializedOpponentUnit = SerializedUnit;
 export type SerializedPlayerState = Override<
   SerializedOmniscientState,
   {
@@ -111,7 +111,7 @@ export class GameSnaphotSystem extends System<EmptyObject> {
         }
         return {
           ...unit,
-          hand: undefined
+          hand: []
         };
       })
     };

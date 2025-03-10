@@ -696,7 +696,35 @@
     },
     {
       "name": "units",
-      "assets": []
+      "assets": [
+        {
+          "alias": [
+            "wizard"
+          ],
+          "src": [
+            "/assets/units/wizard.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "wizard.png"
+          ],
+          "src": [
+            "/assets/units/wizard.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        }
+      ]
     }
   ]
 }

@@ -19,8 +19,12 @@ export const GAME_TYPES = {
 
 export type GameType = Values<typeof GAME_TYPES>;
 
+type SerializedGameEventMap = {
+  [Key in keyof GameEventMap]: ReturnType<GameEventMap[Key]['serialize']>;
+};
+
 export const useBattleStore = defineStore('battle', () => {
-  const fxEmitter = new TypedEventEmitter<GameEventMap>(true);
+  const fxEmitter = new TypedEventEmitter<SerializedGameEventMap>(true);
 
   const isPlayingFx = ref(false);
   const isReady = ref(false);
@@ -89,23 +93,23 @@ export const useBattleStore = defineStore('battle', () => {
     isPlayingFx: readonly(isPlayingFx),
     playerId,
     state,
-    on<T extends keyof GameEventMap>(
+    on<T extends keyof SerializedGameEventMap>(
       eventName: T,
-      handler: (eventArg: GameEventMap[T]) => Promise<void>
+      handler: (eventArg: SerializedGameEventMap[T]) => Promise<void>
     ) {
       return fxEmitter.on(eventName, handler);
     },
 
     once<T extends keyof GameEventMap>(
       eventName: T,
-      handler: (eventArg: GameEventMap[T]) => Promise<void>
+      handler: (eventArg: SerializedGameEventMap[T]) => Promise<void>
     ) {
       return fxEmitter.once(eventName, handler);
     },
 
     off<T extends keyof GameEventMap>(
       eventName: T,
-      handler: (eventArg: GameEventMap[T]) => Promise<void>
+      handler: (eventArg: SerializedGameEventMap[T]) => Promise<void>
     ) {
       return fxEmitter.off(eventName, handler);
     }
@@ -114,7 +118,7 @@ export const useBattleStore = defineStore('battle', () => {
 
 export const useBattleEvent = <T extends keyof GameEventMap>(
   name: T,
-  handler: (eventArg: GameEventMap[T]) => Promise<void>
+  handler: (eventArg: ReturnType<GameEventMap[T]['serialize']>) => Promise<void>
 ) => {
   const store = useBattleStore();
 

@@ -65,10 +65,15 @@ watchEffect(() => {
     textures.value.push(app.value.renderer.generateTexture(g));
   });
 });
+
+watchEffect(() => {
+  console.log('textures', textures.value);
+});
 </script>
 
 <template>
   <animated-sprite
+    v-if="textures.length > 10"
     :textures="textures"
     event-mode="none"
     v-bind="props"
