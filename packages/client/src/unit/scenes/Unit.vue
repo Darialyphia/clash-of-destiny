@@ -2,23 +2,17 @@
 import UnitOrientation from './UnitOrientation.vue';
 import UnitSprite from './UnitSprite.vue';
 import UnitShadow from './UnitShadow.vue';
-import UnitStatsIndicators from './UnitStatsIndicators.vue';
 import UnitPositioner from './UnitPositioner.vue';
-import UnitVFX from './vfx/UnitVFX.vue';
-
-import { PTransition } from 'vue3-pixi';
 import type { Container } from 'pixi.js';
-import AlphaTransition from '@/ui/scenes/AlphaTransition.vue';
 import { waitFor } from '@game/shared';
-import UnitResourceIndicator from './UnitResourceIndicator.vue';
-import UnitModifierSprite from './UnitModifierSprite.vue';
 import { useBattleEvent } from '@/battle/stores/battle.store';
 import { useIsoCamera } from '@/iso/composables/useIsoCamera';
 import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
 import { useAnimatedIsoPoint } from '@/iso/composables/useAnimatedPoint';
 import { GAME_EVENTS } from '@game/engine/src/game/game.events';
+import type { UnitViewModel } from '../unit.model';
 
-const { unit } = defineProps<{ unit: SerializedUnit }>();
+const { unit } = defineProps<{ unit: UnitViewModel }>();
 
 const camera = useIsoCamera();
 

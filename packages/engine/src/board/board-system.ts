@@ -5,7 +5,7 @@ import {
   type Point,
   type Serializable
 } from '@game/shared';
-import { Cell, type SerializedCell } from './cell';
+import { Cell } from './cell';
 import { pointToCellId } from './board-utils';
 import { System } from '../system';
 import type { MapBlueprint } from './map-blueprint';
@@ -17,7 +17,7 @@ export type BoardSystemOptions = {
 export type SerializedBoard = {
   rows: number;
   columns: number;
-  cells: SerializedCell[];
+  cells: string[];
 };
 
 export class BoardSystem
@@ -52,7 +52,7 @@ export class BoardSystem
     return {
       rows: this.rows,
       columns: this.cols,
-      cells: this.cells.map(cell => cell.serialize())
+      cells: this.cells.map(cell => cell.id)
     };
   }
 

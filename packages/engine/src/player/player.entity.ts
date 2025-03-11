@@ -31,8 +31,9 @@ export type PlayerOptions = {
 
 export type SerializedPlayer = {
   id: string;
+  entityType: 'player';
   name: string;
-  deployZone: SerializedCell[];
+  deployZone: string[];
 };
 
 type PlayerInterceptors = EmptyObject;
@@ -66,8 +67,9 @@ export class Player
   serialize() {
     return {
       id: this.id,
+      entityType: 'player' as const,
       name: this.options.name,
-      deployZone: this.deployZone.map(c => c.serialize())
+      deployZone: this.deployZone.map(c => c.id)
     };
   }
 

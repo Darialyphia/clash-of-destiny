@@ -26,7 +26,7 @@ export type TurnEventMap = {
   [TURN_EVENTS.TURN_END]: GameTurnEvent;
 };
 
-export type SerializedTurnOrder = SerializedUnit[];
+export type SerializedTurnOrder = string[];
 
 export class TurnSystem
   extends System<never>
@@ -60,7 +60,7 @@ export class TurnSystem
   }
 
   serialize() {
-    return this.queue.map(unit => unit.serialize());
+    return this.queue.map(unit => unit.id);
   }
 
   get turnCount() {

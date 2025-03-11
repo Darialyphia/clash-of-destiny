@@ -1,5 +1,12 @@
+import { CellViewModel } from '@/board/cell.model';
+import { CardViewModel } from '@/card/card.model';
+import { PlayerViewModel } from '@/player/player.model';
+import { ArtifactViewModel } from '@/unit/artifact.model';
+import { ModifierViewModel } from '@/unit/modifier.model';
+import { UnitViewModel } from '@/unit/unit.model';
 import type { GameEventMap } from '@game/engine/src/game/game.events';
 import type {
+  EntityDictionary,
   GameStateSnapshot,
   SerializedOmniscientState,
   SerializedPlayerState
@@ -8,9 +15,12 @@ import type {
   InputDispatcher,
   SerializedInput
 } from '@game/engine/src/input/input-system';
+import type { Modifier } from '@game/engine/src/modifier/modifier.entity';
+import type { Artifact } from '@game/engine/src/unit/entities/artifact.entity';
 import { TypedEventEmitter } from '@game/engine/src/utils/typed-emitter';
-import { type PartialBy, type Values } from '@game/shared';
+import { type Override, type PartialBy, type Values } from '@game/shared';
 import { defineStore } from 'pinia';
+import { match } from 'ts-pattern';
 
 export const GAME_TYPES = {
   LOCAL: 'local',
@@ -19,8 +29,57 @@ export const GAME_TYPES = {
 
 export type GameType = Values<typeof GAME_TYPES>;
 
+export type GameState = Override<
+  SerializedOmniscientState,
+  {
+    entities: Record<
+      string,
+      | UnitViewModel
+      | CellViewModel
+      | PlayerViewModel
+      | CardViewModel
+      | ModifierViewModel
+      | ArtifactViewModel
+    >;
+  }
+>;
 type SerializedGameEventMap = {
   [Key in keyof GameEventMap]: ReturnType<GameEventMap[Key]['serialize']>;
+};
+
+const buildentities = (entities: EntityDictionary): GameState['entities'] => {
+  const result = {} as GameState['entities'];
+
+  for (const [id, entity] of Object.entries(entities)) {
+    result[id] = match(entity)
+      .with(
+        { entityType: 'unit' },
+        entity => new UnitViewModel(entity, entities, () => {})
+      )
+      .with(
+        { entityType: 'cell' },
+        entity => new CellViewModel(entity, entities, () => {})
+      )
+      .with(
+        { entityType: 'player' },
+        entity => new PlayerViewModel(entity, entities, () => {})
+      )
+      .with(
+        { entityType: 'card' },
+        entity => new CardViewModel(entity, entities, () => {})
+      )
+      .with(
+        { entityType: 'modifier' },
+        entity => new ModifierViewModel(entity, entities, () => {})
+      )
+      .with(
+        { entityType: 'artifact' },
+        entity => new ArtifactViewModel(entity, entities, () => {})
+      )
+      .exhaustive();
+  }
+
+  return result;
 };
 
 export const useBattleStore = defineStore('battle', () => {
@@ -34,7 +93,7 @@ export const useBattleStore = defineStore('battle', () => {
   const playerId = ref<string>();
 
   const gameType = ref<GameType>();
-  const state = ref<SerializedOmniscientState | SerializedPlayerState>();
+  const state = ref<GameState>();
 
   return {
     init({
@@ -59,7 +118,10 @@ export const useBattleStore = defineStore('battle', () => {
       playerId.value = id;
       dispatch = dispatcher;
       gameType.value = type;
-      state.value = initialState;
+      state.value = {
+        ...initialState,
+        entities: buildentities(initialState.entities)
+      };
 
       subscriber(async snapshot => {
         isPlayingFx.value = true;
@@ -67,7 +129,10 @@ export const useBattleStore = defineStore('battle', () => {
         for (const event of snapshot.events) {
           await fxEmitter.emitAsync(event.eventName, event.event as any);
         }
-        state.value = snapshot.state;
+        state.value = {
+          ...snapshot.state,
+          entities: buildentities(snapshot.state.entities)
+        };
         isPlayingFx.value = false;
       });
 
@@ -134,16 +199,8 @@ export const useGameState = () => {
 
   return {
     gameType: computed(() => store.gameType),
-    state: computed(() => store.state)
-  } as
-    | {
-        gameType: ComputedRef<typeof GAME_TYPES.LOCAL>;
-        state: ComputedRef<SerializedOmniscientState>;
-      }
-    | {
-        gameType: ComputedRef<typeof GAME_TYPES.ONLINE>;
-        state: ComputedRef<SerializedPlayerState>;
-      };
+    state: computed(() => store.state!)
+  };
 };
 
 export const useGameType = () => {
@@ -152,26 +209,58 @@ export const useGameType = () => {
   return computed(() => store.gameType);
 };
 
+const usePlayers = () => {
+  const { state } = useGameState();
+
+  return computed(() =>
+    state.value.players.map(p => state.value.entities[p] as PlayerViewModel)
+  );
+};
+
+export const useCells = () => {
+  const { state } = useGameState();
+
+  return computed(() =>
+    state.value.board.cells.map(c => state.value.entities[c] as CellViewModel)
+  );
+};
+
+export const useUnits = () => {
+  const { state } = useGameState();
+
+  return computed(() =>
+    state.value.units.map(u => state.value.entities[u] as UnitViewModel)
+  );
+};
+
+export const useActiveUnit = () => {
+  const { state } = useGameState();
+
+  return computed(
+    () => state.value.entities[state.value.activeUnit] as UnitViewModel
+  );
+};
+
 export const useUserPlayer = () => {
   const store = useBattleStore();
+  const players = usePlayers();
+  const activeUnit = useActiveUnit();
 
   return computed(() =>
     store.playerId
-      ? store.state!.players.find(p => p.id === store.playerId)!
-      : store.state!.players.find(
-          p => p.id === store.state!.activeUnit.playerId
-        )!
+      ? players.value.find(p => p.id === store.playerId)!
+      : players.value.find(p => p.id === activeUnit.value.id)!
   );
 };
 
 export const useOpponentPlayer = () => {
   const store = useBattleStore();
+  const players = usePlayers();
+  const activeUnit = useActiveUnit();
 
   return computed(() =>
     store.playerId
-      ? store.state!.players.find(p => p.id !== store.playerId)!
-      : store.state!.players.find(
-          p => p.id !== store.state!.activeUnit.playerId
-        )!
+      ? players.value.find(p => p.id !== store.playerId)!
+      : players.value.find(p => p.id !== activeUnit.value.id)!
   );
 };

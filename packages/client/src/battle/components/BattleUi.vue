@@ -45,7 +45,7 @@ battleStore.init({
     session.subscribe(null, onSnapshot);
   },
   initialState: session.game.snapshotSystem.getLatestOmniscientSnapshot().state,
-  dispatcher: session.dispatch
+  dispatcher: session.dispatch.bind(session)
 });
 </script>
 

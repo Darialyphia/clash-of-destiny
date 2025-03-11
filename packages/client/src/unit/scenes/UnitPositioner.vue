@@ -6,9 +6,10 @@ import { useBattleEvent, useGameState } from '@/battle/stores/battle.store';
 import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
 import { GAME_EVENTS } from '@game/engine/src/game/game.events';
 import AnimatedIsoPoint from '@/iso/components/AnimatedIsoPoint.vue';
+import type { UnitViewModel } from '../unit.model';
 
 const { unit } = defineProps<{
-  unit: SerializedUnit;
+  unit: UnitViewModel;
 }>();
 
 const offset = {
@@ -17,7 +18,7 @@ const offset = {
 };
 const { state } = useGameState();
 useBattleEvent(GAME_EVENTS.UNIT_AFTER_MOVE, async e => {
-  if (e.unit.id !== unit.id) return;
+  if (!unit.equals(e.unit)) return;
 
   const start = e.previousPosition;
   const end = e.position;
@@ -34,7 +35,7 @@ useBattleEvent(GAME_EVENTS.UNIT_AFTER_MOVE, async e => {
 });
 
 const attackAnimation = async (e: { unit: SerializedUnit; target: Point }) => {
-  if (e.unit.id !== unit.id) return;
+  if (!unit.equals(e.unit)) return;
 
   const start = e.unit.position;
   const end = e.target;

@@ -3,8 +3,9 @@ import { useSpritesheet } from '@/shared/composables/useSpritesheet';
 import { Hitbox } from '@/utils/hitbox';
 import { config } from '@/utils/config';
 import type { SerializedCell } from '@game/engine/src/board/cell';
+import type { CellViewModel } from '../cell.model';
 
-const { cell } = defineProps<{ cell: SerializedCell }>();
+const { cell } = defineProps<{ cell: CellViewModel }>();
 
 const sheet = useSpritesheet<'', 'tile'>(() => cell.spriteId);
 

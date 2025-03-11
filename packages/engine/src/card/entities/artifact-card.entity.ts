@@ -58,12 +58,14 @@ export class ArtifactCard extends Card<
   serialize(): SerializedArtifactCard {
     return {
       id: this.id,
+      entityType: 'card' as const,
       blueprintId: this.blueprint.id,
       kind: this.blueprint.kind,
       setId: this.blueprint.setId,
       name: this.blueprint.name,
       description: this.blueprint.description,
-      rarity: this.blueprint.rarity
+      rarity: this.blueprint.rarity,
+      unit: this.unit.id
     };
   }
 }

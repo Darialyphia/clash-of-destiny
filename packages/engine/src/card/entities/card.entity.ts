@@ -18,6 +18,8 @@ export type AnyCard = Card<any, any, any, any>;
 
 export type SerializedCard = {
   id: string;
+  entityType: 'card';
+  unit: string;
   blueprintId: string;
   description: string;
   name: string;

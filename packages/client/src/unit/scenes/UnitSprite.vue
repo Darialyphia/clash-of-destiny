@@ -3,13 +3,12 @@ import { useSpritesheet } from '@/shared/composables/useSpritesheet';
 import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
 import { OutlineFilter } from '@pixi/filter-outline';
 import { type Filter } from 'pixi.js';
-import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
 import { useIsoCamera } from '@/iso/composables/useIsoCamera';
-import MultiLayerAnimatedSprite from '@/shared/components/MultiLayerAnimatedSprite.vue';
 import { useMultiLayerTexture } from '@/shared/composables/useMultiLayerTexture';
 import { config } from '@/utils/config';
+import type { UnitViewModel } from '../unit.model';
 
-const { unit } = defineProps<{ unit: SerializedUnit }>();
+const { unit } = defineProps<{ unit: UnitViewModel }>();
 
 const sheet = useSpritesheet<'', 'base' | 'destroyed'>(() => unit.spriteId);
 // const textures = computed(() => {

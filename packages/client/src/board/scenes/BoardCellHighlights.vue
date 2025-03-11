@@ -12,8 +12,9 @@ import type { SerializedCell } from '@game/engine/src/board/cell';
 import { GAME_PHASES } from '@game/engine/src/game/systems/game-phase.system';
 import { PTransition } from 'vue3-pixi';
 import UiAnimatedSprite from '@/ui/scenes/UiAnimatedSprite.vue';
+import type { CellViewModel } from '../cell.model';
 
-const { cell } = defineProps<{ cell: SerializedCell }>();
+const { cell } = defineProps<{ cell: CellViewModel }>();
 
 const battleStore = useBattleStore();
 const camera = useIsoCamera();
@@ -30,8 +31,7 @@ const canTarget = computed(() => {
 
 const canMove = computed(() => {
   return (
-    !!ui.selectedUnit &&
-    ui.selectedUnit.moveZone.some(c => pointToCellId(c) === cell.id)
+    !!ui.selectedUnit && ui.selectedUnit.getMoveZone().some(c => c.equals(cell))
   );
 });
 
@@ -60,7 +60,7 @@ const tag = computed(() => {
   }
 
   if (state.value.phase === GAME_PHASES.DEPLOY) {
-    if (userPlayer.value.deployZone.some(c => c.id === cell.id)) {
+    if (userPlayer.value.getDeployZone().some(c => c.equals(cell))) {
       return 'movement';
     }
   }

@@ -13,12 +13,13 @@ export type CellOptions = MapBlueprint['cells'][number] & {
 };
 
 export type SerializedCell = {
+  entityType: 'cell';
   id: string;
   position: Point;
   terrain: Terrain;
   player: 'p1' | 'p2' | null;
   isWalkable: boolean;
-  unit: SerializedUnit | null;
+  unit: string | null;
   spriteId: string;
 };
 
@@ -44,11 +45,12 @@ export class Cell
   serialize() {
     return {
       id: this.id,
+      entityType: 'cell' as const,
       position: this.position.serialize(),
       terrain: this.terrain,
       player: this.options.player,
       isWalkable: this.isWalkable,
-      unit: this.unit?.serialize() ?? null,
+      unit: this.unit?.id ?? null,
       spriteId: this.options.spriteId
     };
   }

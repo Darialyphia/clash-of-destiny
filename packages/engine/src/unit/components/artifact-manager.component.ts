@@ -21,7 +21,7 @@ export class ArtifactManagerComponent {
   get artifacts() {
     return {
       weapon: this.weapon,
-      amor: this.armor,
+      armor: this.armor,
       relic: this.relic
     };
   }

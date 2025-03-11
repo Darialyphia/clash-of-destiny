@@ -4,11 +4,11 @@ import { type Filter, BlurFilter } from 'pixi.js';
 import { config } from '@/utils/config';
 import { useMultiLayerTexture } from '@/shared/composables/useMultiLayerTexture';
 import { useBattleEvent, useBattleStore } from '@/battle/stores/battle.store';
-import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
 import { useIsoCamera } from '@/iso/composables/useIsoCamera';
 import { GAME_EVENTS } from '@game/engine/src/game/game.events';
+import type { UnitViewModel } from '../unit.model';
 
-const { unit } = defineProps<{ unit: SerializedUnit }>();
+const { unit } = defineProps<{ unit: UnitViewModel }>();
 
 const spritesheet = useSpritesheet(() => unit.spriteId);
 

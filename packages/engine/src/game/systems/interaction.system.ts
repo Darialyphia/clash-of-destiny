@@ -8,11 +8,10 @@ import {
   StateMachine,
   stateTransition
 } from '@game/shared';
-import type { AnyCard, SerializedCard } from '../../card/entities/card.entity';
+import type { AnyCard } from '../../card/entities/card.entity';
 import type { Player } from '../../player/player.entity';
 import { System } from '../../system';
 import { match } from 'ts-pattern';
-import type { DeckCard } from '../../card/entities/deck.entity';
 import {
   IllegalTargetError,
   InvalidInteractionStateError,
@@ -89,19 +88,9 @@ export type SerializedInteractionContext =
       state: 'selecting_cards';
       ctx: {
         playerId: string;
-        choices: SerializedCard[];
+        choices: string[];
         minChoices: number;
         maxChoices: number;
-      };
-    }
-  | {
-      state: 'searching_deck';
-      ctx: {
-        player: string;
-        minChoices: number;
-        maxChoices: number;
-        elligibleCards: SerializedCard[];
-        inelligibleCards: SerializedCard[];
       };
     };
 
@@ -329,12 +318,21 @@ export class InteractionSystem
         }))
         .with({ state: 'selecting_cards' }, ({ ctx }) => ({
           playerId: ctx.player.id,
-          choices: ctx.choices.map(card => card.serialize()),
+          choices: ctx.choices.map(card => card.id),
           minChoices: ctx.minChoices,
           maxChoices: ctx.maxChoices
         }))
 
         .exhaustive()
     };
+  }
+
+  getEntities() {
+    return match(this._context)
+      .with({ state: 'selecting_targets' }, { state: 'idle' }, () => [])
+      .with({ state: 'selecting_cards' }, ({ ctx }) =>
+        ctx.choices.map(card => card.serialize())
+      )
+      .exhaustive();
   }
 }

@@ -74,11 +74,12 @@ export type ModifierTarget = {
 
 export type SerializedModifier = {
   id: string;
+  entityType: 'modifier';
   stacks: number;
   name?: string;
   description?: string;
-  targetId: string;
-  sourceId: string;
+  target: string;
+  source: string;
 };
 
 export class Modifier<
@@ -212,11 +213,12 @@ export class Modifier<
   serialize(): SerializedModifier {
     return {
       id: this.id,
+      entityType: 'modifier' as const,
       stacks: this.stacks,
       name: this.infos.name,
       description: this.infos.description,
-      targetId: this._target.id,
-      sourceId: this.source.id
+      target: this._target.id,
+      source: this.source.id
     };
   }
 }

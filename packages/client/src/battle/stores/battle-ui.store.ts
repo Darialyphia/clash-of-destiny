@@ -1,22 +1,25 @@
 import { defineStore } from 'pinia';
-import { useGameState } from './battle.store';
+import { useCells, useGameState, useUnits } from './battle.store';
 import { isDefined, type Nullable, type Point } from '@game/shared';
 import type { SerializedCell } from '@game/engine/src/board/cell';
 import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
 import { Layer } from '@pixi/layers';
 import type { DisplayObject } from 'pixi.js';
 import { pointToCellId } from '@game/engine/src/board/board-utils';
+import type { UnitViewModel } from '@/unit/unit.model';
+import type { CellViewModel } from '@/board/cell.model';
 
 export const useInternalBattleUiStore = defineStore(
   'internal-battle-ui',
   () => {
-    const hoveredCell = shallowRef<Nullable<SerializedCell>>(null);
-    const highlightedUnit = ref<Nullable<SerializedUnit>>(null);
+    const hoveredCell = shallowRef<Nullable<CellViewModel>>(null);
+    const highlightedUnit = ref<Nullable<UnitViewModel>>(null);
     const selectedUnitId = ref<Nullable<string>>(null);
 
     watch(hoveredCell, cell => {
-      if (cell?.unit) {
-        highlightedUnit.value = cell.unit;
+      const unit = cell?.getUnit();
+      if (unit) {
+        highlightedUnit.value = unit;
       }
     });
 
@@ -27,6 +30,8 @@ export const useInternalBattleUiStore = defineStore(
 export const useBattleUiStore = defineStore('battle-ui', () => {
   const uiStore = useInternalBattleUiStore();
   const { state } = useGameState();
+  const cells = useCells();
+  const units = useUnits();
 
   type LayerName = 'ui' | 'scene' | 'fx';
 
@@ -49,7 +54,7 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
     },
     hoveredCell: computed(() => uiStore.hoveredCell),
     hoverAt(point: Point) {
-      uiStore.hoveredCell = state.value.board.cells.find(
+      uiStore.hoveredCell = cells.value.find(
         cell => cell.id === pointToCellId(point)
       );
     },
@@ -59,7 +64,7 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
     },
 
     highlightedUnit: computed(() => uiStore.highlightedUnit),
-    highlightUnit(unit: SerializedUnit) {
+    highlightUnit(unit: UnitViewModel) {
       uiStore.highlightedUnit = unit;
     },
     unhighlightUnit() {
@@ -67,7 +72,9 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
     },
 
     selectedUnit: computed(() =>
-      state.value.units.find(unit => unit.id === uiStore.selectedUnitId)
+      uiStore.selectedUnitId
+        ? (state.value.entities[uiStore.selectedUnitId] as UnitViewModel)
+        : null
     ),
     selectUnit(unit: SerializedUnit) {
       uiStore.selectedUnitId = unit.id;

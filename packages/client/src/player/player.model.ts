@@ -1,58 +1,32 @@
-import { makeCardViewModel, type CardViewModel } from '@/card/card.model';
-import type { UnitViewModel } from '@/unit/unit.model';
-import type { Game } from '@game/engine';
-import type { EntityId } from '@game/engine/src/entity';
-import type { Player } from '@game/engine/src/player/player.entity';
-import type { Rune } from '@game/engine/src/utils/rune';
-import type { Point3D } from '@game/shared';
+import { CellViewModel } from '@/board/cell.model';
+import type { EntityDictionary } from '@game/engine/src/game/systems/game-snapshot.system';
+import type { InputDispatcher } from '@game/engine/src/input/input-system';
+import type { SerializedPlayer } from '@game/engine/src/player/player.entity';
 
-export type PlayerViewModel = {
-  id: EntityId;
-  getPlayer(): Player;
-  canPerformResourceAction: boolean;
-  name: string;
-  victoryPoints: number;
-  runes: Rune[];
-  hand: CardViewModel[];
-  deckSize: number;
-  gold: number;
-  remainingCardsInDeck: number;
-  isActive: boolean;
-  quests: CardViewModel[];
-  equals(player: PlayerViewModel): boolean;
-  isEnemy(unit: UnitViewModel): boolean;
-  isAlly(unit: UnitViewModel): boolean;
-};
+export class PlayerViewModel {
+  constructor(
+    private data: SerializedPlayer,
+    private entityDictionary: EntityDictionary,
+    private dispatcher: InputDispatcher
+  ) {}
 
-export const makePlayerViewModel = (
-  game: Game,
-  player: Player
-): PlayerViewModel => {
-  const vm: PlayerViewModel = {
-    id: player.id,
-    hand: player.hand.map(card => makeCardViewModel(game, card)),
-    canPerformResourceAction: player.canPerformResourceAction,
-    name: player.name,
-    victoryPoints: player.team.victoryPoints,
-    runes: player.runes,
-    deckSize: player.deckSize,
-    remainingCardsInDeck: player.remainingCardsInDeck,
-    gold: player.gold,
-    isActive: game.turnSystem.activePlayer.equals(player),
-    quests: [...player.quests].map(quest => makeCardViewModel(game, quest)),
-    getPlayer() {
-      return player;
-    },
-    equals(playerVm: PlayerViewModel) {
-      return playerVm.getPlayer().equals(player);
-    },
-    isAlly(unit) {
-      return unit.player.equals(vm);
-    },
-    isEnemy(unit) {
-      return !unit.player.equals(vm);
-    }
-  };
+  equals(unit: PlayerViewModel | SerializedPlayer) {
+    return this.id === unit.id;
+  }
 
-  return vm;
-};
+  get id() {
+    return this.data.id;
+  }
+
+  getDeployZone() {
+    return this.data.deployZone.map(cellId => {
+      const cell = this.entityDictionary[cellId];
+
+      if (cell.entityType !== 'cell') {
+        throw new Error('Expected cell');
+      }
+
+      return new CellViewModel(cell, this.entityDictionary, this.dispatcher);
+    });
+  }
+}

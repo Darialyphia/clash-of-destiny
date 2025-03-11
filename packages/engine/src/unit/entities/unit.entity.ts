@@ -67,14 +67,15 @@ import { QuestManagerComponent } from '../components/quest-manager.component';
 
 export type SerializedUnit = {
   id: string;
+  entityType: 'unit';
   position: Point;
   playerId: string;
   spriteId: string;
   spriteParts: Record<string, string>;
-  hand: SerializedCard[];
+  hand: string[];
   handSize: number;
   remainingCardsInDeck: number;
-  discardPile: SerializedCard[];
+  discardPile: string[];
   hp: number;
   maxHp: number;
   ap: number;
@@ -94,7 +95,12 @@ export type SerializedUnit = {
   isDead: boolean;
   moveZone: Point[];
   attackableCells: Point[];
-  modifiers: SerializedModifier[];
+  modifiers: string[];
+  artifacts: {
+    weapon: string | null;
+    armor: string | null;
+    relic: string | null;
+  };
 };
 
 export type UnitOptions = {
@@ -194,14 +200,15 @@ export class Unit
   serialize(): SerializedUnit {
     return {
       id: this.id,
+      entityType: 'unit' as const,
       position: this.position.serialize(),
       playerId: this.player.id,
       spriteId: this.blueprint.spriteId,
       spriteParts: this.blueprint.spriteParts,
-      hand: this.cards.hand.map(card => card.serialize()),
+      hand: this.cards.hand.map(card => card.id),
       handSize: this.cards.hand.length,
       remainingCardsInDeck: this.cards.deck.cards.length,
-      discardPile: Array.from(this.cards.discardPile).map(card => card.serialize()),
+      discardPile: Array.from(this.cards.discardPile).map(card => card.id),
       hp: this.hp.current,
       maxHp: this.hp.max,
       ap: this.ap.current,
@@ -225,9 +232,14 @@ export class Unit
       attackableCells: this.game.boardSystem.cells
         .filter(cell => this.canAttackAt(cell.position))
         .map(cell => cell.position.serialize()),
-      modifiers: this.modifiers.map(modifier => modifier.serialize()),
+      modifiers: this.modifiers.map(modifier => modifier.id),
       expToNextLevel: this.expToNextLevel,
-      canLevelup: this.canLevelUp
+      canLevelup: this.canLevelUp,
+      artifacts: {
+        weapon: this.artifacts.artifacts.weapon?.id ?? null,
+        armor: this.artifacts.artifacts.armor?.id ?? null,
+        relic: this.artifacts.artifacts.relic?.id ?? null
+      }
     };
   }
 

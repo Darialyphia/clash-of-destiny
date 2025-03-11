@@ -6,17 +6,20 @@ import UiAnimatedSprite from '@/ui/scenes/UiAnimatedSprite.vue';
 import AnimatedIsoPoint from '@/iso/components/AnimatedIsoPoint.vue';
 import BoardCellHighlights from './BoardCellHighlights.vue';
 import { PTransition, type ContainerInst } from 'vue3-pixi';
+import type { CellViewModel } from '../cell.model';
 
-const { cell } = defineProps<{ cell: SerializedCell }>();
+const { cell } = defineProps<{ cell: CellViewModel }>();
 
 const ui = useBattleUiStore();
 const isHovered = computed(() => ui.hoveredCell?.id === cell.id);
 
 const emit = defineEmits<{ ready: [] }>();
+const isSpawnAnimationDone = ref(false);
 
 const spawnAnimation = (container: ContainerInst) => {
   container.y = -400;
   container.alpha = 0;
+
   gsap.to(container, {
     y: 0,
     duration: 1,
@@ -26,6 +29,7 @@ const spawnAnimation = (container: ContainerInst) => {
       container.alpha = 1;
     },
     onComplete() {
+      isSpawnAnimationDone.value = true;
       emit('ready');
     }
   });
@@ -45,8 +49,11 @@ const spawnAnimation = (container: ContainerInst) => {
     >
       <container :ref="(container: any) => ui.assignLayer(container, 'scene')">
         <BoardCellSprite :cell="cell" />
-        <BoardCellHighlights :cell="cell" />
-        <UiAnimatedSprite assetId="hovered-cell" v-if="isHovered" />
+        <BoardCellHighlights :cell="cell" v-if="isSpawnAnimationDone" />
+        <UiAnimatedSprite
+          assetId="hovered-cell"
+          v-if="isHovered && isSpawnAnimationDone"
+        />
       </container>
     </PTransition>
   </AnimatedIsoPoint>

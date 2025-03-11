@@ -1,10 +1,7 @@
 import type { EmptyObject, Serializable, Values } from '@game/shared';
 import { nanoid } from 'nanoid';
-import type {
-  ArtifactCard,
-  SerializedArtifactCard
-} from '../../card/entities/artifact-card.entity';
-import type { Modifier, SerializedModifier } from '../../modifier/modifier.entity';
+import type { ArtifactCard } from '../../card/entities/artifact-card.entity';
+import type { Modifier } from '../../modifier/modifier.entity';
 import { Entity } from '../../entity';
 import type { Game } from '../../game/game';
 import { ModifierManager } from '../../modifier/modifier-manager.component';
@@ -55,8 +52,9 @@ const makeInterceptors = (): ArtifactInterceptor => ({
 
 export type SerializedArtifact = {
   id: string;
-  card: SerializedArtifactCard;
-  modifiers: SerializedModifier[];
+  entityType: 'artifact';
+  card: string;
+  modifiers: string[];
 };
 
 export class Artifact
@@ -100,8 +98,9 @@ export class Artifact
   serialize() {
     return {
       id: this.id,
-      card: this.card.serialize(),
-      modifiers: this.modifiers.map(modifier => modifier.serialize())
+      entityType: 'artifact' as const,
+      card: this.card.id,
+      modifiers: this.modifiers.map(modifier => modifier.id)
     };
   }
 
