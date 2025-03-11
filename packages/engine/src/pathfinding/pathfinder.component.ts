@@ -7,7 +7,10 @@ import type { PathfindingStrategy } from './strategies/pathinding-strategy';
 
 export type DistanceMap = {
   costs: ReturnType<typeof dijkstra>['costs'];
-  get: (point: Point) => number;
+  get: (point: Point) => {
+    distance: number;
+    path: Point[] | null;
+  };
 };
 
 export class PathfinderComponent {
@@ -31,8 +34,18 @@ export class PathfinderComponent {
 
     return {
       costs: map.costs,
-      get(pt: Point) {
-        return map.costs[pointToCellId(pt)];
+      get: (pt: Point) => {
+        return {
+          distance: map.costs[pointToCellId(pt)],
+          path:
+            findShortestPath<SerializedCoords>({
+              adapter: this.strategy,
+              startNode: pointToCellId(from),
+              finishNode: pointToCellId(pt),
+              maxWeight: maxDistance,
+              distanceMap: map
+            })?.path.map(p => Vec2.fromPoint(cellIdToPoint(p))) ?? null
+        };
       }
     };
   }
@@ -43,12 +56,12 @@ export class PathfinderComponent {
 
     this.strategy.setOrigin(from);
 
-    const path = findShortestPath<SerializedCoords>(
-      this.strategy,
-      pointToCellId(from),
-      pointToCellId(to),
-      maxDistance
-    );
+    const path = findShortestPath<SerializedCoords>({
+      adapter: this.strategy,
+      startNode: pointToCellId(from),
+      finishNode: pointToCellId(to),
+      maxWeight: maxDistance
+    });
 
     if (!path) return null;
     this.strategy.done();

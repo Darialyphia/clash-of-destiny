@@ -9,7 +9,7 @@ import {
   type Serializable
 } from '@game/shared';
 import { type PlayerEventMap } from './player.events';
-import type { Cell, SerializedCell } from '../board/cell';
+import type { Cell } from '../board/cell';
 import { Unit } from '../unit/entities/unit.entity';
 import type {
   AbilityBlueprint,
@@ -34,6 +34,7 @@ export type SerializedPlayer = {
   entityType: 'player';
   name: string;
   deployZone: string[];
+  heroes: string[];
 };
 
 type PlayerInterceptors = EmptyObject;
@@ -69,7 +70,8 @@ export class Player
       id: this.id,
       entityType: 'player' as const,
       name: this.options.name,
-      deployZone: this.deployZone.map(c => c.id)
+      deployZone: this.deployZone.map(c => c.id),
+      heroes: this.heroes.map(h => h.unit.id)
     };
   }
 

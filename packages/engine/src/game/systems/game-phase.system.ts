@@ -10,9 +10,9 @@ import { GAME_EVENTS, GamePhaseChangeEvent } from '../game.events';
 import type { Player } from '../../player/player.entity';
 
 export const GAME_PHASES = {
-  DEPLOY: 'mulligan',
-  BATTLE: 'battle',
-  END: 'end'
+  DEPLOY: 'DEPLOY',
+  BATTLE: 'BATTLE',
+  END: 'END'
 } as const;
 export type GamePhase = Values<typeof GAME_PHASES>;
 

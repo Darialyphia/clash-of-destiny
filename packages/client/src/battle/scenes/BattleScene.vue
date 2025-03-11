@@ -8,12 +8,57 @@ import { until } from '@vueuse/core';
 import { useBattleStore, useGameState } from '../stores/battle.store';
 import { useBattleUiStore } from '../stores/battle-ui.store';
 import Board from '@/board/scenes/Board.vue';
+import { GameSession } from '@game/engine/src/game/game-session';
 
 const battleStore = useBattleStore();
 const settingsStore = useSettingsStore();
 const uiStore = useBattleUiStore();
 const { state } = useGameState();
 const isoWorld = useTemplateRef('isoWorld');
+
+const session = new GameSession({
+  mapId: '1v1',
+  rngSeed: 'test',
+  history: [],
+  overrides: {},
+  players: [
+    {
+      id: 'p1',
+      name: 'Player 1',
+      heroes: [
+        {
+          blueprintId: 'mage',
+          deck: {
+            cards: Array.from({ length: 30 }, () => 'magic-missile')
+          }
+        }
+      ]
+    },
+    {
+      id: 'p2',
+      name: 'Player 2',
+      heroes: [
+        {
+          blueprintId: 'mage',
+          deck: {
+            cards: Array.from({ length: 30 }, () => 'magic-missile')
+          }
+        }
+      ]
+    }
+  ]
+});
+
+session.initialize();
+battleStore.init({
+  id: 'p1',
+  type: 'local',
+  subscriber(onSnapshot) {
+    session.subscribe(null, onSnapshot);
+  },
+  initialState: session.game.snapshotSystem.getLatestOmniscientSnapshot().state,
+  dispatcher: session.dispatch.bind(session)
+});
 
 useKeyboardControl(
   'keydown',

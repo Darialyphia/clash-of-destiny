@@ -1,14 +1,15 @@
+import type { GameStateEntities } from '@/battle/stores/battle.store';
 import { CellViewModel } from '@/board/cell.model';
 import { CardViewModel } from '@/card/card.model';
 import { pointToCellId } from '@game/engine/src/board/board-utils';
-import type { EntityDictionary } from '@game/engine/src/game/systems/game-snapshot.system';
 import type { InputDispatcher } from '@game/engine/src/input/input-system';
 import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
+import type { Point } from '@game/shared';
 
 export class UnitViewModel {
   constructor(
     private data: SerializedUnit,
-    private entityDictionary: EntityDictionary,
+    private entityDictionary: GameStateEntities,
     private dispatcher: InputDispatcher
   ) {}
 
@@ -28,6 +29,9 @@ export class UnitViewModel {
     return this.data.position;
   }
 
+  set position(val: Point) {
+    this.data.position = val;
+  }
   get spriteId() {
     return this.data.spriteId;
   }
@@ -38,37 +42,19 @@ export class UnitViewModel {
 
   getMoveZone() {
     return this.data.moveZone.map(point => {
-      const cell = this.entityDictionary[pointToCellId(point)];
-
-      if (cell.entityType !== 'cell') {
-        throw new Error('Expected cell');
-      }
-
-      return new CellViewModel(cell, this.entityDictionary, this.dispatcher);
+      return this.entityDictionary[pointToCellId(point.point)] as CellViewModel;
     });
   }
 
   getHand() {
     return this.data.hand.map(cardId => {
-      const card = this.entityDictionary[cardId];
-
-      if (card.entityType !== 'card') {
-        throw new Error('Expected card');
-      }
-
-      return new CardViewModel(card, this.entityDictionary, this.dispatcher);
+      return this.entityDictionary[cardId] as CardViewModel;
     });
   }
 
   getDiscardPile() {
     return this.data.discardPile.map(cardId => {
-      const card = this.entityDictionary[cardId];
-
-      if (card.entityType !== 'card') {
-        throw new Error('Expected card');
-      }
-
-      return new CardViewModel(card, this.entityDictionary, this.dispatcher);
+      return this.entityDictionary[cardId] as CardViewModel;
     });
   }
 }

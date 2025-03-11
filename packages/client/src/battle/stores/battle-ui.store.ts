@@ -76,7 +76,7 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
         ? (state.value.entities[uiStore.selectedUnitId] as UnitViewModel)
         : null
     ),
-    selectUnit(unit: SerializedUnit) {
+    selectUnit(unit: UnitViewModel) {
       uiStore.selectedUnitId = unit.id;
     },
     unselectUnit() {

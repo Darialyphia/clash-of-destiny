@@ -11,7 +11,7 @@ const { unit } = defineProps<{ unit: UnitViewModel }>();
 
 const { state } = useGameState();
 const scaleX = computed(() => {
-  let value = unit.playerId === state.value.players[1].id ? -1 : 1;
+  let value = unit.playerId === state.value.players[1] ? -1 : 1;
 
   return value;
 });

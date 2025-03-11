@@ -14,6 +14,11 @@ export const config = {
     height: 128
   },
 
+  UNIT_SPRITE_OFFSET: {
+    x: 0,
+    y: -24
+  },
+
   TILE_SPRITE_SIZE: {
     width: 96,
     height: 80

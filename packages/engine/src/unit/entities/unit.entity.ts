@@ -6,11 +6,7 @@ import {
   type Serializable
 } from '@game/shared';
 import { Entity, InterceptableEvent, INTERCEPTOR_EVENTS } from '../../entity';
-import {
-  type AnyCard,
-  type CardOptions,
-  type SerializedCard
-} from '../../card/entities/card.entity';
+import { type AnyCard, type CardOptions } from '../../card/entities/card.entity';
 import { type Game } from '../../game/game';
 import { MOVE_EVENTS, MovementComponent } from '../components/movement.component';
 import type { Player } from '../../player/player.entity';
@@ -93,7 +89,7 @@ export type SerializedUnit = {
   canLevelup: boolean;
   keywords: Array<{ id: string; name: string; description: string }>;
   isDead: boolean;
-  moveZone: Point[];
+  moveZone: Array<{ point: Point; path: Point[] }>;
   attackableCells: Point[];
   modifiers: string[];
   artifacts: {
@@ -552,8 +548,8 @@ export class Unit
   getPossibleMoves() {
     return this.movement
       .getAllPossibleMoves(this.ap.current / this.apCostPerMovement)
-      .filter(point => {
-        const cell = this.game.boardSystem.getCellAt(point)!;
+      .filter(move => {
+        const cell = this.game.boardSystem.getCellAt(move.point)!;
         return cell.isWalkable && !cell.unit;
       });
   }

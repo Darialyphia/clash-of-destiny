@@ -12,10 +12,6 @@ const { unit } = defineProps<{
   unit: UnitViewModel;
 }>();
 
-const offset = {
-  x: 0,
-  y: -24
-};
 const { state } = useGameState();
 useBattleEvent(GAME_EVENTS.UNIT_AFTER_MOVE, async e => {
   if (!unit.equals(e.unit)) return;
@@ -70,12 +66,29 @@ const attackAnimation = async (e: { unit: SerializedUnit; target: Point }) => {
 useBattleEvent(GAME_EVENTS.UNIT_BEFORE_ATTACK, attackAnimation);
 
 const ui = useBattleUiStore();
+
+const yOffset = ref(0);
+watchEffect(() => {
+  let newOffset = 0;
+  if (state.value.phase === 'DEPLOY' && ui.selectedUnit?.equals(unit)) {
+    newOffset = -12;
+  }
+
+  gsap.to(yOffset, {
+    value: newOffset,
+    duration: 0.3,
+    ease: Power2.easeIn
+  });
+});
 </script>
 
 <template>
   <AnimatedIsoPoint :position="unit.position" :z-index-offset="32">
     <container
-      :position="offset"
+      :position="{
+        x: config.UNIT_SPRITE_OFFSET.x,
+        y: config.UNIT_SPRITE_OFFSET.y + yOffset
+      }"
       :ref="(container: any) => ui.assignLayer(container, 'scene')"
     >
       <slot />

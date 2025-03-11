@@ -1,12 +1,14 @@
+import type { GameStateEntities } from '@/battle/stores/battle.store';
 import { CellViewModel } from '@/board/cell.model';
-import type { EntityDictionary } from '@game/engine/src/game/systems/game-snapshot.system';
+import type { UnitViewModel } from '@/unit/unit.model';
 import type { InputDispatcher } from '@game/engine/src/input/input-system';
 import type { SerializedPlayer } from '@game/engine/src/player/player.entity';
+import type { Unit } from '@game/engine/src/unit/entities/unit.entity';
 
 export class PlayerViewModel {
   constructor(
     private data: SerializedPlayer,
-    private entityDictionary: EntityDictionary,
+    private entityDictionary: GameStateEntities,
     private dispatcher: InputDispatcher
   ) {}
 
@@ -20,13 +22,23 @@ export class PlayerViewModel {
 
   getDeployZone() {
     return this.data.deployZone.map(cellId => {
-      const cell = this.entityDictionary[cellId];
+      return this.entityDictionary[cellId] as CellViewModel;
+    });
+  }
 
-      if (cell.entityType !== 'cell') {
-        throw new Error('Expected cell');
+  deploy() {
+    this.dispatcher({
+      type: 'deploy',
+      payload: {
+        playerId: this.id,
+        deployment: this.data.heroes.map(heroId => {
+          const hero = this.entityDictionary[heroId] as UnitViewModel;
+          return {
+            heroId: heroId,
+            ...hero.position
+          };
+        })
       }
-
-      return new CellViewModel(cell, this.entityDictionary, this.dispatcher);
     });
   }
 }

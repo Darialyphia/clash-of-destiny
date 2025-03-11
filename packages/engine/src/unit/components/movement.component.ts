@@ -104,7 +104,12 @@ export class MovementComponent {
     const distanceMap = this.pathfinding.getDistanceMap(this.position, maxDistance);
     return Object.entries(distanceMap.costs)
       .filter(([, cost]) => cost <= maxDistance)
-      .map(([cellId]) => cellIdToPoint(cellId as SerializedCoords));
+      .map(([cellId]) => {
+        return {
+          point: cellIdToPoint(cellId as SerializedCoords),
+          path: distanceMap.get(cellIdToPoint(cellId as SerializedCoords)).path!
+        };
+      });
   }
 
   canMoveTo(point: Point, maxDistance: number) {

@@ -7,6 +7,8 @@ import AnimatedIsoPoint from '@/iso/components/AnimatedIsoPoint.vue';
 import BoardCellHighlights from './BoardCellHighlights.vue';
 import { PTransition, type ContainerInst } from 'vue3-pixi';
 import type { CellViewModel } from '../cell.model';
+import { useUserPlayer } from '@/battle/stores/battle.store';
+import HoveredCellIndicator from './HoveredCellIndicator.vue';
 
 const { cell } = defineProps<{ cell: CellViewModel }>();
 
@@ -34,6 +36,8 @@ const spawnAnimation = (container: ContainerInst) => {
     }
   });
 };
+
+const player = useUserPlayer();
 </script>
 
 <template>
@@ -41,6 +45,18 @@ const spawnAnimation = (container: ContainerInst) => {
     :position="cell.position"
     @pointerenter="ui.hoverAt(cell.position)"
     @pointerleave="ui.unHover()"
+    @pointerup="
+      () => {
+        const unit = cell.getUnit();
+        const shouldUnselect =
+          !unit || unit.playerId !== player.id || ui.selectedUnit?.equals(unit);
+        if (shouldUnselect) {
+          ui.unselectUnit();
+          return;
+        }
+        ui.selectUnit(unit);
+      }
+    "
   >
     <PTransition
       appear
@@ -50,10 +66,7 @@ const spawnAnimation = (container: ContainerInst) => {
       <container :ref="(container: any) => ui.assignLayer(container, 'scene')">
         <BoardCellSprite :cell="cell" />
         <BoardCellHighlights :cell="cell" v-if="isSpawnAnimationDone" />
-        <UiAnimatedSprite
-          assetId="hovered-cell"
-          v-if="isHovered && isSpawnAnimationDone"
-        />
+        <HoveredCellIndicator v-if="isHovered && isSpawnAnimationDone" />
       </container>
     </PTransition>
   </AnimatedIsoPoint>

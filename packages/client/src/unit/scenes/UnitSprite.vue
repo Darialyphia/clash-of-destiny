@@ -2,39 +2,44 @@
 import { useSpritesheet } from '@/shared/composables/useSpritesheet';
 import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
 import { OutlineFilter } from '@pixi/filter-outline';
+import { AdjustmentFilter } from '@pixi/filter-adjustment';
 import { type Filter } from 'pixi.js';
 import { useIsoCamera } from '@/iso/composables/useIsoCamera';
 import { useMultiLayerTexture } from '@/shared/composables/useMultiLayerTexture';
 import { config } from '@/utils/config';
 import type { UnitViewModel } from '../unit.model';
+import { useGameState } from '@/battle/stores/battle.store';
 
-const { unit } = defineProps<{ unit: UnitViewModel }>();
+const { unit, hasFilters = true } = defineProps<{
+  unit: UnitViewModel;
+  hasFilters?: boolean;
+}>();
 
 const sheet = useSpritesheet<'', 'base' | 'destroyed'>(() => unit.spriteId);
-// const textures = computed(() => {
-//   if (!sheet.value) return null;
-//   return createSpritesheetFrameObject(
-//     'idle',
-//     unit.isAltar && unit.isDead
-//       ? sheet.value.sheets.base.destroyed
-//       : sheet.value.sheets.base.base
-//   );
-// });
 
 const ui = useBattleUiStore();
 const camera = useIsoCamera();
-const selectedFilter = new OutlineFilter(
+
+const highlghtedFilter = new OutlineFilter(
   camera.viewport.value!.scale.x,
   0xffffff
 );
 camera.viewport.value?.on('zoomed-end', () => {
-  selectedFilter.thickness = Math.round(camera.viewport.value!.scale.x);
+  highlghtedFilter.thickness = Math.round(camera.viewport.value!.scale.x);
 });
+
+const selectedFilter = new AdjustmentFilter({ brightness: 1.5, blue: 1.25 });
 
 const filters = computed(() => {
   const result: Filter[] = [];
 
+  if (!hasFilters) return result;
+
   if (ui.highlightedUnit?.id === unit.id) {
+    result.push(highlghtedFilter);
+  }
+
+  if (ui.selectedUnit?.id === unit.id) {
     result.push(selectedFilter);
   }
 

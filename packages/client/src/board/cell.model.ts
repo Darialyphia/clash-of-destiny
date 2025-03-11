@@ -1,13 +1,12 @@
+import type { GameStateEntities } from '@/battle/stores/battle.store';
 import { UnitViewModel } from '@/unit/unit.model';
 import type { SerializedCell } from '@game/engine/src/board/cell';
-import type { EntityDictionary } from '@game/engine/src/game/systems/game-snapshot.system';
 import type { InputDispatcher } from '@game/engine/src/input/input-system';
-import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
 
 export class CellViewModel {
   constructor(
     private data: SerializedCell,
-    private entityDictionary: EntityDictionary,
+    private entityDictionary: GameStateEntities,
 
     private dispatcher: InputDispatcher
   ) {}
@@ -32,12 +31,6 @@ export class CellViewModel {
     if (!this.data.unit) {
       return null;
     }
-    const unit = this.entityDictionary[this.data.unit];
-
-    if (unit.entityType !== 'unit') {
-      throw new Error('Expected unit');
-    }
-
-    return new UnitViewModel(unit, this.entityDictionary, this.dispatcher);
+    return this.entityDictionary[this.data.unit] as UnitViewModel;
   }
 }

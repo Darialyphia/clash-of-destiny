@@ -29,18 +29,19 @@ export const GAME_TYPES = {
 
 export type GameType = Values<typeof GAME_TYPES>;
 
+export type GameStateEntities = Record<
+  string,
+  | UnitViewModel
+  | CellViewModel
+  | PlayerViewModel
+  | CardViewModel
+  | ModifierViewModel
+  | ArtifactViewModel
+>;
 export type GameState = Override<
   SerializedOmniscientState,
   {
-    entities: Record<
-      string,
-      | UnitViewModel
-      | CellViewModel
-      | PlayerViewModel
-      | CardViewModel
-      | ModifierViewModel
-      | ArtifactViewModel
-    >;
+    entities: GameStateEntities;
   }
 >;
 type SerializedGameEventMap = {
@@ -48,33 +49,33 @@ type SerializedGameEventMap = {
 };
 
 const buildentities = (entities: EntityDictionary): GameState['entities'] => {
-  const result = {} as GameState['entities'];
+  const result = {} as GameStateEntities;
 
   for (const [id, entity] of Object.entries(entities)) {
     result[id] = match(entity)
       .with(
         { entityType: 'unit' },
-        entity => new UnitViewModel(entity, entities, () => {})
+        entity => new UnitViewModel(entity, result, () => {})
       )
       .with(
         { entityType: 'cell' },
-        entity => new CellViewModel(entity, entities, () => {})
+        entity => new CellViewModel(entity, result, () => {})
       )
       .with(
         { entityType: 'player' },
-        entity => new PlayerViewModel(entity, entities, () => {})
+        entity => new PlayerViewModel(entity, result, () => {})
       )
       .with(
         { entityType: 'card' },
-        entity => new CardViewModel(entity, entities, () => {})
+        entity => new CardViewModel(entity, result, () => {})
       )
       .with(
         { entityType: 'modifier' },
-        entity => new ModifierViewModel(entity, entities, () => {})
+        entity => new ModifierViewModel(entity, result, () => {})
       )
       .with(
         { entityType: 'artifact' },
-        entity => new ArtifactViewModel(entity, entities, () => {})
+        entity => new ArtifactViewModel(entity, result, () => {})
       )
       .exhaustive();
   }
@@ -90,7 +91,7 @@ export const useBattleStore = defineStore('battle', () => {
 
   let dispatch: InputDispatcher = () => {};
 
-  const playerId = ref<string>();
+  const playerId = ref<string | undefined>();
 
   const gameType = ref<GameType>();
   const state = ref<GameState>();
@@ -113,7 +114,7 @@ export const useBattleStore = defineStore('battle', () => {
       dispatcher: InputDispatcher;
       initialState: SerializedOmniscientState | SerializedPlayerState;
       type: GameType;
-      id: string;
+      id?: string;
     }) {
       playerId.value = id;
       dispatch = dispatcher;
