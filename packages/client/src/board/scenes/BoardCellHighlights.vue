@@ -61,6 +61,9 @@ const tag = computed(() => {
   if (activeUnit.value.canMoveTo(cell)) {
     return 'movement';
   }
+  if (activeUnit.value.canAttackAt(cell)) {
+    return 'danger';
+  }
 
   return null;
 });

@@ -15,6 +15,6 @@ const isActive = computed(() => activeUnit.value.equals(unit));
   <UiAnimatedSprite
     v-if="isActive && state.phase === GAME_PHASES.BATTLE"
     asset-id="active-unit-indicator"
-    :y="-45"
+    :y="-55"
   />
 </template>

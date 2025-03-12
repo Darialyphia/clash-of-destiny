@@ -14,6 +14,7 @@ import type { UnitViewModel } from '../unit.model';
 import ActiveUnitIndicator from './ActiveUnitIndicator.vue';
 import AlphaTransition from '@/ui/scenes/AlphaTransition.vue';
 import UnitSpawnAnimation from './UnitSpawnAnimation.vue';
+import HealthBar from './HealthBar.vue';
 const { unit } = defineProps<{ unit: UnitViewModel }>();
 
 const camera = useIsoCamera();
@@ -81,6 +82,7 @@ const isSpawnAnimationDone = ref(false);
     >
       <container>
         <ActiveUnitIndicator :unit="unit" />
+        <HealthBar :unit="unit" :y="-45" :x="-20" />
         <!-- <UnitStatsIndicators
           :unit="unit"
           v-if="!unit.isAltar || !unit.isDead"

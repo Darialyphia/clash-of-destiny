@@ -175,4 +175,21 @@ export class UnitViewModel {
       }
     });
   }
+
+  canAttackAt(cell: CellViewModel) {
+    return this.data.attackableCells.some(point => {
+      return cell.id === pointToCellId(point);
+    });
+  }
+
+  attackAt(cell: CellViewModel) {
+    console.log('attack at', cell.position);
+    this.dispatcher({
+      type: 'attack',
+      payload: {
+        playerId: this.playerId,
+        ...cell.position
+      }
+    });
+  }
 }

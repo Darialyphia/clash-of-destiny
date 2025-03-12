@@ -23,8 +23,15 @@ export class BattleController implements UiController {
         return;
       }
     }
+
     if (this.activeUnit.canMoveTo(cell)) {
       this.activeUnit.moveTowards({ x: cell.position.x, y: cell.position.y });
+      return;
+    }
+
+    if (this.activeUnit.canAttackAt(cell)) {
+      this.activeUnit.attackAt(cell);
+      return;
     }
   }
 }
