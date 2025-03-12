@@ -13,6 +13,7 @@ export const manaShield: AbilityBlueprint = {
   id: 'mana-shield',
   name: 'Mana Shield',
   description: 'The next time this takes damage, reduce the damage by 2 and lose 1 mana.',
+  cardIconId: 'placeholder',
   rarity: RARITIES.RARE,
   setId: CARD_SETS.CORE,
   kind: CARD_KINDS.ABILITY,

@@ -117,6 +117,8 @@
     ),
     hsl(250 30% 0% / 0.6);
   --fancy-border: solid var(--border-size-2) hsl(var(--color-primary-hsl) / 0.5);
+
+  --unit-icon-size: calc(38 * 3px);
 }
 
 html.dark {

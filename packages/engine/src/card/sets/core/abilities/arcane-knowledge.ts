@@ -8,6 +8,7 @@ export const arcaneKnowledge: AbilityBlueprint = {
   id: 'arcane-knowledge',
   name: 'Arcane Knowledge',
   description: 'Draw 2 cards.',
+  cardIconId: 'placeholder',
   rarity: RARITIES.COMMON,
   setId: CARD_SETS.CORE,
   kind: CARD_KINDS.ABILITY,

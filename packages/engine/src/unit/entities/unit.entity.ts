@@ -41,7 +41,7 @@ import { CARD_EVENTS, UNIT_KINDS } from '../../card/card.enums';
 import { HealthComponent } from '../components/health.component';
 import { GAME_EVENTS, GameUnitEvent } from '../../game/game.events';
 import type { Cell } from '../../board/cell';
-import type { Modifier, SerializedModifier } from '../../modifier/modifier.entity';
+import type { Modifier } from '../../modifier/modifier.entity';
 import { ModifierManager } from '../../modifier/modifier-manager.component';
 import { ApComponent } from '../components/ap.component';
 import { MeleeTargetingStrategy } from '../../targeting/melee-targeting.straegy';
@@ -66,8 +66,11 @@ export type SerializedUnit = {
   entityType: 'unit';
   position: Point;
   playerId: string;
+  iconId: string;
   spriteId: string;
   spriteParts: Record<string, string>;
+  name: string;
+  description: string;
   hand: string[];
   handSize: number;
   remainingCardsInDeck: number;
@@ -199,8 +202,11 @@ export class Unit
       entityType: 'unit' as const,
       position: this.position.serialize(),
       playerId: this.player.id,
+      iconId: this.blueprint.iconId,
       spriteId: this.blueprint.spriteId,
       spriteParts: this.blueprint.spriteParts,
+      name: this.blueprint.name,
+      description: this.blueprint.description,
       hand: this.cards.hand.map(card => card.id),
       handSize: this.cards.hand.length,
       remainingCardsInDeck: this.cards.deck.cards.length,
@@ -339,14 +345,6 @@ export class Unit
 
   get removeKeyword() {
     return this.keywordManager.remove.bind(this.keywordManager);
-  }
-
-  get name() {
-    return this.blueprint.name;
-  }
-
-  get description() {
-    return this.blueprint.description;
   }
 
   get isHero() {
@@ -518,6 +516,21 @@ export class Unit
     this.ap.remove(this.apCostPerMovement * (path?.distance ?? 0));
   }
 
+  deployAt(cell: Cell) {
+    if (cell.unit) {
+      this.swapPosition(cell.unit);
+    } else {
+      this.teleport(cell.position);
+    }
+  }
+
+  swapPosition(unit: Unit) {
+    const prevPosition = this.position.clone();
+    const prevUnitPosition = unit.position.clone();
+    this.teleport(prevUnitPosition);
+    unit.teleport(prevPosition);
+  }
+
   teleport(to: Point) {
     this.emitter.emit(
       UNIT_EVENTS.BEFORE_TELEPORT,
@@ -644,7 +657,12 @@ export class Unit
     this.movement.resetMovementsCount();
     this.ap.setTo(this.ap.max);
     this.mp.add(this.mpRegen);
-    this.cards.draw(this.game.config.CARDS_DRAWN_PER_TURN);
+    const isFirstTurn = this.game.turnSystem.turnCount === 1;
+    this.cards.draw(
+      isFirstTurn
+        ? this.game.config.INITIAL_HAND_SIZE
+        : this.game.config.CARDS_DRAWN_PER_TURN
+    );
   }
 
   get removeModifier() {

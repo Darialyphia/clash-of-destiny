@@ -28,7 +28,7 @@ camera.viewport.value?.on('zoomed-end', () => {
   highlghtedFilter.thickness = Math.round(camera.viewport.value!.scale.x);
 });
 
-const selectedFilter = new AdjustmentFilter({ brightness: 1.5, blue: 1.25 });
+const selectedFilter = new AdjustmentFilter({ brightness: 1.2, blue: 1.25 });
 
 const filters = computed(() => {
   const result: Filter[] = [];

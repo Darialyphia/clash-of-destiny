@@ -7,7 +7,7 @@ const { assetId, tag = 'idle' } = defineProps<{
   tag?: string;
 }>();
 
-const sheet = useSpritesheet<'', 'base'>(toValue(assetId));
+const sheet = useSpritesheet<'', 'base'>(() => assetId);
 const textures = computed(() => {
   if (!sheet.value) return null;
   return createSpritesheetFrameObject(tag, sheet.value.sheets.base.base);

@@ -52,6 +52,7 @@ export class QuestCard extends Card<
       id: this.id,
       entityType: 'card' as const,
       blueprintId: this.blueprint.id,
+      iconId: this.blueprint.cardIconId,
       kind: this.blueprint.kind,
       setId: this.blueprint.setId,
       name: this.blueprint.name,

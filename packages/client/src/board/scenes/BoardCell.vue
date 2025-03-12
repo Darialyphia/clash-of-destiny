@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
-import type { SerializedCell } from '@game/engine/src/board/cell';
 import BoardCellSprite from '@/board/scenes/BoardCellSprite.vue';
-import UiAnimatedSprite from '@/ui/scenes/UiAnimatedSprite.vue';
 import AnimatedIsoPoint from '@/iso/components/AnimatedIsoPoint.vue';
 import BoardCellHighlights from './BoardCellHighlights.vue';
 import { PTransition, type ContainerInst } from 'vue3-pixi';
 import type { CellViewModel } from '../cell.model';
-import { useUserPlayer } from '@/battle/stores/battle.store';
+import { useActiveUnit, useUserPlayer } from '@/battle/stores/battle.store';
 import HoveredCellIndicator from './HoveredCellIndicator.vue';
+import { pointToCellId } from '@game/engine/src/board/board-utils';
+import { config } from '@/utils/config';
+import UnitOrientation from '@/unit/scenes/UnitOrientation.vue';
+import UnitSprite from '@/unit/scenes/UnitSprite.vue';
+import MoveIntentPath from './MoveIntentPath.vue';
 
 const { cell } = defineProps<{ cell: CellViewModel }>();
 
@@ -37,7 +40,12 @@ const spawnAnimation = (container: ContainerInst) => {
   });
 };
 
-const player = useUserPlayer();
+const activeUnit = useActiveUnit();
+const isActiveUnitMoveIntent = computed(() => {
+  return activeUnit.value.moveIntent
+    ? pointToCellId(activeUnit.value.moveIntent.point) === cell.id
+    : false;
+});
 </script>
 
 <template>
@@ -47,14 +55,7 @@ const player = useUserPlayer();
     @pointerleave="ui.unHover()"
     @pointerup="
       () => {
-        const unit = cell.getUnit();
-        const shouldUnselect =
-          !unit || unit.playerId !== player.id || ui.selectedUnit?.equals(unit);
-        if (shouldUnselect) {
-          ui.unselectUnit();
-          return;
-        }
-        ui.selectUnit(unit);
+        ui.controller.onCellClick(cell);
       }
     "
   >
@@ -66,7 +67,16 @@ const player = useUserPlayer();
       <container :ref="(container: any) => ui.assignLayer(container, 'scene')">
         <BoardCellSprite :cell="cell" />
         <BoardCellHighlights :cell="cell" v-if="isSpawnAnimationDone" />
+        <MoveIntentPath :cell="cell" />
         <HoveredCellIndicator v-if="isHovered && isSpawnAnimationDone" />
+        <container
+          v-if="isActiveUnitMoveIntent"
+          :position="config.UNIT_SPRITE_OFFSET"
+        >
+          <UnitOrientation :unit="activeUnit">
+            <UnitSprite :unit="activeUnit" />
+          </UnitOrientation>
+        </container>
       </container>
     </PTransition>
   </AnimatedIsoPoint>

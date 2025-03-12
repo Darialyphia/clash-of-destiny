@@ -35,7 +35,7 @@ export const defaultConfig: Config = {
   MAX_MP: 5,
   MP_REGEN_PER_TURN: 2,
 
-  INITIAL_HAND_SIZE: 3,
+  INITIAL_HAND_SIZE: 5,
   MAX_HAND_SIZE: 10,
   SHUFFLE_DECK_ON_GAME_START: true,
   CARDS_DRAWN_PER_TURN: 1,

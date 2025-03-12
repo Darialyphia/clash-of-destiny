@@ -17,8 +17,9 @@ import { CommitPlayCardInput } from './inputs/commit-play-card.input';
 import { EndTurnInput } from './inputs/end-turn.input';
 import { MoveInput } from './inputs/move.input';
 import { PlayCardInput } from './inputs/play-card.input';
-import { DeployInput } from './inputs/deploy.input';
+import { DeployUnitInput } from './inputs/deploy-unit.input';
 import { LevelUpInput } from './inputs/level-up.input';
+import { CommitDeploymentInput } from './inputs/commit-deployment.input';
 
 type GenericInputMap = Record<string, Constructor<Input<DefaultSchema>>>;
 
@@ -33,7 +34,8 @@ type ValidatedInputMap<T extends GenericInputMap> = {
 const validateinputMap = <T extends GenericInputMap>(data: ValidatedInputMap<T>) => data;
 
 const inputMap = validateinputMap({
-  deploy: DeployInput,
+  deployUnit: DeployUnitInput,
+  commitDeployment: CommitDeploymentInput,
   levelUp: LevelUpInput,
   move: MoveInput,
   attack: AttackInput,
@@ -114,7 +116,9 @@ export class InputSystem extends System<SerializedInput[]> {
   }
 
   dispatch(input: SerializedInput) {
-    // this.log(input);
+    console.groupCollapsed(`[InputSystem]: ${input.type}`);
+    console.log(input);
+    console.groupEnd();
     if (!this.isActionType(input.type)) return;
     return this.schedule(() => this.handleInput(input));
   }

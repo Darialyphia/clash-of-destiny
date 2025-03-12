@@ -31,6 +31,18 @@ const session = new GameSession({
           deck: {
             cards: Array.from({ length: 30 }, () => 'magic-missile')
           }
+        },
+        {
+          blueprintId: 'mage',
+          deck: {
+            cards: Array.from({ length: 30 }, () => 'magic-missile')
+          }
+        },
+        {
+          blueprintId: 'mage',
+          deck: {
+            cards: Array.from({ length: 30 }, () => 'magic-missile')
+          }
         }
       ]
     },
@@ -38,6 +50,18 @@ const session = new GameSession({
       id: 'p2',
       name: 'Player 2',
       heroes: [
+        {
+          blueprintId: 'mage',
+          deck: {
+            cards: Array.from({ length: 30 }, () => 'magic-missile')
+          }
+        },
+        {
+          blueprintId: 'mage',
+          deck: {
+            cards: Array.from({ length: 30 }, () => 'magic-missile')
+          }
+        },
         {
           blueprintId: 'mage',
           deck: {
@@ -57,7 +81,9 @@ battleStore.init({
     session.subscribe(null, onSnapshot);
   },
   initialState: session.game.snapshotSystem.getLatestOmniscientSnapshot().state,
-  dispatcher: session.dispatch.bind(session)
+  dispatcher: input => {
+    session.dispatch(input);
+  }
 });
 
 useKeyboardControl(

@@ -1,4 +1,4 @@
-import type { EmptyObject, Override } from '@game/shared';
+import type { EmptyObject } from '@game/shared';
 import { System } from '../../system';
 import type { GameStarEvent, SerializedStarEvent } from '../game.events';
 import type { SerializedUnit } from '../../unit/entities/unit.entity';

@@ -20,24 +20,34 @@ export class PlayerViewModel {
     return this.data.id;
   }
 
+  get hasDeployed() {
+    return this.data.hasCommitedDeployment;
+  }
+
   getDeployZone() {
     return this.data.deployZone.map(cellId => {
       return this.entityDictionary[cellId] as CellViewModel;
     });
   }
 
-  deploy() {
+  getHeroes() {
+    return this.data.heroes.map(heroId => {
+      return this.entityDictionary[heroId] as UnitViewModel;
+    });
+  }
+
+  getOpponent() {
+    const entity = Object.values(this.entityDictionary).find(
+      entity => entity instanceof PlayerViewModel && entity.id !== this.id
+    );
+    return entity as PlayerViewModel;
+  }
+
+  commitDeployment() {
     this.dispatcher({
-      type: 'deploy',
+      type: 'commitDeployment',
       payload: {
-        playerId: this.id,
-        deployment: this.data.heroes.map(heroId => {
-          const hero = this.entityDictionary[heroId] as UnitViewModel;
-          return {
-            heroId: heroId,
-            ...hero.position
-          };
-        })
+        playerId: this.id
       }
     });
   }

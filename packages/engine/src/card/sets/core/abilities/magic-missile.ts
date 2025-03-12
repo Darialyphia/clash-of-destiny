@@ -9,7 +9,8 @@ import { mage } from '../heroes/mage';
 export const magicMissile: AbilityBlueprint = {
   id: 'magic-missile',
   name: 'Magic Missile',
-  description: 'Fires a projectile in a line that deals 1 dmaage to the first enemy hit.',
+  description: 'Fires a projectile in a line that deals 1 damage to the first enemy hit.',
+  cardIconId: 'placeholder',
   rarity: RARITIES.COMMON,
   setId: CARD_SETS.CORE,
   kind: CARD_KINDS.ABILITY,

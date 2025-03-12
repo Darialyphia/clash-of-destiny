@@ -14,8 +14,8 @@ const app = useApplication();
 
 const camera = useIsoCamera();
 const WORLD_PADDING = {
-  x: window.innerWidth / 2,
-  y: window.innerHeight / 2
+  x: window.innerWidth / 4,
+  y: 0
 };
 
 const boardSize = computed(() => ({
@@ -49,7 +49,7 @@ until(camera.viewport)
       //   allowButtons: true
       // })
       .pinch({ noDrag: true })
-      .moveCenter(worldSize.value.width / 2, worldSize.value.height - 500);
+      .moveCenter(worldSize.value.width / 2, worldSize.value.height / 2);
   });
 
 useEventListener('resize', () => {

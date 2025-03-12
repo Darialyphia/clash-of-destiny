@@ -9,6 +9,7 @@ export const staffOfFocus: ArtifactBlueprint = {
   id: 'staff-of-focus',
   name: 'Staff of Focus',
   description: 'At the start of your turn, gain 1 mana.',
+  cardIconId: 'placeholder',
   rarity: RARITIES.RARE,
   setId: CARD_SETS.CORE,
   kind: CARD_KINDS.ARTIFACT,

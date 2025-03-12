@@ -1,4 +1,5 @@
 import type { GameStateEntities } from '@/battle/stores/battle.store';
+import type { PlayerViewModel } from '@/player/player.model';
 import { UnitViewModel } from '@/unit/unit.model';
 import type { SerializedCell } from '@game/engine/src/board/cell';
 import type { InputDispatcher } from '@game/engine/src/input/input-system';
@@ -31,6 +32,22 @@ export class CellViewModel {
     if (!this.data.unit) {
       return null;
     }
+
     return this.entityDictionary[this.data.unit] as UnitViewModel;
+  }
+
+  getPlayer() {
+    if (!this.data.player) {
+      return null;
+    }
+    return this.entityDictionary[this.data.player] as PlayerViewModel;
+  }
+
+  removeUnit() {
+    this.data.unit = null;
+  }
+
+  addUnit(unit: UnitViewModel) {
+    this.data.unit = unit.id;
   }
 }

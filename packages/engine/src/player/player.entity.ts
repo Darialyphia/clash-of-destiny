@@ -1,13 +1,6 @@
 import { Entity } from '../entity';
 import { type Game } from '../game/game';
-import {
-  assert,
-  isDefined,
-  type EmptyObject,
-  type Nullable,
-  type Point,
-  type Serializable
-} from '@game/shared';
+import { type EmptyObject, type Serializable } from '@game/shared';
 import { type PlayerEventMap } from './player.events';
 import type { Cell } from '../board/cell';
 import { Unit } from '../unit/entities/unit.entity';
@@ -18,7 +11,6 @@ import type {
   UnitBlueprint
 } from '../card/card-blueprint';
 import type { UNIT_KINDS } from '../card/card.enums';
-import { NoDeploymentError } from './player-errors';
 
 export type PlayerOptions = {
   id: string;
@@ -35,6 +27,7 @@ export type SerializedPlayer = {
   name: string;
   deployZone: string[];
   heroes: string[];
+  hasCommitedDeployment: boolean;
 };
 
 type PlayerInterceptors = EmptyObject;
@@ -53,7 +46,7 @@ export class Player
     deck: { cards: string[] };
   }>;
 
-  private deployMent: Nullable<Array<{ heroId: string } & Point>> = null;
+  private hasCommitedDeployment = false;
 
   constructor(
     game: Game,
@@ -71,7 +64,8 @@ export class Player
       entityType: 'player' as const,
       name: this.options.name,
       deployZone: this.deployZone.map(c => c.id),
-      heroes: this.heroes.map(h => h.unit.id)
+      heroes: this.heroes.map(h => h.unit.id),
+      hasCommitedDeployment: this.hasCommitedDeployment
     };
   }
 
@@ -112,20 +106,11 @@ export class Player
     return this.game.playerSystem.players.find(p => !p.equals(this))!;
   }
 
-  get isReadyToDeploy() {
-    return isDefined(this.deployMent);
-  }
-
-  commitDeployment(deployment: Array<{ heroId: string } & Point>) {
-    this.deployMent = deployment;
-  }
-
-  deploy() {
-    assert(this.isReadyToDeploy, new NoDeploymentError());
-    this.deployMent!.forEach(({ heroId, x, y }) => {
-      const hero = this.heroes.find(h => h.unit.id === heroId)!.unit;
-      hero.teleport({ x, y });
-    });
+  commitDeployment() {
+    this.hasCommitedDeployment = true;
+    if (this.game.playerSystem.players.every(p => p.hasCommitedDeployment)) {
+      this.game.gamePhaseSystem.startBattle();
+    }
   }
 
   makeClassChainFrom(blueprintId: string) {

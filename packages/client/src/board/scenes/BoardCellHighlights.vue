@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
 import {
+  useActiveUnit,
   useBattleStore,
   useGameState,
   useUserPlayer
 } from '@/battle/stores/battle.store';
 import { useIsoCamera } from '@/iso/composables/useIsoCamera';
 import { useSettingsStore } from '@/shared/composables/useSettings';
-import { pointToCellId } from '@game/engine/src/board/board-utils';
-import type { SerializedCell } from '@game/engine/src/board/cell';
 import { GAME_PHASES } from '@game/engine/src/game/systems/game-phase.system';
 import { PTransition } from 'vue3-pixi';
 import UiAnimatedSprite from '@/ui/scenes/UiAnimatedSprite.vue';
 import type { CellViewModel } from '../cell.model';
+import { pointToCellId } from '@game/engine/src/board/board-utils';
 
 const { cell } = defineProps<{ cell: CellViewModel }>();
 
@@ -20,6 +20,8 @@ const battleStore = useBattleStore();
 const camera = useIsoCamera();
 const ui = useBattleUiStore();
 const { state } = useGameState();
+const activeUnit = useActiveUnit();
+
 const isWithinCardRange = computed(() => {
   return false;
 });
@@ -29,24 +31,12 @@ const canTarget = computed(() => {
   return false;
 });
 
-const canMove = computed(() => {
-  return (
-    !!ui.selectedUnit && ui.selectedUnit.getMoveZone().some(c => c.equals(cell))
-  );
-});
-
 const settingsStore = useSettingsStore();
 
-const isOnPath = computed(() => {
-  if (camera.isDragging.value) return false;
-  if (!ui.selectedUnit) return false;
-  if (!ui.hoveredCell) return false;
-  if (!canMove.value) return false;
-
-  return false;
-  // const path = pathHelpers.getPathTo(ui.selectedUnit, ui.hoveredCell);
-
-  // return path?.path.some(point => point.equals(cell));
+const isOnMovementPath = computed(() => {
+  return activeUnit.value.moveIntent?.path.some(
+    c => pointToCellId(c) === cell.id
+  );
 });
 
 const isInCardAoe = computed(() => {
@@ -55,14 +45,21 @@ const isInCardAoe = computed(() => {
 const userPlayer = useUserPlayer();
 
 const tag = computed(() => {
-  if (battleStore.isPlayingFx) {
-    return null;
-  }
-
   if (state.value.phase === GAME_PHASES.DEPLOY) {
     if (userPlayer.value.getDeployZone().some(c => c.equals(cell))) {
       return 'movement';
     }
+    return null;
+  }
+
+  if (battleStore.isPlayingFx) {
+    return null;
+  }
+  if (isOnMovementPath.value) {
+    return 'movement-path';
+  }
+  if (activeUnit.value.canMoveTo(cell)) {
+    return 'movement';
   }
 
   return null;

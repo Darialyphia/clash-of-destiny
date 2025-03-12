@@ -50,8 +50,9 @@ export class SolidBodyPathfindingStrategy implements PathfindingStrategy {
 
   isEdgeValid(cell: Cell) {
     if (this.origin.equals(cell)) return false;
-    if (!cell.isWalkable) return true;
-    return cell.isWalkable && !cell.unit;
+    if (cell.unit) return cell.unit.isAlly(this.unit);
+
+    return cell.isWalkable;
   }
 
   getEdges(node: SerializedCoords): Array<Edge<SerializedCoords>> {

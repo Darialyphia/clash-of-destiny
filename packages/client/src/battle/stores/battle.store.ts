@@ -5,6 +5,7 @@ import { ArtifactViewModel } from '@/unit/artifact.model';
 import { ModifierViewModel } from '@/unit/modifier.model';
 import { UnitViewModel } from '@/unit/unit.model';
 import type { GameEventMap } from '@game/engine/src/game/game.events';
+import { GAME_PHASES } from '@game/engine/src/game/systems/game-phase.system';
 import type {
   EntityDictionary,
   GameStateSnapshot,
@@ -18,7 +19,12 @@ import type {
 import type { Modifier } from '@game/engine/src/modifier/modifier.entity';
 import type { Artifact } from '@game/engine/src/unit/entities/artifact.entity';
 import { TypedEventEmitter } from '@game/engine/src/utils/typed-emitter';
-import { type Override, type PartialBy, type Values } from '@game/shared';
+import {
+  waitFor,
+  type Override,
+  type PartialBy,
+  type Values
+} from '@game/shared';
 import { defineStore } from 'pinia';
 import { match } from 'ts-pattern';
 
@@ -48,34 +54,37 @@ type SerializedGameEventMap = {
   [Key in keyof GameEventMap]: ReturnType<GameEventMap[Key]['serialize']>;
 };
 
-const buildentities = (entities: EntityDictionary): GameState['entities'] => {
+const buildentities = (
+  entities: EntityDictionary,
+  dispatcher: InputDispatcher
+): GameState['entities'] => {
   const result = {} as GameStateEntities;
 
   for (const [id, entity] of Object.entries(entities)) {
     result[id] = match(entity)
       .with(
         { entityType: 'unit' },
-        entity => new UnitViewModel(entity, result, () => {})
+        entity => new UnitViewModel(entity, result, dispatcher)
       )
       .with(
         { entityType: 'cell' },
-        entity => new CellViewModel(entity, result, () => {})
+        entity => new CellViewModel(entity, result, dispatcher)
       )
       .with(
         { entityType: 'player' },
-        entity => new PlayerViewModel(entity, result, () => {})
+        entity => new PlayerViewModel(entity, result, dispatcher)
       )
       .with(
         { entityType: 'card' },
-        entity => new CardViewModel(entity, result, () => {})
+        entity => new CardViewModel(entity, result, dispatcher)
       )
       .with(
         { entityType: 'modifier' },
-        entity => new ModifierViewModel(entity, result, () => {})
+        entity => new ModifierViewModel(entity, result, dispatcher)
       )
       .with(
         { entityType: 'artifact' },
-        entity => new ArtifactViewModel(entity, result, () => {})
+        entity => new ArtifactViewModel(entity, result, dispatcher)
       )
       .exhaustive();
   }
@@ -121,7 +130,7 @@ export const useBattleStore = defineStore('battle', () => {
       gameType.value = type;
       state.value = {
         ...initialState,
-        entities: buildentities(initialState.entities)
+        entities: buildentities(initialState.entities, dispatch)
       };
 
       subscriber(async snapshot => {
@@ -130,11 +139,20 @@ export const useBattleStore = defineStore('battle', () => {
         for (const event of snapshot.events) {
           await fxEmitter.emitAsync(event.eventName, event.event as any);
         }
+        isPlayingFx.value = false;
         state.value = {
           ...snapshot.state,
-          entities: buildentities(snapshot.state.entities)
+          entities: buildentities(snapshot.state.entities, dispatch)
         };
-        isPlayingFx.value = false;
+
+        if (
+          gameType.value === GAME_TYPES.LOCAL &&
+          state.value.phase === GAME_PHASES.BATTLE
+        ) {
+          playerId.value = (
+            state.value.entities[state.value.activeUnit] as UnitViewModel
+          ).playerId;
+        }
       });
 
       isReady.value = true;

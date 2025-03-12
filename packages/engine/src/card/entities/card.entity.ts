@@ -20,6 +20,7 @@ export type SerializedCard = {
   id: string;
   entityType: 'card';
   unit: string;
+  iconId: string;
   blueprintId: string;
   description: string;
   name: string;

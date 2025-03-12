@@ -14,6 +14,8 @@ export const mage: UnitBlueprint = {
   rarity: RARITIES.COMMON,
   setId: CARD_SETS.CORE,
   unitKind: UNIT_KINDS.HERO,
+  iconId: 'unit-mage',
+  cardIconId: 'placeholder',
   spriteId: 'wizard',
   spriteParts: {
     armor: 'tier1',

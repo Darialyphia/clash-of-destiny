@@ -5,8 +5,20 @@ import { useIsoPoint } from '../composables/useIsoPoint';
 import { useBattleStore } from '@/battle/stores/battle.store';
 import { config } from '@/utils/config';
 
-const props = defineProps<{ position: Point; zIndexOffset?: number }>();
-const { isoPosition, zIndex } = useIsoPoint(toRefs(props));
+const {
+  position,
+  zIndexOffset,
+  isAnimated = true
+} = defineProps<{
+  position: Point;
+  zIndexOffset?: number;
+  isAnimated?: boolean;
+}>();
+
+const { isoPosition, zIndex } = useIsoPoint({
+  position: computed(() => position),
+  zIndexOffset: computed(() => zIndexOffset)
+});
 
 const containerRef = ref<Container>();
 
@@ -16,9 +28,10 @@ watch(
   [isoPosition, zIndex, containerRef],
   ([pos, z, container], [, , prevContainer]) => {
     if (!container) return;
+
     gsap.to(container, {
       duration:
-        prevContainer && !store.isPlayingFx
+        prevContainer && !store.isPlayingFx && isAnimated
           ? config.ISO_TILES_ROTATION_SPEED
           : 0,
       pixi: {

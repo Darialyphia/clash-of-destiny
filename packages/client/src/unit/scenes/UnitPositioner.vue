@@ -16,18 +16,25 @@ const { state } = useGameState();
 useBattleEvent(GAME_EVENTS.UNIT_AFTER_MOVE, async e => {
   if (!unit.equals(e.unit)) return;
 
-  const start = e.previousPosition;
-  const end = e.position;
-  const midPoint = {
-    x: (start.x + end.x) / 2,
-    y: (start.y + end.y) / 2
-    // z: (start.z + end.z) / 2 + (bounce ? config.MOVEMENT_BOUNCE_HEIGHT : 0)
-  };
+  const tl = gsap.timeline();
+  let currentPos = e.previousPosition;
 
-  await gsap.to(unit.position, {
-    motionPath: [start, midPoint, end],
-    duration: config.MOVEMENT_SPEED_PER_TILE
+  e.path.forEach(point => {
+    const start = currentPos;
+    const end = point;
+    // const midPoint = {
+    //   x: (start.x + end.x) / 2,
+    //   y: (start.y + end.y) / 2 - config.MOVEMENT_BOUNCE_HEIGHT
+    // };
+    currentPos = point;
+
+    tl.to(unit.position, {
+      motionPath: [start, end],
+      duration: config.MOVEMENT_SPEED_PER_TILE
+    });
   });
+
+  await tl.play();
 });
 
 const attackAnimation = async (e: { unit: SerializedUnit; target: Point }) => {
@@ -83,7 +90,11 @@ watchEffect(() => {
 </script>
 
 <template>
-  <AnimatedIsoPoint :position="unit.position" :z-index-offset="32">
+  <AnimatedIsoPoint
+    :position="unit.position"
+    :z-index-offset="32"
+    :is-animated="!unit.isAnimating"
+  >
     <container
       :position="{
         x: config.UNIT_SPRITE_OFFSET.x,

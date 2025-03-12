@@ -10,7 +10,12 @@ import {
 } from '../card.events';
 import { Card, type CardOptions, type SerializedCard } from './card.entity';
 
-export type SerializedAbilityCard = SerializedCard & { kind: typeof CARD_KINDS.ABILITY };
+export type SerializedAbilityCard = SerializedCard & {
+  kind: typeof CARD_KINDS.ABILITY;
+  manaCost: number;
+  levelCost: number;
+  exp: number;
+};
 export type AbilityCardEventMap = CardEventMap;
 export type AbilityCardInterceptors = Record<string, never>;
 
@@ -89,12 +94,16 @@ export class AbilityCard extends Card<
       id: this.id,
       entityType: 'card' as const,
       blueprintId: this.blueprint.id,
+      iconId: this.blueprint.cardIconId,
       kind: this.blueprint.kind,
       setId: this.blueprint.setId,
       name: this.blueprint.name,
       description: this.blueprint.description,
       rarity: this.blueprint.rarity,
-      unit: this.unit.id
+      unit: this.unit.id,
+      manaCost: this.manaCost,
+      levelCost: this.levelCost,
+      exp: this.exp
     };
   }
 }
