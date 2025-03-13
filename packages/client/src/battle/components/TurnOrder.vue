@@ -19,7 +19,7 @@ const turnOrder = computed(() =>
 </script>
 
 <template>
-  <div class="flex gap-2 items-center">
+  <div class="flex gap-2 items-center m-3">
     Turn Order
     <button
       v-for="hero in turnOrder"

@@ -34,7 +34,7 @@ export const magicMissile: AbilityBlueprint = {
       target.takeDamage(
         card.unit,
         new AbilityDamage({
-          baseAmount: 1,
+          baseAmount: 5,
           source: card
         })
       );

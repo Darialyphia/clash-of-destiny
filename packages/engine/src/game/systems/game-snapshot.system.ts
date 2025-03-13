@@ -131,7 +131,6 @@ export class GameSnaphotSystem extends System<EmptyObject> {
     this.game.interaction.getEntities().forEach(entity => {
       entities[entity.id] = entity.serialize();
     });
-
     return entities;
   }
 

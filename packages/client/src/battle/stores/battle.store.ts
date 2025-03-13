@@ -132,24 +132,28 @@ export const useBattleStore = defineStore('battle', () => {
       };
 
       subscriber(async snapshot => {
-        isPlayingFx.value = true;
+        try {
+          isPlayingFx.value = true;
 
-        for (const event of snapshot.events) {
-          await fxEmitter.emitAsync(event.eventName, event.event as any);
-        }
-        isPlayingFx.value = false;
-        state.value = {
-          ...snapshot.state,
-          entities: buildentities(snapshot.state.entities, dispatch)
-        };
+          for (const event of snapshot.events) {
+            await fxEmitter.emitAsync(event.eventName, event.event as any);
+          }
+          isPlayingFx.value = false;
+          state.value = {
+            ...snapshot.state,
+            entities: buildentities(snapshot.state.entities, dispatch)
+          };
 
-        if (
-          gameType.value === GAME_TYPES.LOCAL &&
-          state.value.phase === GAME_PHASES.BATTLE
-        ) {
-          playerId.value = (
-            state.value.entities[state.value.activeUnit] as UnitViewModel
-          ).playerId;
+          if (
+            gameType.value === GAME_TYPES.LOCAL &&
+            state.value.phase === GAME_PHASES.BATTLE
+          ) {
+            playerId.value = (
+              state.value.entities[state.value.activeUnit] as UnitViewModel
+            ).playerId;
+          }
+        } catch (err) {
+          console.error(err);
         }
       });
 

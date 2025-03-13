@@ -7,7 +7,7 @@ import {
   GAME_EVENTS,
   GameErrorEvent,
   GameInputQueueFlushedEvent,
-  GameInputStartEvent
+  GameInputEvent
 } from '../game/game.events';
 import { AddCardTargetCardInput } from './inputs/add-card-target.input';
 import { AttackInput } from './inputs/attack.input';
@@ -134,9 +134,11 @@ export class InputSystem extends System<SerializedInput[]> {
     const ctor = inputMap[type];
     const input = new ctor(this.game, payload);
     this._currentAction = input;
-    this.game.emit(GAME_EVENTS.INPUT_START, new GameInputStartEvent({ input }));
+    this.game.emit(GAME_EVENTS.INPUT_START, new GameInputEvent({ input }));
 
     input.execute();
+
+    this.game.emit(GAME_EVENTS.INPUT_END, new GameInputEvent({ input }));
     this.history.push(input);
     this._currentAction = null;
   }

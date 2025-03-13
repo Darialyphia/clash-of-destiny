@@ -1,19 +1,57 @@
 <script setup lang="ts">
 import UiButton from '@/ui/components/UiButton.vue';
 import {
+  useBattleEvent,
   useBattleStore,
   useGameState,
   useUserPlayer
 } from '../stores/battle.store';
 import { INTERACTION_STATES } from '@game/engine/src/game/systems/interaction.system';
 import { useBattleUiStore } from '../stores/battle-ui.store';
+import { GAME_EVENTS } from '@game/engine/src/game/game.events';
 
 const { state } = useGameState();
+const ui = useBattleUiStore();
 
-const isDisplayed = computed(
-  () =>
-    state.value.interactionState.state === INTERACTION_STATES.SELECTING_TARGETS
-);
+const isQuickCasting = ref(false);
+useBattleEvent(GAME_EVENTS.INPUT_START, async e => {
+  if (e.type === 'playCard' && ui.firstTargetIntent) {
+    isQuickCasting.value = true;
+  }
+});
+const forceHide = ref(false);
+useBattleEvent(GAME_EVENTS.UNIT_BEFORE_PLAY_CARD, async e => {
+  isQuickCasting.value = false;
+  forceHide.value = true;
+});
+useBattleEvent(GAME_EVENTS.UNIT_AFTER_PLAY_CARD, async e => {
+  forceHide.value = false;
+});
+
+const isDisplayed = computed(() => {
+  if (forceHide.value) {
+    return false;
+  }
+  if (
+    state.value.interactionState.state !== INTERACTION_STATES.SELECTING_TARGETS
+  ) {
+    return false;
+  }
+  if (!ui.cardPlayIntent) {
+    return true;
+  }
+  if (isQuickCasting.value) {
+    return (
+      ui.cardPlayIntent.maxTargets - 1 >
+      state.value.interactionState.ctx.selectedTargets.length
+    );
+  } else {
+    return (
+      ui.cardPlayIntent.maxTargets >
+      state.value.interactionState.ctx.selectedTargets.length
+    );
+  }
+});
 
 const battle = useBattleStore();
 const player = useUserPlayer();

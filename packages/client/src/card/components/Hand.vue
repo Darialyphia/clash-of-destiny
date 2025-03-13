@@ -3,13 +3,14 @@ import type { UnitViewModel } from '@/unit/unit.model';
 import { useResizeObserver } from '@vueuse/core';
 import { throttle } from 'lodash-es';
 import HandCard from './HandCard.vue';
+import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
 
 const { unit } = defineProps<{
   unit: UnitViewModel;
 }>();
 
 const hand = computed(() => unit.getHand());
-
+const ui = useBattleUiStore();
 const cardSpacing = ref(0);
 const root = useTemplateRef('root');
 
@@ -52,7 +53,12 @@ useResizeObserver(
         :key="card.id"
         :style="{ '--i': index }"
         :data-flip-id="card.id"
-        @dblclick="unit.playCard(index)"
+        @dblclick="
+          () => {
+            ui.cardPlayIntent = card;
+            unit.playCard(index);
+          }
+        "
       >
         <div>
           <HandCard :card="card" />

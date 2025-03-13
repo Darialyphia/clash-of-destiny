@@ -11,7 +11,7 @@ export const archMage: UnitBlueprint = {
   initiative: 8,
   kind: CARD_KINDS.UNIT,
   level: 2,
-  neededExp: 1,
+  neededExp: 10,
   previousClass: mage.id,
   maxHp: 16,
   rarity: RARITIES.EPIC,

@@ -9,6 +9,7 @@ import BattleLog from '@/battle/components/BattleLog.vue';
 import DraggedCard from '@/card/components/DraggedCard.vue';
 import InspectedCard from '@/card/components/InspectedCard.vue';
 import TurnOrder from './TurnOrder.vue';
+import PlayIntent from '@/card/components/PlayIntent.vue';
 
 const { state } = useGameState();
 
@@ -22,6 +23,7 @@ const activeUnit = useActiveUnit();
   <div v-else class="battle-ui">
     <BattleLog />
     <TurnOrder />
+    <PlayIntent />
     <footer>
       <Hand :unit="activeUnit" />
       <ActiveUnitPanel class="active-unit" />

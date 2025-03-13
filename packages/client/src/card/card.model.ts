@@ -83,6 +83,25 @@ export class CardViewModel {
       })
       .exhaustive();
   }
+
+  get maxTargets() {
+    const data = this.data as
+      | SerializedAbilityCard
+      | SerializedArtifactCard
+      | SerializedQuestCard;
+    return match(data)
+      .with({ kind: CARD_KINDS.ABILITY }, data => {
+        return data.maxTargets;
+      })
+      .with({ kind: CARD_KINDS.ARTIFACT }, () => {
+        return 0;
+      })
+      .with({ kind: CARD_KINDS.QUEST }, () => {
+        return 0;
+      })
+      .exhaustive();
+  }
+
   canPlayAt(cell: CellViewModel) {
     const data = this.data as
       | SerializedAbilityCard

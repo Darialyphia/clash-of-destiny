@@ -1,6 +1,5 @@
 import { isDefined } from '@game/shared';
 import type { Game } from '../../game/game';
-import type { Player } from '../../player/player.entity';
 import { createCard } from '../card.factory';
 import type { CardOptions } from '../entities/card.entity';
 import { Deck, type DeckCard } from '../entities/deck.entity';

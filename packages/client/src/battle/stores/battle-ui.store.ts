@@ -154,11 +154,12 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
     });
   };
 
-  const selectedFirstTarget = shallowRef<Nullable<CellViewModel>>(null);
-  battle.on(GAME_EVENTS.FLUSHED, async () => {
-    if (selectedFirstTarget.value) {
-      const { x, y } = selectedFirstTarget.value.position;
-      selectedFirstTarget.value = null;
+  const firstTargetIntent = shallowRef<Nullable<CellViewModel>>(null);
+  battle.on(GAME_EVENTS.INPUT_END, async e => {
+    if (e.type !== 'playCard') return;
+    if (firstTargetIntent.value) {
+      const { x, y } = firstTargetIntent.value.position;
+
       dispatch({
         type: 'addCardTarget',
         payload: {
@@ -170,7 +171,20 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
     }
   });
 
+  const cardPlayIntent = shallowRef<Nullable<CardViewModel>>(null);
+  battle.on(GAME_EVENTS.UNIT_BEFORE_PLAY_CARD, async () => {
+    cardPlayIntent.value = null;
+    firstTargetIntent.value = null;
+  });
+  battle.on(GAME_EVENTS.INPUT_START, async e => {
+    if (e.type === 'cancelPlayCard') {
+      cardPlayIntent.value = null;
+      firstTargetIntent.value = null;
+    }
+  });
+
   const userPlayer = useUserPlayer();
+
   const controller = computed<UiController>(() =>
     match(state.value.phase)
       .with(
@@ -188,8 +202,9 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
         GAME_PHASES.BATTLE,
         () =>
           new BattleController({
+            cardPlayIntent,
             selectedUnit,
-            selectedFirstTarget,
+            firstTargetIntent,
             selectedCard: computed({
               get() {
                 return selectedCard.value;
@@ -228,6 +243,10 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
     inspectedCard,
     inspectCard,
     uninspectCard,
+
+    firstTargetIntent,
+
+    cardPlayIntent,
 
     registerLayer(layer: Layer, name: LayerName) {
       if (!layer) return;

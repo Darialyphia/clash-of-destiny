@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { clamp } from '@game/shared';
 import type { UnitViewModel } from '../unit.model';
-import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
 import { useSpritesheet } from '@/shared/composables/useSpritesheet';
 import UiAnimatedSprite from '@/ui/scenes/UiAnimatedSprite.vue';
 import UiLayerContainer from '@/ui/scenes/UiLayerContainer.vue';
@@ -22,13 +21,13 @@ watch(
 
 useBattleEvent(GAME_EVENTS.UNIT_BEFORE_RECEIVE_DAMAGE, async event => {
   if (event.unit.id === unit.id) {
-    const duration = Math.abs(unit.hp - hp.value) * 0.1;
+    const duration = Math.abs(hp.value - event.damage) * 0.1;
     gsap.to(hp, { value: event.unit.hp, duration });
   }
 });
 useBattleEvent(GAME_EVENTS.UNIT_BEFORE_RECEIVE_HEAL, async event => {
   if (event.unit.id === unit.id) {
-    const duration = Math.abs(unit.hp - hp.value) * 0.1;
+    const duration = Math.abs(hp.value + event.amount) * 0.1;
     gsap.to(hp, { value: event.unit.hp, duration });
   }
 });
@@ -65,13 +64,14 @@ const mask = ref<GraphicsInst>();
 
 <template>
   <UiLayerContainer v-if="sheet">
-    <container :y="unit.isMaxLevel ? -30 : -40">
+    <container :y="unit.isMaxLevel ? -45 : -55">
       <UiAnimatedSprite asset-id="unit-stat-bars" :tag="tag" :mask="mask" />
 
       <graphics
-        :x="-64"
-        :y="-64.5"
+        :x="-40"
+        :y="-28"
         ref="mask"
+        :alpha="0.75"
         @render="
           g => {
             const slices = [
@@ -99,7 +99,7 @@ const mask = ref<GraphicsInst>();
             ];
             g.clear();
             g.beginFill(0x665555);
-            g.drawRect(0, 0, 128, 128);
+            g.drawRect(0, 0, 80, 55);
             g.endFill();
             g.beginHole();
             slices.forEach(([slice, stat, max]) => {

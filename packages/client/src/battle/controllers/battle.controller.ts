@@ -11,9 +11,10 @@ import type { InputDispatcher } from '@game/engine/src/input/input-system';
 import type { CardViewModel } from '@/card/card.model';
 
 export type BattleControllerOptions = {
+  cardPlayIntent: Ref<Nullable<CardViewModel>>;
   selectedUnit: Ref<Nullable<UnitViewModel>>;
   selectedCard: Ref<Nullable<CardViewModel>>;
-  selectedFirstTarget: Ref<Nullable<CellViewModel>>;
+  firstTargetIntent: Ref<Nullable<CellViewModel>>;
   activeUnit: Ref<UnitViewModel>;
   state: Ref<GameState>;
   dispatcher: InputDispatcher;
@@ -38,9 +39,11 @@ export class BattleController implements UiController {
             const hand = this.selectedCard.getUnit().getHand();
             const index = hand.findIndex(c => c.id === this.selectedCard!.id);
             if (this.selectedCard.needsTargets) {
-              this.options.selectedFirstTarget.value = cell;
+              this.options.firstTargetIntent.value = cell;
+              console.log('declared first target intent');
             }
 
+            this.options.cardPlayIntent.value = this.selectedCard;
             this.selectedCard.getUnit().playCard(index);
           } else {
             this.options.selectedCard.value = null;

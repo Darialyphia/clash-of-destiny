@@ -31,7 +31,7 @@ import {
   type ArtifactEventMap
 } from '../unit/entities/artifact.entity';
 
-export class GameInputStartEvent extends TypedSerializableEvent<
+export class GameInputEvent extends TypedSerializableEvent<
   { input: Input<any> },
   SerializedInput
 > {
@@ -214,7 +214,8 @@ type GameArtifactEventMap = {
 };
 
 type GameEventsBase = {
-  'game.input-start': GameInputStartEvent;
+  'game.input-start': GameInputEvent;
+  'game.input-end': GameInputEvent;
   'game.input-queue-flushed': GameInputQueueFlushedEvent;
   'game.error': GameErrorEvent;
   'game.ready': GameReadyEvent;
@@ -266,6 +267,7 @@ export const GAME_EVENTS = {
   READY: 'game.ready',
   FLUSHED: 'game.input-queue-flushed',
   INPUT_START: 'game.input-start',
+  INPUT_END: 'game.input-end',
   TURN_START: TURN_EVENTS.TURN_START,
   TURN_END: TURN_EVENTS.TURN_END,
   START_BATTLE: 'game.start-battle',
