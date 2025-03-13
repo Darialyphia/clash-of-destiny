@@ -102,4 +102,24 @@ export class UnitSystem extends System<UnitSystemOptions> {
     const { x, y } = unit.position;
     return this.getUnitAt({ x, y: y + 1 });
   }
+
+  getClosest(origin: Point, direction: Point) {
+    let found: Unit | null = null;
+    let cell = this.game.boardSystem.getCellAt({
+      x: origin.x + direction.x,
+      y: origin.y + direction.y
+    });
+    while (cell) {
+      const unit = this.getUnitAt(cell.position);
+      if (unit) {
+        found = unit;
+        break;
+      }
+      cell = this.game.boardSystem.getCellAt({
+        x: cell.position.x + direction.x,
+        y: cell.position.y + direction.y
+      });
+    }
+    return found;
+  }
 }

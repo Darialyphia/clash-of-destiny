@@ -98,6 +98,9 @@ export class UnitViewModel {
     return this.data.canLevelup;
   }
 
+  get remainingCardsInDeck() {
+    return this.data.remainingCardsInDeck;
+  }
   getPlayer() {
     return this.entityDictionary[this.data.playerId] as PlayerViewModel;
   }
@@ -189,6 +192,30 @@ export class UnitViewModel {
       payload: {
         playerId: this.playerId,
         ...cell.position
+      }
+    });
+  }
+
+  playCard(index: number) {
+    this.dispatcher({
+      type: 'playCard',
+      payload: {
+        playerId: this.playerId,
+        index: index
+      }
+    });
+  }
+
+  get canReplace() {
+    return this.data.canReplace;
+  }
+
+  replaceCard(index: number) {
+    this.dispatcher({
+      type: 'replaceCard',
+      payload: {
+        playerId: this.playerId,
+        index: index
       }
     });
   }

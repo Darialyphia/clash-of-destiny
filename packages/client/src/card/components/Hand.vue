@@ -3,6 +3,13 @@ import type { UnitViewModel } from '@/unit/unit.model';
 import Card from './Card.vue';
 import { useResizeObserver } from '@vueuse/core';
 import { throttle } from 'lodash-es';
+import {
+  PopoverContent,
+  PopoverPortal,
+  PopoverRoot,
+  PopoverTrigger
+} from 'reka-ui';
+import UiButton from '@/ui/components/UiButton.vue';
 
 const { unit } = defineProps<{
   unit: UnitViewModel;
@@ -48,15 +55,35 @@ useResizeObserver(
   <div class="hand" ref="root">
     <div v-for="(card, index) in hand" :key="card.id" :style="{ '--i': index }">
       <div>
-        <Card
-          :card="{
-            name: card.name,
-            description: card.description,
-            image: card.imagePath,
-            kind: card.kind,
-            manaCost: card.manaCost
-          }"
-        />
+        <PopoverRoot>
+          <PopoverTrigger>
+            <Card
+              :card="{
+                name: card.name,
+                description: card.description,
+                image: card.imagePath,
+                kind: card.kind,
+                manaCost: card.manaCost
+              }"
+            />
+          </PopoverTrigger>
+          <PopoverContent class="flex flex-col gap-4 pt-6">
+            <UiButton
+              :disabled="!card.canPlay"
+              class="primary-button"
+              @click="unit.playCard(index)"
+            >
+              Play
+            </UiButton>
+            <UiButton
+              v-if="unit.canReplace"
+              class="primary-button"
+              @click="unit.replaceCard(index)"
+            >
+              Replace
+            </UiButton>
+          </PopoverContent>
+        </PopoverRoot>
       </div>
     </div>
   </div>

@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogPortal
-} from 'radix-vue';
+} from 'reka-ui';
 export type ModalStyleVariables = '--ui-modal-size';
 
 const isOpened = defineModel<boolean>('isOpened', { required: true });

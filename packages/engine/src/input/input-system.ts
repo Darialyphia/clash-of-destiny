@@ -20,6 +20,7 @@ import { PlayCardInput } from './inputs/play-card.input';
 import { DeployUnitInput } from './inputs/deploy-unit.input';
 import { LevelUpInput } from './inputs/level-up.input';
 import { CommitDeploymentInput } from './inputs/commit-deployment.input';
+import { ReplaceCardInput } from './inputs/replace-card.input';
 
 type GenericInputMap = Record<string, Constructor<Input<DefaultSchema>>>;
 
@@ -40,6 +41,7 @@ const inputMap = validateinputMap({
   move: MoveInput,
   attack: AttackInput,
   playCard: PlayCardInput,
+  replaceCard: ReplaceCardInput,
   cancelPlayCard: CancelPlayCardInput,
   addCardTarget: AddCardTargetCardInput,
   commitPlayCard: CommitPlayCardInput,

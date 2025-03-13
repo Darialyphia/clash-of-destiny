@@ -1,5 +1,5 @@
 import type { CellViewModel } from '@/board/cell.model';
-import type { UiController } from './ui-controller';
+import type { HighlightTag, UiController } from './ui-controller';
 import type { UnitViewModel } from '@/unit/unit.model';
 import type { Nullable, Point } from '@game/shared';
 import type { Ref } from 'vue';
@@ -98,5 +98,13 @@ export class DeployController implements UiController {
         selectUnit(unit);
       }
     }
+  }
+
+  getCellHighlightTag(cell: CellViewModel): HighlightTag | null {
+    if (this.options.player.value.getDeployZone().some(c => c.equals(cell))) {
+      return 'movement';
+    }
+
+    return null;
   }
 }

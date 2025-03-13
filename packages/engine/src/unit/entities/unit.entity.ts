@@ -26,6 +26,7 @@ import {
   UnitBeforeMoveEvent,
   UnitCreatedEvent,
   UnitDealDamageEvent,
+  UnitDrawEvent,
   UnitLevelUpEvent,
   UnitPlayCardEvent,
   UnitReceiveDamageEvent,
@@ -75,6 +76,7 @@ export type SerializedUnit = {
   handSize: number;
   remainingCardsInDeck: number;
   discardPile: string[];
+  canReplace: boolean;
   hp: number;
   maxHp: number;
   ap: number;
@@ -142,6 +144,8 @@ export class Unit
   currentlyPlayedCard: Nullable<DeckCard> = null;
 
   currentyPlayedCardIndexInHand: Nullable<number> = null;
+
+  private cardReplacedThisTurn = 0;
 
   private cancelCardCleanups: Array<() => void> = [];
 
@@ -211,6 +215,7 @@ export class Unit
       handSize: this.cards.hand.length,
       remainingCardsInDeck: this.cards.deck.cards.length,
       discardPile: Array.from(this.cards.discardPile).map(card => card.id),
+      canReplace: this.canReplace(),
       hp: this.hp.current,
       maxHp: this.hp.max,
       ap: this.ap.current,
@@ -452,7 +457,8 @@ export class Unit
 
   get apCostPerAttack() {
     return this.interceptors.apCostPerAttack.getValue(
-      this.game.config.AP_COST_PER_ATTACK,
+      this.game.config.AP_COST_PER_ATTACK +
+        this.attacksPerformedThisTurn * this.game.config.AP_COST_INCREASE_PER_ATTACK,
       {}
     );
   }
@@ -655,9 +661,12 @@ export class Unit
   onTurnStart() {
     this.combat.resetAttackCount();
     this.movement.resetMovementsCount();
+    this.cardReplacedThisTurn = 0;
     this.ap.setTo(this.ap.max);
-    this.mp.add(this.mpRegen);
     const isFirstTurn = this.game.turnSystem.turnCount === 1;
+    if (!isFirstTurn) {
+      this.mp.add(this.mpRegen);
+    }
     this.cards.draw(
       isFirstTurn
         ? this.game.config.INITIAL_HAND_SIZE
@@ -705,6 +714,12 @@ export class Unit
     this.playCardFromHand(card);
   }
 
+  draw(amount: number) {
+    this.emitter.emit(UNIT_EVENTS.BEFORE_DRAW, new UnitDrawEvent({ amount }));
+    this.cards.draw(amount);
+    this.emitter.emit(UNIT_EVENTS.AFTER_DRAW, new UnitDrawEvent({ amount }));
+  }
+
   private onBeforePlayFromHand(card: DeckCard) {
     this.emitter.emit(UNIT_EVENTS.BEFORE_PLAY_CARD, new UnitPlayCardEvent({ card }));
     this.mp.remove(card.manaCost);
@@ -746,6 +761,15 @@ export class Unit
     });
 
     return card;
+  }
+
+  canReplace() {
+    return this.cardReplacedThisTurn < this.game.config.MAX_CARD_REPLACES_PER_TURN;
+  }
+
+  replaceCardAtIndex(index: number) {
+    this.cards.replaceCardAt(index);
+    this.cardReplacedThisTurn++;
   }
 
   starturn() {

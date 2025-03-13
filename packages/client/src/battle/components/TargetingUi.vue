@@ -1,70 +1,58 @@
 <script setup lang="ts">
-import { match } from 'ts-pattern';
-import { UI_MODES, useBattleUiStore } from '../stores/battle-ui.store';
-import { useBattleStore } from '../stores/battle.store';
-import { isDefined } from '@game/shared';
 import UiButton from '@/ui/components/UiButton.vue';
+import {
+  useBattleStore,
+  useGameState,
+  useUserPlayer
+} from '../stores/battle.store';
+import { INTERACTION_STATES } from '@game/engine/src/game/systems/interaction.system';
+import { useBattleUiStore } from '../stores/battle-ui.store';
 
-const ui = useBattleUiStore();
-const game = useBattleStore();
+const { state } = useGameState();
+
+const isDisplayed = computed(
+  () =>
+    state.value.interactionState.state === INTERACTION_STATES.SELECTING_TARGETS
+);
+
+const battle = useBattleStore();
+const player = useUserPlayer();
 
 const canSkip = computed(() => {
-  const card = ui.selectedCard;
-  if (!card) return false;
-  return ui.cardTargets.length <= card.minTargetCount;
-});
-
-const cancel = () => {
-  match(ui.mode)
-    .with(UI_MODES.PLAY_CARD, () => {
-      ui.unselectCard();
-    })
-    .otherwise(() => void 0);
-};
-
-const commitPlay = () => {
-  game.dispatch({
-    type: 'playCard',
-    payload: {
-      index: ui.selectedCardIndex!,
-      targets: ui.cardTargets
-    }
-  });
-  ui.unselectCard();
-};
-
-watchEffect(() => {
-  if (!isDefined(ui.mode)) return;
-
-  match(ui.mode)
-    .with(UI_MODES.BASIC, () => undefined)
-    .with(UI_MODES.PLAY_CARD, () => {
-      const card = ui.selectedCard;
-      if (!card) return false;
-      if (ui.cardTargets.length === card.maxTargetCount) {
-        commitPlay();
-      }
-    })
-    .exhaustive();
-});
-
-const isDisplayed = computed(() => {
-  // this is strange, but if we dont evaluate all the conditions we rn into reactivity issues
-  // maybe it is pinia related ?
-  const isCorrectMode = ui.mode === UI_MODES.PLAY_CARD;
-  const hasMultipleTargets = ui.cardTargets.length > 0;
-  const needsMultipleTargets =
-    (ui.selectedCard?.maxTargetCount ?? 0) > 1 ||
-    ui.selectedCard?.minTargetCount === 0;
-
-  return isCorrectMode && hasMultipleTargets && needsMultipleTargets;
+  return (
+    state.value.interactionState.state ===
+      INTERACTION_STATES.SELECTING_TARGETS &&
+    state.value.interactionState.ctx.canSkip
+  );
 });
 </script>
 
 <template>
   <div v-if="isDisplayed" class="targeting-ui" @click.stop>
-    <UiButton class="error-button" is-cta @click="cancel">Cancel</UiButton>
-    <UiButton v-if="canSkip" is-cta class="primary-button" @click="commitPlay">
+    <UiButton
+      class="error-button"
+      is-cta
+      @click="
+        battle.dispatch({
+          type: 'cancelPlayCard',
+          payload: { playerId: player.id }
+        })
+      "
+    >
+      Cancel
+    </UiButton>
+    <UiButton
+      is-cta
+      v-if="canSkip"
+      @click="
+        battle.dispatch({
+          type: 'commitPlayCard',
+          payload: {
+            playerId: player.id
+          }
+        })
+      "
+    >
       Skip
     </UiButton>
   </div>
@@ -74,7 +62,7 @@ const isDisplayed = computed(() => {
 .targeting-ui {
   pointer-events: auto;
   position: absolute;
-  bottom: calc(var(--size-12));
+  bottom: calc(var(--size-13));
   left: 50%;
   transform: translateX(-50%);
 

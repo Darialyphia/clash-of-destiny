@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import {
   useCells,
+  useDispatcher,
   useGameState,
   useUnits,
   useUserPlayer
@@ -41,6 +42,8 @@ export const useInternalBattleUiStore = defineStore(
 export const useBattleUiStore = defineStore('battle-ui', () => {
   const uiStore = useInternalBattleUiStore();
   const { state } = useGameState();
+  const dispatch = useDispatcher();
+
   const cells = useCells();
 
   type LayerName = 'ui' | 'scene' | 'fx';
@@ -87,7 +90,9 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
             activeUnit: computed(
               () =>
                 state.value.entities[state.value.activeUnit] as UnitViewModel
-            )
+            ),
+            state,
+            dispatcher: dispatch
           })
       )
       .with(GAME_PHASES.END, () => new EndGameController())

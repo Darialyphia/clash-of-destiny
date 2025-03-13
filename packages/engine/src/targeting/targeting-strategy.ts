@@ -10,6 +10,7 @@ export type TargetingStrategy = {
 
 export const TARGETING_TYPE = {
   EMPTY: 'empty',
+  NON_EMPTY: 'non_empty',
   ALLY: 'ally_unit',
   ENEMY: 'enemy_unit',
   ANYWHERE: 'anywhere'
@@ -32,6 +33,7 @@ export const isValidTargetingType = (
   return !!match(type)
     .with(TARGETING_TYPE.ANYWHERE, () => true)
     .with(TARGETING_TYPE.EMPTY, () => !unit)
+    .with(TARGETING_TYPE.NON_EMPTY, () => !!unit)
     .with(TARGETING_TYPE.ALLY, () => isDefined(unit) && unit.player.equals(player))
     .with(TARGETING_TYPE.ENEMY, () => isDefined(unit) && !unit.player.equals(player))
     .exhaustive();

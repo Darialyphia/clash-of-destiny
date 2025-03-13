@@ -66,7 +66,8 @@ export class ArtifactCard extends Card<
       name: this.blueprint.name,
       description: this.blueprint.description,
       rarity: this.blueprint.rarity,
-      unit: this.unit.id
+      unit: this.unit.id,
+      canPlay: this.canPlay()
     };
   }
 }

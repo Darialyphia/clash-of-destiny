@@ -1,86 +1,79 @@
 <script setup lang="ts">
-import type { Card } from '@game/engine/src/card/card.entity';
-import type { SerializedInput } from '@game/engine/src/input/input-system';
-import type { Unit } from '@game/engine/src/unit/unit.entity';
-import type { Point3D } from '@game/shared';
-import { vOnClickOutside } from '@vueuse/components';
-import { match } from 'ts-pattern';
-import { Icon } from '@iconify/vue';
-import type { EntityId } from '@game/engine/src/entity';
-import type { Player } from '@game/engine/src/player/player.entity';
-import { GAME_PHASES } from '@game/engine/src/game/game-phase.system';
-import { GAME_EVENTS } from '@game/engine/src/game/game';
 import {
+  useActiveUnit,
   useBattleEvent,
-  useGame,
-  useGameClientState
+  useGameState,
+  useUnits
 } from '@/battle/stores/battle.store';
+import { vOnClickOutside } from '@vueuse/components';
+import type { CardViewModel } from '@/card/card.model';
+import type { UnitViewModel } from '@/unit/unit.model';
+import type { PlayerViewModel } from '../../player/player.model';
+import type { Point } from '@game/shared';
+import { GAME_EVENTS } from '@game/engine/src/game/game.events';
+import { match } from 'ts-pattern';
+import { GAME_PHASES } from '@game/engine/src/game/systems/game-phase.system';
+import { pointToCellId } from '@game/engine/src/board/board-utils';
+import { Icon } from '@iconify/vue';
 
-const state = useGameClientState();
-const game = useGame();
-
+const { state } = useGameState();
+const units = useUnits();
 type Token =
   | {
       kind: 'text';
       text: string;
     }
-  | { kind: 'card'; card: Card }
+  | { kind: 'card'; card: CardViewModel }
   | {
       kind: 'unit';
-      unit: Unit;
+      unit: UnitViewModel;
     }
   | {
       kind: 'player';
-      player: Player;
+      player: PlayerViewModel;
     }
   | {
       kind: 'input';
-      player: Player;
+      player: PlayerViewModel;
     }
-  | { kind: 'position'; point: Point3D }
-  | { kind: 'turn_start'; player: Player }
+  | { kind: 'position'; point: Point }
+  | { kind: 'turn_start'; unit: UnitViewModel }
   | { kind: 'action'; text: string };
 
 const events = ref<Token[][]>([[]]);
 
-useBattleEvent(GAME_EVENTS.INPUT_START, async event => {
+useBattleEvent(GAME_EVENTS.UNIT_BEFORE_PLAY_CARD, async event => {
   events.value.push([
     {
-      kind: 'input',
-      player: game.value.playerSystem.getPlayerById(
-        event.payload.playerId as EntityId
-      )!
+      kind: 'unit',
+      unit: state.value.entities[event.unit.id] as UnitViewModel
     },
-    {
-      kind: 'action',
-      text: match(event.type as Exclude<SerializedInput['type'], 'deploy'>)
-        .with('attack', () => 'attacks')
-        .with('endTurn', () => 'ends their turn')
-        .with('move', () => 'moves')
-        .with('playCard', () => 'plays a card')
-        .with('drawResourceAction', () => 'draws a card')
-        .with('goldResourceAction', () => 'gains 1 gold')
-        .with('runeResourceAction', () => 'adds a rune')
-        .with('mulligan', () => 'mulligans')
-        .exhaustive()
-    }
+    { kind: 'text', text: 'played' },
+    { kind: 'card', card: state.value.entities[event.card.id] as CardViewModel }
   ]);
 });
 
-useBattleEvent(GAME_EVENTS.PLAYER_BEFORE_PLAY_CARD, async event => {
+useBattleEvent(GAME_EVENTS.UNIT_BEFORE_DRAW, async event => {
   events.value.push([
-    { kind: 'player', player: event.player },
-    { kind: 'text', text: 'played' },
-    { kind: 'card', card: event.card }
+    {
+      kind: 'unit',
+      unit: state.value.entities[event.unit.id] as UnitViewModel
+    },
+    { kind: 'text', text: `draws ${event.amount} cards` }
   ]);
 });
 
 useBattleEvent(GAME_EVENTS.UNIT_BEFORE_ATTACK, async event => {
   const tokens: Token[] = [
-    { kind: 'unit', unit: event.unit },
+    {
+      kind: 'unit',
+      unit: state.value.entities[event.unit.id] as UnitViewModel
+    },
     { kind: 'text', text: 'attacked' }
   ];
-  const target = game.value.unitSystem.getUnitAt(event.target);
+  const target = units.value.find(
+    u => u.getCell().id === pointToCellId(event.target)
+  );
   if (target) {
     tokens.push({ kind: 'unit', unit: target });
   }
@@ -89,26 +82,35 @@ useBattleEvent(GAME_EVENTS.UNIT_BEFORE_ATTACK, async event => {
 
 useBattleEvent(GAME_EVENTS.UNIT_BEFORE_RECEIVE_DAMAGE, async event => {
   events.value.push([
-    { kind: 'unit', unit: event.unit },
+    {
+      kind: 'unit',
+      unit: state.value.entities[event.unit.id] as UnitViewModel
+    },
     {
       kind: 'text',
-      text: `took ${event.damage.getMitigatedAmount(event.unit)} damage from`
+      text: `took ${event.damage} damage from`
     },
-    { kind: 'card', card: event.from }
+    { kind: 'unit', unit: state.value.entities[event.from.id] as UnitViewModel }
   ]);
 });
 
 useBattleEvent(GAME_EVENTS.UNIT_AFTER_RECEIVE_HEAL, async event => {
   events.value.push([
-    { kind: 'unit', unit: event.unit },
+    {
+      kind: 'unit',
+      unit: state.value.entities[event.unit.id] as UnitViewModel
+    },
     { kind: 'text', text: `got healed for ${event.amount} by` },
-    { kind: 'unit', unit: event.from }
+    { kind: 'unit', unit: state.value.entities[event.from.id] as UnitViewModel }
   ]);
 });
 
 useBattleEvent(GAME_EVENTS.UNIT_AFTER_MOVE, async event => {
   events.value.push([
-    { kind: 'unit', unit: event.unit },
+    {
+      kind: 'unit',
+      unit: state.value.entities[event.unit.id] as UnitViewModel
+    },
     { kind: 'text', text: `moved from` },
     { kind: 'position', point: event.previousPosition },
     { kind: 'text', text: `to` },
@@ -116,30 +118,25 @@ useBattleEvent(GAME_EVENTS.UNIT_AFTER_MOVE, async event => {
   ]);
 });
 
-useBattleEvent(GAME_EVENTS.PLAYER_START_TURN, async event => {
-  events.value.push([{ kind: 'turn_start', player: event.player }]);
+useBattleEvent(GAME_EVENTS.UNIT_START_TURN, async event => {
+  events.value.push([
+    {
+      kind: 'turn_start',
+      unit: state.value.entities[event.unit.id] as UnitViewModel
+    }
+  ]);
 });
 
 useBattleEvent(GAME_EVENTS.UNIT_AFTER_DESTROY, async event => {
   events.value.push([
-    { kind: 'unit', unit: event.unit },
+    {
+      kind: 'unit',
+      unit: state.value.entities[event.unit.id] as UnitViewModel
+    },
     { kind: 'text', text: `got destroyed.` }
   ]);
 });
 
-useBattleEvent(GAME_EVENTS.PLAYER_AFTER_RUNE_CHANGE, async event => {
-  events.value.push([
-    { kind: 'player', player: event.player },
-    { kind: 'text', text: `gained a ${event.rune.name} rune` }
-  ]);
-});
-
-useBattleEvent(GAME_EVENTS.PLAYER_AFTER_GOLD_CHANGE, async event => {
-  events.value.push([
-    { kind: 'player', player: event.player },
-    { kind: 'text', text: `gained ${event.amount} gold.` }
-  ]);
-});
 const isCollapsed = ref(true);
 
 const listEl = ref<HTMLElement>();
@@ -208,19 +205,19 @@ const isAction = (event: Pick<Token, 'kind'>[]) =>
             {{ token.player.name }}
           </template>
           <template v-else-if="token.kind === 'position'">
-            [{{ token.point.x }}, {{ token.point.y }}, {{ token.point.z }}]
+            [{{ token.point.x }}, {{ token.point.y }}]
           </template>
           <template v-else-if="token.kind === 'player'">
             {{ token.player.name }}
           </template>
           <template v-else-if="token.kind === 'turn_start'">
-            {{ token.player.name }}
+            {{ token.unit.name }}
           </template>
         </span>
       </li>
     </ul>
     <button class="toggle" @click="isCollapsed = !isCollapsed">
-      <Icon icon="material-symbols:arrow-forward-ios" />
+      <Icon icon="game-icons:scroll-unfurled" />
     </button>
   </div>
 </template>
@@ -228,9 +225,10 @@ const isAction = (event: Pick<Token, 'kind'>[]) =>
 <style scoped lang="postcss">
 .combat-log {
   position: fixed;
-  top: 35%;
+  top: 25%;
 
-  font-family: 'Press Start 2P';
+  pointer-events: auto;
+  /* font-family: 'Press Start 2P'; */
   color: #efef9f;
   user-select: none;
   background-color: #32021b;
@@ -285,8 +283,6 @@ li {
   padding-block: var(--size-1);
   padding-inline-start: var(--size-6);
 
-  font-size: 10px;
-
   &.action {
     background-color: hsl(0 0 100% / 0.05);
   }
@@ -318,7 +314,7 @@ li {
   border-left: none;
   > svg {
     aspect-ratio: 1;
-    width: 100%;
+    width: var(--size-7);
   }
 
   @screen lt-lg {
@@ -353,7 +349,6 @@ li {
 .turn_start {
   flex-grow: 1;
 
-  font-size: var(--font-size-0);
   font-weight: var(--font-weight-6);
   text-align: center;
 

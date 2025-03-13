@@ -4,6 +4,8 @@ import { useActiveUnit, useGameState } from '../stores/battle.store';
 import DeployUi from './DeployUi.vue';
 import Hand from '@/card/components/Hand.vue';
 import ActiveUnitPanel from '@/unit/components/ActiveUnitPanel.vue';
+import TargetingUi from './TargetingUi.vue';
+import BattleLog from '@/battle/components/BattleLog.vue';
 
 const { state } = useGameState();
 
@@ -13,6 +15,8 @@ const activeUnit = useActiveUnit();
 <template>
   <DeployUi v-if="state.phase === GAME_PHASES.DEPLOY" />
   <div v-else class="battle-ui">
+    <TargetingUi />
+    <BattleLog />
     <footer>
       <Hand :unit="activeUnit" />
       <ActiveUnitPanel class="active-unit" />

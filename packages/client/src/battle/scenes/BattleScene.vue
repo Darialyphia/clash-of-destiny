@@ -29,19 +29,31 @@ const session = new GameSession({
         {
           blueprintId: 'mage',
           deck: {
-            cards: Array.from({ length: 30 }, () => 'magic-missile')
+            cards: [
+              ...Array.from({ length: 10 }, () => 'magic-missile'),
+              ...Array.from({ length: 10 }, () => 'arcane-knowledge'),
+              ...Array.from({ length: 10 }, () => 'mana-shield')
+            ]
           }
         },
         {
           blueprintId: 'mage',
           deck: {
-            cards: Array.from({ length: 30 }, () => 'magic-missile')
+            cards: [
+              ...Array.from({ length: 10 }, () => 'magic-missile'),
+              ...Array.from({ length: 10 }, () => 'arcane-knowledge'),
+              ...Array.from({ length: 10 }, () => 'mana-shield')
+            ]
           }
         },
         {
           blueprintId: 'mage',
           deck: {
-            cards: Array.from({ length: 30 }, () => 'magic-missile')
+            cards: [
+              ...Array.from({ length: 10 }, () => 'magic-missile'),
+              ...Array.from({ length: 10 }, () => 'arcane-knowledge'),
+              ...Array.from({ length: 10 }, () => 'mana-shield')
+            ]
           }
         }
       ]
@@ -53,19 +65,31 @@ const session = new GameSession({
         {
           blueprintId: 'mage',
           deck: {
-            cards: Array.from({ length: 30 }, () => 'magic-missile')
+            cards: [
+              ...Array.from({ length: 10 }, () => 'magic-missile'),
+              ...Array.from({ length: 10 }, () => 'arcane-knowledge'),
+              ...Array.from({ length: 10 }, () => 'mana-shield')
+            ]
           }
         },
         {
           blueprintId: 'mage',
           deck: {
-            cards: Array.from({ length: 30 }, () => 'magic-missile')
+            cards: [
+              ...Array.from({ length: 10 }, () => 'magic-missile'),
+              ...Array.from({ length: 10 }, () => 'arcane-knowledge'),
+              ...Array.from({ length: 10 }, () => 'mana-shield')
+            ]
           }
         },
         {
           blueprintId: 'mage',
           deck: {
-            cards: Array.from({ length: 30 }, () => 'magic-missile')
+            cards: [
+              ...Array.from({ length: 10 }, () => 'magic-missile'),
+              ...Array.from({ length: 10 }, () => 'arcane-knowledge'),
+              ...Array.from({ length: 10 }, () => 'mana-shield')
+            ]
           }
         }
       ]

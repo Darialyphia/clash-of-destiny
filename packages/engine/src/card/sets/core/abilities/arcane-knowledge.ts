@@ -21,6 +21,6 @@ export const arcaneKnowledge: AbilityBlueprint = {
     return new NoAOEShape();
   },
   onPlay(game, card) {
-    card.unit.cards.draw(2);
+    card.unit.draw(2);
   }
 };

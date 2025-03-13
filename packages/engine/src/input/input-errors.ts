@@ -36,6 +36,12 @@ export class TooManyReplacesError extends InputError {
   }
 }
 
+export class InvalidCardIndexError extends InputError {
+  constructor() {
+    super('Invalid card index');
+  }
+}
+
 export class WrongGamePhaseError extends InputError {
   constructor() {
     super('You cannot do this action in the current game phase.');

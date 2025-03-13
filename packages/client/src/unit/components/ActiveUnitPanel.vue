@@ -11,21 +11,23 @@ const isActiveUnitOwner = computed(() =>
 </script>
 
 <template>
-  <div class="flex flex-col gap-4" v-if="isActiveUnitOwner">
-    <UiButton
-      v-if="activeUnit.moveIntent"
-      class="primary-button pointer-events-auto"
-      @click="activeUnit.commitMove()"
-    >
-      Move
-    </UiButton>
-    <UiButton
-      class="primary-button pointer-events-auto"
-      @click="activeUnit.endTurn()"
-    >
-      EndTurn
-    </UiButton>
-    <div class="fancy-surface active-unit-panel">
+  <div class="flex gap-4 p-5" v-if="isActiveUnitOwner">
+    <div class="flex flex-col gap-3 justify-end">
+      <UiButton
+        v-if="activeUnit.moveIntent"
+        class="primary-button pointer-events-auto"
+        @click="activeUnit.commitMove()"
+      >
+        Move
+      </UiButton>
+      <UiButton
+        class="primary-button pointer-events-auto"
+        @click="activeUnit.endTurn()"
+      >
+        End turn
+      </UiButton>
+    </div>
+    <div class="active-unit-panel">
       <div>
         <div class="name">{{ activeUnit.name }}</div>
         <div>HP: {{ activeUnit.hp }} / {{ activeUnit.maxHp }}</div>
@@ -34,6 +36,11 @@ const isActiveUnitOwner = computed(() =>
         <div v-if="activeUnit.canLevelUp">
           EXP: {{ activeUnit.exp }} / {{ activeUnit.expToNextLevel }}
         </div>
+      </div>
+      <div>
+        <div>Deck: {{ activeUnit.remainingCardsInDeck }}</div>
+        <div>Hand: {{ activeUnit.handSize }}</div>
+        <div>Discard pile: {{ activeUnit.getDiscardPile().length }}</div>
       </div>
       <div
         class="portrait"
@@ -46,8 +53,13 @@ const isActiveUnitOwner = computed(() =>
 <style scoped lang="postcss">
 .active-unit-panel {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr 1fr auto;
   gap: var(--size-4);
+  padding: var(--size-5);
+  background-color: #32021b;
+  border: solid 6px #efef9f;
+  border-right-color: #d7ad42;
+  border-bottom-color: #d7ad42;
 }
 
 .portrait {

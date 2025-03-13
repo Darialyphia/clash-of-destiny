@@ -151,6 +151,17 @@ export class UnitLevelUpEvent extends TypedSerializableEvent<EmptyObject, EmptyO
   }
 }
 
+export class UnitDrawEvent extends TypedSerializableEvent<
+  { amount: number },
+  { amount: number }
+> {
+  serialize() {
+    return {
+      amount: this.data.amount
+    };
+  }
+}
+
 export type UnitEventMap = {
   [UNIT_EVENTS.CREATED]: UnitCreatedEvent;
   [UNIT_EVENTS.BEFORE_MOVE]: UnitBeforeMoveEvent;
@@ -159,8 +170,6 @@ export type UnitEventMap = {
   [UNIT_EVENTS.AFTER_TELEPORT]: UnitAfterMoveEvent;
   [UNIT_EVENTS.BEFORE_ATTACK]: UnitAttackEvent;
   [UNIT_EVENTS.AFTER_ATTACK]: UnitAttackEvent;
-  [UNIT_EVENTS.BEFORE_COUNTERATTACK]: UnitAttackEvent;
-  [UNIT_EVENTS.AFTER_COUNTERATTACK]: UnitAttackEvent;
   [UNIT_EVENTS.BEFORE_DEAL_DAMAGE]: UnitDealDamageEvent;
   [UNIT_EVENTS.AFTER_DEAL_DAMAGE]: UnitDealDamageEvent;
   [UNIT_EVENTS.BEFORE_RECEIVE_DAMAGE]: UnitReceiveDamageEvent;
@@ -175,4 +184,6 @@ export type UnitEventMap = {
   [UNIT_EVENTS.END_TURN]: UnitTurnEvent;
   [UNIT_EVENTS.BEFORE_LEVEL_UP]: UnitLevelUpEvent;
   [UNIT_EVENTS.AFTER_LEVEL_UP]: UnitLevelUpEvent;
+  [UNIT_EVENTS.BEFORE_DRAW]: UnitDrawEvent;
+  [UNIT_EVENTS.AFTER_DRAW]: UnitDrawEvent;
 };

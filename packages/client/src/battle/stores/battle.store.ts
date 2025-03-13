@@ -16,8 +16,6 @@ import type {
   InputDispatcher,
   SerializedInput
 } from '@game/engine/src/input/input-system';
-import type { Modifier } from '@game/engine/src/modifier/modifier.entity';
-import type { Artifact } from '@game/engine/src/unit/entities/artifact.entity';
 import { TypedEventEmitter } from '@game/engine/src/utils/typed-emitter';
 import {
   waitFor,
@@ -211,6 +209,12 @@ export const useBattleEvent = <T extends keyof GameEventMap>(
   onUnmounted(unsub);
 
   return unsub;
+};
+
+export const useDispatcher = () => {
+  const store = useBattleStore();
+
+  return store.dispatch;
 };
 
 export const useGameState = () => {

@@ -2,7 +2,7 @@
 import { External } from 'vue3-pixi';
 import { useAssets } from './shared/composables/useAssets';
 import PixiApp from './PixiApp.vue';
-import { TooltipProvider } from 'radix-vue';
+import { TooltipProvider } from 'reka-ui';
 
 const { loaded } = useAssets();
 

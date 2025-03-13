@@ -54,4 +54,8 @@ export class CardViewModel {
       return this.data.exp as number;
     }
   }
+
+  get canPlay() {
+    return this.data.canPlay;
+  }
 }

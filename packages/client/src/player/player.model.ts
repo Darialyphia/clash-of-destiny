@@ -20,6 +20,10 @@ export class PlayerViewModel {
     return this.data.id;
   }
 
+  get name() {
+    return this.data.name;
+  }
+
   get hasDeployed() {
     return this.data.hasCommitedDeployment;
   }

@@ -103,7 +103,8 @@ export class AbilityCard extends Card<
       unit: this.unit.id,
       manaCost: this.manaCost,
       levelCost: this.levelCost,
-      exp: this.exp
+      exp: this.exp,
+      canPlay: this.canPlay()
     };
   }
 }

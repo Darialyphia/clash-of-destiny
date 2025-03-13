@@ -27,6 +27,7 @@ export type SerializedCard = {
   kind: CardKind;
   setId: string;
   rarity: Rarity;
+  canPlay: boolean;
 };
 
 export abstract class Card<

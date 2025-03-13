@@ -5,7 +5,7 @@ import {
   TooltipPortal,
   TooltipContent,
   type TooltipContentProps
-} from 'radix-vue';
+} from 'reka-ui';
 
 export type UITooltipProps = {
   sideOffset?: number;
