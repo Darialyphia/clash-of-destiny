@@ -28,9 +28,7 @@ const turnOrder = computed(() =>
       :class="{ enemy: hero.playerId !== player.id }"
       @mouseenter="ui.highlightUnit(hero)"
       @mouseleave="ui.unhighlightUnit()"
-    >
-      {{ hero.name }}
-    </button>
+    ></button>
   </div>
 </template>
 
@@ -38,7 +36,7 @@ const turnOrder = computed(() =>
 button {
   width: var(--unit-icon-size);
   aspect-ratio: 1;
-  background: linear-gradient(transparent 30%, hsl(0 0 0 / 0.75)), var(--bg);
+  background: var(--bg);
   background-size: cover;
   pointer-events: auto;
   display: flex;
@@ -47,9 +45,36 @@ button {
   text-transform: uppercase;
   padding: var(--size-2);
   font-weight: var(--font-weight-5);
-  color: var(--blue-4);
+  position: relative;
+  --color: var(--blue-6);
+  --shadow-color: var(--blue-3);
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    display: block;
+    transform: translateX(-50%);
+    width: var(--size-3);
+    aspect-ratio: 1;
+    border-radius: var(--radius-round);
+    background: radial-gradient(
+      circle at center,
+      white,
+      white 15%,
+      var(--color) 70%
+    );
+    box-shadow: 0 0 var(--size-2) var(--shadow-color);
+  }
+
+  &:hover {
+    outline: solid var(--border-size-2) var(--yellow-2);
+  }
   &.enemy {
-    color: var(--red-4);
+    --color: var(--red-6);
+    --shadow-color: var(--red-3);
+    transform: rotateY(180deg);
   }
 }
 </style>

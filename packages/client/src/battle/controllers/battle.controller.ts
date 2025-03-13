@@ -40,7 +40,6 @@ export class BattleController implements UiController {
             const index = hand.findIndex(c => c.id === this.selectedCard!.id);
             if (this.selectedCard.needsTargets) {
               this.options.firstTargetIntent.value = cell;
-              console.log('declared first target intent');
             }
 
             this.options.cardPlayIntent.value = this.selectedCard;
