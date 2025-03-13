@@ -53,10 +53,16 @@ const onMouseDown = (e: MouseEvent) => {
     if (Math.abs(e.clientY - clickedPosition.value.y) > SELECTION_THRESHOLD) {
       ui.selectCard(cardElement, card);
       document.body.removeEventListener('mousemove', onMousemove);
-      startDragging();
     }
+    startDragging();
   };
   document.body.addEventListener('mousemove', onMousemove);
+  const onMouseup = () => {
+    isClicking.value = false;
+    document.body.removeEventListener('mousemove', onMousemove);
+    document.body.removeEventListener('mouseup', onMouseup);
+  };
+  document.body.addEventListener('mouseup', onMouseup);
 };
 </script>
 

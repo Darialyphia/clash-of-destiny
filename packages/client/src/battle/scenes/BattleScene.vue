@@ -96,7 +96,14 @@ const session = new GameSession({
     }
   ]
 });
-
+// @ts-expect-error
+window._debugSession = () => {
+  console.log(session.game);
+};
+// @ts-expect-error
+window._debugClient = () => {
+  console.log(battleStore.state);
+};
 session.initialize();
 battleStore.init({
   id: 'p1',

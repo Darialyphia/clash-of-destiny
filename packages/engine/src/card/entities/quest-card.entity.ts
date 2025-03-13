@@ -31,6 +31,7 @@ export class QuestCard extends Card<
     this.emitter.emit(CARD_EVENTS.BEFORE_PLAY, new CardBeforePlayEvent({ targets: [] }));
     this.blueprint.onPlay(this.game, this);
     this.unit.quests.start(this);
+    this.unit.cards.sendToDiscardPile(this);
     this.emitter.emit(CARD_EVENTS.AFTER_PLAY, new CardAfterPlayEvent({ targets: [] }));
   }
 

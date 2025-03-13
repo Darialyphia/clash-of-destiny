@@ -6,6 +6,7 @@ import UnitPositioner from './UnitPositioner.vue';
 import type { Container } from 'pixi.js';
 import { waitFor } from '@game/shared';
 import {
+  GAME_TYPES,
   useBattleEvent,
   useGameState,
   useUserPlayer
@@ -24,12 +25,13 @@ import { GAME_PHASES } from '@game/engine/src/game/systems/game-phase.system';
 const { unit } = defineProps<{ unit: UnitViewModel }>();
 
 const camera = useIsoCamera();
-const { state } = useGameState();
+const { state, gameType } = useGameState();
+const player = useUserPlayer();
 
 const isoPosition = useAnimatedIsoPoint({
   position: computed(() => unit.position)
 });
-const centerCamera = () => {
+const centerCamera = (buffer: number) => {
   const viewport = camera.viewport.value;
   if (!viewport) return;
   const position = {
@@ -38,10 +40,10 @@ const centerCamera = () => {
   };
 
   const isWithinViewport =
-    position.x > viewport.left * 1.35 &&
-    position.x < viewport.right * 0.65 &&
-    position.y > viewport.top * 1.35 &&
-    position.y < viewport.bottom * 0.65;
+    position.x > viewport.left * (1 + buffer) &&
+    position.x < viewport.right * (1 - buffer) &&
+    position.y > viewport.top * (1 + buffer) &&
+    position.y < viewport.bottom * (1 - buffer);
 
   if (isWithinViewport) return;
 
@@ -55,17 +57,19 @@ const centerCamera = () => {
 
 useBattleEvent(GAME_EVENTS.UNIT_BEFORE_ATTACK, async e => {
   if (unit.equals(e.unit)) {
-    await centerCamera();
+    await centerCamera(0.3);
   }
 });
-// useBattleEvent(GAME_EVENTS.UNIT_BEFORE_RECEIVE_DAMAGE, async e => {
-//   if (unit.equals(e.unit)) {
-//     await centerCamera();
-//   }
-// });
+
 useBattleEvent(GAME_EVENTS.UNIT_START_TURN, async e => {
+  if (
+    gameType.value !== GAME_TYPES.LOCAL &&
+    e.unit.playerId !== player.value.id
+  ) {
+    return;
+  }
   if (unit.equals(e.unit)) {
-    await centerCamera();
+    await centerCamera(1);
   }
 });
 

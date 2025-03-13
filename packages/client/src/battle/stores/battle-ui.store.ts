@@ -175,11 +175,14 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
   battle.on(GAME_EVENTS.UNIT_BEFORE_PLAY_CARD, async () => {
     cardPlayIntent.value = null;
     firstTargetIntent.value = null;
+    internals.selectedCardId = null;
+    console.log('reset');
   });
   battle.on(GAME_EVENTS.INPUT_START, async e => {
     if (e.type === 'cancelPlayCard') {
       cardPlayIntent.value = null;
       firstTargetIntent.value = null;
+      internals.selectedCardId = null;
     }
   });
 

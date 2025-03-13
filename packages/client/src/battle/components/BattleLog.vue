@@ -44,7 +44,6 @@ type Token =
 const events = ref<Token[][]>([[]]);
 
 useBattleEvent(GAME_EVENTS.UNIT_BEFORE_PLAY_CARD, async event => {
-  console.log(event.card.id, state.value.entities);
   events.value.push([
     {
       kind: 'unit',

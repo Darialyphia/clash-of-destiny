@@ -106,12 +106,15 @@ export class GameSnaphotSystem extends System<EmptyObject> {
 
       if (weapon) {
         entities[weapon.id] = weapon.serialize();
+        entities[weapon.card.id] = weapon.card.serialize();
       }
       if (armor) {
         entities[armor.id] = armor.serialize();
+        entities[armor.card.id] = armor.card.serialize();
       }
       if (relic) {
         entities[relic.id] = relic.serialize();
+        entities[relic.card.id] = relic.card.serialize();
       }
 
       unit.cards.hand.forEach(card => {

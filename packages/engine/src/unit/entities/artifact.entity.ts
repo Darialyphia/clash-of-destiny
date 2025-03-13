@@ -191,6 +191,7 @@ export class Artifact
     this.emitter.emit(ARTIFACT_EVENTS.BEFORE_DESTROY, new ArtifactDestroyEvent({}));
 
     this.unit.artifacts.unequip(this.card.artifactKind);
+    this.unit.cards.sendToDiscardPile(this.card);
 
     this.emitter.emit(ARTIFACT_EVENTS.AFTER_DESTROY, new ArtifactDestroyEvent({}));
   }

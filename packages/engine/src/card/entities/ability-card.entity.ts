@@ -84,6 +84,7 @@ export class AbilityCard extends Card<
       aoeShape.getUnits(points)
     );
 
+    this.unit.cards.sendToDiscardPile(this);
     this.emitter.emit(
       CARD_EVENTS.AFTER_PLAY,
       new CardAfterPlayEvent({ targets: points })

@@ -7,7 +7,7 @@ const cardRotation = ref({ x: 0, y: 0 });
 const { x, y } = useMouse();
 let prev = { x: x.value, y: y.value };
 let delta = { x: 0, y: 0 };
-const MAX_ANGLE = 45;
+const MAX_ANGLE = 30;
 const SCALE_FACTOR = 1.4;
 const LERP_FACTOR = 0.3;
 
