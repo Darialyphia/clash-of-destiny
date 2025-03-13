@@ -90,6 +90,16 @@ export class BattleController implements UiController {
                 ...cell.position
               }
             });
+            return;
+          }
+
+          if (!isElligible) {
+            this.options.dispatcher({
+              type: 'cancelPlayCard',
+              payload: {
+                playerId: this.activeUnit.playerId
+              }
+            });
           }
         }
       );

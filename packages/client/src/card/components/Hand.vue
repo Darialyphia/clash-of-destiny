@@ -45,18 +45,21 @@ useResizeObserver(
 </script>
 
 <template>
-  <div class="hand" ref="root">
-    <div
-      v-for="(card, index) in hand"
-      :key="card.id"
-      :style="{ '--i': index }"
-      :data-flip-id="card.id"
-    >
-      <div>
-        <HandCard :card="card" />
+  <transition appear mode="out-in">
+    <div class="hand" ref="root" :key="unit.id">
+      <div
+        v-for="(card, index) in hand"
+        :key="card.id"
+        :style="{ '--i': index }"
+        :data-flip-id="card.id"
+        @dblclick="unit.playCard(index)"
+      >
+        <div>
+          <HandCard :card="card" />
+        </div>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <style scoped lang="postcss">
@@ -85,6 +88,16 @@ useResizeObserver(
     :has(&:hover) > div {
       transform: translateY(0);
     }
+  }
+
+  &.v-enter-active,
+  &.v-leave-active {
+    transition: transform 0.35s var(--ease-spring-2);
+  }
+
+  &.v-enter-from,
+  &.v-leave-to {
+    transform: translateY(50%);
   }
 }
 </style>

@@ -17,11 +17,14 @@ const emit = defineEmits<{}>();
 
 <template>
   <div class="card" :data-flip-id="`card_${card.id}`">
-    <div class="card-image" :style="{ '--bg': `url('${card.image}')` }" />
-    <div class="name">{{ card.name }}</div>
-    <div>kind: {{ card.kind }}</div>
-    <div>{{ card.description }}</div>
-    <div v-if="isDefined(card.manaCost)">Mana cost: {{ card.manaCost }}</div>
+    <div class="card-front">
+      <div class="card-image" :style="{ '--bg': `url('${card.image}')` }" />
+      <div class="name">{{ card.name }}</div>
+      <div>kind: {{ card.kind }}</div>
+      <div>{{ card.description }}</div>
+      <div v-if="isDefined(card.manaCost)">Mana cost: {{ card.manaCost }}</div>
+    </div>
+    <div class="card-back" />
   </div>
 </template>
 
@@ -30,9 +33,32 @@ const emit = defineEmits<{}>();
   --pixel-scale: 2;
   width: calc(126px * var(--pixel-scale));
   height: calc(178px * var(--pixel-scale));
+  display: grid;
+  transform-style: preserve-3d;
+  border-radius: var(--radius-2);
+
+  > * {
+    grid-column: 1;
+    grid-row: 1;
+  }
+}
+
+.card-front {
+  border-radius: inherit;
   background-color: #69193a;
   padding: 8px;
   border: solid 3px black;
+  backface-visibility: hidden;
+}
+
+.card-back {
+  background-color: #69193a;
+  border-radius: inherit;
+  border: solid 3px black;
+  transform: rotateY(0.5turn);
+  backface-visibility: hidden;
+  background: url('/assets/ui/card-back.png');
+  background-size: cover;
 }
 
 .card-image {

@@ -1,5 +1,3 @@
-import { LineAOEShape } from '../../../../aoe/line.aoe-shape';
-import { PointAOEShape } from '../../../../aoe/point.aoe-shape';
 import { ProjectileAOEShape } from '../../../../aoe/projectile.aoe-shape';
 import { AbilityDamage } from '../../../../combat/damage';
 import { TARGETING_TYPE } from '../../../../targeting/targeting-strategy';

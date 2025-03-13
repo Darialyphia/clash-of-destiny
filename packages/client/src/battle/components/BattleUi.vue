@@ -8,6 +8,7 @@ import TargetingUi from './TargetingUi.vue';
 import BattleLog from '@/battle/components/BattleLog.vue';
 import DraggedCard from '@/card/components/DraggedCard.vue';
 import InspectedCard from '@/card/components/InspectedCard.vue';
+import TurnOrder from './TurnOrder.vue';
 
 const { state } = useGameState();
 
@@ -20,6 +21,7 @@ const activeUnit = useActiveUnit();
   <DeployUi v-if="state.phase === GAME_PHASES.DEPLOY" />
   <div v-else class="battle-ui">
     <BattleLog />
+    <TurnOrder />
     <footer>
       <Hand :unit="activeUnit" />
       <ActiveUnitPanel class="active-unit" />

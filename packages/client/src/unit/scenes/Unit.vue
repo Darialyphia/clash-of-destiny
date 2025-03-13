@@ -5,7 +5,11 @@ import UnitShadow from './UnitShadow.vue';
 import UnitPositioner from './UnitPositioner.vue';
 import type { Container } from 'pixi.js';
 import { waitFor } from '@game/shared';
-import { useBattleEvent, useUserPlayer } from '@/battle/stores/battle.store';
+import {
+  useBattleEvent,
+  useGameState,
+  useUserPlayer
+} from '@/battle/stores/battle.store';
 import { useIsoCamera } from '@/iso/composables/useIsoCamera';
 import { useAnimatedIsoPoint } from '@/iso/composables/useAnimatedPoint';
 import { GAME_EVENTS } from '@game/engine/src/game/game.events';
@@ -13,14 +17,14 @@ import type { UnitViewModel } from '../unit.model';
 import ActiveUnitIndicator from './ActiveUnitIndicator.vue';
 import AlphaTransition from '@/ui/scenes/AlphaTransition.vue';
 import UnitSpawnAnimation from './UnitSpawnAnimation.vue';
-import HealthBar from './HealthBar.vue';
-import ManaBar from './ManaBar.vue';
+import UnitStatBars from './UnitStatBars.vue';
 import UnitVFX from './vfx/UnitVFX.vue';
+import { GAME_PHASES } from '@game/engine/src/game/systems/game-phase.system';
 
 const { unit } = defineProps<{ unit: UnitViewModel }>();
 
 const camera = useIsoCamera();
-const player = useUserPlayer();
+const { state } = useGameState();
 
 const isoPosition = useAnimatedIsoPoint({
   position: computed(() => unit.position)
@@ -54,11 +58,11 @@ useBattleEvent(GAME_EVENTS.UNIT_BEFORE_ATTACK, async e => {
     await centerCamera();
   }
 });
-useBattleEvent(GAME_EVENTS.UNIT_BEFORE_RECEIVE_DAMAGE, async e => {
-  if (unit.equals(e.unit)) {
-    await centerCamera();
-  }
-});
+// useBattleEvent(GAME_EVENTS.UNIT_BEFORE_RECEIVE_DAMAGE, async e => {
+//   if (unit.equals(e.unit)) {
+//     await centerCamera();
+//   }
+// });
 useBattleEvent(GAME_EVENTS.UNIT_START_TURN, async e => {
   if (unit.equals(e.unit)) {
     await centerCamera();
@@ -84,8 +88,9 @@ const isSpawnAnimationDone = ref(false);
     >
       <container>
         <ActiveUnitIndicator :unit="unit" />
-        <HealthBar :unit="unit" :y="-45" :x="-20" />
-        <ManaBar :unit="unit" :y="-40" :x="-20" />
+        <UnitStatBars :unit="unit" v-if="state.phase === GAME_PHASES.BATTLE" />
+        <!-- <HealthBar :unit="unit" :y="-45" :x="-20" />
+        <ManaBar :unit="unit" :y="-40" :x="-20" /> -->
         <!-- <UnitStatsIndicators
           :unit="unit"
           v-if="!unit.isAltar || !unit.isDead"

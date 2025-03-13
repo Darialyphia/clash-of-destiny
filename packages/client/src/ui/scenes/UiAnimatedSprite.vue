@@ -2,15 +2,20 @@
 import { useSpritesheet } from '@/shared/composables/useSpritesheet';
 import { createSpritesheetFrameObject } from '@/utils/sprite';
 
-const { assetId, tag = 'idle' } = defineProps<{
+const {
+  assetId,
+  tag = 'idle',
+  layer = 'base'
+} = defineProps<{
   assetId: string;
   tag?: string;
+  layer?: string;
 }>();
 
-const sheet = useSpritesheet<'', 'base'>(() => assetId);
+const sheet = useSpritesheet<'', string>(() => assetId);
 const textures = computed(() => {
   if (!sheet.value) return null;
-  return createSpritesheetFrameObject(tag, sheet.value.sheets.base.base);
+  return createSpritesheetFrameObject(tag, sheet.value.sheets.base[layer]);
 });
 </script>
 
@@ -22,5 +27,7 @@ const textures = computed(() => {
     playing
     :anchor="0.5"
     :textures="textures"
-  />
+  >
+    <slot />
+  </animated-sprite>
 </template>

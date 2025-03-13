@@ -4,6 +4,7 @@ import Card from './Card.vue';
 import { usePageLeave } from '@vueuse/core';
 import type { CardViewModel } from '../card.model';
 import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
+import InspectableCard from './InspectableCard.vue';
 
 const { card } = defineProps<{ card: CardViewModel }>();
 
@@ -68,15 +69,8 @@ const onMouseDown = (e: MouseEvent) => {
     @mousedown="onMouseDown"
   >
     <component :is="isSelected ? Teleport : 'div'" to="#dragged-card">
-      <Card
-        :card="{
-          id: card.id,
-          name: card.name,
-          description: card.description,
-          image: card.imagePath,
-          kind: card.kind,
-          manaCost: card.manaCost
-        }"
+      <InspectableCard
+        :card="card"
         class="hand-card__card"
         :class="{
           'is-dragging': isSelected

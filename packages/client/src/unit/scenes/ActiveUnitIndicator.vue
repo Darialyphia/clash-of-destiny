@@ -18,7 +18,7 @@ const ui = useBattleUiStore();
     <UiAnimatedSprite
       v-if="isActive && state.phase === GAME_PHASES.BATTLE"
       asset-id="active-unit-indicator"
-      :y="-55"
+      :y="unit.isMaxLevel ? -70 : -80"
     />
   </container>
 </template>

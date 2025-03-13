@@ -92,6 +92,7 @@ export type SerializedUnit = {
   exp: number;
   expToNextLevel: number;
   canLevelup: boolean;
+  isMaxLevel: boolean;
   keywords: Array<{ id: string; name: string; description: string }>;
   isDead: boolean;
   moveZone: Array<{ point: Point; path: Point[] }>;
@@ -223,6 +224,7 @@ export class Unit
       mp: this.mp.current,
       maxMp: this.mp.max,
       level: this.level,
+      isMaxLevel: !this.nextBlueprint,
       blueprintChain: this.blueprintChain.map(blueprint => ({
         id: blueprint.id,
         name: blueprint.name,

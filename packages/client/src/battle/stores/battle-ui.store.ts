@@ -144,12 +144,11 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
 
     const el = document.querySelector(`[data-flip-id="card_${card.id}"]`);
     const flipState = Flip.getState(el);
-
     window.requestAnimationFrame(() => {
       Flip.from(flipState, {
-        targets: ['.hand-card__card'],
-        duration: 0.4,
-        absolute: true,
+        targets: [`.hand-card__card[data-flip-id="card_${card.id}"]`],
+        duration: 0.3,
+        absolute: false,
         ease: Power1.easeOut
       });
     });

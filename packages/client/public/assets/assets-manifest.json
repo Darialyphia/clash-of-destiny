@@ -550,6 +550,19 @@
         },
         {
           "alias": [
+            "card-back.png"
+          ],
+          "src": [
+            "/assets/ui/card-back.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "cursor-disabled.png"
           ],
           "src": [
@@ -833,6 +846,33 @@
           ],
           "src": [
             "/assets/ui/tile-highlights.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "unit-stat-bars"
+          ],
+          "src": [
+            "/assets/ui/unit-stat-bars.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "unit-stat-bars.png"
+          ],
+          "src": [
+            "/assets/ui/unit-stat-bars.png"
           ],
           "data": {
             "tags": {

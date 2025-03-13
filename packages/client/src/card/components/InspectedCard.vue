@@ -28,6 +28,7 @@ onClickOutside(
 
 <style lang="postcss">
 #inspected-card-container {
+  pointer-events: auto;
   perspective: 800px;
   position: fixed;
   inset: 0;
@@ -48,8 +49,9 @@ onClickOutside(
 }
 
 #inspected-card {
-  width: 20rem;
-  aspect-ratio: var(--aspect-card);
+  --pixel-scale: 2;
+  width: calc(126px * var(--pixel-scale));
+  height: calc(178px * var(--pixel-scale));
   > * {
     width: 100%;
     height: 100%;

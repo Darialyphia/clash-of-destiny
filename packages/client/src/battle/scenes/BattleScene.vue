@@ -27,7 +27,7 @@ const session = new GameSession({
       name: 'Player 1',
       heroes: [
         {
-          blueprintId: 'mage',
+          blueprintId: 'archMage',
           deck: {
             cards: [
               ...Array.from({ length: 10 }, () => 'magic-missile'),
@@ -37,7 +37,7 @@ const session = new GameSession({
           }
         },
         {
-          blueprintId: 'mage',
+          blueprintId: 'archMage',
           deck: {
             cards: [
               ...Array.from({ length: 10 }, () => 'magic-missile'),
@@ -47,7 +47,7 @@ const session = new GameSession({
           }
         },
         {
-          blueprintId: 'mage',
+          blueprintId: 'archMage',
           deck: {
             cards: [
               ...Array.from({ length: 10 }, () => 'magic-missile'),
@@ -63,7 +63,7 @@ const session = new GameSession({
       name: 'Player 2',
       heroes: [
         {
-          blueprintId: 'mage',
+          blueprintId: 'archMage',
           deck: {
             cards: [
               ...Array.from({ length: 10 }, () => 'magic-missile'),
@@ -73,7 +73,7 @@ const session = new GameSession({
           }
         },
         {
-          blueprintId: 'mage',
+          blueprintId: 'archMage',
           deck: {
             cards: [
               ...Array.from({ length: 10 }, () => 'magic-missile'),
@@ -83,7 +83,7 @@ const session = new GameSession({
           }
         },
         {
-          blueprintId: 'mage',
+          blueprintId: 'archMage',
           deck: {
             cards: [
               ...Array.from({ length: 10 }, () => 'magic-missile'),

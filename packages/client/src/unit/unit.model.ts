@@ -98,6 +98,10 @@ export class UnitViewModel {
     return this.data.canLevelup;
   }
 
+  get isMaxLevel() {
+    return this.data.isMaxLevel;
+  }
+
   get remainingCardsInDeck() {
     return this.data.remainingCardsInDeck;
   }
@@ -216,6 +220,15 @@ export class UnitViewModel {
       payload: {
         playerId: this.playerId,
         index: index
+      }
+    });
+  }
+
+  levelUp() {
+    this.dispatcher({
+      type: 'levelUp',
+      payload: {
+        playerId: this.playerId
       }
     });
   }

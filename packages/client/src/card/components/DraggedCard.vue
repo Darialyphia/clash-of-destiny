@@ -2,6 +2,7 @@
 import { lerp } from '@game/shared';
 import { useMouse, useRafFn } from '@vueuse/core';
 
+const container = useTemplateRef('container');
 const cardRotation = ref({ x: 0, y: 0 });
 const { x, y } = useMouse();
 let prev = { x: x.value, y: y.value };
@@ -11,6 +12,8 @@ const SCALE_FACTOR = 1.4;
 const LERP_FACTOR = 0.3;
 
 useRafFn(() => {
+  if (!container.value?.children.length) return;
+
   delta = {
     x: x.value - prev.x,
     y: y.value - prev.y
@@ -40,6 +43,7 @@ useRafFn(() => {
 <template>
   <div id="dragged-card-container">
     <div
+      ref="container"
       id="dragged-card"
       :style="{
         '--x': `${x}px`,
