@@ -1,8 +1,11 @@
 import type { GameStateEntities } from '@/battle/stores/battle.store';
+import type { CellViewModel } from '@/board/cell.model';
+import type { UnitViewModel } from '@/unit/unit.model';
 import { CARD_KINDS } from '@game/engine/src/card/card.enums';
 import type { SerializedAbilityCard } from '@game/engine/src/card/entities/ability-card.entity';
 import type { SerializedArtifactCard } from '@game/engine/src/card/entities/artifact-card.entity';
 import type { SerializedCard } from '@game/engine/src/card/entities/card.entity';
+import type { SerializedQuestCard } from '@game/engine/src/card/entities/quest-card.entity';
 import type { InputDispatcher } from '@game/engine/src/input/input-system';
 import { match } from 'ts-pattern';
 
@@ -57,5 +60,46 @@ export class CardViewModel {
 
   get canPlay() {
     return this.data.canPlay;
+  }
+
+  getUnit() {
+    return this.entityDictionary[this.data.unit] as UnitViewModel;
+  }
+
+  get needsTargets() {
+    const data = this.data as
+      | SerializedAbilityCard
+      | SerializedArtifactCard
+      | SerializedQuestCard;
+    return match(data)
+      .with({ kind: CARD_KINDS.ABILITY }, data => {
+        return !!data.elligibleFirstTargets.length;
+      })
+      .with({ kind: CARD_KINDS.ARTIFACT }, () => {
+        return false;
+      })
+      .with({ kind: CARD_KINDS.QUEST }, () => {
+        return false;
+      })
+      .exhaustive();
+  }
+  canPlayAt(cell: CellViewModel) {
+    const data = this.data as
+      | SerializedAbilityCard
+      | SerializedArtifactCard
+      | SerializedQuestCard;
+    return match(data)
+      .with({ kind: CARD_KINDS.ABILITY }, data => {
+        if (!data.elligibleFirstTargets.length) return true; // card has no followup
+
+        return data.elligibleFirstTargets.some(id => id === cell.id);
+      })
+      .with({ kind: CARD_KINDS.ARTIFACT }, () => {
+        return cell.getUnit() === this.getUnit();
+      })
+      .with({ kind: CARD_KINDS.QUEST }, () => {
+        return true;
+      })
+      .exhaustive();
   }
 }

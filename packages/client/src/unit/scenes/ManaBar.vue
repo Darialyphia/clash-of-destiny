@@ -28,9 +28,9 @@ const ui = useBattleUiStore();
           g.drawRect(0, 0, WIDTH, HEIGHT);
           g.endFill();
           g.beginFill({
-            h: 240,
+            h: 220,
             s: 85,
-            l: 50
+            l: 55
           });
           g.drawRect(0, 0, (WIDTH * mp) / unit.maxMp, HEIGHT);
           g.endFill();

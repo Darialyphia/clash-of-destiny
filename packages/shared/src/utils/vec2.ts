@@ -35,6 +35,24 @@ export class Vec2 implements Serializable {
     return new Vec2(this.x, this.y);
   }
 
+  get magnitude() {
+    return Math.sqrt(this.x ** 2 + this.y ** 2);
+  }
+
+  set magnitude(mag: number) {
+    this.normalize().mul({ x: mag, y: mag });
+  }
+
+  normalize() {
+    const mag = this.magnitude;
+    if (mag === 0) return this;
+
+    this.x /= mag;
+    this.y /= mag;
+
+    return this;
+  }
+
   equals(vec: Point) {
     return this.x === vec.x && this.y === vec.y;
   }

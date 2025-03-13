@@ -6,6 +6,8 @@ import Hand from '@/card/components/Hand.vue';
 import ActiveUnitPanel from '@/unit/components/ActiveUnitPanel.vue';
 import TargetingUi from './TargetingUi.vue';
 import BattleLog from '@/battle/components/BattleLog.vue';
+import DraggedCard from '@/card/components/DraggedCard.vue';
+import InspectedCard from '@/card/components/InspectedCard.vue';
 
 const { state } = useGameState();
 
@@ -13,15 +15,19 @@ const activeUnit = useActiveUnit();
 </script>
 
 <template>
+  <TargetingUi />
+
   <DeployUi v-if="state.phase === GAME_PHASES.DEPLOY" />
   <div v-else class="battle-ui">
-    <TargetingUi />
     <BattleLog />
     <footer>
       <Hand :unit="activeUnit" />
       <ActiveUnitPanel class="active-unit" />
     </footer>
   </div>
+
+  <DraggedCard />
+  <InspectedCard />
 </template>
 
 <style scoped lang="postcss">

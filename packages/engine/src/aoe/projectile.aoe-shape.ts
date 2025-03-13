@@ -1,4 +1,4 @@
-import { assert, isDefined } from '@game/shared';
+import { assert, isDefined, Vec2 } from '@game/shared';
 import type { Point } from 'honeycomb-grid';
 import type { Game } from '../game/game';
 import type { Player } from '../player/player.entity';
@@ -20,8 +20,11 @@ export class ProjectileAOEShape implements AOEShape {
   ) {}
 
   getCells(points: Point[]) {
-    const end = this.game.unitSystem.getClosest(this.origin, points[0]);
-    console.log(this.origin, points[0], end);
+    const direction = Vec2.fromPoint(points[0]);
+    direction.sub(this.origin);
+    direction.magnitude = 1;
+
+    const end = this.game.unitSystem.getClosest(this.origin, direction);
     if (!end) return [];
 
     return bresenham(this.origin, end.position)
@@ -31,7 +34,6 @@ export class ProjectileAOEShape implements AOEShape {
   }
 
   getUnits(points: Point[]): Unit[] {
-    console.log(this.getCells(points));
     return this.getCells(points)
       .filter(cell => {
         if (!isDefined(cell.unit)) return false;

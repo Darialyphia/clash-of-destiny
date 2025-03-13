@@ -38,6 +38,7 @@ type Token =
     }
   | { kind: 'position'; point: Point }
   | { kind: 'turn_start'; unit: UnitViewModel }
+  | { kind: 'turn_end'; unit: UnitViewModel }
   | { kind: 'action'; text: string };
 
 const events = ref<Token[][]>([[]]);
@@ -127,6 +128,16 @@ useBattleEvent(GAME_EVENTS.UNIT_START_TURN, async event => {
   ]);
 });
 
+useBattleEvent(GAME_EVENTS.UNIT_END_TURN, async event => {
+  events.value.push([
+    {
+      kind: 'turn_end',
+      unit: state.value.entities[event.unit.id] as UnitViewModel
+    },
+    { kind: 'text', text: 'ended their turn' }
+  ]);
+});
+
 useBattleEvent(GAME_EVENTS.UNIT_AFTER_DESTROY, async event => {
   events.value.push([
     {
@@ -211,6 +222,9 @@ const isAction = (event: Pick<Token, 'kind'>[]) =>
             {{ token.player.name }}
           </template>
           <template v-else-if="token.kind === 'turn_start'">
+            {{ token.unit.name }}
+          </template>
+          <template v-else-if="token.kind === 'turn_end'">
             {{ token.unit.name }}
           </template>
         </span>

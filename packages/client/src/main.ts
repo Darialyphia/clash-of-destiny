@@ -14,13 +14,14 @@ import { useAssetsProvider } from './shared/composables/useAssets';
 import { PixiPlugin } from 'gsap/PixiPlugin';
 import gsap from 'gsap';
 import * as PIXI from 'pixi.js';
-import { MotionPathPlugin } from 'gsap/all';
+import { MotionPathPlugin, Flip } from 'gsap/all';
 
 // @ts-expect-error enables pixi devtools
 window.PIXI = PIXI;
 gsap.install(window);
 gsap.registerPlugin(PixiPlugin);
 gsap.registerPlugin(MotionPathPlugin);
+gsap.registerPlugin(Flip);
 
 const app = createApp(App);
 

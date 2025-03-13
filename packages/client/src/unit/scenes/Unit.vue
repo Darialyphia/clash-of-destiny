@@ -4,7 +4,6 @@ import UnitSprite from './UnitSprite.vue';
 import UnitShadow from './UnitShadow.vue';
 import UnitPositioner from './UnitPositioner.vue';
 import type { Container } from 'pixi.js';
-import { PTransition } from 'vue3-pixi';
 import { waitFor } from '@game/shared';
 import { useBattleEvent, useUserPlayer } from '@/battle/stores/battle.store';
 import { useIsoCamera } from '@/iso/composables/useIsoCamera';
@@ -16,6 +15,8 @@ import AlphaTransition from '@/ui/scenes/AlphaTransition.vue';
 import UnitSpawnAnimation from './UnitSpawnAnimation.vue';
 import HealthBar from './HealthBar.vue';
 import ManaBar from './ManaBar.vue';
+import UnitVFX from './vfx/UnitVFX.vue';
+
 const { unit } = defineProps<{ unit: UnitViewModel }>();
 
 const camera = useIsoCamera();
@@ -75,7 +76,7 @@ const isSpawnAnimationDone = ref(false);
         <UnitSprite :unit="unit" :alpha="unit.moveIntent ? 0.35 : 1" />
       </UnitOrientation>
     </UnitSpawnAnimation>
-    <!-- <UnitVFX :unit="unit" /> -->
+    <UnitVFX :unit="unit" />
 
     <AlphaTransition
       :duration="{ enter: 200, leave: 200 }"

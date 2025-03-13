@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useBattleEvent } from '@/battle/stores/battle.store';
 import type { UnitViewModel } from '@/unit/unit.model';
-import { GAME_EVENTS } from '@game/engine/src/game/game';
-import { randomInt } from '@game/shared';
+import { GAME_EVENTS } from '@game/engine/src/game/game.events';
+import { randomInt, waitFor } from '@game/shared';
 import { Container } from 'pixi.js';
 import { PTransition } from 'vue3-pixi';
 
@@ -11,15 +11,12 @@ const { unit } = defineProps<{ unit: UnitViewModel }>();
 const damageAmount = ref(0);
 let direction = 1;
 
-useBattleEvent(GAME_EVENTS.UNIT_BEFORE_RECEIVE_DAMAGE, e => {
-  if (!e.unit.equals(unit.getUnit())) return Promise.resolve();
-  damageAmount.value = e.damage.getMitigatedAmount(unit.getUnit());
+useBattleEvent(GAME_EVENTS.UNIT_BEFORE_RECEIVE_DAMAGE, async e => {
+  if (!unit.equals(e.unit)) return;
+  damageAmount.value = e.damage;
 
-  setTimeout(() => {
-    damageAmount.value = 0;
-  }, 1200);
-
-  return Promise.resolve();
+  await waitFor(1200);
+  damageAmount.value = 0;
 });
 
 const offset = {

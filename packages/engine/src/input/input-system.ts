@@ -113,6 +113,9 @@ export class InputSystem extends System<SerializedInput[]> {
       this.game.snapshotSystem.takeSnapshot();
       this.game.emit('game.input-queue-flushed', new GameInputQueueFlushedEvent({}));
     } catch (err) {
+      console.groupCollapsed('%c[INPUT SYSTEM]: ERROR', 'color: #ff0000');
+      console.error(err);
+      console.groupEnd();
       this.game.emit('game.error', new GameErrorEvent({ error: err as Error }));
     }
   }

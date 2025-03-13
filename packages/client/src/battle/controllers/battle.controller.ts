@@ -8,9 +8,12 @@ import type { GameState } from '../stores/battle.store';
 import { match } from 'ts-pattern';
 import { INTERACTION_STATES } from '@game/engine/src/game/systems/interaction.system';
 import type { InputDispatcher } from '@game/engine/src/input/input-system';
+import type { CardViewModel } from '@/card/card.model';
 
 export type BattleControllerOptions = {
   selectedUnit: Ref<Nullable<UnitViewModel>>;
+  selectedCard: Ref<Nullable<CardViewModel>>;
+  selectedFirstTarget: Ref<Nullable<CellViewModel>>;
   activeUnit: Ref<UnitViewModel>;
   state: Ref<GameState>;
   dispatcher: InputDispatcher;
@@ -23,9 +26,29 @@ export class BattleController implements UiController {
     return this.options.activeUnit.value;
   }
 
+  get selectedCard() {
+    return this.options.selectedCard.value;
+  }
+
   onCellClick(cell: CellViewModel): void {
     match(this.options.state.value.interactionState)
       .with({ state: INTERACTION_STATES.IDLE }, () => {
+        if (this.selectedCard) {
+          if (this.selectedCard.canPlayAt(cell)) {
+            const hand = this.selectedCard.getUnit().getHand();
+            const index = hand.findIndex(c => c.id === this.selectedCard!.id);
+            if (this.selectedCard.needsTargets) {
+              this.options.selectedFirstTarget.value = cell;
+            }
+
+            this.selectedCard.getUnit().playCard(index);
+          } else {
+            this.options.selectedCard.value = null;
+          }
+
+          return;
+        }
+
         if (this.activeUnit.moveIntent) {
           if (pointToCellId(this.activeUnit.moveIntent.point) === cell.id) {
             this.activeUnit.commitMove();
@@ -87,6 +110,13 @@ export class BattleController implements UiController {
 
     return match(this.options.state.value.interactionState)
       .with({ state: INTERACTION_STATES.IDLE }, () => {
+        if (this.selectedCard) {
+          if (this.selectedCard?.canPlayAt(cell)) {
+            return isHovered ? 'targeting-range' : 'targeting-valid';
+          }
+          return null;
+        }
+
         if (
           this.activeUnit.moveIntent?.path.some(
             c => pointToCellId(c) === cell.id
@@ -122,7 +152,7 @@ export class BattleController implements UiController {
           }
 
           if (isElligible) {
-            return isHovered ? 'targeting-valid-hover' : 'targeting-valid';
+            return isHovered ? 'targeting-range' : 'targeting-valid';
           }
 
           return null;

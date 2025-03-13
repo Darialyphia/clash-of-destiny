@@ -4,6 +4,7 @@ import { isDefined } from '@game/shared';
 
 const { card } = defineProps<{
   card: {
+    id: string;
     name: string;
     description: string;
     image: string;
@@ -15,7 +16,7 @@ const emit = defineEmits<{}>();
 </script>
 
 <template>
-  <div class="card">
+  <div class="card" :data-flip-id="`card_${card.id}`">
     <div class="card-image" :style="{ '--bg': `url('${card.image}')` }" />
     <div class="name">{{ card.name }}</div>
     <div>kind: {{ card.kind }}</div>

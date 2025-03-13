@@ -15,6 +15,7 @@ export type SerializedAbilityCard = SerializedCard & {
   manaCost: number;
   levelCost: number;
   exp: number;
+  elligibleFirstTargets: string[];
 };
 export type AbilityCardEventMap = CardEventMap;
 export type AbilityCardInterceptors = Record<string, never>;
@@ -90,6 +91,8 @@ export class AbilityCard extends Card<
   }
 
   serialize(): SerializedAbilityCard {
+    const followup = this.blueprint.followup.getTargets(this.game, this)[0];
+
     return {
       id: this.id,
       entityType: 'card' as const,
@@ -104,7 +107,10 @@ export class AbilityCard extends Card<
       manaCost: this.manaCost,
       levelCost: this.levelCost,
       exp: this.exp,
-      canPlay: this.canPlay()
+      canPlay: this.canPlay(),
+      elligibleFirstTargets: this.game.boardSystem.cells
+        .filter(cell => followup?.isElligible(cell.position))
+        .map(cell => cell.id)
     };
   }
 }

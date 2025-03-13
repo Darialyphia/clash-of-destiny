@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia';
 import {
+  useActiveUnit,
+  useBattleStore,
   useCells,
   useDispatcher,
   useGameState,
-  useUnits,
   useUserPlayer
 } from './battle.store';
 import { isDefined, type Nullable, type Point } from '@game/shared';
-import type { SerializedCell } from '@game/engine/src/board/cell';
 import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
 import { Layer } from '@pixi/layers';
 import type { DisplayObject } from 'pixi.js';
@@ -20,6 +20,9 @@ import { BattleController } from '../controllers/battle.controller';
 import { DeployController } from '../controllers/deploy.controller';
 import { EndGameController } from '../controllers/end-game.controller';
 import type { UiController } from '../controllers/ui-controller';
+import type { CardViewModel } from '@/card/card.model';
+import { Flip } from 'gsap/Flip';
+import { GAME_EVENTS } from '@game/engine/src/game/game.events';
 
 export const useInternalBattleUiStore = defineStore(
   'internal-battle-ui',
@@ -27,6 +30,10 @@ export const useInternalBattleUiStore = defineStore(
     const hoveredCell = shallowRef<Nullable<CellViewModel>>(null);
     const highlightedUnit = ref<Nullable<UnitViewModel>>(null);
     const selectedUnitId = ref<Nullable<string>>(null);
+    // The card that the player is trying to play or replace
+    const selectedCardId = ref<Nullable<string>>(null);
+    // the card the player is inspecting by right clicking
+    const inspectedCardId = ref<Nullable<string>>(null);
 
     watch(hoveredCell, cell => {
       const unit = cell?.getUnit();
@@ -35,14 +42,22 @@ export const useInternalBattleUiStore = defineStore(
       }
     });
 
-    return { hoveredCell, highlightedUnit, selectedUnitId };
+    return {
+      hoveredCell,
+      highlightedUnit,
+      selectedUnitId,
+      selectedCardId,
+      inspectedCardId
+    };
   }
 );
 
 export const useBattleUiStore = defineStore('battle-ui', () => {
-  const uiStore = useInternalBattleUiStore();
+  const internals = useInternalBattleUiStore();
+  const battle = useBattleStore();
   const { state } = useGameState();
   const dispatch = useDispatcher();
+  const activeUnit = useActiveUnit();
 
   const cells = useCells();
 
@@ -55,18 +70,106 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
   };
 
   const selectedUnit = computed(() =>
-    uiStore.selectedUnitId
-      ? (state.value.entities[uiStore.selectedUnitId] as UnitViewModel)
+    internals.selectedUnitId
+      ? (state.value.entities[internals.selectedUnitId] as UnitViewModel)
       : null
   );
 
   const selectUnit = (unit: UnitViewModel) => {
-    uiStore.selectedUnitId = unit.id;
+    internals.selectedUnitId = unit.id;
   };
 
   const unselectUnit = () => {
-    uiStore.selectedUnitId = null;
+    internals.selectedUnitId = null;
   };
+
+  const selectedCard = computed(() =>
+    internals.selectedCardId
+      ? (state.value.entities[internals.selectedCardId] as CardViewModel)
+      : null
+  );
+
+  const selectCard = (element: HTMLElement | null, card: CardViewModel) => {
+    internals.selectedCardId = card.id;
+    const flipState = Flip.getState(element);
+    window.requestAnimationFrame(() => {
+      Flip.from(flipState, {
+        targets: '#dragged-card .card',
+        duration: 0.4,
+        absolute: true,
+        ease: Power3.easeOut
+      });
+    });
+  };
+
+  const unselectCard = () => {
+    internals.selectedCardId = null;
+    const el = document.querySelector('#dragged-card .card');
+    if (!el) return;
+
+    const flipState = Flip.getState(el);
+    window.requestAnimationFrame(() => {
+      Flip.from(flipState, {
+        targets: '.hand-card__card',
+        duration: 0.4,
+        absolute: false,
+        ease: Power1.easeOut
+      });
+    });
+  };
+
+  const inspectedCard = computed(() =>
+    internals.inspectedCardId
+      ? (state.value.entities[internals.inspectedCardId] as CardViewModel)
+      : null
+  );
+
+  const inspectCard = (element: HTMLElement, card: CardViewModel) => {
+    internals.inspectedCardId = card.id;
+
+    const flipState = Flip.getState(element);
+    window.requestAnimationFrame(() => {
+      Flip.from(flipState, {
+        targets: '#inspected-card .card',
+        duration: 0.4,
+        absolute: true,
+        ease: Power3.easeOut
+      });
+    });
+  };
+
+  const uninspectCard = () => {
+    const card = inspectedCard.value!;
+    internals.inspectedCardId = null;
+
+    const el = document.querySelector(`[data-flip-id="card_${card.id}"]`);
+    const flipState = Flip.getState(el);
+
+    window.requestAnimationFrame(() => {
+      Flip.from(flipState, {
+        targets: ['.hand-card__card'],
+        duration: 0.4,
+        absolute: true,
+        ease: Power1.easeOut
+      });
+    });
+  };
+
+  const selectedFirstTarget = shallowRef<Nullable<CellViewModel>>(null);
+  battle.on(GAME_EVENTS.FLUSHED, async () => {
+    if (selectedFirstTarget.value) {
+      const { x, y } = selectedFirstTarget.value.position;
+      selectedFirstTarget.value = null;
+      dispatch({
+        type: 'addCardTarget',
+        payload: {
+          playerId: activeUnit.value.playerId,
+          x,
+          y
+        }
+      });
+    }
+  });
 
   const userPlayer = useUserPlayer();
   const controller = computed<UiController>(() =>
@@ -87,6 +190,19 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
         () =>
           new BattleController({
             selectedUnit,
+            selectedFirstTarget,
+            selectedCard: computed({
+              get() {
+                return selectedCard.value;
+              },
+              set(card) {
+                if (!card) {
+                  unselectCard();
+                } else {
+                  selectCard(null, card);
+                }
+              }
+            }),
             activeUnit: computed(
               () =>
                 state.value.entities[state.value.activeUnit] as UnitViewModel
@@ -106,6 +222,14 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
     selectUnit,
     unselectUnit,
 
+    selectedCard,
+    selectCard,
+    unselectCard,
+
+    inspectedCard,
+    inspectCard,
+    uninspectCard,
+
     registerLayer(layer: Layer, name: LayerName) {
       if (!layer) return;
       layers[name].value = layer;
@@ -116,23 +240,23 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
       if (!isDefined(obj)) return;
       obj.parentLayer = layers[name].value;
     },
-    hoveredCell: computed(() => uiStore.hoveredCell),
+    hoveredCell: computed(() => internals.hoveredCell),
     hoverAt(point: Point) {
-      uiStore.hoveredCell = cells.value.find(
+      internals.hoveredCell = cells.value.find(
         cell => cell.id === pointToCellId(point)
       );
     },
     unHover() {
-      uiStore.hoveredCell = null;
-      uiStore.highlightedUnit = null;
+      internals.hoveredCell = null;
+      internals.highlightedUnit = null;
     },
 
-    highlightedUnit: computed(() => uiStore.highlightedUnit),
+    highlightedUnit: computed(() => internals.highlightedUnit),
     highlightUnit(unit: UnitViewModel) {
-      uiStore.highlightedUnit = unit;
+      internals.highlightedUnit = unit;
     },
     unhighlightUnit() {
-      uiStore.highlightedUnit = null;
+      internals.highlightedUnit = null;
     }
   };
 });
