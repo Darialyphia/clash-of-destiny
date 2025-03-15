@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import UiButton from '@/ui/components/UiButton.vue';
 import {
+  useActiveUnit,
   useBattleEvent,
   useBattleStore,
   useGameState,
@@ -12,6 +13,7 @@ import { GAME_EVENTS } from '@game/engine/src/game/game.events';
 
 const { state } = useGameState();
 const ui = useBattleUiStore();
+const activeUnit = useActiveUnit();
 
 const isQuickCasting = ref(false);
 useBattleEvent(GAME_EVENTS.INPUT_START, async e => {
@@ -117,16 +119,5 @@ button {
   --ui-button-size: var(--font-size-3);
 
   box-shadow: 0 5px 0.25rem hsl(var(--gray-11-hsl) / 0.6);
-
-  &:first-of-type {
-    border-top-left-radius: var(--radius-4);
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  &:last-of-type {
-    border-top-left-radius: 0;
-    border-bottom-right-radius: var(--radius-4);
-    border-bottom-left-radius: 0;
-  }
 }
 </style>

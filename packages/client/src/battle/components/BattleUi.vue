@@ -11,10 +11,13 @@ import InspectedCard from '@/card/components/InspectedCard.vue';
 import TurnOrder from './TurnOrder.vue';
 import PlayIntent from '@/card/components/PlayIntent.vue';
 import PlayedCard from '@/card/components/PlayedCard.vue';
-
+import UnitPanel from '@/unit/components/UnitPanel.vue';
+import { useBattleUiStore } from '../stores/battle-ui.store';
+import ActiveUnitActions from '@/unit/components/ActiveUnitActions.vue';
 const { state } = useGameState();
 
 const activeUnit = useActiveUnit();
+const ui = useBattleUiStore();
 </script>
 
 <template>
@@ -28,7 +31,22 @@ const activeUnit = useActiveUnit();
     <PlayIntent />
     <footer>
       <Hand :unit="activeUnit" />
-      <ActiveUnitPanel class="active-unit" />
+      <div class="unit-section">
+        <transition appear mode="out-in" name="slide">
+          <UnitPanel
+            v-if="ui.selectedUnit"
+            :key="ui.selectedUnit.id"
+            :unit="ui.selectedUnit"
+            class="selected-unit"
+          />
+        </transition>
+        <transition appear mode="out-in" name="slide">
+          <div :key="activeUnit.id" class="active-unit">
+            <ActiveUnitActions />
+            <UnitPanel :unit="activeUnit" />
+          </div>
+        </transition>
+      </div>
     </footer>
   </div>
 
@@ -49,10 +67,36 @@ footer {
   display: grid;
   grid-template-columns: minmax(0, 0.6fr) minmax(0, 0.4fr);
   gap: var(--size-7);
+  align-items: end;
+}
+
+.unit-section {
+  justify-self: end;
+  display: grid;
+  gap: var(--size-3);
+  grid-template-columns: 1fr auto;
+  padding: var(--size-3);
+}
+
+.selected-unit {
+  grid-column: 2;
 }
 
 .active-unit {
-  align-self: end;
-  justify-self: end;
+  grid-row: 2;
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.2s var(--ease-spring-2);
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  opacity: 0;
+  transform: translateX(25%);
 }
 </style>

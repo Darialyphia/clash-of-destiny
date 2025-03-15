@@ -6,7 +6,11 @@ import type { Ref } from 'vue';
 import { pointToCellId } from '@game/engine/src/board/board-utils';
 import type { GameState } from '../stores/battle.store';
 import { match } from 'ts-pattern';
-import { INTERACTION_STATES } from '@game/engine/src/game/systems/interaction.system';
+import {
+  INTERACTION_STATES,
+  type InteractionState,
+  type SerializedInteractionContext
+} from '@game/engine/src/game/systems/interaction.system';
 import type { InputDispatcher } from '@game/engine/src/input/input-system';
 import type { CardViewModel } from '@/card/card.model';
 
@@ -27,82 +31,125 @@ export class BattleController implements UiController {
     return this.options.activeUnit.value;
   }
 
+  get selectedUnit() {
+    return this.options.selectedUnit.value;
+  }
+
   get selectedCard() {
     return this.options.selectedCard.value;
+  }
+
+  private selectUnit(unit: UnitViewModel) {
+    this.options.selectedUnit.value = unit;
+  }
+
+  unselectUnit() {
+    this.options.selectedUnit.value = null;
+  }
+
+  private handleQuickCast(cell: CellViewModel) {
+    if (!this.selectedCard) return;
+    if (this.selectedCard.canPlayAt(cell)) {
+      const hand = this.selectedCard.getUnit().getHand();
+      const index = hand.findIndex(c => c.id === this.selectedCard!.id);
+      if (this.selectedCard.needsTargets) {
+        this.options.firstTargetIntent.value = cell;
+      }
+
+      this.options.cardPlayIntent.value = this.selectedCard;
+      this.selectedCard.getUnit().playCard(index);
+    } else {
+      this.options.selectedCard.value = null;
+    }
+  }
+
+  private handleIdleState(cell: CellViewModel) {
+    if (this.selectedCard) {
+      return this.handleQuickCast(cell);
+    }
+
+    const isMoveIntent =
+      this.activeUnit.moveIntent &&
+      pointToCellId(this.activeUnit.moveIntent.point) === cell.id;
+    if (isMoveIntent) {
+      this.activeUnit.commitMove();
+      return;
+    }
+
+    if (this.activeUnit.canMoveTo(cell)) {
+      this.activeUnit.moveTowards({
+        x: cell.position.x,
+        y: cell.position.y
+      });
+      this.unselectUnit();
+      return;
+    }
+
+    const unit = cell.getUnit();
+    const canAttack =
+      this.activeUnit.canAttackAt(cell) &&
+      unit &&
+      this.selectedUnit?.equals(unit);
+
+    if (canAttack) {
+      this.activeUnit.attackAt(cell);
+      return;
+    }
+
+    if (unit && !unit.equals(this.activeUnit)) {
+      this.selectUnit(unit);
+      this.activeUnit.moveIntent = null;
+      return;
+    }
+
+    this.options.selectedUnit.value = null;
+    this.activeUnit.moveIntent = null;
+  }
+
+  handleTargetingState(
+    cell: CellViewModel,
+    interactionState: SerializedInteractionContext & {
+      state: typeof INTERACTION_STATES.SELECTING_TARGETS;
+    }
+  ) {
+    const isElligible = interactionState.ctx.elligibleTargets.some(
+      c => pointToCellId(c.cell) === cell.id
+    );
+    const isAlreadySelected = interactionState.ctx.selectedTargets.some(
+      c => pointToCellId(c.cell) === cell.id
+    );
+
+    if (isElligible && !isAlreadySelected) {
+      this.options.dispatcher({
+        type: 'addCardTarget',
+        payload: {
+          playerId: this.activeUnit.playerId,
+          ...cell.position
+        }
+      });
+      return;
+    }
+
+    if (!isElligible) {
+      this.options.dispatcher({
+        type: 'cancelPlayCard',
+        payload: {
+          playerId: this.activeUnit.playerId
+        }
+      });
+    }
   }
 
   onCellClick(cell: CellViewModel): void {
     match(this.options.state.value.interactionState)
       .with({ state: INTERACTION_STATES.IDLE }, () => {
-        if (this.selectedCard) {
-          if (this.selectedCard.canPlayAt(cell)) {
-            const hand = this.selectedCard.getUnit().getHand();
-            const index = hand.findIndex(c => c.id === this.selectedCard!.id);
-            if (this.selectedCard.needsTargets) {
-              this.options.firstTargetIntent.value = cell;
-            }
-
-            this.options.cardPlayIntent.value = this.selectedCard;
-            this.selectedCard.getUnit().playCard(index);
-          } else {
-            this.options.selectedCard.value = null;
-          }
-
-          return;
-        }
-
-        if (this.activeUnit.moveIntent) {
-          if (pointToCellId(this.activeUnit.moveIntent.point) === cell.id) {
-            this.activeUnit.commitMove();
-            return;
-          }
-        }
-
-        if (this.activeUnit.canMoveTo(cell)) {
-          this.activeUnit.moveTowards({
-            x: cell.position.x,
-            y: cell.position.y
-          });
-          return;
-        }
-
-        if (this.activeUnit.canAttackAt(cell)) {
-          this.activeUnit.attackAt(cell);
-          return;
-        }
-
-        this.activeUnit.moveIntent = null;
+        this.handleIdleState(cell);
       })
       .with({ state: INTERACTION_STATES.SELECTING_CARDS }, () => {})
       .with(
         { state: INTERACTION_STATES.SELECTING_TARGETS },
         interactionState => {
-          const isElligible = interactionState.ctx.elligibleTargets.some(
-            c => pointToCellId(c.cell) === cell.id
-          );
-          const isAlreadySelected = interactionState.ctx.selectedTargets.some(
-            c => pointToCellId(c.cell) === cell.id
-          );
-
-          if (isElligible && !isAlreadySelected) {
-            this.options.dispatcher({
-              type: 'addCardTarget',
-              payload: {
-                playerId: this.activeUnit.playerId,
-                ...cell.position
-              }
-            });
-            return;
-          }
-
-          if (!isElligible) {
-            this.options.dispatcher({
-              type: 'cancelPlayCard',
-              payload: {
-                playerId: this.activeUnit.playerId
-              }
-            });
-          }
+          this.handleTargetingState(cell, interactionState);
         }
       );
   }

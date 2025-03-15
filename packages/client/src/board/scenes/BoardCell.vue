@@ -12,6 +12,7 @@ import { config } from '@/utils/config';
 import UnitOrientation from '@/unit/scenes/UnitOrientation.vue';
 import UnitSprite from '@/unit/scenes/UnitSprite.vue';
 import MoveIntentPath from './MoveIntentPath.vue';
+import { useIsoCamera } from '@/iso/composables/useIsoCamera';
 
 const { cell } = defineProps<{ cell: CellViewModel }>();
 
@@ -46,6 +47,8 @@ const isActiveUnitMoveIntent = computed(() => {
     ? pointToCellId(activeUnit.value.moveIntent.point) === cell.id
     : false;
 });
+
+const camera = useIsoCamera();
 </script>
 
 <template>
@@ -55,6 +58,7 @@ const isActiveUnitMoveIntent = computed(() => {
     @pointerleave="ui.unHover()"
     @pointerup="
       () => {
+        if (camera.isDragging.value) return;
         ui.controller.onCellClick(cell);
       }
     "

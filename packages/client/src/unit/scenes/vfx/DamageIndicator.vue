@@ -25,8 +25,8 @@ const offset = {
 };
 const onEnter = (container: Container) => {
   const target = {
-    x: 30 + randomInt(30),
-    y: -1 * (30 + randomInt(30))
+    x: 30 + randomInt(60),
+    y: -1 * (30 + randomInt(60))
   };
   gsap.to(container.position, {
     motionPath: [
@@ -53,7 +53,7 @@ const onEnter = (container: Container) => {
         fontFamily: 'Silkscreen',
         align: 'center',
         fill: '#ff0000',
-        fontSize: 60,
+        fontSize: 80,
         fontWeight: '900',
         strokeThickness: 8
       }"

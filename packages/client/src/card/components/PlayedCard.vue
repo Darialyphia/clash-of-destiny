@@ -1,16 +1,28 @@
 <script setup lang="ts">
 import { waitFor, type Nullable } from '@game/shared';
 import Card from './Card.vue';
-import type { CardViewModel } from '../card.model';
-import { useActiveUnit, useBattleEvent } from '@/battle/stores/battle.store';
+import { CardViewModel } from '../card.model';
+import {
+  useActiveUnit,
+  useBattleEvent,
+  useCards,
+  useDispatcher,
+  useGameState
+} from '@/battle/stores/battle.store';
 import { GAME_EVENTS } from '@game/engine/src/game/game.events';
 
 const card = ref<Nullable<CardViewModel>>();
+const { state } = useGameState();
+const dispatch = useDispatcher();
 
-const activeUnit = useActiveUnit();
-
+const cards = useCards();
 useBattleEvent(GAME_EVENTS.UNIT_BEFORE_PLAY_CARD, async event => {
-  card.value = activeUnit.value.getHand().find(c => c.id === event.card.id);
+  card.value = cards.value.find(c => c.id === event.card.id);
+  if (!card.value) {
+    const model = new CardViewModel(event.card, state.value.entities, dispatch);
+    state.value.entities[event.card.id] = model;
+    card.value = model;
+  }
   await waitFor(1000);
   card.value = null;
   await waitFor(500);

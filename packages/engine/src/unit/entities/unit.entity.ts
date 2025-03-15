@@ -668,6 +668,7 @@ export class Unit
     const isFirstTurn = this.game.turnSystem.turnCount === 1;
     if (!isFirstTurn) {
       this.mp.add(this.mpRegen);
+      this.gainExp(this.game.config.EXP_REWARD_PER_TURN);
     }
     this.cards.draw(
       isFirstTurn

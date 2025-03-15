@@ -85,6 +85,33 @@
         },
         {
           "alias": [
+            "fx-slash"
+          ],
+          "src": [
+            "/assets/fx/slash.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "fx-slash.png"
+          ],
+          "src": [
+            "/assets/fx/slash.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "fx-stasis"
           ],
           "src": [
@@ -510,6 +537,32 @@
         },
         {
           "alias": [
+            "ap-indicator-empty-ui.png"
+          ],
+          "src": [
+            "/assets/ui/ap-indicator-empty-ui.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "ap-indicator-ui.png"
+          ],
+          "src": [
+            "/assets/ui/ap-indicator-ui.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "ap-indicator"
           ],
           "src": [
@@ -563,10 +616,205 @@
         },
         {
           "alias": [
+            "button.png"
+          ],
+          "src": [
+            "/assets/ui/button.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "card-art-frame.png"
+          ],
+          "src": [
+            "/assets/ui/card-art-frame.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "card-back.png"
           ],
           "src": [
             "/assets/ui/card-back.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "card-bg.png"
+          ],
+          "src": [
+            "/assets/ui/card-bg.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "card-description.png"
+          ],
+          "src": [
+            "/assets/ui/card-description.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "card-exp.png"
+          ],
+          "src": [
+            "/assets/ui/card-exp.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "card-hp.png"
+          ],
+          "src": [
+            "/assets/ui/card-hp.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "card-level-empty.png"
+          ],
+          "src": [
+            "/assets/ui/card-level-empty.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "card-level-filled.png"
+          ],
+          "src": [
+            "/assets/ui/card-level-filled.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "card-name.png"
+          ],
+          "src": [
+            "/assets/ui/card-name.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "card-previous-class.png"
+          ],
+          "src": [
+            "/assets/ui/card-previous-class.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "card-rarity-common.png"
+          ],
+          "src": [
+            "/assets/ui/card-rarity-common.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "card-rarity-epic.png"
+          ],
+          "src": [
+            "/assets/ui/card-rarity-epic.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "card-rarity-legendary.png"
+          ],
+          "src": [
+            "/assets/ui/card-rarity-legendary.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "card-rarity-rare.png"
+          ],
+          "src": [
+            "/assets/ui/card-rarity-rare.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "card-type.png"
+          ],
+          "src": [
+            "/assets/ui/card-type.png"
           ],
           "data": {
             "tags": {
@@ -654,6 +902,19 @@
         },
         {
           "alias": [
+            "exp.png"
+          ],
+          "src": [
+            "/assets/ui/exp.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "hovered-cell"
           ],
           "src": [
@@ -685,6 +946,19 @@
           ],
           "src": [
             "/assets/ui/hp.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "mp.png"
+          ],
+          "src": [
+            "/assets/ui/mp.png"
           ],
           "data": {
             "tags": {

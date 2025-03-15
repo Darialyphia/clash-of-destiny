@@ -4,7 +4,10 @@ import { PlayerViewModel } from '@/player/player.model';
 import { ArtifactViewModel } from '@/unit/artifact.model';
 import { ModifierViewModel } from '@/unit/modifier.model';
 import { UnitViewModel } from '@/unit/unit.model';
-import type { GameEventMap } from '@game/engine/src/game/game.events';
+import {
+  GAME_EVENTS,
+  type GameEventMap
+} from '@game/engine/src/game/game.events';
 import { GAME_PHASES } from '@game/engine/src/game/systems/game-phase.system';
 import type {
   EntityDictionary,
@@ -48,8 +51,35 @@ export type GameState = Override<
     entities: GameStateEntities;
   }
 >;
+
+export type PreBattleEvent<T extends keyof GameEventMap> = `pre_${T}`;
+export type PreBattleEventKey<T extends keyof typeof GAME_EVENTS> = `PRE_${T}`;
+export const BATTLE_EVENTS = {
+  ...GAME_EVENTS,
+  ...(Object.fromEntries(
+    Object.entries(GAME_EVENTS).map(([key, value]) => [
+      `PRE_${key}`,
+      `pre_${value}`
+    ])
+  ) as unknown as {
+    [Key in keyof typeof GAME_EVENTS as PreBattleEventKey<Key>]: PreBattleEvent<
+      (typeof GAME_EVENTS)[Key]
+    >;
+  })
+} as const;
+
+type BattleEvent = Values<typeof BATTLE_EVENTS>;
+
+export type BattleEventName =
+  | keyof GameEventMap
+  | PreBattleEvent<keyof GameEventMap>;
+
 type SerializedGameEventMap = {
-  [Key in keyof GameEventMap]: ReturnType<GameEventMap[Key]['serialize']>;
+  [Key in BattleEventName]: Key extends PreBattleEvent<infer U>
+    ? ReturnType<GameEventMap[U]['serialize']>
+    : Key extends keyof GameEventMap
+      ? ReturnType<GameEventMap[Key]['serialize']>
+      : never;
 };
 
 const buildentities = (
@@ -136,6 +166,10 @@ export const useBattleStore = defineStore('battle', () => {
           isPlayingFx.value = true;
 
           for (const event of snapshot.events) {
+            await fxEmitter.emitAsync(
+              `pre_${event.eventName}`,
+              event.event as any
+            );
             await fxEmitter.emitAsync(event.eventName, event.event as any);
           }
           isPlayingFx.value = false;
@@ -202,9 +236,9 @@ export const useBattleStore = defineStore('battle', () => {
   };
 });
 
-export const useBattleEvent = <T extends keyof GameEventMap>(
+export const useBattleEvent = <T extends BattleEvent>(
   name: T,
-  handler: (eventArg: ReturnType<GameEventMap[T]['serialize']>) => Promise<void>
+  handler: (eventArg: SerializedGameEventMap[T]) => Promise<void>
 ) => {
   const store = useBattleStore();
 
@@ -257,6 +291,14 @@ export const useUnits = () => {
 
   return computed(() =>
     state.value.units.map(u => state.value.entities[u] as UnitViewModel)
+  );
+};
+
+export const useCards = () => {
+  const { state } = useGameState();
+
+  return computed(() =>
+    Object.values(state.value.entities).filter(e => e instanceof CardViewModel)
   );
 };
 

@@ -6,7 +6,9 @@ import UnitPositioner from './UnitPositioner.vue';
 import type { Container } from 'pixi.js';
 import { waitFor } from '@game/shared';
 import {
+  BATTLE_EVENTS,
   GAME_TYPES,
+  useActiveUnit,
   useBattleEvent,
   useGameState,
   useUserPlayer
@@ -21,6 +23,8 @@ import UnitSpawnAnimation from './UnitSpawnAnimation.vue';
 import UnitStatBars from './UnitStatBars.vue';
 import UnitVFX from './vfx/UnitVFX.vue';
 import { GAME_PHASES } from '@game/engine/src/game/systems/game-phase.system';
+import { useSettingsStore } from '@/shared/composables/useSettings';
+import { useKeyboardControl } from '@/shared/composables/useKeyboardControl';
 
 const { unit } = defineProps<{ unit: UnitViewModel }>();
 
@@ -49,7 +53,7 @@ const centerCamera = (buffer: number) => {
 
   camera.viewport.value?.animate({
     position,
-    time: 500,
+    time: 300,
     ease: 'easeOutSine'
   });
   return waitFor(250);
@@ -58,6 +62,24 @@ const centerCamera = (buffer: number) => {
 useBattleEvent(GAME_EVENTS.UNIT_BEFORE_ATTACK, async e => {
   if (unit.equals(e.unit)) {
     await centerCamera(0.3);
+  }
+});
+
+useBattleEvent(GAME_EVENTS.UNIT_AFTER_ATTACK, async e => {
+  if (unit.equals(e.unit)) {
+    await centerCamera(0.3);
+  }
+});
+
+useBattleEvent(GAME_EVENTS.UNIT_AFTER_PLAY_CARD, async e => {
+  if (unit.equals(e.unit)) {
+    await centerCamera(1);
+  }
+});
+
+useBattleEvent(BATTLE_EVENTS.PRE_UNIT_BEFORE_RECEIVE_DAMAGE, async e => {
+  if (unit.equals(e.unit)) {
+    await centerCamera(0.6);
   }
 });
 
@@ -73,11 +95,23 @@ useBattleEvent(GAME_EVENTS.UNIT_START_TURN, async e => {
   }
 });
 
+const activeUnit = useActiveUnit();
+const settingsStore = useSettingsStore();
+useKeyboardControl(
+  'keydown',
+  () => settingsStore.settings.bindings.centerOnActiveUnit.control,
+  () => {
+    if (activeUnit.value.equals(unit)) {
+      centerCamera(1);
+    }
+  }
+);
+
 const isSpawnAnimationDone = ref(false);
 </script>
 
 <template>
-  <UnitPositioner :unit="unit">
+  <UnitPositioner :unit="unit" v-if="!unit.isDead">
     <UnitSpawnAnimation @done="isSpawnAnimationDone = true">
       <UnitOrientation :unit="unit">
         <UnitShadow :unit="unit" />

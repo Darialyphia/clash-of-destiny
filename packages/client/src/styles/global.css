@@ -4,6 +4,15 @@
 @import url('./utils.css') layer(utilities);
 @import './theme.css';
 
+@font-face {
+  font-family: 'NotJamSlab14';
+  src: url('/fonts/NotJamSlab14.ttf');
+}
+@font-face {
+  font-family: 'NotJamSlab11';
+  src: url('/fonts/NotJamSlabSerif11.ttf');
+}
+
 @layer base {
   @unocss preflights;
 

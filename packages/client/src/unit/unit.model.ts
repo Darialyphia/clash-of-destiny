@@ -30,6 +30,10 @@ export class UnitViewModel {
     return this.data.playerId;
   }
 
+  get isDead() {
+    return this.data.isDead;
+  }
+
   get position() {
     return this.data.position;
   }

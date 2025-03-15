@@ -14,7 +14,12 @@ import { isCustomElement, transformAssetUrls } from 'vue3-pixi/compiler';
 //@ts-expect-error no types for this package
 import assetpackConfig from '@game/assetpack';
 
-const customElements = ['viewport', 'layer'];
+const customElements = [
+  'viewport',
+  'layer',
+  'outline-filter',
+  'adjustment-filter'
+];
 const prefix = 'pixi-';
 
 import { AssetPack } from '@assetpack/core';

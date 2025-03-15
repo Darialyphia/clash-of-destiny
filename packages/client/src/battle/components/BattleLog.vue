@@ -268,7 +268,7 @@ const isAction = (event: Pick<Token, 'kind'>[]) =>
 
   line-height: 2;
 
-  transition: transform 0.2s var(--ease-1);
+  transition: transform 0.2s var(--ease-5);
 
   &.is-collapsed {
     transform: translateX(-100%);

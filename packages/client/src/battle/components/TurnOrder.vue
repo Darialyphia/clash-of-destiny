@@ -20,7 +20,7 @@ const turnOrder = computed(() =>
 
 <template>
   <div class="flex gap-2 items-center m-3">
-    Turn Order
+    Turn {{ state.turnCount }}
     <button
       v-for="hero in turnOrder"
       :key="hero.id"
@@ -28,6 +28,7 @@ const turnOrder = computed(() =>
       :class="{ enemy: hero.playerId !== player.id }"
       @mouseenter="ui.highlightUnit(hero)"
       @mouseleave="ui.unhighlightUnit()"
+      @click="ui.selectUnit(hero)"
     ></button>
   </div>
 </template>
@@ -49,6 +50,10 @@ button {
   --color: var(--blue-6);
   --shadow-color: var(--blue-3);
 
+  @screen lt-lg {
+    width: var(--unit-icon-size-mobile);
+  }
+
   &::after {
     content: '';
     position: absolute;
@@ -66,6 +71,9 @@ button {
       var(--color) 70%
     );
     box-shadow: 0 0 var(--size-2) var(--shadow-color);
+    @screen lt-lg {
+      width: var(--size-2);
+    }
   }
 
   &:hover {

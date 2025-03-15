@@ -176,7 +176,6 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
     cardPlayIntent.value = null;
     firstTargetIntent.value = null;
     internals.selectedCardId = null;
-    console.log('reset');
   });
   battle.on(GAME_EVENTS.INPUT_START, async e => {
     if (e.type === 'cancelPlayCard') {
@@ -206,8 +205,19 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
         () =>
           new BattleController({
             cardPlayIntent,
-            selectedUnit,
             firstTargetIntent,
+            selectedUnit: computed({
+              get() {
+                return selectedUnit.value;
+              },
+              set(unit) {
+                if (!unit) {
+                  unselectUnit();
+                } else {
+                  selectUnit(unit);
+                }
+              }
+            }),
             selectedCard: computed({
               get() {
                 return selectedCard.value;
