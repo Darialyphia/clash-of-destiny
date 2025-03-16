@@ -25,6 +25,7 @@ export type Config = {
 
   EXP_REWARD_PER_ATTACK: number;
   EXP_REWARD_PER_TURN: number;
+  EXP_GLOBES_PER_TURN: number;
 };
 
 export const defaultConfig: Config = {
@@ -53,5 +54,6 @@ export const defaultConfig: Config = {
   BASE_ATTACK_DAMAGE: 1,
 
   EXP_REWARD_PER_ATTACK: 1,
-  EXP_REWARD_PER_TURN: 1
+  EXP_REWARD_PER_TURN: 1,
+  EXP_GLOBES_PER_TURN: 2
 };

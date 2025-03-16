@@ -53,7 +53,7 @@ const onEnter = (container: Container) => {
         fontFamily: 'Silkscreen',
         align: 'center',
         fill: '#ff0000',
-        fontSize: 80,
+        fontSize: 120,
         fontWeight: '900',
         strokeThickness: 8
       }"

@@ -10,7 +10,7 @@ export const magicMissile: AbilityBlueprint = {
   id: 'magic-missile',
   name: 'Magic Missile',
   description:
-    'Fires a projectile in a line that deals 1 damage to the first target hit.',
+    'Fires a projectile in a line that deals 2 damage to the first target hit.',
   cardIconId: 'card-magic-missile',
   rarity: RARITIES.COMMON,
   setId: CARD_SETS.CORE,
@@ -34,7 +34,7 @@ export const magicMissile: AbilityBlueprint = {
       target.takeDamage(
         card.unit,
         new AbilityDamage({
-          baseAmount: 5,
+          baseAmount: 2,
           source: card
         })
       );

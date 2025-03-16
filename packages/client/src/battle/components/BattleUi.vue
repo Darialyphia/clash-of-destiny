@@ -14,6 +14,7 @@ import PlayedCard from '@/card/components/PlayedCard.vue';
 import UnitPanel from '@/unit/components/UnitPanel.vue';
 import { useBattleUiStore } from '../stores/battle-ui.store';
 import ActiveUnitActions from '@/unit/components/ActiveUnitActions.vue';
+import TurnIndicator from '@/player/components/TurnIndicator.vue';
 const { state } = useGameState();
 
 const activeUnit = useActiveUnit();
@@ -29,6 +30,7 @@ const ui = useBattleUiStore();
     <TurnOrder />
     <PlayedCard />
     <PlayIntent />
+    <TurnIndicator />
     <footer>
       <Hand :unit="activeUnit" />
       <div class="unit-section">

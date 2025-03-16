@@ -14,11 +14,9 @@ const screen = useScreen();
     :y="screen.height / 2"
     @render="
       graphics => {
-        console.log('render');
-        console.log(screen);
         graphics.clear();
         graphics.beginFill(0xde3249);
-        graphics.drawCircle(0, 0, 200);
+        // graphics.drawCircle(0, 0, 200);
         graphics.endFill();
       }
     "

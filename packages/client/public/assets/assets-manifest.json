@@ -524,7 +524,62 @@
     },
     {
       "name": "obstacles",
-      "assets": []
+      "assets": [
+        {
+          "alias": [
+            "experience-globe"
+          ],
+          "src": [
+            "/assets/obstacles/experience-globe.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "experience-globe.png"
+          ],
+          "src": [
+            "/assets/obstacles/experience-globe.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "incoming-experience-globe"
+          ],
+          "src": [
+            "/assets/obstacles/incoming-experience-globe.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "incoming-experience-globe.png"
+          ],
+          "src": [
+            "/assets/obstacles/incoming-experience-globe.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        }
+      ]
     },
     {
       "name": "tiles",

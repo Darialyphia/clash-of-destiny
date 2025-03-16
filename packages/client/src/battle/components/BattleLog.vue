@@ -256,7 +256,7 @@ const isAction = (event: Pick<Token, 'kind'>[]) =>
   top: 25%;
 
   pointer-events: auto;
-  /* font-family: 'Press Start 2P'; */
+  font-size: 16px;
   color: #efef9f;
   user-select: none;
   background-color: #32021b;
@@ -264,7 +264,6 @@ const isAction = (event: Pick<Token, 'kind'>[]) =>
   border: solid 6px #efef9f;
   border-right-color: #d7ad42;
   border-bottom-color: #d7ad42;
-  text-shadow: 0 4px 0px #4e3327;
   box-shadow: 3px 3px 0 black;
 
   display: grid;

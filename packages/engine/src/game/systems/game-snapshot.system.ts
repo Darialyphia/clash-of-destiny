@@ -11,6 +11,7 @@ import type { SerializedCell } from '../../board/cell';
 import type { SerializedCard } from '../../card/entities/card.entity';
 import type { SerializedModifier } from '../../modifier/modifier.entity';
 import type { SerializedArtifact } from '../../unit/entities/artifact.entity';
+import type { SerializedInteractable } from '../../interactable/interactable.entity';
 
 export type GameStateSnapshot<T> = {
   id: number;
@@ -26,12 +27,14 @@ export type EntityDictionary = Record<
   | SerializedModifier
   | SerializedPlayer
   | SerializedArtifact
+  | SerializedInteractable
 >;
 
 export type SerializedOmniscientState = {
   entities: EntityDictionary;
   board: SerializedBoard;
   units: string[];
+  interactables: string[];
   players: [string, string];
   activeUnit: string;
   turnCount: number;
@@ -130,6 +133,9 @@ export class GameSnaphotSystem extends System<EmptyObject> {
         entities[modifier.id] = modifier.serialize();
       });
     });
+    this.game.interactableSystem.interactables.forEach(interactable => {
+      entities[interactable.id] = interactable.serialize();
+    });
     this.game.playerSystem.players.forEach(player => {
       entities[player.id] = player.serialize();
     });
@@ -149,6 +155,7 @@ export class GameSnaphotSystem extends System<EmptyObject> {
       phase: this.game.phase,
       board: this.game.boardSystem.serialize(),
       units: this.game.unitSystem.units.map(unit => unit.id),
+      interactables: this.game.interactableSystem.interactables.map(unit => unit.id),
       players: this.game.playerSystem.players.map(player => player.id) as [
         string,
         string

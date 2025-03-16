@@ -1,19 +1,23 @@
 <script setup lang="ts">
-import { useBattleEvent, useUserPlayer } from '@/battle/stores/battle.store';
-import { GAME_EVENTS } from '@game/engine/src/game/game';
+import {
+  useBattleEvent,
+  useGameState,
+  useUserPlayer
+} from '@/battle/stores/battle.store';
+import { GAME_EVENTS } from '@game/engine/src/game/game.events';
 import { waitFor } from '@game/shared';
 
 const userPlayer = useUserPlayer();
 
 const text = ref('');
+const { state } = useGameState();
 
-useBattleEvent(GAME_EVENTS.PLAYER_START_TURN, async e => {
-  text.value = e.player.equals(userPlayer.value.getPlayer())
-    ? 'Your Turn'
-    : 'Enemy turn';
+useBattleEvent(GAME_EVENTS.TURN_START, async e => {
+  text.value = `Turn ${state.value.turnCount + 1}`;
 
-  await waitFor(1500);
-  text.value = '';
+  setTimeout(() => {
+    text.value = '';
+  }, 1500);
 });
 </script>
 
@@ -31,8 +35,8 @@ useBattleEvent(GAME_EVENTS.PLAYER_START_TURN, async e => {
   inset: 0;
   display: grid;
   place-content: center;
-  font-family: 'Press Start 2P';
-  font-size: var(--font-size-8);
+  font-family: 'NotJamSlab14';
+  font-size: 56px;
   pointer-events: none;
 
   &:is(.v-enter-active, .v-leave-active) {

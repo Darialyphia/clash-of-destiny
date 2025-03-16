@@ -4,7 +4,6 @@ import { onTick } from 'vue3-pixi';
 import type { UnitViewModel } from '@/unit/unit.model';
 import PointLight from '@/vfx/PointLight.vue';
 import type { PointLightConfig } from '@/vfx/usePointLight';
-import { useVFXEvent } from '@/battle/stores/battle.store';
 
 const { unit } = defineProps<{ unit: UnitViewModel }>();
 
@@ -40,55 +39,55 @@ const secondPass = ref<PointLightConfig>({
   ]
 });
 
-useVFXEvent('UPDATE_UNIT_LIGHT', async params => {
-  if (!params.unit.equals(unit.getUnit())) return;
+// useVFXEvent('UPDATE_UNIT_LIGHT', async params => {
+//   if (!params.unit.equals(unit.getUnit())) return;
 
-  isVFxPlaying.value = true;
-  const light = params.pass === 0 ? firstPass.value : secondPass.value;
-  const copy = {
-    ...light,
-    position: { ...light.position },
-    colorStops: [...light.colorStops]
-  };
+//   isVFxPlaying.value = true;
+//   const light = params.pass === 0 ? firstPass.value : secondPass.value;
+//   const copy = {
+//     ...light,
+//     position: { ...light.position },
+//     colorStops: [...light.colorStops]
+//   };
 
-  light.blendMode = params.blendMode;
-  for (const step of params.steps) {
-    light.colorStops = step.colorStops;
+//   light.blendMode = params.blendMode;
+//   for (const step of params.steps) {
+//     light.colorStops = step.colorStops;
 
-    await Promise.all([
-      gsap.to(light.position, {
-        x: step.offset.x,
-        y: step.offset.y,
-        duration: step.animated ? step.duration / 1000 : 0.05,
-        ease: Power0.easeNone
-      }),
+//     await Promise.all([
+//       gsap.to(light.position, {
+//         x: step.offset.x,
+//         y: step.offset.y,
+//         duration: step.animated ? step.duration / 1000 : 0.05,
+//         ease: Power0.easeNone
+//       }),
 
-      gsap.to(light, {
-        radius: step.radius,
-        duration: step.animated ? step.duration / 1000 : 0.05,
-        ease: Power0.easeNone
-      })
-    ]);
-  }
+//       gsap.to(light, {
+//         radius: step.radius,
+//         duration: step.animated ? step.duration / 1000 : 0.05,
+//         ease: Power0.easeNone
+//       })
+//     ]);
+//   }
 
-  light.blendMode = copy.blendMode;
-  light.colorStops = copy.colorStops;
-  await Promise.all([
-    gsap.to(light.position, {
-      x: copy.position.x,
-      y: copy.position.y,
-      duration: 0.5,
-      ease: Power2.easeOut
-    }),
+//   light.blendMode = copy.blendMode;
+//   light.colorStops = copy.colorStops;
+//   await Promise.all([
+//     gsap.to(light.position, {
+//       x: copy.position.x,
+//       y: copy.position.y,
+//       duration: 0.5,
+//       ease: Power2.easeOut
+//     }),
 
-    gsap.to(light, {
-      radius: copy.radius,
-      duration: 0.5,
-      ease: Power2.easeOut
-    })
-  ]);
-  isVFxPlaying.value = false;
-});
+//     gsap.to(light, {
+//       radius: copy.radius,
+//       duration: 0.5,
+//       ease: Power2.easeOut
+//     })
+//   ]);
+//   isVFxPlaying.value = false;
+// });
 </script>
 
 <template>

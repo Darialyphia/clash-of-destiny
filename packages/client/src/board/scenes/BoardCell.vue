@@ -13,6 +13,7 @@ import UnitOrientation from '@/unit/scenes/UnitOrientation.vue';
 import UnitSprite from '@/unit/scenes/UnitSprite.vue';
 import MoveIntentPath from './MoveIntentPath.vue';
 import { useIsoCamera } from '@/iso/composables/useIsoCamera';
+import Interactable from '@/interactable/Interactable.vue';
 
 const { cell } = defineProps<{ cell: CellViewModel }>();
 
@@ -73,6 +74,11 @@ const camera = useIsoCamera();
         <BoardCellHighlights :cell="cell" v-if="isSpawnAnimationDone" />
         <MoveIntentPath :cell="cell" />
         <HoveredCellIndicator v-if="isHovered && isSpawnAnimationDone" />
+        <Interactable
+          v-if="cell.getInteractable()"
+          :y="-24"
+          :interactable="cell.getInteractable()!"
+        />
         <container
           v-if="isActiveUnitMoveIntent"
           :position="config.UNIT_SPRITE_OFFSET"

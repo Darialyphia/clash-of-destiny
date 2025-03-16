@@ -176,13 +176,13 @@ export class BattleController implements UiController {
           return null;
         }
 
-        if (
-          this.activeUnit.moveIntent?.path.some(
-            c => pointToCellId(c) === cell.id
-          )
-        ) {
-          return 'movement-path';
-        }
+        // if (
+        //   this.activeUnit.moveIntent?.path.some(
+        //     c => pointToCellId(c) === cell.id
+        //   )
+        // ) {
+        //   return 'movement-path';
+        // }
         if (this.activeUnit.canMoveTo(cell)) {
           return 'movement';
         }

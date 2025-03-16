@@ -1,5 +1,6 @@
 import { CellViewModel } from '@/board/cell.model';
 import { CardViewModel } from '@/card/card.model';
+import { InteractableViewModel } from '@/interactable/interactable.model';
 import { PlayerViewModel } from '@/player/player.model';
 import { ArtifactViewModel } from '@/unit/artifact.model';
 import { ModifierViewModel } from '@/unit/modifier.model';
@@ -44,6 +45,7 @@ export type GameStateEntities = Record<
   | CardViewModel
   | ModifierViewModel
   | ArtifactViewModel
+  | InteractableViewModel
 >;
 export type GameState = Override<
   SerializedOmniscientState,
@@ -113,6 +115,10 @@ const buildentities = (
       .with(
         { entityType: 'artifact' },
         entity => new ArtifactViewModel(entity, result, dispatcher)
+      )
+      .with(
+        { entityType: 'interactable' },
+        entity => new InteractableViewModel(entity, result, dispatcher)
       )
       .exhaustive();
   }

@@ -3,7 +3,6 @@ import { Entity } from '../entity';
 import type { Game } from '../game/game';
 import { Position } from '../utils/position.component';
 import { TERRAINS, type MapBlueprint, type Terrain } from './map-blueprint';
-import type { SerializedUnit } from '../unit/entities/unit.entity';
 
 export type SerializedCoords = `${string}:${string}`;
 
@@ -20,6 +19,7 @@ export type SerializedCell = {
   player: 'p1' | 'p2' | null;
   isWalkable: boolean;
   unit: string | null;
+  interactable: string | null;
   spriteId: string;
 };
 
@@ -51,7 +51,8 @@ export class Cell
       player: this.options.player,
       isWalkable: this.isWalkable,
       unit: this.unit?.id ?? null,
-      spriteId: this.options.spriteId
+      spriteId: this.options.spriteId,
+      interactable: this.interactable?.id ?? null
     };
   }
 
@@ -83,6 +84,10 @@ export class Cell
 
   get unit() {
     return this.game.unitSystem.getUnitAt(this);
+  }
+
+  get interactable() {
+    return this.game.interactableSystem.getAt(this);
   }
 
   get player() {

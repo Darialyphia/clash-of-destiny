@@ -23,6 +23,7 @@ import { CARDS_DICTIONARY } from '../card/sets';
 import { MAPS_DICTIONARY } from '../board/maps/_index';
 import { InteractionSystem } from './systems/interaction.system';
 import { modifierIdFactory } from '../modifier/modifier.entity';
+import { InteractableSystem } from '../interactable/interactable.system';
 
 export type GameOptions = {
   id: string;
@@ -61,6 +62,8 @@ export class Game {
   readonly boardSystem = new BoardSystem(this);
 
   readonly unitSystem = new UnitSystem(this);
+
+  readonly interactableSystem = new InteractableSystem(this);
 
   readonly interaction = new InteractionSystem(this);
 
@@ -110,6 +113,7 @@ export class Game {
       map: this.mapPool[this.options.mapId]
     });
     this.unitSystem.initialize();
+    this.interactableSystem.initialize();
     this.playerSystem.initialize({
       players: this.options.players
     });

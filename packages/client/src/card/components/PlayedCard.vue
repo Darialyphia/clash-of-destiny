@@ -9,6 +9,7 @@ import {
   useGameState
 } from '@/battle/stores/battle.store';
 import { GAME_EVENTS } from '@game/engine/src/game/game.events';
+import { Flip } from 'gsap/Flip';
 
 const card = ref<Nullable<CardViewModel>>();
 const { state } = useGameState();
@@ -22,7 +23,8 @@ useBattleEvent(GAME_EVENTS.UNIT_BEFORE_PLAY_CARD, async event => {
     state.value.entities[event.card.id] = model;
     card.value = model;
   }
-  await waitFor(1200);
+
+  await waitFor(1500);
   card.value = null;
   await waitFor(600);
 });

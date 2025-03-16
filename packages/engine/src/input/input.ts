@@ -50,14 +50,7 @@ export abstract class Input<TSchema extends DefaultSchema>
     assert(this.payload, new MissingPayloadError());
     assert(this.isValidPhase, new WrongGamePhaseError());
 
-    try {
-      this.impl();
-    } catch (err) {
-      if (import.meta.vitest !== undefined) {
-        console.error(err);
-      }
-      throw err;
-    }
+    this.impl();
   }
 
   serialize() {

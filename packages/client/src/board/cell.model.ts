@@ -1,4 +1,5 @@
 import type { GameStateEntities } from '@/battle/stores/battle.store';
+import type { InteractableViewModel } from '@/interactable/interactable.model';
 import type { PlayerViewModel } from '@/player/player.model';
 import { UnitViewModel } from '@/unit/unit.model';
 import type { SerializedCell } from '@game/engine/src/board/cell';
@@ -41,6 +42,15 @@ export class CellViewModel {
       return null;
     }
     return this.entityDictionary[this.data.player] as PlayerViewModel;
+  }
+
+  getInteractable() {
+    if (!this.data.interactable) {
+      return null;
+    }
+    return this.entityDictionary[
+      this.data.interactable
+    ] as InteractableViewModel;
   }
 
   removeUnit() {
