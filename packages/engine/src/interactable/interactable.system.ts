@@ -15,6 +15,7 @@ export class InteractableSystem extends System<InteractableSystemOptions> {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   initialize() {
     this.game.on(GAME_EVENTS.TURN_START, () => {
+      if (this.game.turnSystem.turnCount === 1) return;
       const candidates = this.game.boardSystem.cells.filter(
         cell => !cell.unit && !cell.interactable && cell.isWalkable
       );
@@ -23,7 +24,6 @@ export class InteractableSystem extends System<InteractableSystemOptions> {
         const index = this.game.rngSystem.nextInt(candidates.length - 1);
         const cell = candidates.splice(index, 1)[0];
         this.add({ position: cell.position, blueprintId: 'incoming-experience-globe' });
-        console.log('added incoming experience globe at', cell.position.serialize());
       }
     });
   }
@@ -64,13 +64,13 @@ export class InteractableSystem extends System<InteractableSystemOptions> {
 
   add(options: BetterOmit<InteractableOptions, 'id'>) {
     const id = `interactable_${++this.nextId}`;
-    const unit = new Interactable(this.game, { id, ...options });
-    this.interactableMap.set(unit.id, unit);
-
+    const interactable = new Interactable(this.game, { id, ...options });
+    this.interactableMap.set(interactable.id, interactable);
+    interactable.addToBoard();
     if (this.game.phase === GAME_PHASES.BATTLE) {
       // this.game.turnSystem.insertInCurrentQueue(unit);
     }
-    return unit;
+    return interactable;
   }
 
   remove(interactable: Interactable) {

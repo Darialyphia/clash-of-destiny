@@ -71,7 +71,6 @@ export class Interactable
     this.game.on('*', this.checkOccupation);
 
     this.checkOccupation();
-    this.blueprint.onCreated?.(this.game, this);
   }
 
   get name() {
@@ -118,6 +117,8 @@ export class Interactable
   }
 
   addToBoard() {
+    this.blueprint.onCreated?.(this.game, this);
+
     this.emitter.emit(INTERACTABLE_EVENTS.CREATED, new InteractableCreatedEvent({}));
   }
 
@@ -128,6 +129,7 @@ export class Interactable
     );
     this.blueprint.onDestroyed?.(this.game, this);
     this.game.off('*', this.checkOccupation);
+    this.game.interactableSystem.remove(this);
     this.emitter.emit(
       INTERACTABLE_EVENTS.AFTER_DESTROY,
       new InteractableDestroyedEvent({})
