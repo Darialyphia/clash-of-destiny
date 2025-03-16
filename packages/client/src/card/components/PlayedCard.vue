@@ -3,7 +3,6 @@ import { waitFor, type Nullable } from '@game/shared';
 import Card from './Card.vue';
 import { CardViewModel } from '../card.model';
 import {
-  useActiveUnit,
   useBattleEvent,
   useCards,
   useDispatcher,
@@ -23,9 +22,9 @@ useBattleEvent(GAME_EVENTS.UNIT_BEFORE_PLAY_CARD, async event => {
     state.value.entities[event.card.id] = model;
     card.value = model;
   }
-  await waitFor(1000);
+  await waitFor(1200);
   card.value = null;
-  await waitFor(500);
+  await waitFor(600);
 });
 </script>
 
@@ -40,7 +39,10 @@ useBattleEvent(GAME_EVENTS.UNIT_BEFORE_PLAY_CARD, async event => {
             description: card.description,
             image: card.imagePath,
             kind: card.kind,
-            manaCost: card.manaCost
+            manaCost: card.manaCost,
+            exp: card.exp,
+            rarity: card.rarity,
+            allowedJobs: card.allowedJobs
           }"
         />
       </div>
@@ -57,9 +59,18 @@ useBattleEvent(GAME_EVENTS.UNIT_BEFORE_PLAY_CARD, async event => {
   place-content: center;
   pointer-events: none;
   transition: background-color 0.5s;
+  transform-style: preserve-3d;
+  perspective: 900px;
+  perspective-origin: center var(--size-13);
+}
 
-  &:has(> .wrapper) {
-    background-color: hsl(0 0 0 / 0.3);
+@keyframes play-card-reveal {
+  0%,
+  15% {
+    transform: rotateY(0.5turn);
+  }
+  100% {
+    transform: rotateY(0) scale(1.5);
   }
 }
 
@@ -68,18 +79,19 @@ useBattleEvent(GAME_EVENTS.UNIT_BEFORE_PLAY_CARD, async event => {
   perspective: 500px;
   perspective-origin: center;
   padding-bottom: var(--size-13);
-  &.v-enter-active,
+  transform: scale(1.5);
+
+  &.v-enter-active {
+    animation: play-card-reveal 1.2s var(--ease-3);
+  }
+
   &.v-leave-active {
     transition: all 0.5s var(--ease-3);
   }
 
-  &.v-enter-from {
-    transform: rotateY(0.5turn);
-  }
-
   &.v-leave-to {
     opacity: 0;
-    transform: translateY(calc(-1 * var(--size-9)));
+    transform: scale(1.5) translateY(calc(-1 * var(--size-9)));
   }
 }
 </style>

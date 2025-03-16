@@ -10,10 +10,10 @@ import {
 import { INTERACTION_STATES } from '@game/engine/src/game/systems/interaction.system';
 import { useBattleUiStore } from '../stores/battle-ui.store';
 import { GAME_EVENTS } from '@game/engine/src/game/game.events';
+import FancyButton from '@/ui/components/FancyButton.vue';
 
 const { state } = useGameState();
 const ui = useBattleUiStore();
-const activeUnit = useActiveUnit();
 
 const isQuickCasting = ref(false);
 useBattleEvent(GAME_EVENTS.INPUT_START, async e => {
@@ -69,21 +69,20 @@ const canSkip = computed(() => {
 
 <template>
   <div v-if="isDisplayed" class="targeting-ui" @click.stop>
-    <UiButton
-      class="error-button"
-      is-cta
+    <FancyButton
+      variant="error"
+      text="Cancel"
       @click="
         battle.dispatch({
           type: 'cancelPlayCard',
           payload: { playerId: player.id }
         })
       "
-    >
-      Cancel
-    </UiButton>
-    <UiButton
-      is-cta
+    />
+
+    <FancyButton
       v-if="canSkip"
+      text="Skip"
       @click="
         battle.dispatch({
           type: 'commitPlayCard',
@@ -92,9 +91,7 @@ const canSkip = computed(() => {
           }
         })
       "
-    >
-      Skip
-    </UiButton>
+    />
   </div>
 </template>
 

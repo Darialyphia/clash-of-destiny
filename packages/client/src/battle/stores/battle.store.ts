@@ -302,6 +302,16 @@ export const useCards = () => {
   );
 };
 
+export const useModifiers = () => {
+  const { state } = useGameState();
+
+  return computed(() =>
+    Object.values(state.value.entities).filter(
+      e => e instanceof ModifierViewModel
+    )
+  );
+};
+
 export const useActiveUnit = () => {
   const { state } = useGameState();
 

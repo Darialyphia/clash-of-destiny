@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FancyButton from '@/ui/components/FancyButton.vue';
 import { useBattleUiStore } from '../stores/battle-ui.store';
 import {
   useBattleStore,
@@ -21,35 +22,31 @@ const player = useUserPlayer();
 <template>
   <div class="deploy-layout">
     <header>
-      {{ state.phase }}
-      <button
-        @click="switchPlayer('p1')"
+      <FancyButton
+        text="Switch to Player 1"
         :class="battle.playerId === 'p1' && 'active'"
-      >
-        Switch to Player 1
-      </button>
-      <button
-        @click="switchPlayer('p2')"
+        @click="switchPlayer('p1')"
+      />
+      <FancyButton
+        text="Switch to Player 2"
         :class="battle.playerId === 'p2' && 'active'"
-      >
-        Switch to Player 2
-      </button>
-      <button
-        @click="player.commitDeployment()"
+        @click="switchPlayer('p2')"
+      />
+      <FancyButton
+        text="Confirm deployment"
         :class="{ active: player.hasDeployed }"
-      >
-        Confirm deployment
-      </button>
-      <button
+        @click="player.commitDeployment()"
+      />
+      <FancyButton
+        text="Auto deploy"
+        variant="error"
         @click="
           () => {
             player.commitDeployment();
             player.getOpponent().commitDeployment();
           }
         "
-      >
-        Auto deploy
-      </button>
+      />
     </header>
 
     <div />
@@ -87,12 +84,10 @@ header {
   padding-block: var(--size-3);
 
   button {
-    border: solid var(--border-size-1) white;
     pointer-events: auto;
 
     &.active {
-      border-width: var(--border-size-2);
-      border-color: var(--primary);
+      box-shadow: 0 0 1rem yellow;
     }
   }
 }

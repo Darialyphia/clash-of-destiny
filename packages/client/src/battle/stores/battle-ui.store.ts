@@ -132,7 +132,7 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
       Flip.from(flipState, {
         targets: '#inspected-card .card',
         duration: 0.4,
-        absolute: true,
+        absolute: false,
         ease: Power3.easeOut
       });
     });
@@ -147,9 +147,9 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
     window.requestAnimationFrame(() => {
       Flip.from(flipState, {
         targets: [`.hand-card__card[data-flip-id="card_${card.id}"]`],
-        duration: 0.3,
+        duration: 0.35,
         absolute: false,
-        ease: Power1.easeOut
+        ease: Back.easeIn
       });
     });
   };
@@ -171,7 +171,47 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
     }
   });
 
-  const cardPlayIntent = shallowRef<Nullable<CardViewModel>>(null);
+  const _cardPlayIntent = shallowRef<Nullable<CardViewModel>>(null);
+  const cardPlayIntent = computed({
+    get() {
+      return _cardPlayIntent.value;
+    },
+    set(card) {
+      if (!card) {
+        if (!_cardPlayIntent.value) return;
+        const current = _cardPlayIntent.value;
+        const el = document.querySelector(
+          `[data-flip-id="card_${current.id}"]`
+        );
+        const flipState = Flip.getState(el);
+        window.requestAnimationFrame(() => {
+          Flip.from(flipState, {
+            targets: [`.hand-card__card[data-flip-id="card_${current.id}"]`],
+            duration: 0.35,
+            absolute: false,
+            ease: Back.easeIn
+          });
+        });
+        _cardPlayIntent.value = null;
+        return;
+      }
+
+      _cardPlayIntent.value = card;
+
+      const element = document.querySelector(
+        `[data-flip-id="card_${card.id}"]`
+      );
+      const flipState = Flip.getState(element);
+      window.requestAnimationFrame(() => {
+        Flip.from(flipState, {
+          targets: '.play-intent .card',
+          duration: 0.4,
+          absolute: false,
+          ease: Back.easeIn
+        });
+      });
+    }
+  });
   battle.on(GAME_EVENTS.UNIT_BEFORE_PLAY_CARD, async () => {
     cardPlayIntent.value = null;
     firstTargetIntent.value = null;

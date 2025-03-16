@@ -52,6 +52,7 @@ onClickOutside(
   --pixel-scale: 2;
   width: calc(126px * var(--pixel-scale));
   height: calc(178px * var(--pixel-scale));
+  transform-style: preserve-3d;
   > * {
     width: 100%;
     height: 100%;

@@ -73,7 +73,7 @@ useResizeObserver(
   display: flex;
   > div {
     pointer-events: auto;
-    transform: translateY(50%);
+    transform: translateY(35%);
     transition: transform 0.35s var(--ease-spring-2);
     transition-delay: calc(var(--i) * 0.03s);
     box-shadow: -10px 0 0.5rem hsl(0 0 0 / 0.2);

@@ -24,7 +24,7 @@ const ui = useBattleUiStore();
   <TargetingUi />
 
   <DeployUi v-if="state.phase === GAME_PHASES.DEPLOY" />
-  <div v-else class="battle-ui">
+  <div v-else class="battle-ui" :class="{ cinematic: ui.cardPlayIntent }">
     <BattleLog />
     <TurnOrder />
     <PlayedCard />
@@ -60,6 +60,15 @@ const ui = useBattleUiStore();
   user-select: none;
   display: grid;
   grid-template-rows: auto 1fr auto;
+  transparent: background 0.3s var(--ease-2);
+  &.cinematic {
+    background: radial-gradient(
+      circle at center,
+      transparent,
+      transparent 20%,
+      hsl(0 0 0 / 0.7)
+    );
+  }
 }
 
 footer {

@@ -6,6 +6,7 @@ import { pointToCellId } from '@game/engine/src/board/board-utils';
 import type { InputDispatcher } from '@game/engine/src/input/input-system';
 import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
 import { waitFor, type Nullable, type Point } from '@game/shared';
+import type { ModifierViewModel } from './modifier.model';
 
 export class UnitViewModel {
   isAnimating = false;
@@ -119,6 +120,11 @@ export class UnitViewModel {
     });
   }
 
+  getModifiers() {
+    return this.data.modifiers.map(modifierId => {
+      return this.entityDictionary[modifierId] as ModifierViewModel;
+    });
+  }
   getHand() {
     return this.data.hand.map(cardId => {
       return this.entityDictionary[cardId] as CardViewModel;

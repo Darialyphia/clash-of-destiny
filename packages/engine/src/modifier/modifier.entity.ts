@@ -1,6 +1,5 @@
 import {
   assert,
-  type BetterOmit,
   type Constructor,
   type EmptyObject,
   type Serializable,
@@ -18,11 +17,13 @@ export type ModifierInfos<TCustomEvents extends Record<string, any>> =
     ? {
         name?: string;
         description?: string;
+        icon?: string;
         customEventNames?: never;
       }
     : {
         name?: string;
         description?: string;
+        icon?: string;
         customEventNames: TCustomEvents;
       };
 
@@ -74,10 +75,12 @@ export type ModifierTarget = {
 
 export type SerializedModifier = {
   id: string;
+  modifierType: string;
   entityType: 'modifier';
   stacks: number;
   name?: string;
   description?: string;
+  icon?: string;
   target: string;
   source: string;
 };
@@ -103,10 +106,12 @@ export class Modifier<
 
   private isApplied = false;
 
-  readonly infos: { name?: string; description?: string };
+  readonly infos: { name?: string; description?: string; icon?: string };
+
+  readonly modifierType: string;
 
   constructor(
-    id: string,
+    modifierType: string,
     game: Game,
     source: AnyCard,
     options: ModifierOptions<
@@ -114,15 +119,17 @@ export class Modifier<
       Record<Exclude<keyof TEventsMap, keyof ModifierEventMap>, boolean>
     >
   ) {
-    super(id, {});
+    super(game.modifierIdFactory(modifierType), {});
     this.game = game;
+    this.modifierType = modifierType;
     this.source = source;
     this.mixins = options.mixins;
     this.stackable = options.stackable;
     this._stacks = options.stackable ? options.initialStacks : -1;
     this.infos = {
       description: options.description,
-      name: options.name
+      name: options.name,
+      icon: options.icon
     };
 
     [
@@ -213,12 +220,19 @@ export class Modifier<
   serialize(): SerializedModifier {
     return {
       id: this.id,
+      modifierType: this.modifierType,
       entityType: 'modifier' as const,
       stacks: this.stacks,
       name: this.infos.name,
       description: this.infos.description,
+      icon: this.infos.icon,
       target: this._target.id,
       source: this.source.id
     };
   }
 }
+
+export const modifierIdFactory = () => {
+  let nextId = 0;
+  return (id: string) => `modifier_${id}_${nextId++}`;
+};

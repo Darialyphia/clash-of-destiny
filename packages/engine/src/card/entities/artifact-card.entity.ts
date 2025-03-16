@@ -11,6 +11,7 @@ import { Card, type CardOptions, type SerializedCard } from './card.entity';
 
 export type SerializedArtifactCard = SerializedCard & {
   kind: typeof CARD_KINDS.ARTIFACT;
+  allowedJobs: Array<{ id: string; name: string }>;
 };
 export type ArtifactCardEventMap = CardEventMap;
 export type ArtifactCardInterceptors = Record<string, never>;
@@ -67,7 +68,11 @@ export class ArtifactCard extends Card<
       description: this.blueprint.description,
       rarity: this.blueprint.rarity,
       unit: this.unit.id,
-      canPlay: this.canPlay()
+      canPlay: this.canPlay(),
+      allowedJobs: this.blueprint.classIds.map(id => ({
+        id,
+        name: this.game.cardPool[id].name
+      }))
     };
   }
 }

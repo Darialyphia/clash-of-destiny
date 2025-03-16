@@ -644,7 +644,7 @@ export class Unit
 
   removeFromBoard() {
     for (const modifier of this.modifiers) {
-      this.removeModifier(modifier.id);
+      this.removeModifier(modifier);
     }
     this.game.unitSystem.removeUnit(this);
   }
@@ -700,7 +700,7 @@ export class Unit
 
     this.modifierManager.add(modifier);
 
-    return () => this.removeModifier(modifier.id);
+    return () => this.removeModifier(modifier);
   }
 
   get apCostPerCard() {

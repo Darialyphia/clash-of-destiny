@@ -110,7 +110,7 @@ export abstract class Card<
   addModifier(modifier: Modifier<AnyCard>) {
     this.modifierManager.add(modifier);
 
-    return () => this.removeModifier(modifier.id);
+    return () => this.removeModifier(modifier);
   }
 
   addtoHand() {

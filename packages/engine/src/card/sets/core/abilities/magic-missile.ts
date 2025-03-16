@@ -11,7 +11,7 @@ export const magicMissile: AbilityBlueprint = {
   name: 'Magic Missile',
   description:
     'Fires a projectile in a line that deals 1 damage to the first target hit.',
-  cardIconId: 'placeholder',
+  cardIconId: 'card-magic-missile',
   rarity: RARITIES.COMMON,
   setId: CARD_SETS.CORE,
   kind: CARD_KINDS.ABILITY,

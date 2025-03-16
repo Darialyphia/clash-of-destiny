@@ -144,6 +144,45 @@
       "assets": [
         {
           "alias": [
+            "icon-card-arcane-knowledge"
+          ],
+          "src": [
+            "/assets/icons/card-arcane-knowledge.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-card-magic-missile"
+          ],
+          "src": [
+            "/assets/icons/card-magic-missile.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-card-mana-shield"
+          ],
+          "src": [
+            "/assets/icons/card-mana-shield.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-keyword-altar"
           ],
           "src": [
@@ -417,6 +456,33 @@
         },
         {
           "alias": [
+            "icon-modifier-mana-shield"
+          ],
+          "src": [
+            "/assets/icons/modifier-mana-shield.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-modifier-mana-shield"
+          ],
+          "src": [
+            "/assets/icons/modifier-mana-shield.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-placeholder"
           ],
           "src": [
@@ -616,6 +682,19 @@
         },
         {
           "alias": [
+            "button-error.png"
+          ],
+          "src": [
+            "/assets/ui/button-error.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "button.png"
           ],
           "src": [
@@ -646,6 +725,19 @@
           ],
           "src": [
             "/assets/ui/card-back.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "card-back3.png"
+          ],
+          "src": [
+            "/assets/ui/card-back3.png"
           ],
           "data": {
             "tags": {
@@ -724,6 +816,19 @@
           ],
           "src": [
             "/assets/ui/card-level-filled.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "card-mp.png"
+          ],
+          "src": [
+            "/assets/ui/card-mp.png"
           ],
           "data": {
             "tags": {

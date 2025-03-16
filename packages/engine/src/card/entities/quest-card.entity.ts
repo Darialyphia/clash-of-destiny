@@ -9,7 +9,10 @@ import {
 } from '../card.events';
 import { Card, type CardOptions, type SerializedCard } from './card.entity';
 
-export type SerializedQuestCard = SerializedCard & { kind: typeof CARD_KINDS.QUEST };
+export type SerializedQuestCard = SerializedCard & {
+  kind: typeof CARD_KINDS.QUEST;
+  allowedJobs: Array<{ id: string; name: string }>;
+};
 export type QuestCardEventMap = CardEventMap;
 export type QuestCardInterceptors = Record<string, never>;
 
@@ -60,7 +63,11 @@ export class QuestCard extends Card<
       description: this.blueprint.description,
       rarity: this.blueprint.rarity,
       unit: this.unit.id,
-      canPlay: this.canPlay()
+      canPlay: this.canPlay(),
+      allowedJobs: this.blueprint.classIds.map(id => ({
+        id,
+        name: this.game.cardPool[id].name
+      }))
     };
   }
 }

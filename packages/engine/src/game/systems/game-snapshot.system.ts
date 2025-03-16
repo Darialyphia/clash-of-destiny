@@ -117,6 +117,9 @@ export class GameSnaphotSystem extends System<EmptyObject> {
         entities[relic.card.id] = relic.card.serialize();
       }
 
+      if (unit.currentlyPlayedCard) {
+        entities[unit.currentlyPlayedCard.id] = unit.currentlyPlayedCard.serialize();
+      }
       unit.cards.hand.forEach(card => {
         entities[card.id] = card.serialize();
       });

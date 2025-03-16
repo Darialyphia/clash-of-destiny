@@ -86,12 +86,13 @@ const isDetailsDrawerOpened = ref(false);
     0 -2px 0 black,
     2px 0 0 black,
     -2px 0 0 black;
+  backdrop-filter: blur(20px);
   &.ally {
-    background-color: #00285c;
+    background-color: #00285c77;
   }
 
   &.enemy {
-    background-color: #32021b;
+    background-color: #32021b77;
   }
 }
 

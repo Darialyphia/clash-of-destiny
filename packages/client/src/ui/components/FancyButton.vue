@@ -1,26 +1,29 @@
 <script setup lang="ts">
 import { RouterLink, type RouterLinkProps } from 'vue-router';
-import type { StyleProp } from '../ui-utils';
-import { Icon } from '@iconify/vue';
 
 defineOptions({ inheritAttrs: false });
 
 export type ButtonProps = {
-  leftIcon?: string;
-  rightIcon?: string;
   isLoading?: boolean;
   isInline?: boolean;
   to?: RouterLinkProps['to'];
   text: string;
+  variant?: 'primary' | 'error';
 };
 
-const { isLoading = false, isInline, text } = defineProps<ButtonProps>();
+const {
+  isLoading = false,
+  variant = 'primary',
+  isInline,
+  text,
+  to
+} = defineProps<ButtonProps>();
 
 const attrs = useAttrs();
 
 const tag = computed(() => {
   if (attrs.href) return 'a';
-  if (attrs.to) return RouterLink;
+  if (to) return RouterLink;
   return 'button';
 });
 </script>
@@ -29,10 +32,13 @@ const tag = computed(() => {
   <component
     :is="tag"
     class="fancy-button"
-    :class="{
-      'is-inline': isInline,
-      'is-loading': isLoading
-    }"
+    :class="[
+      {
+        'is-inline': isInline,
+        'is-loading': isLoading
+      },
+      variant
+    ]"
     :disabled="attrs.disabled || isLoading"
     v-bind="attrs"
   >
@@ -64,12 +70,19 @@ const tag = computed(() => {
     position: relative;
     z-index: 0;
 
-    border-image-source: url('/assets/ui/button.png');
     border-image-slice: 39 fill;
     border-image-width: 39px;
     border-radius: var(--_ui-button-radius);
 
     transition: filter 0.2s;
+
+    &.primary {
+      border-image-source: url('/assets/ui/button.png');
+    }
+
+    &.error {
+      border-image-source: url('/assets/ui/button-error.png');
+    }
 
     &:disabled {
       cursor: not-allowed;
@@ -119,8 +132,14 @@ const tag = computed(() => {
     inset: 0;
   }
   &:after {
-    background: linear-gradient(#fcfcfc, #fcfcfc 50%, #e6d67b 50%);
     background-clip: text;
+  }
+  .primary &::after {
+    background-image: linear-gradient(#fcfcfc, #fcfcfc 50%, #e6d67b 50%);
+  }
+
+  .error &::after {
+    background-image: linear-gradient(#fcfcfc, #fcfcfc 50%, #ff9da3 50%);
   }
   &:before {
     text-shadow:

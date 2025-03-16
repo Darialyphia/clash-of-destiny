@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {
-  useActiveUnit,
   useBattleEvent,
   useGameState,
   useUnits
@@ -11,10 +10,17 @@ import type { UnitViewModel } from '@/unit/unit.model';
 import type { PlayerViewModel } from '../../player/player.model';
 import type { Point } from '@game/shared';
 import { GAME_EVENTS } from '@game/engine/src/game/game.events';
-import { match } from 'ts-pattern';
 import { GAME_PHASES } from '@game/engine/src/game/systems/game-phase.system';
 import { pointToCellId } from '@game/engine/src/board/board-utils';
 import { Icon } from '@iconify/vue';
+import {
+  HoverCardArrow,
+  HoverCardContent,
+  HoverCardPortal,
+  HoverCardRoot,
+  HoverCardTrigger
+} from 'reka-ui';
+import InspectableCard from '@/card/components/InspectableCard.vue';
 
 const { state } = useGameState();
 const units = useUnits();
@@ -41,7 +47,7 @@ type Token =
   | { kind: 'turn_end'; unit: UnitViewModel }
   | { kind: 'action'; text: string };
 
-const events = ref<Token[][]>([[]]);
+const events = shallowRef<Token[][]>([[]]);
 
 useBattleEvent(GAME_EVENTS.UNIT_BEFORE_PLAY_CARD, async event => {
   events.value.push([
@@ -207,7 +213,15 @@ const isAction = (event: Pick<Token, 'kind'>[]) =>
             {{ token.text }}
           </template>
           <template v-else-if="token.kind === 'card'">
-            {{ token.card.name }}
+            <HoverCardRoot>
+              <HoverCardTrigger>
+                <span class="card">{{ token.card.name }}</span>
+              </HoverCardTrigger>
+
+              <HoverCardContent side="right" :side-offset="20">
+                <InspectableCard :card="token.card" />
+              </HoverCardContent>
+            </HoverCardRoot>
           </template>
           <template v-else-if="token.kind === 'unit'">
             {{ token.unit.name }}
@@ -358,6 +372,7 @@ li {
 
 .card {
   color: var(--orange-6);
+  z-index: 1;
 }
 
 .turn_start {

@@ -93,8 +93,14 @@ const onMouseDown = (e: MouseEvent) => {
   transform-style: preserve-3d;
   perspective: 800px;
   perspective-origin: center;
-  aspect-ratio: var(--aspect-card);
+  --pixel-scale: 2;
+  width: calc(126px * var(--pixel-scale));
+  transition: width 0.2s ease;
+  cursor: url('/assets/ui/cursor-hover.png'), auto;
 
+  &:not(:has(.hand-card__card)) {
+    width: 0;
+  }
   &.hoverable&:hover {
     &.is-shaking {
       animation: var(--animation-shake-x);

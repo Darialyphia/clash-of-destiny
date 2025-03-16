@@ -8,8 +8,8 @@ import {
   useFloating
 } from '@floating-ui/vue';
 import type { Point } from '@game/shared';
-import { useCamera } from '@/board/composables/useCamera';
 import { External } from 'vue3-pixi';
+import { useIsoCamera } from '@/iso/composables/useIsoCamera';
 
 const {
   position,
@@ -21,7 +21,7 @@ const {
   isOpened: boolean;
 }>();
 
-const camera = useCamera();
+const camera = useIsoCamera();
 
 const isDisplayed = ref(false);
 

@@ -7,13 +7,14 @@ import { UNIT_EVENTS } from '../../../../unit/unit-enums';
 import type { AbilityBlueprint } from '../../../card-blueprint';
 import { RARITIES, CARD_SETS, CARD_KINDS } from '../../../card.enums';
 import { NoFollowup } from '../../../followups/no-followup';
+import { SelfFollowup } from '../../../followups/self-followup';
 import { mage } from '../heroes/mage';
 
 export const manaShield: AbilityBlueprint = {
   id: 'mana-shield',
   name: 'Mana Shield',
   description: 'The next time this takes damage, reduce the damage by 2 and lose 1 mana.',
-  cardIconId: 'placeholder',
+  cardIconId: 'card-mana-shield',
   rarity: RARITIES.RARE,
   setId: CARD_SETS.CORE,
   kind: CARD_KINDS.ABILITY,
@@ -21,7 +22,7 @@ export const manaShield: AbilityBlueprint = {
   levelCost: 1,
   exp: 1,
   classIds: [mage.id],
-  followup: new NoFollowup(),
+  followup: new SelfFollowup(),
   getAoe(game, card) {
     return new PointAOEShape(game, card.player, TARGETING_TYPE.ALLY);
   },
@@ -32,6 +33,7 @@ export const manaShield: AbilityBlueprint = {
         name: 'Magic Shield',
         description:
           'The next time this takes damage, reduce the damage by 2 and lose 1 mana.',
+        icon: 'modifier-mana-shield',
         stackable: false,
         mixins: [
           new UnitInterceptorModifierMixin(game, {

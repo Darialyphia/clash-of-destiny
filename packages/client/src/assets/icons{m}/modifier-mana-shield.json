@@ -1,0 +1,36 @@
+{ "frames": {
+   "modifier-mana-shield__base_idle_0": {
+    "frame": { "x": 0, "y": 0, "w": 20, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 20 },
+    "sourceSize": { "w": 20, "h": 20 },
+    "duration": 100
+   },
+   "modifier-mana-shield__border_idle_0": {
+    "frame": { "x": 0, "y": 20, "w": 20, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 20 },
+    "sourceSize": { "w": 20, "h": 20 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.3.13-x64",
+  "image": "modifier-mana-shield.png",
+  "format": "RGBA8888",
+  "size": { "w": 20, "h": 40 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "idle", "from": 0, "to": 0, "direction": "forward", "color": "#000000ff" }
+  ],
+  "layers": [
+   { "name": "base", "opacity": 255, "blendMode": "normal" },
+   { "name": "border", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

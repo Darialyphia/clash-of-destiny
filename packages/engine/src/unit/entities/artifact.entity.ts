@@ -180,7 +180,7 @@ export class Artifact
   addModifier(modifier: Modifier<Artifact>) {
     this.modifierManager.add(modifier);
 
-    return () => this.removeModifier(modifier.id);
+    return () => this.removeModifier(modifier);
   }
 
   equip() {

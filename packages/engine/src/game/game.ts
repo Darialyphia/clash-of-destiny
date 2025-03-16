@@ -22,6 +22,7 @@ import type { MapBlueprint } from '../board/map-blueprint';
 import { CARDS_DICTIONARY } from '../card/sets';
 import { MAPS_DICTIONARY } from '../board/maps/_index';
 import { InteractionSystem } from './systems/interaction.system';
+import { modifierIdFactory } from '../modifier/modifier.entity';
 
 export type GameOptions = {
   id: string;
@@ -68,6 +69,8 @@ export class Game {
   readonly cardFactory = createCard;
 
   readonly cardIdFactory = cardIdFactory();
+
+  readonly modifierIdFactory = modifierIdFactory();
 
   readonly cardPool: IndexedRecord<CardBlueprint, 'id'>;
 

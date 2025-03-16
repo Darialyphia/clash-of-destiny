@@ -40,6 +40,16 @@ export class CardViewModel {
     return this.data.kind;
   }
 
+  get rarity() {
+    return this.data.rarity;
+  }
+
+  get allowedJobs() {
+    if ('allowedJobs' in this.data) {
+      return this.data.allowedJobs as Array<{ id: string; name: string }>;
+    }
+  }
+
   get manaCost() {
     if ('manaCost' in this.data) {
       return this.data.manaCost as number;

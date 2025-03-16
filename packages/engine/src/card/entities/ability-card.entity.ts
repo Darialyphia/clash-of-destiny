@@ -17,6 +17,7 @@ export type SerializedAbilityCard = SerializedCard & {
   exp: number;
   elligibleFirstTargets: string[];
   maxTargets: number;
+  allowedJobs: Array<{ id: string; name: string }>;
 };
 export type AbilityCardEventMap = CardEventMap;
 export type AbilityCardInterceptors = Record<string, never>;
@@ -113,7 +114,11 @@ export class AbilityCard extends Card<
       elligibleFirstTargets: this.game.boardSystem.cells
         .filter(cell => firstTarget?.isElligible(cell.position))
         .map(cell => cell.id),
-      maxTargets: followup.length
+      maxTargets: followup.length,
+      allowedJobs: this.blueprint.classIds.map(id => ({
+        id,
+        name: this.game.cardPool[id].name
+      }))
     };
   }
 }

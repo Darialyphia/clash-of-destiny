@@ -6,6 +6,18 @@ import Card from './Card.vue';
 const { card } = defineProps<{ card: CardViewModel }>();
 
 const ui = useBattleUiStore();
+
+const cardProps = computed(() => ({
+  id: card.id,
+  name: card.name,
+  description: card.description,
+  image: card.imagePath,
+  kind: card.kind,
+  manaCost: card.manaCost,
+  exp: card.exp,
+  rarity: card.rarity,
+  allowedJobs: card.allowedJobs
+}));
 </script>
 
 <template>
@@ -13,48 +25,49 @@ const ui = useBattleUiStore();
     <Card
       v-bind="$attrs"
       ref="cardRef"
-      :card="{
-        id: card.id,
-        name: card.name,
-        description: card.description,
-        image: card.imagePath,
-        kind: card.kind,
-        manaCost: card.manaCost
-      }"
+      :card="cardProps"
       class="inspected-card"
     />
   </Teleport>
   <Card
     v-else
     ref="cardRef"
-    :card="{
-      id: card.id,
-      name: card.name,
-      description: card.description,
-      image: card.imagePath,
-      kind: card.kind,
-      manaCost: card.manaCost
-    }"
+    :card="cardProps"
     @contextmenu.prevent="ui.inspectCard($event.currentTarget, card)"
   />
 </template>
 
 <style scoped lang="postcss">
-@keyframes inspected-card-spin {
+@keyframes card-front-spin {
   from {
-    transform: rotateY(0deg);
+    transform: rotateY(180deg);
   }
   to {
+    transform: rotateY(0deg) scale(1.5);
+  }
+}
+
+@keyframes card-back-spin {
+  from {
     transform: rotateY(360deg);
+  }
+  to {
+    transform: rotateY(180deg) sale(1.5);
   }
 }
 
 .inspected-card {
-  /* animation: inspected-card-spin 0.4s var(--ease-3); */
+  --pixel-scale: 2;
   :has(> &) {
     transform-style: preserve-3d;
     perspective: 800px;
     perspective-origin: center;
   }
+}
+:global(.inspected-card > .card-front) {
+  animation: card-front-spin 0.4s var(--ease-3) forwards;
+}
+:global(.inspected-card > .card-back) {
+  animation: card-back-spin 0.4s var(--ease-3) forwards;
 }
 </style>

@@ -19,7 +19,7 @@ export class DurationModifierMixin extends ModifierMixin<Unit | AnyCard> {
   onTurnStart() {
     this.duration--;
     if (this.duration === 0) {
-      this.modifier.target.removeModifier(this.modifier.id);
+      this.modifier.target.removeModifier(this.modifier.modifierType);
     }
   }
 

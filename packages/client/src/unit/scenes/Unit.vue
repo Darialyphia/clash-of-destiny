@@ -22,6 +22,7 @@ import AlphaTransition from '@/ui/scenes/AlphaTransition.vue';
 import UnitSpawnAnimation from './UnitSpawnAnimation.vue';
 import UnitStatBars from './UnitStatBars.vue';
 import UnitVFX from './vfx/UnitVFX.vue';
+import UnitModifierSprite from './UnitModifierSprite.vue';
 import { GAME_PHASES } from '@game/engine/src/game/systems/game-phase.system';
 import { useSettingsStore } from '@/shared/composables/useSettings';
 import { useKeyboardControl } from '@/shared/composables/useKeyboardControl';
@@ -127,20 +128,13 @@ const isSpawnAnimationDone = ref(false);
       <container>
         <ActiveUnitIndicator :unit="unit" />
         <UnitStatBars :unit="unit" v-if="state.phase === GAME_PHASES.BATTLE" />
-        <!-- <HealthBar :unit="unit" :y="-45" :x="-20" />
-        <ManaBar :unit="unit" :y="-40" :x="-20" /> -->
-        <!-- <UnitStatsIndicators
-          :unit="unit"
-          v-if="!unit.isAltar || !unit.isDead"
-        />
-        <UnitResourceIndicator v-if="unit.isAltar" :unit="unit" />
         <UnitModifierSprite
-          v-for="(modifier, index) in unit.modifiers"
+          v-for="(modifier, index) in unit.getModifiers()"
           :unit="unit"
           :key="modifier.id"
           :modifier="modifier"
           :index="index"
-        /> -->
+        />
       </container>
     </AlphaTransition>
   </UnitPositioner>

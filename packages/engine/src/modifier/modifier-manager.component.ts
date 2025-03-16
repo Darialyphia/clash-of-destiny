@@ -19,40 +19,40 @@ export class ModifierManager<T extends ModifierTarget> {
   }
 
   get<TArg extends string | Modifier<T, any> | Constructor<Modifier<T>>>(
-    modifierOrId: TArg
+    modifierOrType: TArg
   ): TArg extends Constructor<Modifier<T>>
     ? Nullable<InstanceType<TArg>>
     : Nullable<Modifier<T>> {
-    if (modifierOrId instanceof Modifier) {
-      return this._modifiers.find(modifier => modifier.equals(modifierOrId)) as any;
-    } else if (isString(modifierOrId)) {
-      return this._modifiers.find(modifier =>
-        modifier.equals({ id: modifierOrId } as Modifier<T>)
+    if (modifierOrType instanceof Modifier) {
+      return this._modifiers.find(modifier => modifier.equals(modifierOrType)) as any;
+    } else if (isString(modifierOrType)) {
+      return this._modifiers.find(
+        modifier => modifier.modifierType === modifierOrType
       ) as any;
     } else {
       return this._modifiers.find(
-        modifier => modifier.constructor === modifierOrId
+        modifier => modifier.constructor === modifierOrType
       ) as any;
     }
   }
 
   add(modifier: Modifier<T>) {
     if (this.has(modifier)) {
-      this.get(modifier.id)!.reapplyTo(this.target, modifier.stacks);
+      this.get(modifier.modifierType)!.reapplyTo(this.target, modifier.stacks);
     } else {
       this._modifiers.push(modifier);
       modifier.applyTo(this.target);
     }
   }
 
-  remove(modifierOrId: string | Modifier<T> | Constructor<Modifier<T>>) {
+  remove(modifierOrType: string | Modifier<T> | Constructor<Modifier<T>>) {
     const idx = this._modifiers.findIndex(mod => {
-      if (modifierOrId instanceof Modifier) {
-        return mod.equals(modifierOrId);
-      } else if (isString(modifierOrId)) {
-        return modifierOrId === mod.id;
+      if (modifierOrType instanceof Modifier) {
+        return mod.equals(modifierOrType);
+      } else if (isString(modifierOrType)) {
+        return modifierOrType === mod.modifierType;
       } else {
-        return mod.constructor === modifierOrId;
+        return mod.constructor === modifierOrType;
       }
     });
     if (idx < 0) return;
