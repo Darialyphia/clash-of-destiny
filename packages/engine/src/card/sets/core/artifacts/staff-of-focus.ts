@@ -8,8 +8,10 @@ import { mage } from '../heroes/mage';
 export const staffOfFocus: ArtifactBlueprint = {
   id: 'staff-of-focus',
   name: 'Staff of Focus',
-  description: 'At the start of your turn, gain 1 mana.',
-  cardIconId: 'placeholder',
+  getDescription() {
+    return 'At the start of your turn, gain 1 mana and lose 1 durability.';
+  },
+  cardIconId: 'card-staff-of-focus',
   rarity: RARITIES.RARE,
   setId: CARD_SETS.CORE,
   kind: CARD_KINDS.ARTIFACT,

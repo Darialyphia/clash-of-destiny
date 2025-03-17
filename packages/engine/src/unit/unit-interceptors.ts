@@ -32,7 +32,7 @@ export type UnitInterceptors = {
 
   initiative: Interceptable<number>;
 
-  damage: Interceptable<number>;
+  attackDamage: Interceptable<number>;
   attackTargetingPattern: Interceptable<TargetingStrategy>;
   attackTargetType: Interceptable<TargetingType>;
   attackAOEShape: Interceptable<AOEShape>;
@@ -77,7 +77,7 @@ export const makeUnitInterceptors = (): UnitInterceptors => {
     mpRegen: new Interceptable(),
     initiative: new Interceptable(),
 
-    damage: new Interceptable(),
+    attackDamage: new Interceptable(),
     attackTargetingPattern: new Interceptable(),
     attackTargetType: new Interceptable(),
     attackAOEShape: new Interceptable(),

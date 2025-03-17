@@ -13,7 +13,9 @@ import { mage } from '../heroes/mage';
 export const manaShield: AbilityBlueprint = {
   id: 'mana-shield',
   name: 'Mana Shield',
-  description: 'The next time this takes damage, reduce the damage by 2 and lose 1 mana.',
+  getDescription(game, card) {
+    return `The next time this takes damage, reduce the damage by ${2 + card.unit.abilityPower} and lose 1 mana.`;
+  },
   cardIconId: 'card-mana-shield',
   rarity: RARITIES.RARE,
   setId: CARD_SETS.CORE,
@@ -28,6 +30,8 @@ export const manaShield: AbilityBlueprint = {
   },
   onPlay(game, card) {
     const modifierId = 'magic-shield';
+    const power = 2 + card.unit.abilityPower;
+
     card.unit.addModifier(
       new Modifier(modifierId, game, card, {
         name: 'Magic Shield',
@@ -43,7 +47,7 @@ export const manaShield: AbilityBlueprint = {
                 return value;
               }
 
-              return value - 2;
+              return value - power;
             }
           }),
           new UnitSelfEventModifierMixin(game, {

@@ -100,7 +100,7 @@ export class Modifier<
 
   protected _stacks: number;
 
-  protected stackable: boolean;
+  readonly stackable: boolean;
 
   protected _target!: T;
 
@@ -199,7 +199,7 @@ export class Modifier<
   reapplyTo(target: T, newStacks?: number) {
     this.emitter.emit(MODIFIER_EVENTS.BEFORE_REAPPLIED, new ModifierLifecycleEvent({}));
     if (this.stackable) {
-      this._stacks += newStacks ?? 1;
+      this.addStacks(newStacks ?? 1);
     }
 
     this.mixins.forEach(mixin => {

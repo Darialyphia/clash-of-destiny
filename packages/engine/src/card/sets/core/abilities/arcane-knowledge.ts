@@ -7,7 +7,9 @@ import { mage } from '../heroes/mage';
 export const arcaneKnowledge: AbilityBlueprint = {
   id: 'arcane-knowledge',
   name: 'Arcane Knowledge',
-  description: 'Draw 2 cards.',
+  getDescription() {
+    return `Draw 2 cards.`;
+  },
   cardIconId: 'card-arcane-knowledge',
   rarity: RARITIES.COMMON,
   setId: CARD_SETS.CORE,

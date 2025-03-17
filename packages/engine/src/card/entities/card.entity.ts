@@ -71,10 +71,6 @@ export abstract class Card<
     return this.blueprint.name;
   }
 
-  get description() {
-    return this.blueprint.description;
-  }
-
   get rarity() {
     return this.blueprint.rarity;
   }

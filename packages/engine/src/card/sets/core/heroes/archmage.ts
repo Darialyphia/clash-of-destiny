@@ -6,8 +6,10 @@ import { mage } from './mage';
 
 export const archMage: UnitBlueprint = {
   id: 'archMage',
-  name: 'ArchMage',
-  description: '',
+  name: 'Elementalist',
+  getDescription() {
+    return '';
+  },
   initiative: 8,
   kind: CARD_KINDS.UNIT,
   level: 2,

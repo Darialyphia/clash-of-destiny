@@ -6,7 +6,9 @@ import { CARD_KINDS, CARD_SETS, RARITIES, UNIT_KINDS } from '../../../card.enums
 export const mage: UnitBlueprint = {
   id: 'mage',
   name: 'Mage',
-  description: '',
+  getDescription(game, unit) {
+    return '';
+  },
   initiative: 7,
   kind: CARD_KINDS.UNIT,
   level: 1,

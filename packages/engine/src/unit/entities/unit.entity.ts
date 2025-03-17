@@ -84,6 +84,8 @@ export type SerializedUnit = {
   mp: number;
   maxMp: number;
   level: number;
+  attackDamage: number;
+  abilityPower: number;
   blueprintChain: Array<{
     id: string;
     name: string;
@@ -211,7 +213,7 @@ export class Unit
       spriteId: this.blueprint.spriteId,
       spriteParts: this.blueprint.spriteParts,
       name: this.blueprint.name,
-      description: this.blueprint.description,
+      description: this.blueprint.getDescription(this.game, this),
       hand: this.cards.hand.map(card => card.id),
       handSize: this.cards.hand.length,
       remainingCardsInDeck: this.cards.deck.cards.length,
@@ -224,6 +226,8 @@ export class Unit
       mp: this.mp.current,
       maxMp: this.mp.max,
       level: this.level,
+      attackDamage: this.attackDamage,
+      abilityPower: this.abilityPower,
       isMaxLevel: !this.nextBlueprint,
       blueprintChain: this.blueprintChain.map(blueprint => ({
         id: blueprint.id,
@@ -412,8 +416,11 @@ export class Unit
     );
   }
 
-  get damage() {
-    return this.interceptors.damage.getValue(this.game.config.BASE_ATTACK_DAMAGE, {});
+  get attackDamage() {
+    return this.interceptors.attackDamage.getValue(
+      this.game.config.BASE_ATTACK_DAMAGE,
+      {}
+    );
   }
 
   get attackTargetType(): TargetingType {
@@ -576,7 +583,7 @@ export class Unit
   }
 
   getDealtDamage(target: Unit) {
-    return this.interceptors.damageDealt.getValue(this.damage, {
+    return this.interceptors.damageDealt.getValue(this.attackDamage, {
       target
     });
   }

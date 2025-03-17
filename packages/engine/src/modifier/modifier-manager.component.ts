@@ -8,11 +8,11 @@ export class ModifierManager<T extends ModifierTarget> {
 
   has(modifierOrId: string | Modifier<T, any> | Constructor<Modifier<T>>) {
     if (modifierOrId instanceof Modifier) {
-      return this._modifiers.some(modifier => modifier.equals(modifierOrId));
-    } else if (isString(modifierOrId)) {
-      return this._modifiers.some(modifier =>
-        modifier.equals({ id: modifierOrId } as Modifier<T>)
+      return this._modifiers.some(
+        modifier => modifier.modifierType === modifierOrId.modifierType
       );
+    } else if (isString(modifierOrId)) {
+      return this._modifiers.some(modifier => modifier.modifierType === modifierOrId);
     } else {
       return this._modifiers.some(modifier => modifier.constructor === modifierOrId);
     }
@@ -45,7 +45,10 @@ export class ModifierManager<T extends ModifierTarget> {
     }
   }
 
-  remove(modifierOrType: string | Modifier<T> | Constructor<Modifier<T>>) {
+  remove(
+    modifierOrType: string | Modifier<T> | Constructor<Modifier<T>>,
+    removeAllStacks = false
+  ) {
     const idx = this._modifiers.findIndex(mod => {
       if (modifierOrType instanceof Modifier) {
         return mod.equals(modifierOrType);
@@ -57,8 +60,13 @@ export class ModifierManager<T extends ModifierTarget> {
     });
     if (idx < 0) return;
 
-    const [modifier] = this._modifiers.splice(idx, 1);
-    modifier.remove();
+    const modifier = this._modifiers[idx];
+    if (modifier.stackable && modifier.stacks > 0 && !removeAllStacks) {
+      modifier.removeStacks(1);
+    } else {
+      this._modifiers.splice(idx, 1);
+      modifier.remove();
+    }
   }
 
   get modifiers() {

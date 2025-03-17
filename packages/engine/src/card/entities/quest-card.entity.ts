@@ -60,7 +60,7 @@ export class QuestCard extends Card<
       kind: this.blueprint.kind,
       setId: this.blueprint.setId,
       name: this.blueprint.name,
-      description: this.blueprint.description,
+      description: this.blueprint.getDescription(this.game, this),
       rarity: this.blueprint.rarity,
       unit: this.unit.id,
       canPlay: this.canPlay(),

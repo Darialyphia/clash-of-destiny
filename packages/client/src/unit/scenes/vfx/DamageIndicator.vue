@@ -26,13 +26,12 @@ const offset = {
 const onEnter = (container: Container) => {
   const target = {
     x: 30 + randomInt(60),
-    y: -1 * (30 + randomInt(60))
+    y: -1 * (40 + randomInt(60))
   };
   gsap.to(container.position, {
     motionPath: [
       { x: offset.x + 0, y: offset.y + 0 },
-      { x: offset.x + (target.x / 2) * direction, y: offset.y + target.y },
-      { x: offset.x + target.x * direction, y: offset.y + target.y * 0.25 }
+      { x: offset.x + 0, y: offset.y + target.y }
     ],
     duration: 0.7,
     ease: Power3.easeOut
@@ -50,7 +49,7 @@ const onEnter = (container: Container) => {
       v-if="damageAmount"
       v-bind="offset"
       :style="{
-        fontFamily: 'Silkscreen',
+        fontFamily: 'NotJamSlab14',
         align: 'center',
         fill: '#ff0000',
         fontSize: 120,

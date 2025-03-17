@@ -1,4 +1,4 @@
-import { Vec2, Vec3, isDefined, type Point3D } from '@game/shared';
+import { Vec2, isDefined, type Point, type Point3D } from '@game/shared';
 import type { Cell, SerializedCoords } from '../../board/cell';
 import type { Game } from '../../game/game';
 import type { Edge } from '../dijkstra';
@@ -27,8 +27,8 @@ export class SolidBodyPathfindingStrategy implements PathfindingStrategy {
     this.cache.clear();
   }
 
-  setOrigin(origin: Point3D) {
-    this.origin = Vec3.fromPoint3D(origin);
+  setOrigin(origin: Point) {
+    this.origin = Vec2.fromPoint(origin);
   }
 
   computeNeighbors(node: SerializedCoords) {
