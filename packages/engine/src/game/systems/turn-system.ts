@@ -1,8 +1,8 @@
 import type { Serializable, Values } from '@game/shared';
 import { System } from '../../system';
-import type { SerializedUnit, Unit } from '../../unit/entities/unit.entity';
 import { TypedEventEmitter, TypedSerializableEvent } from '../../utils/typed-emitter';
 import { GAME_EVENTS } from '../game.events';
+import type { Unit } from '../../unit/entities/unit.entity';
 
 export const TURN_EVENTS = {
   TURN_START: 'turn_start',

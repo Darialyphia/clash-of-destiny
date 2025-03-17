@@ -7,7 +7,7 @@ export const incomingExperienceGlobe: InteractableBlueprint = {
   description:
     'At the end of this turn, if no unit stands here, an Experience Globe will spawn.',
   spriteId: 'incoming-experience-globe',
-  iconId: 'interactable_incoming-experience-globe',
+  iconId: 'interactable-incoming-experience-globe',
   walkable: true,
   attackable: false,
 

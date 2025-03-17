@@ -40,4 +40,8 @@ export class InteractableViewModel {
   get spriteId() {
     return this.data.spriteId;
   }
+
+  get position() {
+    return this.data.position;
+  }
 }

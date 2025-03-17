@@ -26,6 +26,7 @@ export type Config = {
   EXP_REWARD_PER_ATTACK: number;
   EXP_REWARD_PER_TURN: number;
   EXP_GLOBES_PER_TURN: number;
+  MAX_EXP_GLOBES_ON_BOARD: number;
 };
 
 export const defaultConfig: Config = {
@@ -55,5 +56,6 @@ export const defaultConfig: Config = {
 
   EXP_REWARD_PER_ATTACK: 1,
   EXP_REWARD_PER_TURN: 1,
-  EXP_GLOBES_PER_TURN: 2
+  EXP_GLOBES_PER_TURN: 2,
+  MAX_EXP_GLOBES_ON_BOARD: 6
 };

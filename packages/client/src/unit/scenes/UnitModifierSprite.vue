@@ -24,7 +24,11 @@ const cardPosition = computed(() =>
     y: isoPosition.value.y + camera.offset.value.y - 50
   })
 );
-console.log(modifier.icon);
+
+const outlineThickness = ref(camera.viewport.value!.scale.x);
+camera.viewport.value?.on('zoomed-end', () => {
+  outlineThickness.value = camera.viewport.value!.scale.x;
+});
 </script>
 
 <template>
@@ -37,13 +41,19 @@ console.log(modifier.icon);
     @pointerenter="isHovered = true"
     @pointerleave="isHovered = false"
   >
-    <sprite :texture="`/assets/icons/${modifier.icon}.png`" :anchor="0.5" />
+    <sprite :texture="`/assets/icons/${modifier.icon}.png`" :anchor="0.5">
+      <outline-filter
+        v-if="isHovered"
+        :thickness="outlineThickness"
+        :color="0xffffff"
+      />
+    </sprite>
     <VirtualFloatingCard
       :position="cardPosition!"
       :timeout="500"
       :is-opened="!!cardPosition && isHovered"
     >
-      <div class="bg-black p-3 c-white">
+      <div class="tooltip">
         <div class="text-1 text-bold">{{ modifier.name }}</div>
         <p class="text-0 max-inline-xs">{{ modifier.description }}</p>
       </div>
@@ -54,3 +64,12 @@ console.log(modifier.icon);
     /> -->
   </container>
 </template>
+
+<style scoped lang="postcss">
+.tooltip {
+  padding: var(--size-3);
+  border-radius: var(--radius-2);
+  color: white;
+  background-color: black;
+}
+</style>

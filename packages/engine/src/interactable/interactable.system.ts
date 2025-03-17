@@ -3,6 +3,7 @@ import { System } from '../system';
 import { GAME_PHASES } from '../game/systems/game-phase.system';
 import { Interactable, type InteractableOptions } from './interactable.entity';
 import { GAME_EVENTS } from '../game/game.events';
+import { experienceGlobe } from './interactables/experience-globe';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type InteractableSystemOptions = {};
@@ -16,8 +17,17 @@ export class InteractableSystem extends System<InteractableSystemOptions> {
   initialize() {
     this.game.on(GAME_EVENTS.TURN_START, () => {
       if (this.game.turnSystem.turnCount === 1) return;
+      const existingGlobes = this.interactables.filter(
+        i => i.blueprintId === experienceGlobe.id
+      );
+      if (existingGlobes.length >= this.game.config.MAX_EXP_GLOBES_ON_BOARD) return;
+
       const candidates = this.game.boardSystem.cells.filter(
-        cell => !cell.unit && !cell.interactable && cell.isWalkable
+        cell =>
+          !cell.unit &&
+          !cell.interactable &&
+          cell.isWalkable &&
+          cell.neighbors.every(n => !n.unit)
       );
 
       for (let i = 0; i < this.game.config.EXP_GLOBES_PER_TURN; i++) {
