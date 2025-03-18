@@ -157,6 +157,19 @@
         },
         {
           "alias": [
+            "icon-card-experience-globe"
+          ],
+          "src": [
+            "/assets/icons/card-experience-globe.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-card-magic-missile"
           ],
           "src": [
@@ -174,6 +187,58 @@
           ],
           "src": [
             "/assets/icons/card-mana-shield.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-card-staff-of-focus"
+          ],
+          "src": [
+            "/assets/icons/card-staff-of-focus.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-interactable-experience-globe"
+          ],
+          "src": [
+            "/assets/icons/interactable-experience-globe.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-interactable-incoming-experience-globe"
+          ],
+          "src": [
+            "/assets/icons/interactable-incoming-experience-globe.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-ability-power-buff"
+          ],
+          "src": [
+            "/assets/icons/keyword-ability-power-buff.png"
           ],
           "data": {
             "tags": {
@@ -496,10 +561,36 @@
         },
         {
           "alias": [
+            "icon-unit-acolyte"
+          ],
+          "src": [
+            "/assets/icons/unit-acolyte.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-unit-archmage"
           ],
           "src": [
             "/assets/icons/unit-archmage.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-unit-exorcist"
+          ],
+          "src": [
+            "/assets/icons/unit-exorcist.png"
           ],
           "data": {
             "tags": {
@@ -618,6 +709,19 @@
       "assets": [
         {
           "alias": [
+            "ability-power.png"
+          ],
+          "src": [
+            "/assets/ui/ability-power.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "active-unit-indicator"
           ],
           "src": [
@@ -728,6 +832,19 @@
           ],
           "src": [
             "/assets/ui/atk.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "attack.png"
+          ],
+          "src": [
+            "/assets/ui/attack.png"
           ],
           "data": {
             "tags": {
@@ -1262,6 +1379,19 @@
         },
         {
           "alias": [
+            "shield.png"
+          ],
+          "src": [
+            "/assets/ui/shield.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "speed.png"
           ],
           "src": [
@@ -1332,6 +1462,33 @@
     {
       "name": "units",
       "assets": [
+        {
+          "alias": [
+            "acolyte"
+          ],
+          "src": [
+            "/assets/units/acolyte.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "acolyte.png"
+          ],
+          "src": [
+            "/assets/units/acolyte.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
         {
           "alias": [
             "wizard"

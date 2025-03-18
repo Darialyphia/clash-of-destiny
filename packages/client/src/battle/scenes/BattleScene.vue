@@ -39,6 +39,16 @@ const session = new GameSession({
           }
         },
         {
+          blueprintId: 'acolyte',
+          deck: {
+            cards: [
+              ...Array.from({ length: 6 }, () => 'inspire'),
+              ...Array.from({ length: 6 }, () => 'purify'),
+              ...Array.from({ length: 8 }, () => 'cure-wounds')
+            ]
+          }
+        },
+        {
           blueprintId: 'archMage',
           deck: {
             cards: [
@@ -47,16 +57,6 @@ const session = new GameSession({
               ...Array.from({ length: 4 }, () => 'mana-shield'),
               ...Array.from({ length: 4 }, () => 'staff-of-focus'),
               ...Array.from({ length: 4 }, () => 'magic-amplification')
-            ]
-          }
-        },
-        {
-          blueprintId: 'archMage',
-          deck: {
-            cards: [
-              ...Array.from({ length: 10 }, () => 'magic-missile'),
-              ...Array.from({ length: 10 }, () => 'arcane-knowledge'),
-              ...Array.from({ length: 10 }, () => 'mana-shield')
             ]
           }
         }
@@ -70,9 +70,21 @@ const session = new GameSession({
           blueprintId: 'archMage',
           deck: {
             cards: [
-              ...Array.from({ length: 10 }, () => 'magic-missile'),
-              ...Array.from({ length: 10 }, () => 'arcane-knowledge'),
-              ...Array.from({ length: 10 }, () => 'mana-shield')
+              ...Array.from({ length: 4 }, () => 'magic-missile'),
+              ...Array.from({ length: 4 }, () => 'arcane-knowledge'),
+              ...Array.from({ length: 4 }, () => 'mana-shield'),
+              ...Array.from({ length: 4 }, () => 'staff-of-focus'),
+              ...Array.from({ length: 4 }, () => 'magic-amplification')
+            ]
+          }
+        },
+        {
+          blueprintId: 'exorcist',
+          deck: {
+            cards: [
+              ...Array.from({ length: 6 }, () => 'inspire'),
+              ...Array.from({ length: 6 }, () => 'purify'),
+              ...Array.from({ length: 8 }, () => 'cure-wounds')
             ]
           }
         },
@@ -80,19 +92,11 @@ const session = new GameSession({
           blueprintId: 'archMage',
           deck: {
             cards: [
-              ...Array.from({ length: 10 }, () => 'magic-missile'),
-              ...Array.from({ length: 10 }, () => 'arcane-knowledge'),
-              ...Array.from({ length: 10 }, () => 'mana-shield')
-            ]
-          }
-        },
-        {
-          blueprintId: 'archMage',
-          deck: {
-            cards: [
-              ...Array.from({ length: 10 }, () => 'magic-missile'),
-              ...Array.from({ length: 10 }, () => 'arcane-knowledge'),
-              ...Array.from({ length: 10 }, () => 'mana-shield')
+              ...Array.from({ length: 4 }, () => 'magic-missile'),
+              ...Array.from({ length: 4 }, () => 'arcane-knowledge'),
+              ...Array.from({ length: 4 }, () => 'mana-shield'),
+              ...Array.from({ length: 4 }, () => 'staff-of-focus'),
+              ...Array.from({ length: 4 }, () => 'magic-amplification')
             ]
           }
         }

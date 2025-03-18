@@ -5,7 +5,7 @@ const { unit } = defineProps<{ unit: UnitViewModel }>();
 </script>
 
 <template>
-  <div class="unit-details">Unit details</div>
+  <div class="unit-details"></div>
 </template>
 
 <style scoped lang="postcss">

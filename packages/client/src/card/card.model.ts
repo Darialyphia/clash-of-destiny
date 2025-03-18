@@ -68,6 +68,12 @@ export class CardViewModel {
     }
   }
 
+  get durability() {
+    if ('durability' in this.data) {
+      return this.data.durability as number;
+    }
+  }
+
   get canPlay() {
     return this.data.canPlay;
   }

@@ -51,9 +51,9 @@ Your next ability is cast with +2 Ability Power.
 
 Ability
 
-3 MP | 2 EXP
+3 MP | 1 EXP
 
-Inflict Root(1 + Spell Power) to nearby enemies.
+Deal 1 damage and inflict Root(1 + Spell Power) to nearby enemies.
 
 
 [ ] Implemented
@@ -85,7 +85,6 @@ XXXXX
 
 ```
 
-
 [ ] Implemented
 
 ###  Blink
@@ -94,7 +93,7 @@ Ability
 
 2 MP | 1EXP
 
-Teleport up to 2 tiles away.
+Teleport up to 2 tiles away. Draw 1 card.
 
 [ ] Implemented
 
@@ -106,6 +105,15 @@ Ability
 
 Inflicts Hex(1) to an enemy (max range: 3).
 
+[ ] Implemented
+
+### Fireball
+
+Ability
+
+2 MP | 1 EXP
+
+Deal 2 damage to an enemy and 1 damage to enemies around it. (max range: 3)
 
 [ ] Implemented
 
@@ -119,10 +127,124 @@ At the start of your turn, gain 1 mana
 
 [ ] Implemented
 
-###  Wizard's hat
+###  Sorcerer's Hat
 
 Artifact - Armor
 
 3 Durability
 
 You have +1 Ability Power
+
+[ ] Implemented
+
+## Acolyte
+
+### Cure Wounds
+
+Ability
+
+2 MP | 1 EXP
+
+Heal an ally for (2 + Ability Power). (Max range: 4)
+
+[X] Implemented
+
+### Purify
+
+Ability
+
+2 MP | 1 EXP
+
+Remove negative status effects from an ally. (Max range: 2)
+
+[x] Implemented
+
+### Inspire
+
+Ability
+
+1 MP | 1 Exp
+
+An ally draws 1 card. (Max range: 3)
+
+[x] Implemented
+
+### Equinox
+
+Ability
+
+3 MP | 1 Exp
+
+Inflict Silence(2) to units in a 2x2 zone.
+
+[ ] Implemented
+
+### Safety Wall
+
+Ability
+
+3 MP | 1 EXP
+
+Summon a Safety Wall on a nearby tile. units inside the wall take 1 reduced damage. Can take (2 + Ability Power) hits.
+
+[ ] Implemented
+
+### Word of Light
+
+Ability
+
+2 MP | 1 EXP
+
+Deal (2 + Ability Power) damage to an enemy.
+
+[ ] Implemented
+
+### Penance
+
+Ability
+
+2 MP | 1 EXP
+
+Give an enemy "When this attacks, take 1 damage" until the end of its next turn.
+
+### Prayer
+
+Ability
+
+0 MP | 1 EXP
+
+Inflict Root(2) to yourself. Gain 2 mana.
+
+### Sky Teachings
+
+Ability
+
+3 MP | 1 EXP
+
+Give an ally "When this uses an ability, gain 1 EXP" during its next turn.
+
+### Pacify
+
+Ability
+
+2MP | 1 Exp
+
+Inflict Disarm(1 + Ability Power) to units in a 2X2 area.
+
+### Blessed Rosary
+
+Artifact - Relic
+
+3 Durability
+
+When you use an ability, heal nearby allies for 1 and lose 1 durability.
+
+### Pendant of Compassion
+
+Artifact - Relic
+
+2 Durability
+
+At the start of the turn, put a Cure wounds in your hand and lose 1 durability.
+
+

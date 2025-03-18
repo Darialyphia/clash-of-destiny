@@ -35,13 +35,13 @@ export const map1v1: MapBlueprint = {
   },
   // prettier-ignore
   cells: [
-    p1(), p1(), neutral(), neutral(), neutral(), neutral(), neutral(), neutral(), neutral(), p2(), p2(),
-    p1(), p1(), neutral(), neutral(), neutral(), neutral(), neutral(), neutral(), neutral(), p2(), p2(),
-    p1(), p1(), neutral(), neutral(), neutral(), neutral(), neutral(), neutral(), neutral(), p2(), p2(),
-    p1(), p1(), neutral(), neutral(), neutral(), neutral(), neutral(), neutral(), neutral(), p2(), p2(),
-    p1(), p1(), neutral(), neutral(), neutral(), neutral(), neutral(), neutral(), neutral(), p2(), p2(),
-    p1(), p1(), neutral(), neutral(), neutral(), neutral(), neutral(), neutral(), neutral(), p2(), p2(),
-    p1(), p1(), neutral(), neutral(), neutral(), neutral(), neutral(), neutral(), neutral(), p2(), p2(),
+    p1(), p1(), p1(), neutral(), neutral(), neutral(), neutral(), neutral(), p2(), p2(), p2(),
+    p1(), p1(), p1(), neutral(), neutral(), neutral(), neutral(), neutral(), p2(), p2(), p2(),
+    p1(), p1(), p1(), neutral(), neutral(), neutral(), neutral(), neutral(), p2(), p2(), p2(),
+    p1(), p1(), p1(), neutral(), neutral(), neutral(), neutral(), neutral(), p2(), p2(), p2(),
+    p1(), p1(), p1(), neutral(), neutral(), neutral(), neutral(), neutral(), p2(), p2(), p2(),
+    p1(), p1(), p1(), neutral(), neutral(), neutral(), neutral(), neutral(), p2(), p2(), p2(),
+    p1(), p1(), p1(), neutral(), neutral(), neutral(), neutral(), neutral(), p2(), p2(), p2()
   ],
   generalPositions: [new Vec2(0, 2), new Vec2(8, 2)]
 };
