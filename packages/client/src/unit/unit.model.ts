@@ -7,6 +7,7 @@ import type { InputDispatcher } from '@game/engine/src/input/input-system';
 import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
 import { waitFor, type Nullable, type Point } from '@game/shared';
 import type { ModifierViewModel } from './modifier.model';
+import type { ArtifactViewModel } from './artifact.model';
 
 export class UnitViewModel {
   isAnimating = false;
@@ -93,6 +94,32 @@ export class UnitViewModel {
 
   get exp() {
     return this.data.exp;
+  }
+
+  get attackDamage() {
+    return this.data.attackDamage;
+  }
+
+  get abilityPower() {
+    return this.data.abilityPower;
+  }
+
+  getWeapon() {
+    return this.data.artifacts.weapon
+      ? (this.entityDictionary[this.data.artifacts.weapon] as ArtifactViewModel)
+      : null;
+  }
+
+  getArmor() {
+    return this.data.artifacts.armor
+      ? (this.entityDictionary[this.data.artifacts.armor] as ArtifactViewModel)
+      : null;
+  }
+
+  getRelic() {
+    return this.data.artifacts.relic
+      ? (this.entityDictionary[this.data.artifacts.relic] as ArtifactViewModel)
+      : null;
   }
 
   get expToNextLevel() {

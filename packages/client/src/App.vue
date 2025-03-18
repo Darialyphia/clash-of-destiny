@@ -17,8 +17,10 @@ const uiRoot = document.getElementById('#app');
       <TooltipProvider :delay-duration="400">
         <RouterView name="ui" />
       </TooltipProvider>
+      <div id="card-portal" />
     </External>
   </PixiApp>
+  <
 </template>
 
 <style>
@@ -26,5 +28,10 @@ const uiRoot = document.getElementById('#app');
   position: absolute;
   inset: 0;
   pointer-events: none;
+}
+
+#card-portal {
+  position: fixed;
+  z-index: 10;
 }
 </style>

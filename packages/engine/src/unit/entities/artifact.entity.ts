@@ -55,6 +55,8 @@ export type SerializedArtifact = {
   entityType: 'artifact';
   card: string;
   modifiers: string[];
+  durability: number;
+  maxDurability: number;
 };
 
 export class Artifact
@@ -100,7 +102,9 @@ export class Artifact
       id: this.id,
       entityType: 'artifact' as const,
       card: this.card.id,
-      modifiers: this.modifiers.map(modifier => modifier.id)
+      modifiers: this.modifiers.map(modifier => modifier.id),
+      durability: this.durability,
+      maxDurability: this.maxDurability
     };
   }
 
