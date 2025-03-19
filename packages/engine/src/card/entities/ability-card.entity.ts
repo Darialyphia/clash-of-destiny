@@ -1,5 +1,8 @@
 import type { Game } from '../../game/game';
-import type { SelectedTarget } from '../../game/systems/interaction.system';
+import {
+  INTERACTION_STATES,
+  type SelectedTarget
+} from '../../game/systems/interaction.system';
 import type { Unit } from '../../unit/entities/unit.entity';
 import type { AbilityBlueprint } from '../card-blueprint';
 import { CARD_EVENTS, CARD_KINDS } from '../card.enums';
@@ -18,6 +21,10 @@ export type SerializedAbilityCard = SerializedCard & {
   elligibleFirstTargets: string[];
   maxTargets: number;
   allowedJobs: Array<{ id: string; name: string }>;
+  aoe: {
+    cells: string[];
+    units: string[];
+  } | null;
 };
 export type AbilityCardEventMap = CardEventMap;
 export type AbilityCardInterceptors = Record<string, never>;
@@ -93,6 +100,32 @@ export class AbilityCard extends Card<
     this.unit.gainExp(this.exp);
   }
 
+  private getSerializedAoe(): SerializedAbilityCard['aoe'] {
+    if (!this.unit.currentlyPlayedCard?.equals(this)) {
+      return null;
+    }
+    if (this.game.interaction.context.state !== INTERACTION_STATES.SELECTING_TARGETS) {
+      return null;
+    }
+    if (!this.game.interaction.context.ctx.nextTargetIntent) {
+      return null;
+    }
+    const targets: SelectedTarget[] = [
+      ...this.game.interaction.context.ctx.selectedTargets,
+      this.game.interaction.context.ctx.nextTargetIntent
+    ];
+    const canCommit = this.game.interaction.context.ctx.canCommit(targets);
+    if (!canCommit) {
+      return null;
+    }
+    const points = targets.map(t => t.cell);
+    const aoeShape = this.blueprint.getAoe(this.game, this, points);
+    return {
+      cells: aoeShape.getCells(points).map(cell => cell.id),
+      units: aoeShape.getUnits(points).map(unit => unit.id)
+    };
+  }
+
   serialize(): SerializedAbilityCard {
     const followup = this.blueprint.followup.getTargets(this.game, this);
     const firstTarget = followup[0];
@@ -118,7 +151,8 @@ export class AbilityCard extends Card<
       allowedJobs: this.blueprint.classIds.map(id => ({
         id,
         name: this.game.cardPool[id].name
-      }))
+      })),
+      aoe: this.getSerializedAoe()
     };
   }
 }

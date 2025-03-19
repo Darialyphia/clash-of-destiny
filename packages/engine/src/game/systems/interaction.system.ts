@@ -56,6 +56,7 @@ export type InteractionStateContext =
         canCommit: (targets: SelectedTarget[]) => boolean;
         getNextTarget: (targets: SelectedTarget[]) => EffectTarget | null;
         selectedTargets: SelectedTarget[];
+        nextTargetIntent: SelectedTarget | null;
         onComplete: (targets: SelectedTarget[]) => void;
       };
     }
@@ -178,6 +179,7 @@ export class InteractionSystem
         getNextTarget: getNextTarget as (
           targets: SelectedTarget[]
         ) => EffectTarget | null,
+        nextTargetIntent: null,
         selectedTargets: firstTarget ? [firstTarget] : [],
         canCommit: canCommit as (targets: SelectedTarget[]) => boolean,
         onComplete: onComplete as (targets: SelectedTarget[]) => void
@@ -210,7 +212,17 @@ export class InteractionSystem
     );
     this.validateTarget(target);
     this._context.ctx.selectedTargets.push(target);
+    this._context.ctx.nextTargetIntent = null;
     this.commitTargetsIfAble();
+  }
+
+  addNextTargetIntent(target: SelectedTarget) {
+    assert(
+      this._context.state === INTERACTION_STATES.SELECTING_TARGETS,
+      'Cannot add card target'
+    );
+    this.validateTarget(target);
+    this._context.ctx.nextTargetIntent = target;
   }
 
   cancelSelectingTargets() {
