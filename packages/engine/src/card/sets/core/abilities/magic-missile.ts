@@ -10,7 +10,7 @@ export const magicMissile: AbilityBlueprint = {
   id: 'magic-missile',
   name: 'Magic Missile',
   getDescription(game, card) {
-    return `Fires a projectile in a line that deals ${2 + card.unit.abilityPower} damage to the first target hit.`;
+    return `Fires a projectile in a line that deals ${1 + card.unit.abilityPower} damage to the first target hit.`;
   },
   cardIconId: 'card-magic-missile',
   rarity: RARITIES.COMMON,
@@ -35,7 +35,7 @@ export const magicMissile: AbilityBlueprint = {
       target.takeDamage(
         card.unit,
         new AbilityDamage({
-          baseAmount: 2 + card.unit.abilityPower,
+          baseAmount: 1 + card.unit.abilityPower,
           source: card
         })
       );

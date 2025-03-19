@@ -157,6 +157,19 @@
         },
         {
           "alias": [
+            "icon-card-cure-wounds"
+          ],
+          "src": [
+            "/assets/icons/card-cure-wounds.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-card-experience-globe"
           ],
           "src": [

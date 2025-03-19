@@ -1,5 +1,4 @@
 import { PointAOEShape } from '../../../../aoe/point.aoe-shape';
-import { AbilityDamage } from '../../../../combat/damage';
 import { TARGETING_TYPE } from '../../../../targeting/targeting-strategy';
 import type { AbilityBlueprint } from '../../../card-blueprint';
 import { RARITIES, CARD_SETS, CARD_KINDS } from '../../../card.enums';
@@ -12,7 +11,7 @@ export const cureWounds: AbilityBlueprint = {
   getDescription(game, card) {
     return `Heal an ally for ${2 + card.unit.abilityPower}.`;
   },
-  cardIconId: 'placeholder',
+  cardIconId: 'card-cure-wounds',
   rarity: RARITIES.COMMON,
   setId: CARD_SETS.CORE,
   kind: CARD_KINDS.ABILITY,

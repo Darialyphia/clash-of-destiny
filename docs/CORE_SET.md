@@ -10,7 +10,7 @@ Ability
 
 1 MP | 1 EXP
 
-Fires a projectile that deals (2 + Ability Power) damage to the first target hit.
+Fires a projectile that deals (1 + Ability Power) damage to the first target hit.
 
 [x] Implemented
 
@@ -64,7 +64,7 @@ Ability
 
 2 MP | 1 EXP
 
-Knockback neaby enemies 1 tile.
+Knockback adjacent enemies 1 tile.
 
 [ ] Implemented
 
@@ -72,7 +72,7 @@ Knockback neaby enemies 1 tile.
 
 Ability
 
-2 MP | 1 EXP
+3 MP | 1 EXP
 
 Deal (2 + Ability Power) damage to enemies in a cone.
 Explanation of the Area of Effect:
