@@ -10,7 +10,7 @@ export const purify: AbilityBlueprint = {
   id: 'purify',
   name: 'Purify',
   getDescription() {
-    return `Remove negative status effects from an ally..`;
+    return `Remove negative status effects from an ally.`;
   },
   cardIconId: 'placeholder',
   rarity: RARITIES.COMMON,

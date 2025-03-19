@@ -58,10 +58,20 @@ camera.viewport.value?.on('zoomed-end', () => {
         <p class="text-0 max-inline-xs">{{ modifier.description }}</p>
       </div>
     </VirtualFloatingCard>
-    <!-- <sprite
-      :texture="`/assets/icons/keyword-frame-${modifier.sourcePlayer.getPlayer().isAlly(userPlayer.getPlayer()) ? 'positive' : 'negative'}.png`"
-      :anchor="0.5"
-    /> -->
+    <pixi-text
+      v-if="modifier.stacks"
+      :style="{
+        fontFamily: 'NotJamSlab14',
+        align: 'center',
+        fill: '#ffffff',
+        fontSize: 56,
+        strokeThickness: 8
+      }"
+      :scale="0.25"
+      :y="-3"
+    >
+      {{ modifier.stacks }}
+    </pixi-text>
   </container>
 </template>
 

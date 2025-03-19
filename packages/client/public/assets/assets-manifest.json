@@ -443,6 +443,19 @@
         },
         {
           "alias": [
+            "icon-keyword-rooted"
+          ],
+          "src": [
+            "/assets/icons/keyword-rooted.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-keyword-rush"
           ],
           "src": [
@@ -1379,6 +1392,19 @@
         },
         {
           "alias": [
+            "relic.png"
+          ],
+          "src": [
+            "/assets/ui/relic.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "shield.png"
           ],
           "src": [
@@ -1450,6 +1476,19 @@
           ],
           "src": [
             "/assets/ui/unit-stat-bars.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "weapon.png"
+          ],
+          "src": [
+            "/assets/ui/weapon.png"
           ],
           "data": {
             "tags": {

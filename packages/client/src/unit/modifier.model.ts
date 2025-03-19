@@ -32,6 +32,10 @@ export class ModifierViewModel {
     return this.data.icon;
   }
 
+  get stacks() {
+    return this.data.stacks;
+  }
+
   get targetAsUnit() {
     return this.entityDictionary[this.data.target] as UnitViewModel;
   }

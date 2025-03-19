@@ -33,13 +33,13 @@ const session = new GameSession({
               ...Array.from({ length: 4 }, () => 'magic-missile'),
               ...Array.from({ length: 4 }, () => 'arcane-knowledge'),
               ...Array.from({ length: 4 }, () => 'mana-shield'),
-              ...Array.from({ length: 4 }, () => 'staff-of-focus'),
+              ...Array.from({ length: 4 }, () => 'frost-nova'),
               ...Array.from({ length: 4 }, () => 'magic-amplification')
             ]
           }
         },
         {
-          blueprintId: 'acolyte',
+          blueprintId: 'exorcist',
           deck: {
             cards: [
               ...Array.from({ length: 6 }, () => 'inspire'),

@@ -56,7 +56,7 @@ Ability
 Deal 1 damage and inflict Root(1 + Spell Power) to nearby enemies.
 
 
-[ ] Implemented
+[x] Implemented
 
 ### Force Wave
 

@@ -53,11 +53,12 @@ export class ModifierManager<T extends ModifierTarget> {
       if (modifierOrType instanceof Modifier) {
         return mod.equals(modifierOrType);
       } else if (isString(modifierOrType)) {
-        return modifierOrType === mod.modifierType;
+        return modifierOrType === mod.modifierType || modifierOrType === mod.id;
       } else {
         return mod.constructor === modifierOrType;
       }
     });
+    console.log(idx);
     if (idx < 0) return;
 
     const modifier = this._modifiers[idx];

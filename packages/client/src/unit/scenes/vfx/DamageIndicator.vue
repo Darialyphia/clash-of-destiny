@@ -53,7 +53,6 @@ const onEnter = (container: Container) => {
         align: 'center',
         fill: '#ff0000',
         fontSize: 120,
-        fontWeight: '900',
         strokeThickness: 8
       }"
       :scale="0.25"

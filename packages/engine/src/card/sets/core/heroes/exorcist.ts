@@ -2,7 +2,7 @@ import { PointAOEShape } from '../../../../aoe/point.aoe-shape';
 import { TARGETING_TYPE } from '../../../../targeting/targeting-strategy';
 import type { UnitBlueprint } from '../../../card-blueprint';
 import { CARD_KINDS, CARD_SETS, RARITIES, UNIT_KINDS } from '../../../card.enums';
-import { mage } from './mage';
+import { acolyte } from './acolyte';
 
 export const exorcist: UnitBlueprint = {
   id: 'exorcist',
@@ -14,14 +14,14 @@ export const exorcist: UnitBlueprint = {
   kind: CARD_KINDS.UNIT,
   level: 2,
   neededExp: 10,
-  previousClass: mage.id,
+  previousClass: acolyte.id,
   maxHp: 16,
   rarity: RARITIES.EPIC,
   setId: CARD_SETS.CORE,
   unitKind: UNIT_KINDS.HERO,
   iconId: 'unit-exorcist',
   cardIconId: 'placeholder',
-  spriteId: 'exorcist',
+  spriteId: 'acolyte',
   spriteParts: {
     armor: 'tier2',
     weapon: 'tier2',

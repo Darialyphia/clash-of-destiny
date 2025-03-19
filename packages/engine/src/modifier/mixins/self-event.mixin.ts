@@ -9,12 +9,17 @@ export class UnitSelfEventModifierMixin<
   TEvent extends keyof UnitEventMap
 > extends ModifierMixin<Unit> {
   private modifier!: Modifier<Unit>;
+  private cleanup: (() => void) | null = null;
 
   constructor(
     game: Game,
     private options: {
       eventName: TEvent;
-      handler: (event: UnitEventMap[TEvent]) => void;
+      handler: (
+        event: UnitEventMap[TEvent],
+        target: Unit,
+        modifier: Modifier<Unit>
+      ) => void;
       once?: boolean;
     }
   ) {
@@ -24,14 +29,20 @@ export class UnitSelfEventModifierMixin<
   onApplied(unit: Unit, modifier: Modifier<Unit>): void {
     this.modifier = modifier;
     if (this.options.once) {
-      unit.once(this.options.eventName, this.options.handler as any);
+      this.cleanup = unit.once(this.options.eventName, event =>
+        this.options.handler(event, unit, modifier)
+      );
     } else {
-      unit.on(this.options.eventName, this.options.handler as any);
+      this.cleanup = unit.on(this.options.eventName, event =>
+        this.options.handler(event, unit, modifier)
+      );
     }
   }
 
-  onRemoved(unit: Unit): void {
-    unit.off(this.options.eventName, this.options.handler as any);
+  onRemoved(): void {
+    if (this.cleanup) {
+      this.cleanup();
+    }
   }
 
   onReapplied(): void {}

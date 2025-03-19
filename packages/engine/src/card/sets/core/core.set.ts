@@ -2,11 +2,13 @@ import type { CardSet } from '..';
 import { CARD_SETS } from '../../card.enums';
 import { arcaneKnowledge } from './abilities/arcane-knowledge';
 import { cureWounds } from './abilities/cure-wounds';
+import { frostNova } from './abilities/frost-nova';
 import { inspire } from './abilities/inspire';
 import { magicAmplification } from './abilities/magic-amplification';
 import { magicMissile } from './abilities/magic-missile';
 import { manaShield } from './abilities/mana-shield';
 import { purify } from './abilities/purify';
+import { rooted } from './abilities/rooted';
 import { staffOfFocus } from './artifacts/staff-of-focus';
 import { acolyte } from './heroes/acolyte';
 import { archMage } from './heroes/archmage';
@@ -23,12 +25,15 @@ export const coreSet: CardSet = {
     manaShield,
     arcaneKnowledge,
     magicAmplification,
+    frostNova,
     staffOfFocus,
 
     acolyte,
     exorcist,
     cureWounds,
     purify,
-    inspire
+    inspire,
+
+    rooted
   ]
 };

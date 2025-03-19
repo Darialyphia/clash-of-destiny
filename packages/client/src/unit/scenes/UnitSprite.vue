@@ -17,7 +17,6 @@ const { unit, hasFilters = true } = defineProps<{
 }>();
 
 const sheet = useSpritesheet<'', 'base' | 'destroyed'>(() => unit.spriteId);
-
 const ui = useBattleUiStore();
 const camera = useIsoCamera();
 const { state } = useGameState();

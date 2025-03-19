@@ -10,5 +10,10 @@ export abstract class ModifierMixin<T extends ModifierTarget> {
 
   abstract onApplied(target: T, modifier: Modifier<T>): void;
   abstract onRemoved(target: T, modifier: Modifier<T>): void;
-  abstract onReapplied(target: T, modifier: Modifier<T>, stacks?: number): void;
+  abstract onReapplied(
+    target: T,
+    modifier: Modifier<T>,
+    stacks?: number,
+    oldStacks?: number
+  ): void;
 }

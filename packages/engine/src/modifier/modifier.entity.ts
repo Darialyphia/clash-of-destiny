@@ -180,9 +180,9 @@ export class Modifier<
 
   removeStacks(amount: number) {
     assert(this.stackable, `Modifier ${this.id} is not stackable`);
-    this._stacks -= amount;
+    this._stacks = Math.max(0, this._stacks - amount);
     if (this._stacks === 0) {
-      this._target.removeModifier(this.id);
+      this._target.removeModifier(this);
     }
   }
 
@@ -198,12 +198,13 @@ export class Modifier<
 
   reapplyTo(target: T, newStacks?: number) {
     this.emitter.emit(MODIFIER_EVENTS.BEFORE_REAPPLIED, new ModifierLifecycleEvent({}));
+    const oldStacks = this.stackable ? this.stacks : 0;
     if (this.stackable) {
       this.addStacks(newStacks ?? 1);
     }
 
     this.mixins.forEach(mixin => {
-      mixin.onReapplied(target, this);
+      mixin.onReapplied(target, this, newStacks, oldStacks);
     });
     this.emitter.emit(MODIFIER_EVENTS.AFTER_REAPPLIED, new ModifierLifecycleEvent({}));
   }

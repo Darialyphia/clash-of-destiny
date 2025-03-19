@@ -574,6 +574,7 @@ export class Unit
   }
 
   getPossibleMoves() {
+    if (!this.canMove) return [];
     return this.movement
       .getAllPossibleMoves(this.ap.current / this.apCostPerMovement)
       .filter(move => {
