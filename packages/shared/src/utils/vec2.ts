@@ -15,7 +15,7 @@ export class Vec2 implements Serializable {
   }
 
   static mul(vec1: Point, vec2: Point) {
-    return Vec2.fromPoint(vec1).mul(vec2);
+    return Vec2.fromPoint(vec1).scale(vec2);
   }
 
   static div(vec1: Point, vec2: Point) {
@@ -40,7 +40,12 @@ export class Vec2 implements Serializable {
   }
 
   set magnitude(mag: number) {
-    this.normalize().mul({ x: mag, y: mag });
+    this.normalize().scale({ x: mag, y: mag });
+  }
+
+  setMagnitude(mag: number) {
+    this.magnitude = mag;
+    return this;
   }
 
   normalize() {
@@ -78,7 +83,7 @@ export class Vec2 implements Serializable {
     return this;
   }
 
-  mul({ x, y }: Point) {
+  scale({ x, y }: Point) {
     this.x *= x;
     this.y *= y;
 
@@ -89,6 +94,32 @@ export class Vec2 implements Serializable {
     this.x /= x;
     this.y /= y;
 
+    return this;
+  }
+
+  rotate(degrees: 90 | 180 | 270) {
+    let temp: number;
+    switch (degrees % 360) {
+      case 90:
+        temp = this.x;
+        this.x = -this.y;
+        this.y = temp;
+        break;
+      case 180:
+        this.x = -this.x;
+        this.y = -this.y;
+        break;
+      case 270:
+        temp = this.x;
+        this.x = this.y;
+        this.y = -temp;
+        break;
+      case 0:
+        // No rotation
+        break;
+      default:
+        throw new Error('Rotation must be 0, 90, 180, or 270 degrees');
+    }
     return this;
   }
 

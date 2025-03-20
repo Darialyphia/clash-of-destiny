@@ -52,10 +52,10 @@ const session = new GameSession({
           blueprintId: 'archMage',
           deck: {
             cards: [
+              ...Array.from({ length: 4 }, () => 'cone-of-flames'),
               ...Array.from({ length: 4 }, () => 'magic-missile'),
               ...Array.from({ length: 4 }, () => 'arcane-knowledge'),
               ...Array.from({ length: 4 }, () => 'mana-shield'),
-              ...Array.from({ length: 4 }, () => 'staff-of-focus'),
               ...Array.from({ length: 4 }, () => 'magic-amplification')
             ]
           }
