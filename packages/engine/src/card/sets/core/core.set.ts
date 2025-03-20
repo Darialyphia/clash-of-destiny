@@ -38,6 +38,7 @@ export const coreSet: CardSet = {
     cureWounds,
     purify,
     inspire,
+    equinox,
 
     rooted,
     silenced
