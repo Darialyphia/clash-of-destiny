@@ -55,4 +55,8 @@ export class GameSession {
   dispatch(input: SerializedInput) {
     this.game.dispatch(input);
   }
+
+  simulateDispatch(playerId: string, input: SerializedInput) {
+    return this.game.simulateDispatch(playerId, input);
+  }
 }

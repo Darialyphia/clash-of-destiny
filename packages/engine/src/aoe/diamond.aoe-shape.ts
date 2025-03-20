@@ -8,22 +8,21 @@ import {
 } from '../targeting/targeting-strategy';
 import type { AOEShape } from './aoe-shapes';
 
-export type CircleAOEShapeOptions = {
-  allow3D: boolean;
+export type DiamondAOEShapeOptions = {
   targetingType: TargetingType;
   range: number;
 };
 
-export class CircleAOEShape implements AOEShape {
+export class DiamondAOEShape implements AOEShape {
   constructor(
     private game: Game,
     private player: Player,
-    private options: CircleAOEShapeOptions
+    private options: DiamondAOEShapeOptions
   ) {}
 
   getCells(points: Point[]) {
-    return this.game.boardSystem.cells.filter(cell =>
-      cell.position.isWithinCells(points[0], this.options.range)
+    return this.game.boardSystem.cells.filter(
+      cell => cell.position.dist(points[0]) <= this.options.range
     );
   }
 

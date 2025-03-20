@@ -33,8 +33,8 @@ const session = new GameSession({
               ...Array.from({ length: 4 }, () => 'magic-missile'),
               ...Array.from({ length: 4 }, () => 'arcane-knowledge'),
               ...Array.from({ length: 4 }, () => 'mana-shield'),
-              ...Array.from({ length: 4 }, () => 'frost-nova'),
-              ...Array.from({ length: 4 }, () => 'magic-amplification')
+              ...Array.from({ length: 4 }, () => 'force-wave'),
+              ...Array.from({ length: 4 }, () => 'frost-nova')
             ]
           }
         },

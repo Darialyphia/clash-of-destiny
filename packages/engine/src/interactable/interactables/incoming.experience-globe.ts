@@ -14,7 +14,6 @@ export const incomingExperienceGlobe: InteractableBlueprint = {
   onCreated(game, interactable) {
     game.once(GAME_EVENTS.TURN_END, () => {
       if (interactable.occupant) return;
-      console.log('?');
       interactable.destroy();
 
       game.interactableSystem.add({

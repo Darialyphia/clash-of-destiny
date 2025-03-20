@@ -22,17 +22,15 @@ Ability
 
 Draw 2 cards.
 
-
 [x] Implemented
 
 #### Mana Shield
 
 Ability
 
-1 MP |  1EXP
+1 MP | 1EXP
 
 The next time this takes damage, reduce the damage by (2 + Abilit Power) and lose 1 mana.
-
 
 [x] Implemented
 
@@ -44,7 +42,6 @@ Ability
 
 Your next ability is cast with +2 Ability Power.
 
-
 [x] Implemented
 
 ### Frost Nova
@@ -54,7 +51,6 @@ Ability
 3 MP | 1 EXP
 
 Deal 1 damage and inflict Root(1 + Spell Power) to nearby enemies.
-
 
 [x] Implemented
 
@@ -66,7 +62,7 @@ Ability
 
 Knockback adjacent enemies 1 tile.
 
-[ ] Implemented
+[x] Implemented
 
 ### Cone of Flames
 
@@ -87,7 +83,7 @@ XXXXX
 
 [ ] Implemented
 
-###  Blink
+### Blink
 
 Ability
 
@@ -127,7 +123,7 @@ At the start of your turn, gain 1 mana
 
 [ ] Implemented
 
-###  Sorcerer's Hat
+### Sorcerer's Hat
 
 Artifact - Armor
 
@@ -246,5 +242,3 @@ Artifact - Relic
 2 Durability
 
 At the start of the turn, put a Cure wounds in your hand and lose 1 durability.
-
-

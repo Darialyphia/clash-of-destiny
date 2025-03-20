@@ -81,6 +81,8 @@ export class Game {
 
   private winCondition!: (game: Game, player: Player) => boolean;
 
+  private nextSimulationId = 0;
+
   constructor(readonly options: GameOptions) {
     this.id = options.id;
     this.cardPool = options.overrides.cardPool ?? CARDS_DICTIONARY;
@@ -182,5 +184,13 @@ export class Game {
     game.initialize();
 
     return game;
+  }
+
+  simulateDispatch(playerId: string, input: SerializedInput) {
+    const game = this.clone(++this.nextSimulationId);
+    game.dispatch(input);
+    game.snapshotSystem.takeSnapshot();
+
+    return game.snapshotSystem.getLatestSnapshotForPlayer(playerId);
   }
 }

@@ -2,6 +2,7 @@ import type { CardSet } from '..';
 import { CARD_SETS } from '../../card.enums';
 import { arcaneKnowledge } from './abilities/arcane-knowledge';
 import { cureWounds } from './abilities/cure-wounds';
+import { forceWave } from './abilities/force-wave';
 import { frostNova } from './abilities/frost-nova';
 import { inspire } from './abilities/inspire';
 import { magicAmplification } from './abilities/magic-amplification';
@@ -26,6 +27,7 @@ export const coreSet: CardSet = {
     arcaneKnowledge,
     magicAmplification,
     frostNova,
+    forceWave,
     staffOfFocus,
 
     acolyte,

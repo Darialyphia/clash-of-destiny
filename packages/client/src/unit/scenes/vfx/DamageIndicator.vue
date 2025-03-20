@@ -15,8 +15,10 @@ useBattleEvent(GAME_EVENTS.UNIT_BEFORE_RECEIVE_DAMAGE, async e => {
   if (!unit.equals(e.unit)) return;
   damageAmount.value = e.damage;
 
-  await waitFor(1200);
-  damageAmount.value = 0;
+  // dont wait for the time to continue playing vfx
+  setTimeout(() => {
+    damageAmount.value = 0;
+  }, 1200);
 });
 
 const offset = {
@@ -26,7 +28,7 @@ const offset = {
 const onEnter = (container: Container) => {
   const target = {
     x: 30 + randomInt(60),
-    y: -1 * (40 + randomInt(60))
+    y: -1 * (30 + randomInt(50))
   };
   gsap.to(container.position, {
     motionPath: [

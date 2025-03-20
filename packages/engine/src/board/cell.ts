@@ -75,9 +75,7 @@ export class Cell
   get isWalkable() {
     if (this.terrain !== TERRAINS.GROUND) return false;
 
-    // if (this.obstacle) {
-    //   return this.obstacle.isWalkable;
-    // }
+    if (this.interactable && this.interactable.isWalkable) return false;
 
     return true;
   }
