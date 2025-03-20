@@ -8,8 +8,14 @@ import { useIsoCamera } from '@/iso/composables/useIsoCamera';
 import { useMultiLayerTexture } from '@/shared/composables/useMultiLayerTexture';
 import { config } from '@/utils/config';
 import type { UnitViewModel } from '../unit.model';
-import { useGameState, useUserPlayer } from '@/battle/stores/battle.store';
+import {
+  useActiveUnit,
+  useGameState,
+  useUserPlayer
+} from '@/battle/stores/battle.store';
 import { GAME_PHASES } from '@game/engine/src/game/systems/game-phase.system';
+import { INTERACTION_STATES } from '@game/engine/src/game/systems/interaction.system';
+import { pointToCellId } from '@game/engine/src/board/board-utils';
 
 const { unit, hasFilters = true } = defineProps<{
   unit: UnitViewModel;
@@ -32,6 +38,25 @@ const textures = useMultiLayerTexture({
   parts: () => unit.spriteParts,
   tag: 'idle',
   dimensions: config.UNIT_SPRITE_SIZE
+});
+
+const activeUnit = useActiveUnit();
+const isInAoe = computed(() => {
+  if (
+    state.value.interactionState.state !== INTERACTION_STATES.SELECTING_TARGETS
+  ) {
+    return false;
+  }
+
+  const card = activeUnit.value.getCurrentlyPlayedCard();
+  if (!card) return false;
+  if (!ui.hoveredCell) return false;
+  const canPlay = state.value.interactionState.ctx.elligibleTargets.some(
+    cell => pointToCellId(cell.cell) === ui.hoveredCell!.id
+  );
+  if (!canPlay) return false;
+  const aoe = card.getAoe();
+  return aoe.units.some(u => u.equals(unit));
 });
 </script>
 
@@ -56,13 +81,7 @@ const textures = useMultiLayerTexture({
         :color="ui.selectedUnit?.playerId === player.id ? 0x00aaff : 0xff0000"
       />
 
-      <!-- <adjustment-filter
-        v-if="
-          ui.selectedUnit?.id === unit.id && state.phase === GAME_PHASES.DEPLOY
-        "
-        :brightness="1.2"
-        :blue="1.25"
-      /> -->
+      <adjustment-filter v-if="isInAoe" :red="3" :brightness="0.8" />
     </template>
   </animated-sprite>
 </template>

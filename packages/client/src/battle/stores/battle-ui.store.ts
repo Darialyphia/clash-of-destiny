@@ -207,7 +207,7 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
           targets: '.play-intent .card',
           duration: 0.4,
           absolute: false,
-          ease: Back.easeIn
+          ease: Power1.easeOut
         });
       });
     }

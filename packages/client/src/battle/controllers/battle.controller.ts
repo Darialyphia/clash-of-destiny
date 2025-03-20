@@ -79,7 +79,8 @@ export class BattleController implements UiController {
 
   private handleIdleState(cell: CellViewModel) {
     if (this.selectedCard) {
-      return this.handleQuickCast(cell);
+      return;
+      // return this.handleQuickCast(cell);
     }
 
     const isMoveIntent =
@@ -177,12 +178,12 @@ export class BattleController implements UiController {
     isHovered: boolean,
     isPlayingFx: boolean
   ): HighlightTag | null {
-    if (isPlayingFx) {
-      return null;
-    }
-
     return match(this.options.state.value.interactionState)
       .with({ state: INTERACTION_STATES.IDLE }, () => {
+        if (isPlayingFx) {
+          return null;
+        }
+
         if (this.selectedCard) {
           // if (this.selectedCard?.canPlayAt(cell)) {
           //   return isHovered ? 'targeting-range' : 'targeting-valid';

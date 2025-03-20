@@ -20,7 +20,6 @@ const uiRoot = document.getElementById('#app');
       <div id="card-portal" />
     </External>
   </PixiApp>
-  <
 </template>
 
 <style>

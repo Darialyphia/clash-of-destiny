@@ -16,15 +16,15 @@ const isClicking = ref(false);
 const clickedPosition = ref({ x: 0, y: 0 });
 
 const isSelected = computed(() => ui.selectedCard?.equals(card));
-const SELECTION_THRESHOLD = 15;
+const SELECTION_THRESHOLD = 10;
 
 const startDragging = () => {
   const stopDragging = () => {
-    ui.unselectCard();
-
     document.body.removeEventListener('mouseup', onMouseup);
   };
   const onMouseup = () => {
+    ui.cardPlayIntent = ui.selectedCard;
+    ui.selectedCard?.play();
     stopDragging();
   };
 
@@ -54,9 +54,10 @@ const onMouseDown = (e: MouseEvent) => {
       ui.selectCard(cardElement, card);
       document.body.removeEventListener('mousemove', onMousemove);
     }
-    startDragging();
   };
+  startDragging();
   document.body.addEventListener('mousemove', onMousemove);
+
   const onMouseup = () => {
     isClicking.value = false;
     document.body.removeEventListener('mousemove', onMousemove);
