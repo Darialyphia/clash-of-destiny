@@ -246,6 +246,7 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
           new BattleController({
             cardPlayIntent,
             firstTargetIntent,
+            hoveredCell: computed(() => internals.hoveredCell),
             selectedUnit: computed({
               get() {
                 return selectedUnit.value;

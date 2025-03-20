@@ -74,6 +74,7 @@ export type SerializedUnit = {
   description: string;
   hand: string[];
   handSize: number;
+  currentlyPlayedCard: string | null;
   remainingCardsInDeck: number;
   discardPile: string[];
   canReplace: boolean;
@@ -216,6 +217,7 @@ export class Unit
       description: this.blueprint.getDescription(this.game, this),
       hand: this.cards.hand.map(card => card.id),
       handSize: this.cards.hand.length,
+      currentlyPlayedCard: this.currentlyPlayedCard?.id ?? null,
       remainingCardsInDeck: this.cards.deck.cards.length,
       discardPile: Array.from(this.cards.discardPile).map(card => card.id),
       canReplace: this.canReplace(),

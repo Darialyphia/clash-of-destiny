@@ -5,7 +5,11 @@ import AnimatedIsoPoint from '@/iso/components/AnimatedIsoPoint.vue';
 import BoardCellHighlights from './BoardCellHighlights.vue';
 import { PTransition, type ContainerInst } from 'vue3-pixi';
 import type { CellViewModel } from '../cell.model';
-import { useActiveUnit, useUserPlayer } from '@/battle/stores/battle.store';
+import {
+  useActiveUnit,
+  useDispatcher,
+  useUserPlayer
+} from '@/battle/stores/battle.store';
 import HoveredCellIndicator from './HoveredCellIndicator.vue';
 import { pointToCellId } from '@game/engine/src/board/board-utils';
 import { config } from '@/utils/config';
@@ -50,12 +54,31 @@ const isActiveUnitMoveIntent = computed(() => {
 });
 
 const camera = useIsoCamera();
+
+const dispatch = useDispatcher();
+const player = useUserPlayer();
 </script>
 
 <template>
   <AnimatedIsoPoint
     :position="cell.position"
-    @pointerenter="ui.hoverAt(cell.position)"
+    @pointerenter="
+      () => {
+        ui.hoverAt(cell.position);
+        if (!ui.cardPlayIntent) return;
+
+        const isTargetable = ui.cardPlayIntent.canPlayAt(cell);
+        if (!isTargetable) return;
+
+        dispatch({
+          type: 'addNextTargetIntent',
+          payload: {
+            ...cell.position,
+            playerId: player.id
+          }
+        });
+      }
+    "
     @pointerleave="ui.unHover()"
     @pointerup="
       () => {

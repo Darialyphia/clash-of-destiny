@@ -73,6 +73,12 @@ const onMouseDown = (e: MouseEvent) => {
       hoverable: !ui.selectedCard
     }"
     @mousedown="onMouseDown"
+    @dblclick="
+      () => {
+        ui.cardPlayIntent = card;
+        card.play();
+      }
+    "
   >
     <component :is="isSelected ? Teleport : 'div'" to="#dragged-card">
       <InspectableCard

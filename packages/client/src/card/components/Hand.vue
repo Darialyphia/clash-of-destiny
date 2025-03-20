@@ -53,12 +53,6 @@ useResizeObserver(
         :key="card.id"
         :style="{ '--i': index }"
         :data-flip-id="card.id"
-        @dblclick="
-          () => {
-            ui.cardPlayIntent = card;
-            unit.playCard(index);
-          }
-        "
       >
         <div>
           <HandCard :card="card" />

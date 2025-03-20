@@ -2,7 +2,7 @@ import type { CellViewModel } from '@/board/cell.model';
 import type { HighlightTag, UiController } from './ui-controller';
 import type { UnitViewModel } from '@/unit/unit.model';
 import type { Nullable } from '@game/shared';
-import type { Ref } from 'vue';
+import type { Ref, ComputedRef } from 'vue';
 import { pointToCellId } from '@game/engine/src/board/board-utils';
 import type { GameState } from '../stores/battle.store';
 import { match } from 'ts-pattern';
@@ -16,6 +16,7 @@ import type { CardViewModel } from '@/card/card.model';
 
 export type BattleControllerOptions = {
   cardPlayIntent: Ref<Nullable<CardViewModel>>;
+  hoveredCell: ComputedRef<Nullable<CellViewModel>>;
   selectedUnit: Ref<Nullable<UnitViewModel>>;
   selectedCard: Ref<Nullable<CardViewModel>>;
   firstTargetIntent: Ref<Nullable<CellViewModel>>;
@@ -39,6 +40,18 @@ export class BattleController implements UiController {
     return this.options.selectedCard.value;
   }
 
+  get cardPlayIntent() {
+    return this.options.cardPlayIntent.value;
+  }
+
+  get hoveredCell() {
+    return this.options.hoveredCell.value;
+  }
+
+  get gameState() {
+    return this.options.state.value;
+  }
+
   private selectUnit(unit: UnitViewModel) {
     this.options.selectedUnit.value = unit;
   }
@@ -49,15 +62,16 @@ export class BattleController implements UiController {
 
   private handleQuickCast(cell: CellViewModel) {
     if (!this.selectedCard) return;
+    this.options.cardPlayIntent.value = this.selectedCard;
+    this.selectedCard.play();
     if (this.selectedCard.canPlayAt(cell)) {
-      const hand = this.selectedCard.getUnit().getHand();
-      const index = hand.findIndex(c => c.id === this.selectedCard!.id);
-      if (this.selectedCard.needsTargets) {
-        this.options.firstTargetIntent.value = cell;
-      }
-
-      this.options.cardPlayIntent.value = this.selectedCard;
-      this.selectedCard.getUnit().playCard(index);
+      // const hand = this.selectedCard.getUnit().getHand();
+      // const index = hand.findIndex(c => c.id === this.selectedCard!.id);
+      // if (this.selectedCard.needsTargets) {
+      //   this.options.firstTargetIntent.value = cell;
+      // }
+      // this.options.cardPlayIntent.value = this.selectedCard;
+      // this.selectedCard.getUnit().playCard(index);
     } else {
       this.options.selectedCard.value = null;
     }
@@ -170,9 +184,9 @@ export class BattleController implements UiController {
     return match(this.options.state.value.interactionState)
       .with({ state: INTERACTION_STATES.IDLE }, () => {
         if (this.selectedCard) {
-          if (this.selectedCard?.canPlayAt(cell)) {
-            return isHovered ? 'targeting-range' : 'targeting-valid';
-          }
+          // if (this.selectedCard?.canPlayAt(cell)) {
+          //   return isHovered ? 'targeting-range' : 'targeting-valid';
+          // }
           return null;
         }
 
@@ -198,6 +212,22 @@ export class BattleController implements UiController {
       .with(
         { state: INTERACTION_STATES.SELECTING_TARGETS },
         interactionState => {
+          const card = this.activeUnit.getCurrentlyPlayedCard();
+          const aoe = card?.getAoe();
+          if (aoe) {
+            const isInAOE = aoe.cells.some(c => c.equals(cell));
+            const canPlayAt =
+              this.gameState.interactionState.state ===
+                INTERACTION_STATES.SELECTING_TARGETS &&
+              this.gameState.interactionState.ctx.elligibleTargets.some(
+                c => pointToCellId(c.cell) === this.hoveredCell?.id
+              );
+
+            if (canPlayAt && isInAOE) {
+              return 'danger';
+            }
+          }
+
           const isElligible = interactionState.ctx.elligibleTargets.some(
             c => pointToCellId(c.cell) === cell.id
           );

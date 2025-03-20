@@ -137,4 +137,39 @@ export class CardViewModel {
       })
       .exhaustive();
   }
+
+  getAoe() {
+    const data = this.data as
+      | SerializedAbilityCard
+      | SerializedArtifactCard
+      | SerializedQuestCard;
+    return match(data)
+      .with({ kind: CARD_KINDS.ABILITY }, data => {
+        return {
+          cells:
+            data.aoe?.cells.map(
+              id => this.entityDictionary[id] as CellViewModel
+            ) ?? [],
+          units:
+            data.aoe?.units.map(
+              id => this.entityDictionary[id] as UnitViewModel
+            ) ?? []
+        };
+      })
+      .with({ kind: CARD_KINDS.ARTIFACT }, () => {
+        return { cells: [], units: [] };
+      })
+      .with({ kind: CARD_KINDS.QUEST }, () => {
+        return { cells: [], units: [] };
+      })
+      .exhaustive();
+  }
+
+  play() {
+    const unit = this.getUnit();
+    const hand = unit.getHand();
+    const index = hand.findIndex(card => card.equals(this));
+    if (index === -1) return;
+    unit.playCard(index);
+  }
 }

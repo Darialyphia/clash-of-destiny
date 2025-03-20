@@ -120,6 +120,7 @@ export class AbilityCard extends Card<
     }
     const points = targets.map(t => t.cell);
     const aoeShape = this.blueprint.getAoe(this.game, this, points);
+
     return {
       cells: aoeShape.getCells(points).map(cell => cell.id),
       units: aoeShape.getUnits(points).map(unit => unit.id)

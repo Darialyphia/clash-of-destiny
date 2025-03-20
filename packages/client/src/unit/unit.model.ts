@@ -169,6 +169,13 @@ export class UnitViewModel {
     return this.entityDictionary[id] as CellViewModel;
   }
 
+  getCurrentlyPlayedCard() {
+    if (!this.data.currentlyPlayedCard) return null;
+    return this.entityDictionary[
+      this.data.currentlyPlayedCard
+    ] as CardViewModel;
+  }
+
   deploy() {
     this.dispatcher({
       type: 'deployUnit',
