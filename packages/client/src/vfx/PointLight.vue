@@ -8,13 +8,13 @@ import { radialGradient } from '@/utils/sprite';
 import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
 import { usePointLights, type PointLightConfig } from './usePointLight';
 import { until } from '@vueuse/core';
-import { useCamera } from '@/board/composables/useCamera';
 import { BLEND_MODES } from 'pixi.js';
 import { getBlendFilter } from '@pixi/picture';
+import { useIsoCamera } from '@/iso/composables/useIsoCamera';
 
 const { light } = defineProps<{ light: PointLightConfig }>();
 
-const camera = useCamera();
+const camera = useIsoCamera();
 const ui = useBattleUiStore();
 const { registerLight } = usePointLights();
 const renderLight = (g: PixiGraphics) => {

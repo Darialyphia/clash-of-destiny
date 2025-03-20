@@ -482,6 +482,19 @@
         },
         {
           "alias": [
+            "icon-keyword-silenced"
+          ],
+          "src": [
+            "/assets/icons/keyword-silenced.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-keyword-spellcaster"
           ],
           "src": [

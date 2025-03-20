@@ -10,12 +10,13 @@ import { magicAmplification } from './abilities/magic-amplification';
 import { magicMissile } from './abilities/magic-missile';
 import { manaShield } from './abilities/mana-shield';
 import { purify } from './abilities/purify';
-import { rooted } from './abilities/rooted';
 import { staffOfFocus } from './artifacts/staff-of-focus';
 import { acolyte } from './heroes/acolyte';
 import { archMage } from './heroes/archmage';
 import { exorcist } from './heroes/exorcist';
 import { mage } from './heroes/mage';
+import { rooted } from './status-effects/rooted';
+import { silenced } from './status-effects/silenced';
 
 export const coreSet: CardSet = {
   id: CARD_SETS.CORE,
@@ -38,6 +39,7 @@ export const coreSet: CardSet = {
     purify,
     inspire,
 
-    rooted
+    rooted,
+    silenced
   ]
 };

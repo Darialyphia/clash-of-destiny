@@ -3,14 +3,14 @@ import { config } from '@/utils/config';
 import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
 import { BLEND_MODES, Graphics as PixiGraphics, Matrix } from 'pixi.js';
 import { waitFor } from '@game/shared';
-import { useCamera } from '../composables/useCamera';
-import { useVFXEvent } from '@/battle/stores/battle.store';
+import { useIsoCamera } from '@/iso/composables/useIsoCamera';
+// import { useVFXEvent } from '@/battle/stores/battle.store';
 
 const { worldSize } = defineProps<{
   worldSize: { width: number; height: number };
 }>();
 
-const camera = useCamera();
+const camera = useIsoCamera();
 const ui = useBattleUiStore();
 // const lightTintFirstPass = ref('#FFDD00');
 // const lightTintSecondPass = ref('#FFDD00');
@@ -31,23 +31,23 @@ const ui = useBattleUiStore();
 const color = ref(config.AMBIENT_LIGHT_COLOR);
 const blendMode = ref(config.AMBIENT_LIGHT_BLEND_MODE);
 
-useVFXEvent('TINT_SCREEN', async params => {
-  blendMode.value = params.blendMode;
+// useVFXEvent('TINT_SCREEN', async params => {
+//   blendMode.value = params.blendMode;
 
-  for (const step of params.steps) {
-    await gsap.to(color, {
-      value: step.color,
-      duration: step.transitionDuration / 1000
-    });
-    await waitFor(step.duration);
-  }
+//   for (const step of params.steps) {
+//     await gsap.to(color, {
+//       value: step.color,
+//       duration: step.transitionDuration / 1000
+//     });
+//     await waitFor(step.duration);
+//   }
 
-  await gsap.to(color, {
-    value: config.AMBIENT_LIGHT_COLOR,
-    duration: params.endTransitionDuration / 1000
-  });
-  blendMode.value = config.AMBIENT_LIGHT_BLEND_MODE;
-});
+//   await gsap.to(color, {
+//     value: config.AMBIENT_LIGHT_COLOR,
+//     duration: params.endTransitionDuration / 1000
+//   });
+//   blendMode.value = config.AMBIENT_LIGHT_BLEND_MODE;
+// });
 // const renderLights = (g: PixiGraphics, color: string, size: number) => {
 //   g.clear();
 //   state.value.units.forEach(unit => {

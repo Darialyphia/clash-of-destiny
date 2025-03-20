@@ -16,6 +16,7 @@ import type { Artifact } from '../unit/entities/artifact.entity';
 import type { ArtifactCard } from './entities/artifact-card.entity';
 import type { QuestCard } from './entities/quest-card.entity';
 import type { AbilityFollowup } from './followups/ability-followup';
+import type { StatusEffectCard } from './entities/status-effect-card';
 
 export type CardBlueprintBase = {
   id: string;
@@ -88,8 +89,15 @@ export type QuestBlueprint = CardBlueprintBase & {
   onCompleted(game: Game, card: QuestCard): void;
 };
 
+export type StatusEffectBlueprint = CardBlueprintBase & {
+  kind: Extract<CardKind, typeof CARD_KINDS.STATUS>;
+  getDescription(game: Game, card: StatusEffectCard): string;
+  onPlay(game: Game, card: StatusEffectCard): void;
+};
+
 export type CardBlueprint =
   | UnitBlueprint
   | AbilityBlueprint
   | ArtifactBlueprint
-  | QuestBlueprint;
+  | QuestBlueprint
+  | StatusEffectBlueprint;

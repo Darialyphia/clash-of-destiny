@@ -6,12 +6,14 @@ import type {
   ArtifactBlueprint,
   CardBlueprint,
   AbilityBlueprint,
-  QuestBlueprint
+  QuestBlueprint,
+  StatusEffectBlueprint
 } from './card-blueprint';
 import { AbilityCard } from './entities/ability-card.entity';
 import { ArtifactCard } from './entities/artifact-card.entity';
 import { QuestCard } from './entities/quest-card.entity';
 import type { Unit } from '../unit/entities/unit.entity';
+import { StatusEffectCard } from './entities/status-effect-card';
 
 export type GameFactory = <T extends CardBlueprint = CardBlueprint>(
   game: Game,
@@ -23,13 +25,16 @@ export type GameFactory = <T extends CardBlueprint = CardBlueprint>(
     ? ArtifactCard
     : T extends QuestBlueprint
       ? QuestCard
-      : AnyCard;
+      : T extends StatusEffectBlueprint
+        ? StatusEffectCard
+        : never;
 
 export const createCard: GameFactory = (game, unit, options) => {
   const card = match(options.blueprint.kind)
     .with(CARD_KINDS.ABILITY, () => new AbilityCard(game, unit, options as any))
     .with(CARD_KINDS.QUEST, () => new QuestCard(game, unit, options as any))
     .with(CARD_KINDS.ARTIFACT, () => new ArtifactCard(game, unit, options as any))
+    .with(CARD_KINDS.STATUS, () => new StatusEffectCard(game, unit, options as any))
     .otherwise(() => {
       throw new Error(`Unknown card kind: ${options.blueprint.kind}`);
     });

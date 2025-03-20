@@ -7,7 +7,6 @@ import { TARGETING_TYPE } from '../../../../targeting/targeting-strategy';
 import type { AbilityBlueprint } from '../../../card-blueprint';
 import { RARITIES, CARD_SETS, CARD_KINDS } from '../../../card.enums';
 import { MeleeFollowup } from '../../../followups/melee-followup';
-import { SelfFollowup } from '../../../followups/self-followup';
 import { mage } from '../heroes/mage';
 
 export const coneOfFlames: AbilityBlueprint = {

@@ -1,10 +1,8 @@
-import { NoAOEShape } from '../../../../aoe/no-aoe.aoe-shape';
 import { RootedModifier } from '../../../../modifier/modifiers/rooted.modifier';
-import type { AbilityBlueprint } from '../../../card-blueprint';
+import type { StatusEffectBlueprint } from '../../../card-blueprint';
 import { RARITIES, CARD_SETS, CARD_KINDS } from '../../../card.enums';
-import { SelfFollowup } from '../../../followups/self-followup';
 
-export const rooted: AbilityBlueprint = {
+export const rooted: StatusEffectBlueprint = {
   id: 'rooted',
   name: 'Rooted',
   getDescription() {
@@ -13,15 +11,7 @@ export const rooted: AbilityBlueprint = {
   cardIconId: 'placeholder',
   rarity: RARITIES.TOKEN,
   setId: CARD_SETS.CORE,
-  kind: CARD_KINDS.ABILITY,
-  manaCost: 0,
-  levelCost: 1,
-  exp: 0,
-  classIds: [],
-  followup: new SelfFollowup(),
-  getAoe() {
-    return new NoAOEShape();
-  },
+  kind: CARD_KINDS.STATUS,
   onPlay(game, card) {
     const modifier = card.unit.getModifier(RootedModifier);
     if (modifier) {

@@ -73,15 +73,7 @@ Ability
 Deal (2 + Ability Power) damage to enemies in a cone.
 Explanation of the Area of Effect:
 
-```
---O--
---X--
--XXX-
-XXXXX
-
-```
-
-[ ] Implemented
+[x] Implemented
 
 ### Blink
 
@@ -121,7 +113,7 @@ Artifact - Weapon
 
 At the start of your turn, gain 1 mana
 
-[ ] Implemented
+[x] Implemented
 
 ### Sorcerer's Hat
 
@@ -173,7 +165,7 @@ Ability
 
 Inflict Silence(2) to units in a 2x2 zone.
 
-[ ] Implemented
+[x] Implemented
 
 ### Safety Wall
 

@@ -13,7 +13,8 @@ export const CARD_KINDS = {
   UNIT: 'UNIT',
   ABILITY: 'ABILITY',
   ARTIFACT: 'ARTIFACT',
-  QUEST: 'QUEST'
+  QUEST: 'QUEST',
+  STATUS: 'STATUS'
 } as const;
 export type CardKind = Values<typeof CARD_KINDS>;
 
