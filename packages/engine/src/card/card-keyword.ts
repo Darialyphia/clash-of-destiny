@@ -19,6 +19,12 @@ export const KEYWORDS = {
     name: 'Silenced',
     description: 'Cannot use Ability cards. Lose 1 stack at the end of its turn.',
     aliases: []
+  },
+  DISARMED: {
+    id: 'disarmed',
+    name: 'Disarmed',
+    description: 'Cannot attack. Lose 1 stack at the end of its turn.',
+    aliases: []
   }
 } as const satisfies Record<string, Keyword>;
 

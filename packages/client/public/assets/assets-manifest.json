@@ -326,6 +326,19 @@
         },
         {
           "alias": [
+            "icon-keyword-disarmed"
+          ],
+          "src": [
+            "/assets/icons/keyword-disarmed.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-keyword-double-attack"
           ],
           "src": [

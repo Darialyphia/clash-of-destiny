@@ -217,7 +217,9 @@ Ability
 
 2MP | 1 Exp
 
-Inflict Disarm(1 + Ability Power) to units in a 2X2 area.
+Inflict Disarm(1 + Ability Power) to an enemy.
+
+[x] Implemented
 
 ### Blessed Rosary
 
