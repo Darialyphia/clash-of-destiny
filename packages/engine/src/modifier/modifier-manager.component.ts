@@ -58,7 +58,6 @@ export class ModifierManager<T extends ModifierTarget> {
         return mod.constructor === modifierOrType;
       }
     });
-    console.log(idx);
     if (idx < 0) return;
 
     const modifier = this._modifiers[idx];

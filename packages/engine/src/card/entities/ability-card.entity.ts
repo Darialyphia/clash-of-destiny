@@ -144,7 +144,7 @@ export class AbilityCard extends Card<
       manaCost: this.manaCost,
       levelCost: this.levelCost,
       exp: this.exp,
-      canPlay: this.canPlay(),
+      canPlay: this.unit.canPlayCard(this),
       elligibleFirstTargets: this.game.boardSystem.cells
         .filter(cell => firstTarget?.isElligible(cell.position))
         .map(cell => cell.id),

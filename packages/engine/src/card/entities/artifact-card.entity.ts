@@ -68,7 +68,7 @@ export class ArtifactCard extends Card<
       description: this.blueprint.getDescription(this.game, this),
       rarity: this.blueprint.rarity,
       unit: this.unit.id,
-      canPlay: this.canPlay(),
+      canPlay: this.unit.canPlayCard(this),
       allowedJobs: this.blueprint.classIds.map(id => ({
         id,
         name: this.game.cardPool[id].name

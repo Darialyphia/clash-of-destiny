@@ -12,9 +12,9 @@ import { Modifier } from '../modifier.entity';
 
 export class SilencedModifier extends Modifier<Unit> {
   constructor(game: Game, source: AnyCard, stacks = 1) {
-    super(KEYWORDS.ROOTED.id, game, source, {
-      name: KEYWORDS.ROOTED.name,
-      description: KEYWORDS.ROOTED.description,
+    super(KEYWORDS.SILENCED.id, game, source, {
+      name: KEYWORDS.SILENCED.name,
+      description: KEYWORDS.SILENCED.description,
       icon: 'keyword-silenced',
       stackable: true,
       initialStacks: stacks,

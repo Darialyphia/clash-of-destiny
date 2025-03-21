@@ -245,6 +245,10 @@ export class UnitViewModel {
   }
 
   playCard(index: number) {
+    const card = this.getHand()[index];
+    if (!card) return;
+    if (!card.canPlay) return;
+
     this.dispatcher({
       type: 'playCard',
       payload: {

@@ -42,9 +42,11 @@ const session = new GameSession({
           blueprintId: 'exorcist',
           deck: {
             cards: [
-              ...Array.from({ length: 6 }, () => 'inspire'),
-              ...Array.from({ length: 6 }, () => 'purify'),
-              ...Array.from({ length: 8 }, () => 'cure-wounds')
+              ...Array.from({ length: 4 }, () => 'inspire'),
+              ...Array.from({ length: 4 }, () => 'purify'),
+              ...Array.from({ length: 4 }, () => 'cure-wounds'),
+              ...Array.from({ length: 4 }, () => 'equinox'),
+              ...Array.from({ length: 4 }, () => 'pacify')
             ]
           }
         },
@@ -82,9 +84,11 @@ const session = new GameSession({
           blueprintId: 'exorcist',
           deck: {
             cards: [
-              ...Array.from({ length: 6 }, () => 'inspire'),
-              ...Array.from({ length: 6 }, () => 'purify'),
-              ...Array.from({ length: 8 }, () => 'cure-wounds')
+              ...Array.from({ length: 4 }, () => 'inspire'),
+              ...Array.from({ length: 4 }, () => 'purify'),
+              ...Array.from({ length: 4 }, () => 'cure-wounds'),
+              ...Array.from({ length: 4 }, () => 'equinox'),
+              ...Array.from({ length: 4 }, () => 'pacify')
             ]
           }
         },

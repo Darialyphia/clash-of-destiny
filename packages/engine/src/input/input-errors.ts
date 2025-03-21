@@ -107,3 +107,9 @@ export class CannotLevelUpError extends InputError {
     super('Cannot level up');
   }
 }
+
+export class IllegalCardPlayedError extends InputError {
+  constructor() {
+    super('Cannot play this card');
+  }
+}

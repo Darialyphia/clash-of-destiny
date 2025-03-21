@@ -23,6 +23,10 @@ const startDragging = () => {
     document.body.removeEventListener('mouseup', onMouseup);
   };
   const onMouseup = () => {
+    if (!ui.selectedCard?.canPlay) {
+      ui.unselectCard();
+      return;
+    }
     ui.cardPlayIntent = ui.selectedCard;
     ui.selectedCard?.play();
     stopDragging();
@@ -71,11 +75,13 @@ const onMouseDown = (e: MouseEvent) => {
   <div
     class="hand-card"
     :class="{
-      hoverable: !ui.selectedCard
+      hoverable: !ui.selectedCard,
+      disabled: !card.canPlay
     }"
     @mousedown="onMouseDown"
     @dblclick="
       () => {
+        if (!card.canPlay) return;
         ui.cardPlayIntent = card;
         card.play();
       }
@@ -104,6 +110,18 @@ const onMouseDown = (e: MouseEvent) => {
   width: calc(126px * var(--pixel-scale));
   transition: width 0.2s ease;
   cursor: url('/assets/ui/cursor-hover.png'), auto;
+
+  &.disabled::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle,
+      hsl(0 0% 0% / 0.15),
+      hsl(0 0% 0% / 0.5)
+    );
+    pointer-events: none;
+  }
 
   &:not(:has(.hand-card__card)) {
     width: 0;

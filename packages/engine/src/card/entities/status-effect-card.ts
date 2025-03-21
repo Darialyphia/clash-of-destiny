@@ -29,6 +29,10 @@ export class StatusEffectCard extends Card<
     return true;
   }
 
+  get manaCost() {
+    return 0;
+  }
+
   play() {
     this.emitter.emit(CARD_EVENTS.BEFORE_PLAY, new CardBeforePlayEvent({ targets: [] }));
 

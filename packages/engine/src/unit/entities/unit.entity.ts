@@ -370,7 +370,7 @@ export class Unit
 
   canPlayCard(card: AnyCard): boolean {
     return this.interceptors.canPlayCard.getValue(
-      card.canPlay() && this.ap.current < this.apCostPerCard,
+      card.canPlay() && this.ap.current >= this.apCostPerCard,
       { card }
     );
   }

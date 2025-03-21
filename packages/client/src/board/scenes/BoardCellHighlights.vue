@@ -21,18 +21,10 @@ const tag = computed(() => {
 </script>
 
 <template>
-  <PTransition
-    appear
-    :duration="{ enter: 200, leave: 200 }"
-    :before-enter="{ alpha: 0 }"
-    :enter="{ alpha: 1 }"
-    :leave="{ alpha: 0 }"
-  >
-    <UiAnimatedSprite
-      v-if="tag"
-      assetId="tile-highlights"
-      :tag="tag"
-      :anchor="0.5"
-    />
-  </PTransition>
+  <UiAnimatedSprite
+    v-if="tag"
+    assetId="tile-highlights"
+    :tag="tag"
+    :anchor="0.5"
+  />
 </template>
