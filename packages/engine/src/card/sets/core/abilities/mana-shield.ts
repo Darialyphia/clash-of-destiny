@@ -6,7 +6,6 @@ import { TARGETING_TYPE } from '../../../../targeting/targeting-strategy';
 import { UNIT_EVENTS } from '../../../../unit/unit-enums';
 import type { AbilityBlueprint } from '../../../card-blueprint';
 import { RARITIES, CARD_SETS, CARD_KINDS } from '../../../card.enums';
-import { NoFollowup } from '../../../followups/no-followup';
 import { SelfFollowup } from '../../../followups/self-followup';
 import { mage } from '../heroes/mage';
 
@@ -24,7 +23,9 @@ export const manaShield: AbilityBlueprint = {
   levelCost: 1,
   exp: 1,
   classIds: [mage.id],
-  followup: new SelfFollowup(),
+  getFollowup() {
+    return new SelfFollowup();
+  },
   getAoe(game, card) {
     return new PointAOEShape(game, card.player, TARGETING_TYPE.ALLY);
   },

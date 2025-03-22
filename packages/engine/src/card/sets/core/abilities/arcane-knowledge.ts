@@ -18,7 +18,9 @@ export const arcaneKnowledge: AbilityBlueprint = {
   levelCost: 1,
   exp: 1,
   classIds: [mage.id],
-  followup: new SelfFollowup(),
+  getFollowup() {
+    return new SelfFollowup();
+  },
   getAoe() {
     return new NoAOEShape();
   },

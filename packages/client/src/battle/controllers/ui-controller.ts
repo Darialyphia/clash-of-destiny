@@ -6,7 +6,8 @@ export type HighlightTag =
   | 'danger'
   | 'targeting-range'
   | 'targeting-valid'
-  | 'targeting-valid-hover';
+  | 'targeting-valid-hover'
+  | 'normal';
 
 export type UiController = {
   onCellClick: (cell: CellViewModel) => void;

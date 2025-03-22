@@ -245,6 +245,12 @@ export class BattleController implements UiController {
             return isHovered ? 'targeting-range' : 'targeting-valid';
           }
 
+          const isWithinRange = card?.getRange().some(c => c.equals(cell));
+
+          if (isWithinRange) {
+            return 'normal';
+          }
+
           return null;
         }
       )

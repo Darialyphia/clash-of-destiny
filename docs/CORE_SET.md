@@ -83,7 +83,7 @@ Ability
 
 Teleport up to 2 tiles away. Draw 1 card.
 
-[ ] Implemented
+[x] Implemented
 
 ### Polymorph
 

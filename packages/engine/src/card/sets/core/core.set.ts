@@ -1,6 +1,7 @@
 import type { CardSet } from '..';
 import { CARD_SETS } from '../../card.enums';
 import { arcaneKnowledge } from './abilities/arcane-knowledge';
+import { blink } from './abilities/blink';
 import { coneOfFlames } from './abilities/cone-of-flames';
 import { cureWounds } from './abilities/cure-wounds';
 import { equinox } from './abilities/equinox';
@@ -33,6 +34,7 @@ export const coreSet: CardSet = {
     frostNova,
     forceWave,
     coneOfFlames,
+    blink,
     staffOfFocus,
 
     acolyte,

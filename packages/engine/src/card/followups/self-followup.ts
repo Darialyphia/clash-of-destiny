@@ -3,6 +3,7 @@ import type { Game } from '../../game/game';
 import type { AbilityCard } from '../entities/ability-card.entity';
 import type { AbilityFollowup } from './ability-followup';
 import type { SelectedTarget } from '../../game/systems/interaction.system';
+import type { Cell } from '../../board/cell';
 
 export class SelfFollowup implements AbilityFollowup {
   getTargets(game: Game, card: AbilityCard) {
@@ -14,6 +15,10 @@ export class SelfFollowup implements AbilityFollowup {
         }
       }
     ];
+  }
+
+  getRange(game: Game, card: AbilityCard): Cell[] {
+    return [game.boardSystem.getCellAt(card.unit.position)!];
   }
 
   canCommit(targets: SelectedTarget[]) {

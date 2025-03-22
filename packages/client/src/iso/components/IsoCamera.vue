@@ -14,18 +14,18 @@ const app = useApplication();
 
 const camera = useIsoCamera();
 const WORLD_PADDING = {
-  x: window.innerWidth / 4,
-  y: 0
+  x: 0,
+  y: 150
 };
 
 const boardSize = computed(() => ({
-  columns: ((columns + rows) / 2) * config.TILE_SIZE.x,
-  rows: ((columns + rows) / 2) * (config.TILE_SIZE.y + config.TILE_SIZE.z)
+  width: ((columns + rows) / 2) * config.TILE_SIZE.x,
+  height: config.TILE_SIZE.z + ((columns + rows) / 2) * config.TILE_SIZE.y
 }));
 
 const worldSize = computed(() => ({
-  width: boardSize.value.columns + WORLD_PADDING.x,
-  height: boardSize.value.rows + WORLD_PADDING.y
+  width: boardSize.value.width + WORLD_PADDING.x,
+  height: boardSize.value.height + WORLD_PADDING.y
 }));
 
 until(camera.viewport)
@@ -61,8 +61,9 @@ useEventListener('resize', () => {
 watchEffect(() => {
   camera.offset.value = {
     x: (rows / 2) * config.TILE_SIZE.x + WORLD_PADDING.x / 2,
-    y: boardSize.value.rows / 4 + WORLD_PADDING.y / 2
+    y: boardSize.value.height / 6 + WORLD_PADDING.y / 2
   };
+  console.log(camera.offset.value);
 });
 </script>
 

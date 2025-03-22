@@ -165,6 +165,27 @@ export class CardViewModel {
       .exhaustive();
   }
 
+  getRange() {
+    const data = this.data as
+      | SerializedAbilityCard
+      | SerializedArtifactCard
+      | SerializedQuestCard;
+    return match(data)
+      .with({ kind: CARD_KINDS.ABILITY }, data => {
+        return (
+          data.range?.map(id => this.entityDictionary[id] as CellViewModel) ??
+          []
+        );
+      })
+      .with({ kind: CARD_KINDS.ARTIFACT }, () => {
+        return [];
+      })
+      .with({ kind: CARD_KINDS.QUEST }, () => {
+        return [];
+      })
+      .exhaustive();
+  }
+
   play() {
     const unit = this.getUnit();
     const hand = unit.getHand();

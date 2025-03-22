@@ -25,6 +25,7 @@ export type SerializedAbilityCard = SerializedCard & {
     cells: string[];
     units: string[];
   } | null;
+  range: string[] | null;
 };
 export type AbilityCardEventMap = CardEventMap;
 export type AbilityCardInterceptors = Record<string, never>;
@@ -56,7 +57,7 @@ export class AbilityCard extends Card<
   }
 
   get followupTargets() {
-    return this.blueprint.followup.getTargets(this.game, this);
+    return this.blueprint.getFollowup(this.game, this).getTargets(this.game, this);
   }
 
   selectTargets(onComplete: (targets: SelectedTarget[]) => void) {
@@ -64,10 +65,12 @@ export class AbilityCard extends Card<
       player: this.unit.player,
       getNextTarget: targets => {
         return (
-          this.blueprint.followup.getTargets(this.game, this)[targets.length] ?? null
+          this.blueprint.getFollowup(this.game, this).getTargets(this.game, this)[
+            targets.length
+          ] ?? null
         );
       },
-      canCommit: this.blueprint.followup.canCommit,
+      canCommit: this.blueprint.getFollowup(this.game, this).canCommit,
       onComplete
     });
   }
@@ -128,7 +131,9 @@ export class AbilityCard extends Card<
   }
 
   serialize(): SerializedAbilityCard {
-    const followup = this.blueprint.followup.getTargets(this.game, this);
+    const followup = this.blueprint
+      .getFollowup(this.game, this)
+      .getTargets(this.game, this);
     const firstTarget = followup[0];
     return {
       id: this.id,
@@ -153,7 +158,13 @@ export class AbilityCard extends Card<
         id,
         name: this.game.cardPool[id].name
       })),
-      aoe: this.getSerializedAoe()
+      aoe: this.getSerializedAoe(),
+      range: this.unit.currentlyPlayedCard?.equals(this)
+        ? this.blueprint
+            .getFollowup(this.game, this)
+            .getRange(this.game, this)
+            .map(cell => cell.id)
+        : null
     };
   }
 }

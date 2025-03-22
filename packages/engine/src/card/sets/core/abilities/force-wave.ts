@@ -20,7 +20,9 @@ export const forceWave: AbilityBlueprint = {
   levelCost: 1,
   exp: 1,
   classIds: [mage.id],
-  followup: new SelfFollowup(),
+  getFollowup() {
+    return new SelfFollowup();
+  },
   getAoe(game, card) {
     return new CrossAOEShape(game, card.unit.player, {
       range: 1,

@@ -60,7 +60,7 @@ export type AbilityBlueprint = CardBlueprintBase & {
   levelCost: 1 | 2 | 3;
   exp: number;
   classIds: string[];
-  followup: AbilityFollowup;
+  getFollowup(game: Game, card: AbilityCard): AbilityFollowup;
   getAoe(game: Game, card: AbilityCard, points: Point[]): AOEShape;
   onPlay(
     game: Game,

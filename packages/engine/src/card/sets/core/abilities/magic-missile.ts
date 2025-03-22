@@ -20,7 +20,9 @@ export const magicMissile: AbilityBlueprint = {
   levelCost: 1,
   exp: 1,
   classIds: [mage.id],
-  followup: new ProjectileFollowup(),
+  getFollowup() {
+    return new ProjectileFollowup(TARGETING_TYPE.ANYWHERE);
+  },
   getAoe(game, card) {
     return new ProjectileAOEShape(
       game,

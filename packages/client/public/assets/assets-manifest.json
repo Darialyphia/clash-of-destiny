@@ -157,6 +157,19 @@
         },
         {
           "alias": [
+            "icon-card-cone-of-flames"
+          ],
+          "src": [
+            "/assets/icons/card-cone-of-flames.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-card-cure-wounds"
           ],
           "src": [
@@ -174,6 +187,32 @@
           ],
           "src": [
             "/assets/icons/card-experience-globe.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-card-frost-nova"
+          ],
+          "src": [
+            "/assets/icons/card-frost-nova.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-card-magic-amplification"
+          ],
+          "src": [
+            "/assets/icons/card-magic-amplification.png"
           ],
           "data": {
             "tags": {

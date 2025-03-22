@@ -1,4 +1,3 @@
-import { ProjectileAOEShape } from '../../../../aoe/projectile.aoe-shape';
 import { RingAOEShape } from '../../../../aoe/ring.aoe-shape';
 import { AbilityDamage } from '../../../../combat/damage';
 import { RootedModifier } from '../../../../modifier/modifiers/rooted.modifier';
@@ -14,7 +13,7 @@ export const frostNova: AbilityBlueprint = {
   getDescription(game, card) {
     return `Deal 1 damage and inflict Rooted(${2 + card.unit.abilityPower}) to nearby enemies.`;
   },
-  cardIconId: 'placeholder',
+  cardIconId: 'card-frost-nova',
   rarity: RARITIES.RARE,
   setId: CARD_SETS.CORE,
   kind: CARD_KINDS.ABILITY,
@@ -22,7 +21,9 @@ export const frostNova: AbilityBlueprint = {
   levelCost: 1,
   exp: 1,
   classIds: [mage.id],
-  followup: new SelfFollowup(),
+  getFollowup() {
+    return new SelfFollowup();
+  },
   getAoe(game, card) {
     return new RingAOEShape(game, card.unit.player, {
       targetingType: TARGETING_TYPE.ENEMY

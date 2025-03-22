@@ -13,7 +13,7 @@ export const magicAmplification: AbilityBlueprint = {
   getDescription() {
     return `Your next ability is cast with +2 Ability Power.`;
   },
-  cardIconId: 'placeholder',
+  cardIconId: 'card-magic-amplification',
   rarity: RARITIES.COMMON,
   setId: CARD_SETS.CORE,
   kind: CARD_KINDS.ABILITY,
@@ -21,7 +21,9 @@ export const magicAmplification: AbilityBlueprint = {
   levelCost: 1,
   exp: 1,
   classIds: [mage.id],
-  followup: new SelfFollowup(),
+  getFollowup() {
+    return new SelfFollowup();
+  },
   getAoe() {
     return new NoAOEShape();
   },

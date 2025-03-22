@@ -20,7 +20,14 @@ export const equinox: AbilityBlueprint = {
   levelCost: 1,
   exp: 1,
   classIds: [acolyte.id],
-  followup: new RangedFollowup({ minRange: 0, maxRange: 3, targetsCount: 1 }),
+  getFollowup() {
+    return new RangedFollowup({
+      minRange: 0,
+      maxRange: 3,
+      targetsCount: 1,
+      targetingType: TARGETING_TYPE.ANYWHERE
+    });
+  },
   getAoe(game, card) {
     return new BoxAOEShape(game, card.unit.player, {
       targetingType: TARGETING_TYPE.ENEMY,
