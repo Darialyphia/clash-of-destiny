@@ -1,22 +1,22 @@
-import { BoxAOEShape } from '../../../../aoe/box.aoe-shape';
-import { SilencedModifier } from '../../../../modifier/modifiers/silenced.modifier';
+import { PointAOEShape } from '../../../../aoe/point.aoe-shape';
+import { AbilityDamage } from '../../../../combat/damage';
 import { TARGETING_TYPE } from '../../../../targeting/targeting-strategy';
 import type { AbilityBlueprint } from '../../../card-blueprint';
 import { RARITIES, CARD_SETS, CARD_KINDS } from '../../../card.enums';
 import { RangedFollowup } from '../../../followups/ranged-followup';
 import { acolyte } from '../heroes/acolyte';
 
-export const equinox: AbilityBlueprint = {
-  id: 'equinox',
-  name: 'Equinox',
-  getDescription() {
-    return `Inflict Silenced(2) to units in a 2x2 area.`;
+export const wordOfLight: AbilityBlueprint = {
+  id: 'word-of-light',
+  name: 'Word of Light',
+  getDescription(game, card) {
+    return `Deal ${2 + card.unit.abilityPower} damage to an enemy.`;
   },
   cardIconId: 'placeholder',
-  rarity: RARITIES.RARE,
+  rarity: RARITIES.COMMON,
   setId: CARD_SETS.CORE,
   kind: CARD_KINDS.ABILITY,
-  manaCost: 3,
+  manaCost: 2,
   levelCost: 1,
   exp: 1,
   classIds: [acolyte.id],
@@ -25,20 +25,16 @@ export const equinox: AbilityBlueprint = {
       minRange: 0,
       maxRange: 3,
       targetsCount: 1,
-      targetingType: TARGETING_TYPE.ANYWHERE
+      targetingType: TARGETING_TYPE.ENEMY
     });
   },
   getAoe(game, card) {
-    return new BoxAOEShape(game, card.unit.player, {
-      targetingType: TARGETING_TYPE.ENEMY,
-      width: 2,
-      height: 2,
-      origin: 'topLeft'
-    });
+    return new PointAOEShape(game, card.unit.player, TARGETING_TYPE.ENEMY);
   },
   onPlay(game, card, cells, targets) {
-    targets.forEach(target => {
-      target.addModifier(new SilencedModifier(game, card, 2));
-    });
+    const [target] = targets;
+    if (target) {
+      target.takeDamage(card.unit, new AbilityDamage({ baseAmount: 2, source: card }));
+    }
   }
 };

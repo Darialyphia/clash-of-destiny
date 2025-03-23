@@ -103,7 +103,7 @@ Ability
 
 Deal 2 damage to an enemy and 1 damage to enemies around it. (max range: 3)
 
-[ ] Implemented
+[x] Implemented
 
 ### Staff of Focus
 
@@ -185,7 +185,7 @@ Ability
 
 Deal (2 + Ability Power) damage to an enemy.
 
-[ ] Implemented
+[x] Implemented
 
 ### Penance
 
@@ -195,6 +195,8 @@ Ability
 
 Give an enemy "When this attacks, take 1 damage" until the end of its next turn.
 
+[x] Implemented
+
 ### Prayer
 
 Ability
@@ -202,6 +204,8 @@ Ability
 0 MP | 1 EXP
 
 Inflict Root(2) to yourself. Gain 2 mana.
+
+[ ] Implemented
 
 ### Sky Teachings
 

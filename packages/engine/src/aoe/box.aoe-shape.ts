@@ -12,6 +12,7 @@ export type BoxAOEShapeOptions = {
   targetingType: TargetingType;
   width: number;
   height: number;
+  origin: 'center' | 'topLeft';
 };
 
 export class BoxAOEShape implements AOEShape {
@@ -21,8 +22,7 @@ export class BoxAOEShape implements AOEShape {
     private options: BoxAOEShapeOptions
   ) {}
 
-  getCells(points: Point[]) {
-    const topLeft = points[0];
+  private getCellsFromTopLeft(topLeft: Point) {
     return this.game.boardSystem.cells.filter(
       cell =>
         cell.position.x >= topLeft.x &&
@@ -30,6 +30,19 @@ export class BoxAOEShape implements AOEShape {
         cell.position.y >= topLeft.y &&
         cell.position.y < topLeft.y + this.options.height
     );
+  }
+
+  getCells(points: Point[]) {
+    const origin = points[0];
+    if (this.options.origin === 'center') {
+      const topLeft = {
+        x: origin.x - Math.floor(this.options.width / 2),
+        y: origin.y - Math.floor(this.options.height / 2)
+      };
+      return this.getCellsFromTopLeft(topLeft);
+    } else {
+      return this.getCellsFromTopLeft(origin);
+    }
   }
 
   getUnits(points: Point[]) {
