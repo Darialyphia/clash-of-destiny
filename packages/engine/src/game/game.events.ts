@@ -16,11 +16,7 @@ import { UNIT_EVENTS } from '../unit/unit-enums';
 
 import { TURN_EVENTS } from './game.enums';
 import { type Modifier, type SerializedModifier } from '../modifier/modifier.entity';
-import type {
-  AbilityCard,
-  SerializedAbilityCard
-} from '../card/entities/ability-card.entity';
-import type { QuestCard, SerializedQuestCard } from '../card/entities/quest-card.entity';
+import type { SpellCard, SerializedSpellCard } from '../card/entities/spell-card.entity';
 import type {
   ArtifactCard,
   SerializedArtifactCard
@@ -30,6 +26,16 @@ import {
   type Artifact,
   type ArtifactEventMap
 } from '../unit/entities/artifact.entity';
+import type { HeroCard, SerializedHeroCard } from '../card/entities/hero-card.entity';
+import type {
+  MinionCard,
+  SerializedMinionCard
+} from '../card/entities/minion-card.entity';
+import type {
+  ShrineCard,
+  SerializedShrineCard
+} from '../card/entities/shrine-card.entity';
+import type { SecretCard } from '../card/entities/secret-card.entity';
 
 export class GameInputEvent extends TypedSerializableEvent<
   { input: Input<any> },
@@ -109,13 +115,19 @@ export class GameStarEvent<
   }
 }
 
-type GameCardEventSerialized<TCard extends AnyCard> = TCard extends AbilityCard
-  ? SerializedAbilityCard
-  : TCard extends QuestCard
-    ? SerializedQuestCard
-    : TCard extends ArtifactCard
-      ? SerializedArtifactCard
-      : `TCard needs to be an instance of UnitCard, SpellCard or ArtiactCard`;
+type GameCardEventSerialized<TCard extends AnyCard> = TCard extends SpellCard
+  ? SerializedSpellCard
+  : TCard extends HeroCard
+    ? SerializedHeroCard
+    : TCard extends MinionCard
+      ? SerializedMinionCard
+      : TCard extends ShrineCard
+        ? SerializedShrineCard
+        : TCard extends ArtifactCard
+          ? SerializedArtifactCard
+          : TCard extends SecretCard
+            ? SerializedSpellCard
+            : never;
 
 type GameCardSerializedResult<
   TCard extends AnyCard,
@@ -149,7 +161,7 @@ export class GameCardEvent<
 
 type GameCardEventMap = {
   [Event in keyof CardEventMap as `card.${Event}`]: GameCardEvent<
-    AbilityCard | QuestCard | ArtifactCard,
+    HeroCard | ShrineCard | MinionCard | SpellCard | ArtifactCard | SecretCard,
     CardEventMap,
     CardEventMap[Event]
   >;

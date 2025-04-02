@@ -9,17 +9,33 @@ export const CARD_EVENTS = {
 } as const;
 export type CardEvent = Values<typeof CARD_EVENTS>;
 
+export const CARD_DECK_SOURCES = {
+  MAIN_DECK: 'MAIN_DECK',
+  DESTINY_DECK: 'DESTINY_DECK'
+} as const;
+export type CardDeckSource = Values<typeof CARD_DECK_SOURCES>;
+
 export const CARD_KINDS = {
   UNIT: 'UNIT',
-  ABILITY: 'ABILITY',
-  ARTIFACT: 'ARTIFACT',
-  QUEST: 'QUEST',
-  STATUS: 'STATUS'
+  SPELL: 'SPELL',
+  SECRET: 'SECRET',
+  ARTIFACT: 'ARTIFACT'
 } as const;
 export type CardKind = Values<typeof CARD_KINDS>;
 
+export const CARD_JOBS = {
+  BRAWLER: 'BRAWLER',
+  AVENGER: 'AVENGER',
+  GUARDIAN: 'GUARDIAN',
+  SPELLCASTER: 'SPELLCASTER',
+  WANDERER: 'WANDERER',
+  SUMMONER: 'SUMMONER'
+};
+export type CardJob = Values<typeof CARD_JOBS>;
+
 export const UNIT_KINDS = {
   MINION: 'MINION',
+  SHRINE: 'SHRINE',
   HERO: 'HERO'
 } as const;
 export type UnitKind = Values<typeof UNIT_KINDS>;

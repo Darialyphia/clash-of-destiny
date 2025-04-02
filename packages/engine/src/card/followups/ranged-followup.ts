@@ -1,15 +1,18 @@
 import type { Point } from '@game/shared';
 import type { Game } from '../../game/game';
-import type { AbilityCard } from '../entities/ability-card.entity';
-import type { AbilityFollowup } from './ability-followup';
+import type { SpellCard } from '../entities/spell-card.entity';
+import type { Followup } from './ability-followup';
 import type { SelectedTarget } from '../../game/systems/interaction.system';
 import {
   isValidTargetingType,
   type TargetingType
 } from '../../targeting/targeting-strategy';
 import type { Cell } from '../../board/cell';
+import { Position } from '../../utils/position.component';
+import type { AnyCard } from '../entities/card.entity';
 
-export class RangedFollowup implements AbilityFollowup {
+export class RangedFollowup implements Followup<AnyCard> {
+  private position: Position;
   constructor(
     private options: {
       minRange: number;
@@ -17,31 +20,28 @@ export class RangedFollowup implements AbilityFollowup {
       targetsCount?: number;
       allowSelf?: boolean;
       targetingType: TargetingType;
+      position: Point;
     }
   ) {
+    this.position = Position.fromPoint(this.options.position);
     this.canCommit = this.canCommit.bind(this);
   }
 
-  getTargets(game: Game, card: AbilityCard) {
+  getTargets(game: Game, card: AnyCard) {
     return [
       {
         type: 'cell' as const,
         isElligible: (point: Point) => {
           if (
-            !isValidTargetingType(
-              game,
-              point,
-              card.unit.player,
-              this.options.targetingType
-            )
+            !isValidTargetingType(game, point, card.player, this.options.targetingType)
           ) {
             return false;
           }
 
-          if (!this.options.allowSelf && card.unit.position.equals(point)) {
+          if (!this.options.allowSelf && this.position.equals(point)) {
             return false;
           }
-          const distance = card.unit.position.dist(point);
+          const distance = this.position.dist(point);
 
           return distance >= this.options.minRange && distance <= this.options.maxRange;
         }
@@ -49,13 +49,13 @@ export class RangedFollowup implements AbilityFollowup {
     ];
   }
 
-  getRange(game: Game, card: AbilityCard): Cell[] {
+  getRange(game: Game): Cell[] {
     return game.boardSystem.cells.filter(cell => {
-      if (!this.options.allowSelf && card.unit.position.equals(cell.position)) {
+      if (!this.options.allowSelf && this.position.equals(cell.position)) {
         return false;
       }
 
-      const distance = card.unit.position.dist(cell);
+      const distance = this.position.dist(cell);
 
       return distance >= this.options.minRange && distance <= this.options.maxRange;
     });

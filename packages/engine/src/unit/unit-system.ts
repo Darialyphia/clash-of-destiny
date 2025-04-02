@@ -4,6 +4,9 @@ import { System } from '../system';
 import { GAME_PHASES } from '../game/systems/game-phase.system';
 import type { UnitBlueprint } from '../card/card-blueprint';
 import type { Player } from '../player/player.entity';
+import type { MinionCard } from '../card/entities/minion-card.entity';
+import type { HeroCard } from '../card/entities/hero-card.entity';
+import type { ShrineCard } from '../card/entities/shrine-card.entity';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type UnitSystemOptions = {};
@@ -50,18 +53,12 @@ export class UnitSystem extends System<UnitSystemOptions> {
     ].filter
   }
 
-  addUnit(
-    player: Player,
-    blueprintChain: UnitBlueprint[],
-    deck: UnitOptions['deck'],
-    position: Point
-  ) {
+  addUnit(player: Player, card: MinionCard | HeroCard | ShrineCard, position: Point) {
     const id = `unit_${++this.nextUnitId}`;
-    const unit = new Unit(this.game, blueprintChain, {
+    const unit = new Unit(this.game, card, {
       id,
       player,
-      position,
-      deck
+      position
     });
     this.unitMap.set(unit.id, unit);
 

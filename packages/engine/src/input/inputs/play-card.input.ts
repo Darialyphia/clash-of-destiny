@@ -17,15 +17,13 @@ export class PlayCardInput extends Input<typeof schema> {
 
   impl() {
     assert(
-      this.game.turnSystem.activeUnit.player.equals(this.player),
+      this.game.turnSystem.activePlayer.equals(this.player),
       new NotActivePlayerError()
     );
 
-    const card = this.game.turnSystem.activeUnit.cards.getCardAt(this.payload.index);
-    assert(
-      this.game.turnSystem.activeUnit.canPlayCard(card),
-      new IllegalCardPlayedError()
-    );
-    this.game.turnSystem.activeUnit.playCardAtIndex(this.payload.index);
+    const card = this.player.cards.getCardAt(this.payload.index);
+    assert(this.player.canPlayCard(card), new IllegalCardPlayedError());
+
+    this.player.playMainDeckCardAtIndex(this.payload.index);
   }
 }

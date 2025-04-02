@@ -3,66 +3,60 @@ import {
   INTERACTION_STATES,
   type SelectedTarget
 } from '../../game/systems/interaction.system';
+import type { Player } from '../../player/player.entity';
 import type { Unit } from '../../unit/entities/unit.entity';
-import type { AbilityBlueprint } from '../card-blueprint';
+import type { SecretBlueprint, SpellBlueprint } from '../card-blueprint';
 import { CARD_EVENTS, CARD_KINDS } from '../card.enums';
 import {
   CardAfterPlayEvent,
   CardBeforePlayEvent,
   type CardEventMap
 } from '../card.events';
-import { Card, type CardOptions, type SerializedCard } from './card.entity';
+import {
+  Card,
+  makeCardInterceptors,
+  type CardInterceptors,
+  type CardOptions,
+  type SerializedCard
+} from './card.entity';
 
-export type SerializedAbilityCard = SerializedCard & {
-  kind: typeof CARD_KINDS.ABILITY;
-  manaCost: number;
-  levelCost: number;
-  exp: number;
-  elligibleFirstTargets: string[];
+export type SerializedSpellCard = SerializedCard & {
+  kind: typeof CARD_KINDS.SECRET;
   maxTargets: number;
-  allowedJobs: Array<{ id: string; name: string }>;
   aoe: {
     cells: string[];
     units: string[];
   } | null;
   range: string[] | null;
 };
-export type AbilityCardEventMap = CardEventMap;
-export type AbilityCardInterceptors = Record<string, never>;
+export type SecretCardEventMap = CardEventMap;
+export type SecretCardInterceptors = CardInterceptors;
 
-export class AbilityCard extends Card<
+export class SecretCard extends Card<
   SerializedCard,
-  AbilityCardEventMap,
-  AbilityCardInterceptors,
-  AbilityBlueprint
+  SecretCardEventMap,
+  SecretCardInterceptors,
+  SecretBlueprint
 > {
-  constructor(game: Game, unit: Unit, options: CardOptions<AbilityBlueprint>) {
-    super(game, unit, {}, options);
+  constructor(game: Game, player: Player, options: CardOptions<SpellBlueprint>) {
+    super(game, player, makeCardInterceptors(), options);
   }
 
   canPlay(): boolean {
-    return this.manaCost <= this.unit.mp.current && this.levelCost <= this.unit.level;
+    return true;
   }
 
-  get exp() {
-    return this.blueprint.exp;
-  }
-
-  get manaCost() {
-    return this.blueprint.manaCost;
-  }
-
-  get levelCost() {
-    return this.blueprint.levelCost;
+  get followup() {
+    return this.blueprint.getFollowup(this.game, this);
   }
 
   get followupTargets() {
-    return this.blueprint.getFollowup(this.game, this).getTargets(this.game, this);
+    return this.followup.getTargets(this.game, this);
   }
 
   selectTargets(onComplete: (targets: SelectedTarget[]) => void) {
     this.game.interaction.startSelectingTargets({
-      player: this.unit.player,
+      player: this.player,
       getNextTarget: targets => {
         return (
           this.blueprint.getFollowup(this.game, this).getTargets(this.game, this)[
@@ -95,16 +89,15 @@ export class AbilityCard extends Card<
       aoeShape.getUnits(points)
     );
 
-    this.unit.cards.sendToDiscardPile(this);
+    this.player.cards.sendToDiscardPile(this);
     this.emitter.emit(
       CARD_EVENTS.AFTER_PLAY,
       new CardAfterPlayEvent({ targets: points })
     );
-    this.unit.gainExp(this.exp);
   }
 
-  private getSerializedAoe(): SerializedAbilityCard['aoe'] {
-    if (!this.unit.currentlyPlayedCard?.equals(this)) {
+  private getSerializedAoe(): SerializedSpellCard['aoe'] {
+    if (!this.player.currentlyPlayedCard?.equals(this)) {
       return null;
     }
     if (this.game.interaction.context.state !== INTERACTION_STATES.SELECTING_TARGETS) {
@@ -130,11 +123,7 @@ export class AbilityCard extends Card<
     };
   }
 
-  serialize(): SerializedAbilityCard {
-    const followup = this.blueprint
-      .getFollowup(this.game, this)
-      .getTargets(this.game, this);
-    const firstTarget = followup[0];
+  serialize(): SerializedSpellCard {
     return {
       id: this.id,
       entityType: 'card' as const,
@@ -144,22 +133,15 @@ export class AbilityCard extends Card<
       setId: this.blueprint.setId,
       name: this.blueprint.name,
       description: this.blueprint.getDescription(this.game, this),
-      rarity: this.blueprint.rarity,
-      unit: this.unit.id,
+      deckSource: this.deckSource,
+      destinyCost: this.destinyCost,
       manaCost: this.manaCost,
-      levelCost: this.levelCost,
-      exp: this.exp,
-      canPlay: this.unit.canPlayCard(this),
-      elligibleFirstTargets: this.game.boardSystem.cells
-        .filter(cell => firstTarget?.isElligible(cell.position))
-        .map(cell => cell.id),
-      maxTargets: followup.length,
-      allowedJobs: this.blueprint.classIds.map(id => ({
-        id,
-        name: this.game.cardPool[id].name
-      })),
+      rarity: this.blueprint.rarity,
+      unit: this.player.id,
+      canPlay: this.player.canPlayCard(this),
+      maxTargets: this.followupTargets.length,
       aoe: this.getSerializedAoe(),
-      range: this.unit.currentlyPlayedCard?.equals(this)
+      range: this.player.currentlyPlayedCard?.equals(this)
         ? this.blueprint
             .getFollowup(this.game, this)
             .getRange(this.game, this)

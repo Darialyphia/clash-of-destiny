@@ -8,19 +8,32 @@ import type {
   Interceptable
 } from '../../utils/interceptable';
 import type {
-  AbilityCard,
+  SpellCard,
   AbilityCardInterceptors
-} from '../../card/entities/ability-card.entity';
+} from '../../card/entities/spell-card.entity';
 import type {
   ArtifactCard,
   ArtifactCardInterceptors
 } from '../../card/entities/artifact-card.entity';
 import type { Artifact, ArtifactInterceptor } from '../../unit/entities/artifact.entity';
-import type {
-  QuestCard,
-  QuestCardInterceptors
-} from '../../card/entities/quest-card.entity';
 import type { UnitInterceptors } from '../../unit/unit-interceptors';
+import type {
+  AnyUnitCard,
+  UnitCard,
+  UnitCardInterceptors
+} from '../../card/entities/unit-card.entity';
+import type {
+  HeroCard,
+  HeroCardInterceptors
+} from '../../card/entities/hero-card.entity';
+import type {
+  ShrineCard,
+  ShrineCardInterceptors
+} from '../../card/entities/shrine-card.entity';
+import type {
+  MinionCard,
+  MinionCardInterceptors
+} from '../../card/entities/minion-card.entity';
 
 type InterceptorMap = Record<string, Interceptable<any, any>>;
 export class InterceptorModifierMixin<
@@ -80,17 +93,29 @@ export class UnitInterceptorModifierMixin<
   TKey extends keyof UnitInterceptors
 > extends InterceptorModifierMixin<UnitInterceptors, TKey, Unit> {}
 
-export class AbilityCardInterceptorModifierMixin<
+export class UnitCardInterceptorModifierMixin<
+  TKey extends keyof UnitCardInterceptors
+> extends InterceptorModifierMixin<UnitCardInterceptors, TKey, AnyUnitCard> {}
+
+export class HeroCardInterceptorModifierMixin<
+  TKey extends keyof HeroCardInterceptors
+> extends InterceptorModifierMixin<HeroCardInterceptors, TKey, HeroCard> {}
+
+export class ShrineCardInterceptorModifierMixin<
+  TKey extends keyof ShrineCardInterceptors
+> extends InterceptorModifierMixin<ShrineCardInterceptors, TKey, ShrineCard> {}
+
+export class MinionCardInterceptorModifierMixin<
+  TKey extends keyof MinionCardInterceptors
+> extends InterceptorModifierMixin<MinionCardInterceptors, TKey, MinionCard> {}
+
+export class SpellCardInterceptorModifierMixin<
   TKey extends keyof AbilityCardInterceptors
-> extends InterceptorModifierMixin<AbilityCardInterceptors, TKey, AbilityCard> {}
+> extends InterceptorModifierMixin<AbilityCardInterceptors, TKey, SpellCard> {}
 
 export class ArtifactCardInterceptorModifierMixin<
   TKey extends keyof ArtifactCardInterceptors
 > extends InterceptorModifierMixin<ArtifactCardInterceptors, TKey, ArtifactCard> {}
-
-export class QuestCardInterceptorModifierMixin<
-  TKey extends keyof QuestCardInterceptors
-> extends InterceptorModifierMixin<QuestCardInterceptors, TKey, QuestCard> {}
 
 export class ArtifactInterceptorModifierMixin<
   TKey extends keyof ArtifactInterceptor

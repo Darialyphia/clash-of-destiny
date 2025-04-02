@@ -56,12 +56,6 @@ export class CardViewModel {
     }
   }
 
-  get levelCost() {
-    if ('levelCost' in this.data) {
-      return this.data.levelCost as number;
-    }
-  }
-
   get exp() {
     if ('exp' in this.data) {
       return this.data.exp as number;

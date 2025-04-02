@@ -1,10 +1,17 @@
 import { z } from 'zod';
 import { defaultInputSchema, Input } from '../input';
-import { assert } from '@game/shared';
+import { assert, isDefined } from '@game/shared';
 import { GAME_PHASES } from '../../game/systems/game-phase.system';
-import { NotActivePlayerError, IllegalMovementError } from '../input-errors';
+import {
+  NotActivePlayerError,
+  IllegalMovementError,
+  UnknownUnitError,
+  UnitNotOwnedError,
+  IllegalTargetError
+} from '../input-errors';
 
 const schema = defaultInputSchema.extend({
+  unitId: z.string(),
   x: z.number(),
   y: z.number()
 });
@@ -16,16 +23,21 @@ export class MoveInput extends Input<typeof schema> {
 
   protected payloadSchema = schema;
 
+  private get unit() {
+    return this.game.unitSystem.getUnitById(this.payload.unitId);
+  }
+
   impl() {
     assert(
-      this.game.turnSystem.activeUnit.player.equals(this.player),
+      this.game.turnSystem.activePlayer.equals(this.player),
       new NotActivePlayerError()
     );
-    assert(
-      this.game.turnSystem.activeUnit.canMoveTo(this.payload),
-      new IllegalMovementError(this.payload)
-    );
 
-    this.game.turnSystem.activeUnit.move(this.payload);
+    assert(isDefined(this.unit), new UnknownUnitError(this.payload.unitId));
+    assert(this.unit.player.equals(this.player), new UnitNotOwnedError());
+
+    assert(this.unit.canMoveTo(this.payload), new IllegalTargetError());
+
+    this.unit.move(this.payload);
   }
 }

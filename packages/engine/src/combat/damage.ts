@@ -1,9 +1,11 @@
 import type { BetterOmit, Values } from '@game/shared';
 import type { Unit } from '../unit/entities/unit.entity';
-import type { AbilityCard } from '../card/entities/ability-card.entity';
+import type { AnyUnitCard } from '../card/entities/unit-card.entity';
+import type { ArtifactCard } from '../card/entities/artifact-card.entity';
 
 export const DAMAGE_TYPES = {
   COMBAT: 'COMBAT',
+  SPELL: 'SPELL',
   ABILITY: 'ABILITY'
 } as const;
 
@@ -48,19 +50,16 @@ export class CombatDamage extends Damage<Unit> {
   getFinalAmount(target: Unit) {
     const scaled = this._source.getDealtDamage(target);
 
-    return Math.max(0, target.getReceivedDamage(scaled, this, this._source));
+    return Math.max(0, target.getReceivedDamage(scaled, this, this._source.card));
   }
 }
 
-export class AbilityDamage extends Damage<AbilityCard> {
-  constructor(options: BetterOmit<DamageOptions<AbilityCard>, 'type'>) {
+export class AbilityDamage extends Damage<AnyUnitCard | ArtifactCard> {
+  constructor(options: BetterOmit<DamageOptions<AnyUnitCard | ArtifactCard>, 'type'>) {
     super({ ...options, type: DAMAGE_TYPES.ABILITY });
   }
 
   getFinalAmount(target: Unit) {
-    return Math.max(
-      0,
-      target.getReceivedDamage(this.baseAmount, this, this._source.unit)
-    );
+    return Math.max(0, target.getReceivedDamage(this.baseAmount, this, this._source));
   }
 }

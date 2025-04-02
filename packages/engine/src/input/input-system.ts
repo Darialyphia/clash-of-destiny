@@ -17,9 +17,6 @@ import { CommitPlayCardInput } from './inputs/commit-play-card.input';
 import { EndTurnInput } from './inputs/end-turn.input';
 import { MoveInput } from './inputs/move.input';
 import { PlayCardInput } from './inputs/play-card.input';
-import { DeployUnitInput } from './inputs/deploy-unit.input';
-import { LevelUpInput } from './inputs/level-up.input';
-import { CommitDeploymentInput } from './inputs/commit-deployment.input';
 import { ReplaceCardInput } from './inputs/replace-card.input';
 import { AddNextTargetIntentCardInput } from './inputs/add-next-target-intent';
 
@@ -36,9 +33,6 @@ type ValidatedInputMap<T extends GenericInputMap> = {
 const validateinputMap = <T extends GenericInputMap>(data: ValidatedInputMap<T>) => data;
 
 const inputMap = validateinputMap({
-  deployUnit: DeployUnitInput,
-  commitDeployment: CommitDeploymentInput,
-  levelUp: LevelUpInput,
   move: MoveInput,
   attack: AttackInput,
   playCard: PlayCardInput,

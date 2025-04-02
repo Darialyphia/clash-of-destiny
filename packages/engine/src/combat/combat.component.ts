@@ -7,6 +7,7 @@ import {
   TypedSerializableEvent,
   TypedSerializableEventEmitter
 } from '../utils/typed-emitter';
+import type { AnyCard, SerializedCard } from '../card/entities/card.entity';
 
 export const COMBAT_EVENTS = {
   BEFORE_ATTACK: 'before_attack',
@@ -42,8 +43,8 @@ export class DealDamageEvent extends TypedSerializableEvent<
 }
 
 export class ReceiveDamageEvent extends TypedSerializableEvent<
-  { from: Unit; damage: Damage<any> },
-  { from: SerializedUnit }
+  { from: AnyCard; damage: Damage<any> },
+  { from: SerializedCard }
 > {
   serialize() {
     return {
@@ -137,7 +138,7 @@ export class CombatComponent {
       new DealDamageEvent({ targets, damage })
     );
     targets.forEach(target => {
-      target.takeDamage(this.unit, damage);
+      target.takeDamage(this.unit.card, damage);
     });
     this.emitter.emit(
       COMBAT_EVENTS.AFTER_DEAL_DAMAGE,
@@ -145,7 +146,7 @@ export class CombatComponent {
     );
   }
 
-  takeDamage(from: Unit, damage: Damage<any>) {
+  takeDamage(from: AnyCard, damage: Damage<any>) {
     this.emitter.emit(
       COMBAT_EVENTS.BEFORE_RECEIVE_DAMAGE,
       new ReceiveDamageEvent({

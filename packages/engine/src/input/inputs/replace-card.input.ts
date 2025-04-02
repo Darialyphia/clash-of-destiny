@@ -7,6 +7,7 @@ import {
   NotActivePlayerError,
   TooManyReplacesError
 } from '../input-errors';
+import { PlayerAlreadyPerformedResourceActionError } from '../../player/player-errors';
 
 const schema = defaultInputSchema.extend({
   index: z.number()
@@ -21,16 +22,19 @@ export class ReplaceCardInput extends Input<typeof schema> {
 
   impl() {
     assert(
-      this.game.turnSystem.activeUnit.player.equals(this.player),
+      this.game.turnSystem.activePlayer.equals(this.player),
       new NotActivePlayerError()
     );
 
     assert(
-      this.game.turnSystem.activeUnit.cards.hand.length > this.payload.index,
+      this.player.cards.hand.length > this.payload.index,
       new InvalidCardIndexError()
     );
 
-    assert(this.game.turnSystem.activeUnit.canReplace(), new TooManyReplacesError());
-    this.game.turnSystem.activeUnit.replaceCardAtIndex(this.payload.index);
+    assert(
+      this.player.canPerformResourceAction,
+      new PlayerAlreadyPerformedResourceActionError()
+    );
+    // this.game.turnSystem.activeUnit.replaceCardAtIndex(this.payload.index);
   }
 }

@@ -82,8 +82,8 @@ export class UnitDealDamageEvent extends TypedSerializableEvent<
 }
 
 export class UnitReceiveDamageEvent extends TypedSerializableEvent<
-  { from: Unit; target: Unit; damage: Damage<any> },
-  { from: SerializedUnit; damage: number }
+  { from: AnyCard; target: Unit; damage: Damage<any> },
+  { from: SerializedCard; damage: number }
 > {
   serialize() {
     return {
@@ -94,7 +94,7 @@ export class UnitReceiveDamageEvent extends TypedSerializableEvent<
 }
 
 export class UnitReceiveHealEvent extends TypedSerializableEvent<
-  { from: Unit; amount: number },
+  { from: AnyCard; amount: number },
   { from: SerializedUnit; amount: number }
 > {
   serialize() {
@@ -128,17 +128,6 @@ export class UnitAfterDestroyEvent extends TypedSerializableEvent<
   }
 }
 
-export class UnitPlayCardEvent extends TypedSerializableEvent<
-  { card: AnyCard },
-  { card: SerializedCard }
-> {
-  serialize() {
-    return {
-      card: this.data.card.serialize()
-    };
-  }
-}
-
 export class UnitTurnEvent extends TypedSerializableEvent<EmptyObject, EmptyObject> {
   serialize() {
     return {};
@@ -148,17 +137,6 @@ export class UnitTurnEvent extends TypedSerializableEvent<EmptyObject, EmptyObje
 export class UnitLevelUpEvent extends TypedSerializableEvent<EmptyObject, EmptyObject> {
   serialize() {
     return {};
-  }
-}
-
-export class UnitDrawEvent extends TypedSerializableEvent<
-  { amount: number },
-  { amount: number }
-> {
-  serialize() {
-    return {
-      amount: this.data.amount
-    };
   }
 }
 
@@ -178,12 +156,8 @@ export type UnitEventMap = {
   [UNIT_EVENTS.AFTER_RECEIVE_HEAL]: UnitReceiveHealEvent;
   [UNIT_EVENTS.BEFORE_DESTROY]: UnitBeforeDestroyEvent;
   [UNIT_EVENTS.AFTER_DESTROY]: UnitAfterDestroyEvent;
-  [UNIT_EVENTS.BEFORE_PLAY_CARD]: UnitPlayCardEvent;
-  [UNIT_EVENTS.AFTER_PLAY_CARD]: UnitPlayCardEvent;
   [UNIT_EVENTS.START_TURN]: UnitTurnEvent;
   [UNIT_EVENTS.END_TURN]: UnitTurnEvent;
   [UNIT_EVENTS.BEFORE_LEVEL_UP]: UnitLevelUpEvent;
   [UNIT_EVENTS.AFTER_LEVEL_UP]: UnitLevelUpEvent;
-  [UNIT_EVENTS.BEFORE_DRAW]: UnitDrawEvent;
-  [UNIT_EVENTS.AFTER_DRAW]: UnitDrawEvent;
 };

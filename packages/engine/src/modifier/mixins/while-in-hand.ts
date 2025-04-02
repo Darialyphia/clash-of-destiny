@@ -1,21 +1,21 @@
 import { CARD_EVENTS } from '../../card/card.enums';
-import type { DeckCard } from '../../card/entities/deck.entity';
+import type { AnyCard } from '../../card/entities/card.entity';
 import type { Game } from '../../game/game';
 import { ModifierMixin } from '../modifier-mixin';
 import type { Modifier } from '../modifier.entity';
 
-export class WhileInHanddModifierMixin extends ModifierMixin<DeckCard> {
+export class WhileInHanddModifierMixin extends ModifierMixin<AnyCard> {
   constructor(
     game: Game,
     private options: {
-      onApplied: (modifier: Modifier<DeckCard>) => void;
-      onRemoved: (modifier: Modifier<DeckCard>) => void;
+      onApplied: (modifier: Modifier<AnyCard>) => void;
+      onRemoved: (modifier: Modifier<AnyCard>) => void;
     }
   ) {
     super(game);
   }
 
-  onApplied(target: DeckCard, modifier: Modifier<DeckCard>): void {
+  onApplied(target: AnyCard, modifier: Modifier<AnyCard>): void {
     target.on(CARD_EVENTS.ADD_TO_HAND, () => {
       this.options.onApplied(modifier);
     });
@@ -29,7 +29,7 @@ export class WhileInHanddModifierMixin extends ModifierMixin<DeckCard> {
     );
   }
 
-  onRemoved(target: DeckCard, modifier: Modifier<DeckCard>): void {
+  onRemoved(target: AnyCard, modifier: Modifier<AnyCard>): void {
     this.options.onRemoved(modifier);
   }
 

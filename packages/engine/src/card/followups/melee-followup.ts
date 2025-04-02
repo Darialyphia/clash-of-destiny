@@ -1,56 +1,54 @@
 import type { Point } from '@game/shared';
 import type { Game } from '../../game/game';
-import type { AbilityCard } from '../entities/ability-card.entity';
-import type { AbilityFollowup } from './ability-followup';
+import type { Followup } from './ability-followup';
 import type { SelectedTarget } from '../../game/systems/interaction.system';
 import type { Cell } from '../../board/cell';
 import {
   isValidTargetingType,
   type TargetingType
 } from '../../targeting/targeting-strategy';
+import type { AnyCard } from '../entities/card.entity';
+import { Position } from '../../utils/position.component';
 
-export class MeleeFollowup implements AbilityFollowup {
+export class MeleeFollowup implements Followup<AnyCard> {
+  private position: Position;
   constructor(
-    private options: { allowDiagonals: boolean; targetingType: TargetingType }
-  ) {}
+    private options: {
+      position: Point;
+      allowDiagonals: boolean;
+      targetingType: TargetingType;
+    }
+  ) {
+    this.position = Position.fromPoint(this.options.position);
+  }
 
-  getTargets(game: Game, card: AbilityCard) {
+  getTargets(game: Game, card: AnyCard) {
     return [
       {
         type: 'cell' as const,
         isElligible: (point: Point) => {
           if (
-            !isValidTargetingType(
-              game,
-              point,
-              card.unit.player,
-              this.options.targetingType
-            )
+            !isValidTargetingType(game, point, card.player, this.options.targetingType)
           ) {
             return false;
           }
 
           if (this.options.allowDiagonals) {
-            return card.unit.position.isNearby(point);
+            return this.position.isNearby(point);
           } else {
-            return (
-              card.unit.position.isNearby(point) &&
-              card.unit.position.isAxisAligned(point)
-            );
+            return this.position.isNearby(point) && this.position.isAxisAligned(point);
           }
         }
       }
     ];
   }
 
-  getRange(game: Game, card: AbilityCard): Cell[] {
+  getRange(game: Game): Cell[] {
     return game.boardSystem.cells.filter(cell => {
       if (this.options.allowDiagonals) {
-        return card.unit.position.isNearby(cell);
+        return this.position.isNearby(cell);
       } else {
-        return (
-          card.unit.position.isNearby(cell) && card.unit.position.isAxisAligned(cell)
-        );
+        return this.position.isNearby(cell) && this.position.isAxisAligned(cell);
       }
     });
   }

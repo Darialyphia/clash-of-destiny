@@ -14,10 +14,10 @@ export class EndTurnInput extends Input<typeof schema> {
 
   impl() {
     assert(
-      this.game.turnSystem.activeUnit.player.equals(this.player),
+      this.game.turnSystem.activePlayer.equals(this.player),
       new NotActivePlayerError()
     );
 
-    this.game.turnSystem.activeUnit.endTurn();
+    this.game.turnSystem.activePlayer.endTurn();
   }
 }

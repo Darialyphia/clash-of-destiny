@@ -1,13 +1,13 @@
 import { assert } from '@game/shared';
 
-export class ManaManagerComponent {
+export class ResourceTrackerComponent {
   private _amount: number;
 
-  private _maxAmount: number;
+  private _max: number;
 
   constructor(initialAmount: number, maxAmount: number) {
     this._amount = initialAmount;
-    this._maxAmount = maxAmount;
+    this._max = maxAmount;
   }
 
   canSpend(amount: number) {
@@ -27,12 +27,12 @@ export class ManaManagerComponent {
     this._amount += amount;
   }
 
-  setMaxAmount(amount: number) {
-    this._maxAmount = amount;
+  setMax(amount: number) {
+    this._max = amount;
   }
 
   get maxAmount() {
-    return this._maxAmount;
+    return this._max;
   }
 
   get amount() {

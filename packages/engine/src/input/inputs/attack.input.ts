@@ -10,6 +10,7 @@ import {
 } from '../input-errors';
 
 const schema = defaultInputSchema.extend({
+  unitId: z.string(),
   x: z.number(),
   y: z.number()
 });
@@ -21,17 +22,24 @@ export class AttackInput extends Input<typeof schema> {
 
   protected payloadSchema = schema;
 
+  private get unit() {
+    return this.game.unitSystem.getUnitById(this.payload.unitId);
+  }
+
   impl() {
     assert(
-      this.game.turnSystem.activeUnit.player.equals(this.player),
+      this.game.turnSystem.activePlayer.equals(this.player),
       new NotActivePlayerError()
     );
 
+    assert(isDefined(this.unit), new UnknownUnitError(this.payload.unitId));
+    assert(this.unit.player.equals(this.player), new UnitNotOwnedError());
+
     assert(
-      this.game.turnSystem.activeUnit.canAttackAt(this.payload),
+      this.unit.canAttackAt(this.payload),
       new IllegalAttackTargetError(this.payload)
     );
 
-    this.game.turnSystem.activeUnit.attack(this.payload);
+    this.unit.attack(this.payload);
   }
 }

@@ -6,7 +6,6 @@ import type { SerializedPlayer } from '../../player/player.entity';
 import type { GamePhase } from './game-phase.system';
 import type { SerializedInteractionContext } from './interaction.system';
 import type { SerializedBoard } from '../../board/board-system';
-import type { SerializedTurnOrder } from './turn-system';
 import type { SerializedCell } from '../../board/cell';
 import type { SerializedCard } from '../../card/entities/card.entity';
 import type { SerializedModifier } from '../../modifier/modifier.entity';
@@ -36,11 +35,10 @@ export type SerializedOmniscientState = {
   units: string[];
   interactables: string[];
   players: [string, string];
-  activeUnit: string;
+  activePlayer: string;
   turnCount: number;
   interactionState: SerializedInteractionContext;
   phase: GamePhase;
-  turnOrder: SerializedTurnOrder;
 };
 
 export type SerializedOpponentUnit = SerializedUnit;
@@ -105,39 +103,35 @@ export class GameSnaphotSystem extends System<EmptyObject> {
     });
     this.game.unitSystem.units.forEach(unit => {
       entities[unit.id] = unit.serialize();
-      const { weapon, armor, relic } = unit.artifacts.artifacts;
 
-      if (weapon) {
-        entities[weapon.id] = weapon.serialize();
-        entities[weapon.card.id] = weapon.card.serialize();
-      }
-      if (armor) {
-        entities[armor.id] = armor.serialize();
-        entities[armor.card.id] = armor.card.serialize();
-      }
-      if (relic) {
-        entities[relic.id] = relic.serialize();
-        entities[relic.card.id] = relic.card.serialize();
-      }
-
-      if (unit.currentlyPlayedCard) {
-        entities[unit.currentlyPlayedCard.id] = unit.currentlyPlayedCard.serialize();
-      }
-      unit.cards.hand.forEach(card => {
-        entities[card.id] = card.serialize();
-      });
-      unit.cards.discardPile.forEach(card => {
-        entities[card.id] = card.serialize();
-      });
       unit.modifiers.forEach(modifier => {
         entities[modifier.id] = modifier.serialize();
       });
+
+      entities[unit.card.id] = unit.card.serialize();
     });
+
     this.game.interactableSystem.interactables.forEach(interactable => {
       entities[interactable.id] = interactable.serialize();
     });
+
     this.game.playerSystem.players.forEach(player => {
       entities[player.id] = player.serialize();
+
+      player.artifacts.artifacts.forEach(artifact => {
+        entities[artifact.id] = artifact.serialize();
+        entities[artifact.card.id] = artifact.card.serialize();
+      });
+
+      if (player.currentlyPlayedCard) {
+        entities[player.currentlyPlayedCard.id] = player.currentlyPlayedCard.serialize();
+      }
+      player.cards.hand.forEach(card => {
+        entities[card.id] = card.serialize();
+      });
+      player.cards.discardPile.forEach(card => {
+        entities[card.id] = card.serialize();
+      });
     });
 
     this.game.interaction.getEntities().forEach(entity => {
@@ -149,18 +143,14 @@ export class GameSnaphotSystem extends System<EmptyObject> {
   serializeOmniscientState(): SerializedOmniscientState {
     return {
       entities: this.buildEntityDictionary(),
-      activeUnit: this.game.turnSystem.activeUnit.id,
-      turnCount: this.game.turnSystem.turnCount,
+      activePlayer: this.game.turnSystem.activePlayer.id,
+      turnCount: this.game.turnSystem.elapsedTurns,
       interactionState: this.game.interaction.serialize(),
       phase: this.game.phase,
       board: this.game.boardSystem.serialize(),
       units: this.game.unitSystem.units.map(unit => unit.id),
       interactables: this.game.interactableSystem.interactables.map(unit => unit.id),
-      players: this.game.playerSystem.players.map(player => player.id) as [
-        string,
-        string
-      ],
-      turnOrder: this.game.turnSystem.serialize()
+      players: this.game.playerSystem.players.map(player => player.id) as [string, string]
     };
   }
 

@@ -15,7 +15,7 @@ export class CancelPlayCardInput extends Input<typeof schema> {
 
   impl() {
     assert(
-      this.game.turnSystem.activeUnit.player.equals(this.player),
+      this.game.turnSystem.activePlayer.equals(this.player),
       new NotActivePlayerError()
     );
 
@@ -24,6 +24,6 @@ export class CancelPlayCardInput extends Input<typeof schema> {
       new InvalidInteractionStateError()
     );
 
-    this.game.turnSystem.activeUnit.cancelCardPlayed();
+    this.game.turnSystem.activePlayer.cancelCardPlayed();
   }
 }

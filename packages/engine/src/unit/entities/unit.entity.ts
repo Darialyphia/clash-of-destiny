@@ -1,12 +1,6 @@
-import {
-  isDefined,
-  Vec2,
-  type Nullable,
-  type Point,
-  type Serializable
-} from '@game/shared';
-import { Entity, InterceptableEvent, INTERCEPTOR_EVENTS } from '../../entity';
-import { type AnyCard, type CardOptions } from '../../card/entities/card.entity';
+import { Vec2, type Point, type Point3D, type Serializable } from '@game/shared';
+import { Entity } from '../../entity';
+import { type AnyCard } from '../../card/entities/card.entity';
 import { type Game } from '../../game/game';
 import { MOVE_EVENTS, MovementComponent } from '../components/movement.component';
 import type { Player } from '../../player/player.entity';
@@ -26,9 +20,6 @@ import {
   UnitBeforeMoveEvent,
   UnitCreatedEvent,
   UnitDealDamageEvent,
-  UnitDrawEvent,
-  UnitLevelUpEvent,
-  UnitPlayCardEvent,
   UnitReceiveDamageEvent,
   UnitReceiveHealEvent,
   UnitTurnEvent,
@@ -38,29 +29,18 @@ import type { Damage } from '../../combat/damage';
 import { COMBAT_EVENTS, CombatComponent } from '../../combat/combat.component';
 import { PathfinderComponent } from '../../pathfinding/pathfinder.component';
 import { SolidBodyPathfindingStrategy } from '../../pathfinding/strategies/solid-pathfinding.strategy';
-import { CARD_EVENTS, UNIT_KINDS } from '../../card/card.enums';
+import { UNIT_KINDS } from '../../card/card.enums';
 import { HealthComponent } from '../components/health.component';
 import { GAME_EVENTS, GameUnitEvent } from '../../game/game.events';
 import type { Cell } from '../../board/cell';
 import type { Modifier } from '../../modifier/modifier.entity';
 import { ModifierManager } from '../../modifier/modifier-manager.component';
-import { ApComponent } from '../components/ap.component';
 import { MeleeTargetingStrategy } from '../../targeting/melee-targeting.straegy';
 import { PointAOEShape } from '../../aoe/point.aoe-shape';
-import { CardManagerComponent } from '../../card/components/card-manager.component';
-import type {
-  AbilityBlueprint,
-  ArtifactBlueprint,
-  CardBlueprint,
-  HeroBlueprint,
-  QuestBlueprint,
-  UnitBlueprint
-} from '../../card/card-blueprint';
-import { ManaComponent } from '../components/mana.component';
-import type { DeckCard } from '../../card/entities/deck.entity';
-import { ArtifactManagerComponent } from '../components/artifact-manager.component';
 import { makeUnitInterceptors, type UnitInterceptors } from '../unit-interceptors';
-import { QuestManagerComponent } from '../components/quest-manager.component';
+import type { MinionCard } from '../../card/entities/minion-card.entity';
+import type { HeroCard } from '../../card/entities/hero-card.entity';
+import type { ShrineCard } from '../../card/entities/shrine-card.entity';
 
 export type SerializedUnit = {
   id: string;
@@ -72,49 +52,21 @@ export type SerializedUnit = {
   spriteParts: Record<string, string>;
   name: string;
   description: string;
-  hand: string[];
-  handSize: number;
-  currentlyPlayedCard: string | null;
-  remainingCardsInDeck: number;
-  discardPile: string[];
-  canReplace: boolean;
   hp: number;
   maxHp: number;
-  ap: number;
-  maxAp: number;
-  mp: number;
-  maxMp: number;
-  level: number;
-  attackDamage: number;
-  abilityPower: number;
-  blueprintChain: Array<{
-    id: string;
-    name: string;
-    level: number;
-  }>;
-  exp: number;
-  expToNextLevel: number;
-  canLevelup: boolean;
-  isMaxLevel: boolean;
+  atk: number;
+  spellPower: number;
   keywords: Array<{ id: string; name: string; description: string }>;
   isDead: boolean;
   moveZone: Array<{ point: Point; path: Point[] }>;
   attackableCells: Point[];
   modifiers: string[];
-  artifacts: {
-    weapon: string | null;
-    armor: string | null;
-    relic: string | null;
-  };
 };
 
 export type UnitOptions = {
   id: string;
   position: Point;
   player: Player;
-  deck: {
-    cards: Array<CardOptions<AbilityBlueprint | ArtifactBlueprint | QuestBlueprint>>;
-  };
 };
 
 export class Unit
@@ -129,37 +81,15 @@ export class Unit
 
   readonly hp: HealthComponent;
 
-  readonly ap: ApComponent;
-
-  readonly mp: ManaComponent;
-
-  readonly cards: CardManagerComponent;
-
-  readonly artifacts: ArtifactManagerComponent;
-
   readonly movement: MovementComponent;
-
-  readonly quests: QuestManagerComponent;
 
   readonly keywordManager: KeywordManagerComponent;
 
   private readonly combat: CombatComponent;
 
-  currentlyPlayedCard: Nullable<DeckCard> = null;
-
-  currentyPlayedCardIndexInHand: Nullable<number> = null;
-
-  private cardReplacedThisTurn = 0;
-
-  private cancelCardCleanups: Array<() => void> = [];
-
-  private _level = 1;
-
-  private _exp = 0;
-
   constructor(
     game: Game,
-    readonly blueprintChain: UnitBlueprint[],
+    readonly card: MinionCard | HeroCard | ShrineCard,
     options: UnitOptions
   ) {
     super(`${options.id}`, makeUnitInterceptors());
@@ -168,24 +98,9 @@ export class Unit
     this.modifierManager = new ModifierManager(this);
     this.keywordManager = new KeywordManagerComponent();
     this.hp = new HealthComponent({
-      initialValue: this.blueprint.maxHp,
-      max: this.blueprint.maxHp
+      initialValue: this.card.blueprint.maxHp,
+      max: this.card.blueprint.maxHp
     });
-    this.ap = new ApComponent({
-      initialValue: game.config.MAX_AP,
-      max: game.config.MAX_AP
-    });
-    this.mp = new ManaComponent({
-      initialValue: game.config.INITIAL_MP,
-      max: game.config.MAX_MP
-    });
-    this.quests = new QuestManagerComponent();
-    this.cards = new CardManagerComponent(this.game, this, {
-      deck: options.deck.cards,
-      maxHandSize: this.game.config.MAX_HAND_SIZE,
-      shouldShuffleDeck: this.game.config.SHUFFLE_DECK_ON_GAME_START
-    });
-    this.artifacts = new ArtifactManagerComponent(this.game, this);
     this.movement = new MovementComponent({
       position: options.position,
       pathfinding: new PathfinderComponent(
@@ -198,8 +113,6 @@ export class Unit
     this.game.on(GAME_EVENTS.TURN_START, () => {
       this.onTurnStart();
     });
-    this.on(INTERCEPTOR_EVENTS.ADD_INTERCEPTOR, this.onInterceptorChange.bind(this));
-    this.on(INTERCEPTOR_EVENTS.REMOVE_INTERCEPTOR, this.onInterceptorChange.bind(this));
 
     this.forwardEvents();
   }
@@ -210,33 +123,15 @@ export class Unit
       entityType: 'unit' as const,
       position: this.position.serialize(),
       playerId: this.player.id,
-      iconId: this.blueprint.iconId,
-      spriteId: this.blueprint.spriteId,
-      spriteParts: this.blueprint.spriteParts,
-      name: this.blueprint.name,
-      description: this.blueprint.getDescription(this.game, this),
-      hand: this.cards.hand.map(card => card.id),
-      handSize: this.cards.hand.length,
-      currentlyPlayedCard: this.currentlyPlayedCard?.id ?? null,
-      remainingCardsInDeck: this.cards.deck.cards.length,
-      discardPile: Array.from(this.cards.discardPile).map(card => card.id),
-      canReplace: this.canReplace(),
+      iconId: this.card.blueprint.iconId,
+      spriteId: this.card.blueprint.spriteId,
+      spriteParts: this.card.blueprint.spriteParts,
+      name: this.card.blueprint.name,
+      description: this.card.blueprint.getDescription(this.game, this as any),
       hp: this.hp.current,
       maxHp: this.hp.max,
-      ap: this.ap.current,
-      maxAp: this.ap.max,
-      mp: this.mp.current,
-      maxMp: this.mp.max,
-      level: this.level,
-      attackDamage: this.attackDamage,
-      abilityPower: this.abilityPower,
-      isMaxLevel: !this.nextBlueprint,
-      blueprintChain: this.blueprintChain.map(blueprint => ({
-        id: blueprint.id,
-        name: blueprint.name,
-        level: (blueprint as any).level
-      })),
-      exp: this.exp,
+      atk: this.atk,
+      spellPower: this.spellPower,
       keywords: this.keywords.map(keyword => ({
         id: keyword.id,
         name: keyword.name,
@@ -247,32 +142,8 @@ export class Unit
       attackableCells: this.game.boardSystem.cells
         .filter(cell => this.canAttackAt(cell.position))
         .map(cell => cell.position.serialize()),
-      modifiers: this.modifiers.map(modifier => modifier.id),
-      expToNextLevel: this.expToNextLevel,
-      canLevelup: this.canLevelUp,
-      artifacts: {
-        weapon: this.artifacts.artifacts.weapon?.id ?? null,
-        armor: this.artifacts.artifacts.armor?.id ?? null,
-        relic: this.artifacts.artifacts.relic?.id ?? null
-      }
+      modifiers: this.modifiers.map(modifier => modifier.id)
     };
-  }
-
-  private onInterceptorChange(event: InterceptableEvent) {
-    if (event.key === 'maxHp') {
-      this.hp.max = this.interceptors.maxHp.getValue(this.blueprint.maxHp, {});
-      if (this.isDead) {
-        this.game.inputSystem.schedule(() => {
-          this.destroy(this);
-        });
-      }
-    }
-    if (event.key === 'maxAp') {
-      this.ap.max = this.interceptors.maxAp.getValue(this.game.config.MAX_AP, {});
-    }
-    if (event.key === 'maxMp') {
-      this.mp.max = this.interceptors.maxMp.getValue(this.game.config.MAX_MP, {});
-    }
   }
 
   private forwardEvents() {
@@ -316,32 +187,12 @@ export class Unit
     });
   }
 
-  get blueprint() {
-    return this.blueprintChain[this._level - 1];
-  }
-
   get player() {
     return this.interceptors.player.getValue(this.originalPlayer, {});
   }
 
-  get isActive() {
-    return this.game.turnSystem.activeUnit.equals(this);
-  }
-
-  get abilityPower() {
-    return this.interceptors.abilityPower.getValue(0, {});
-  }
-
-  get mpRegen() {
-    return this.interceptors.mpRegen.getValue(this.game.config.MP_REGEN_PER_TURN, {});
-  }
-
-  canSpendMp(amount: number) {
-    return this.mp.current >= amount;
-  }
-
-  canSpendAp(amount: number) {
-    return this.ap.current >= amount;
+  get spellPower() {
+    return this.interceptors.spellPower.getValue(0, {});
   }
 
   get position() {
@@ -361,18 +212,19 @@ export class Unit
   }
 
   get isHero() {
-    return this.blueprint.unitKind === UNIT_KINDS.HERO;
+    return this.card.blueprint.unitKind === UNIT_KINDS.HERO;
+  }
+
+  get isShrine() {
+    return this.card.blueprint.unitKind === UNIT_KINDS.SHRINE;
+  }
+
+  get isMinion() {
+    return this.card.blueprint.unitKind === UNIT_KINDS.MINION;
   }
 
   canBeAttackedBy(unit: Unit): boolean {
     return this.interceptors.canBeAttackTarget.getValue(!this.isDead, { attacker: unit });
-  }
-
-  canPlayCard(card: AnyCard): boolean {
-    return this.interceptors.canPlayCard.getValue(
-      card.canPlay() && this.ap.current >= this.apCostPerCard,
-      { card }
-    );
   }
 
   canBeTargetedByCard(card: AnyCard): boolean {
@@ -387,10 +239,6 @@ export class Unit
 
   get isDead() {
     return this.hp.current <= 0;
-  }
-
-  get initiative() {
-    return this.interceptors.initiative.getValue(this.blueprint.initiative, {});
   }
 
   get maxMovementsPerTurn() {
@@ -418,15 +266,12 @@ export class Unit
     );
   }
 
-  get attackDamage() {
-    return this.interceptors.attackDamage.getValue(
-      this.game.config.BASE_ATTACK_DAMAGE,
-      {}
-    );
+  get atk() {
+    return this.interceptors.atk.getValue(this.card.atk, {});
   }
 
   get attackTargetType(): TargetingType {
-    return this.interceptors.attackTargetType.getValue(TARGETING_TYPE.ENEMY, {});
+    return this.interceptors.attackTargetType.getValue(TARGETING_TYPE.ENEMY_UNIT, {});
   }
 
   get attackAOEShape(): AOEShape {
@@ -444,18 +289,8 @@ export class Unit
     return this.movement.movementsCount;
   }
 
-  get apCostPerMovement() {
-    return this.interceptors.apCostPerMovement.getValue(
-      this.game.config.AP_COST_PER_MOVE,
-      {}
-    );
-  }
-
   get canMove(): boolean {
-    return this.interceptors.canMove.getValue(
-      this.remainingMovement > 0 && this.ap.current >= this.apCostPerMovement,
-      {}
-    );
+    return this.interceptors.canMove.getValue(this.remainingMovement > 0, {});
   }
 
   canMoveThrough(unit: Unit) {
@@ -466,18 +301,9 @@ export class Unit
     return this.interceptors.canBeDestroyed.getValue(true, {});
   }
 
-  get apCostPerAttack() {
-    return this.interceptors.apCostPerAttack.getValue(
-      this.game.config.AP_COST_PER_ATTACK +
-        this.attacksPerformedThisTurn * this.game.config.AP_COST_INCREASE_PER_ATTACK,
-      {}
-    );
-  }
-
   canAttack(unit: Unit): boolean {
     return this.interceptors.canAttack.getValue(
-      this.attacksPerformedThisTurn < this.maxAttacksPerTurn &&
-        this.ap.current >= this.apCostPerAttack,
+      this.attacksPerformedThisTurn < this.maxAttacksPerTurn,
       { unit }
     );
   }
@@ -523,14 +349,19 @@ export class Unit
     return this.player.equals(unit.player);
   }
 
+  get speed() {
+    return this.interceptors.movementReach.getValue(
+      this.game.config.UNIT_MOVEMENT_REACH,
+      {}
+    );
+  }
   canMoveTo(point: Point) {
     if (!this.canMove) return false;
-    return this.movement.canMoveTo(point, this.ap.current / this.apCostPerMovement);
+    return this.movement.canMoveTo(point, this.speed);
   }
 
   move(to: Point) {
-    const path = this.movement.move(to);
-    this.ap.remove(this.apCostPerMovement * (path?.distance ?? 0));
+    this.movement.move(to);
   }
 
   deployAt(cell: Cell) {
@@ -577,21 +408,19 @@ export class Unit
 
   getPossibleMoves() {
     if (!this.canMove) return [];
-    return this.movement
-      .getAllPossibleMoves(this.ap.current / this.apCostPerMovement)
-      .filter(move => {
-        const cell = this.game.boardSystem.getCellAt(move.point)!;
-        return cell.isWalkable && !cell.unit;
-      });
+    return this.movement.getAllPossibleMoves(this.speed).filter(move => {
+      const cell = this.game.boardSystem.getCellAt(move.point)!;
+      return cell.isWalkable && !cell.unit;
+    });
   }
 
   getDealtDamage(target: Unit) {
-    return this.interceptors.damageDealt.getValue(this.attackDamage, {
+    return this.interceptors.damageDealt.getValue(this.atk, {
       target
     });
   }
 
-  getReceivedDamage<T>(amount: number, damage: Damage<T>, from: Unit) {
+  getReceivedDamage<T>(amount: number, damage: Damage<T>, from: AnyCard) {
     return this.interceptors.damageReceived.getValue(amount, {
       source: from,
       damage,
@@ -611,19 +440,17 @@ export class Unit
     if (this.hp.current === this.hp.max) return;
     this.emitter.emit(
       UNIT_EVENTS.BEFORE_RECEIVE_HEAL,
-      new UnitReceiveHealEvent({ from: source.unit, amount })
+      new UnitReceiveHealEvent({ from: source, amount })
     );
     this.hp.add(amount);
     this.emitter.emit(
       UNIT_EVENTS.AFTER_RECEIVE_HEAL,
-      new UnitReceiveHealEvent({ from: source.unit, amount })
+      new UnitReceiveHealEvent({ from: source, amount })
     );
   }
 
   attack(point: Point) {
-    this.ap.remove(this.apCostPerAttack);
     this.combat.attack(point);
-    this.gainExp(this.game.config.EXP_REWARD_PER_ATTACK);
   }
 
   canAttackAt(point: Point) {
@@ -633,9 +460,6 @@ export class Unit
     const target = this.game.unitSystem.getUnitAt(point);
     if (!target) return false;
 
-    if (this.ap.current < this.apCostPerAttack) {
-      return false;
-    }
     if (!this.canAttack(target) || !target.canBeAttackedBy(this)) {
       return false;
     }
@@ -673,18 +497,6 @@ export class Unit
   onTurnStart() {
     this.combat.resetAttackCount();
     this.movement.resetMovementsCount();
-    this.cardReplacedThisTurn = 0;
-    this.ap.setTo(this.ap.max);
-    const isFirstTurn = this.game.turnSystem.turnCount === 1;
-    if (!isFirstTurn) {
-      this.mp.add(this.mpRegen);
-      this.gainExp(this.game.config.EXP_REWARD_PER_TURN);
-    }
-    this.cards.draw(
-      isFirstTurn
-        ? this.game.config.INITIAL_HAND_SIZE
-        : this.game.config.CARDS_DRAWN_PER_TURN
-    );
   }
 
   get removeModifier() {
@@ -713,125 +525,11 @@ export class Unit
     return () => this.removeModifier(modifier);
   }
 
-  get apCostPerCard() {
-    return this.interceptors.apCostPerCard.getValue(
-      this.game.config.AP_COST_PER_CARD,
-      {}
-    );
-  }
-
-  playCardAtIndex(index: number) {
-    const card = this.cards.getCardAt(index);
-    if (!card) return;
-
-    this.playCardFromHand(card);
-  }
-
-  draw(amount: number) {
-    this.emitter.emit(UNIT_EVENTS.BEFORE_DRAW, new UnitDrawEvent({ amount }));
-    this.cards.draw(amount);
-    this.emitter.emit(UNIT_EVENTS.AFTER_DRAW, new UnitDrawEvent({ amount }));
-  }
-
-  private onBeforePlayFromHand(card: DeckCard) {
-    this.emitter.emit(UNIT_EVENTS.BEFORE_PLAY_CARD, new UnitPlayCardEvent({ card }));
-    this.mp.remove(card.manaCost);
-    this.ap.remove(this.apCostPerCard);
-  }
-
-  private onAfterPlayFromHand(card: DeckCard) {
-    this.currentlyPlayedCard = null;
-    this.currentyPlayedCardIndexInHand = null;
-    this.emitter.emit(UNIT_EVENTS.AFTER_PLAY_CARD, new UnitPlayCardEvent({ card }));
-  }
-
-  playCardFromHand(card: DeckCard) {
-    this.currentlyPlayedCard = card;
-    this.currentyPlayedCardIndexInHand = this.cards.hand.indexOf(card);
-    this.cancelCardCleanups = [
-      card.once(CARD_EVENTS.BEFORE_PLAY, this.onBeforePlayFromHand.bind(this, card)),
-      card.once(CARD_EVENTS.AFTER_PLAY, this.onAfterPlayFromHand.bind(this, card))
-    ];
-    this.cards.play(card);
-  }
-
-  cancelCardPlayed() {
-    if (!isDefined(this.currentlyPlayedCard)) return;
-    if (!isDefined(this.currentyPlayedCardIndexInHand)) return;
-    this.game.interaction.cancelSelectingTargets();
-    this.cards.addToHand(this.currentlyPlayedCard, this.currentyPlayedCardIndexInHand);
-    this.cancelCardCleanups.forEach(cleanup => cleanup());
-    this.cancelCardCleanups = [];
-    this.currentlyPlayedCard = null;
-    this.currentyPlayedCardIndexInHand = null;
-  }
-
-  generateCard<T extends CardBlueprint = CardBlueprint>(blueprintId: string) {
-    const blueprint = this.game.cardPool[blueprintId] as T;
-    const card = this.game.cardFactory<T>(this.game, this, {
-      id: this.game.cardIdFactory(blueprint.id, this.id),
-      blueprint: blueprint
-    });
-
-    return card;
-  }
-
-  canReplace() {
-    return this.cardReplacedThisTurn < this.game.config.MAX_CARD_REPLACES_PER_TURN;
-  }
-
-  replaceCardAtIndex(index: number) {
-    this.cards.replaceCardAt(index);
-    this.cardReplacedThisTurn++;
-  }
-
   starturn() {
     this.emitter.emit(UNIT_EVENTS.START_TURN, new UnitTurnEvent({}));
   }
 
   endTurn() {
     this.emitter.emit(UNIT_EVENTS.END_TURN, new UnitTurnEvent({}));
-  }
-
-  get exp() {
-    return this._exp;
-  }
-
-  get level() {
-    return this._level;
-  }
-
-  get nextBlueprint() {
-    return this.blueprintChain[this._level];
-  }
-
-  get expToNextLevel() {
-    if (!this.nextBlueprint) return 0;
-    if (this.blueprint.unitKind === UNIT_KINDS.MINION) return 0;
-    if (this.nextBlueprint.unitKind === UNIT_KINDS.MINION) return 0;
-
-    return (
-      this.nextBlueprint as HeroBlueprint & { level: Exclude<HeroBlueprint['level'], 1> }
-    ).neededExp;
-  }
-
-  get canLevelUp() {
-    return this.exp >= this.expToNextLevel && isDefined(this.nextBlueprint);
-  }
-
-  levelUp() {
-    if (!this.canLevelUp) return;
-
-    this.emitter.emit(UNIT_EVENTS.BEFORE_LEVEL_UP, new UnitLevelUpEvent({}));
-
-    this._exp -= this.expToNextLevel;
-    this._level += 1;
-
-    this.emitter.emit(UNIT_EVENTS.AFTER_LEVEL_UP, new UnitLevelUpEvent({}));
-  }
-
-  gainExp(amount: number) {
-    if (!this.nextBlueprint) return;
-    this._exp += amount;
   }
 }

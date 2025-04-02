@@ -33,7 +33,6 @@ export type ArtifactEventMap = {
 
 export type ArtifactOptions = {
   card: ArtifactCard;
-  unitId: string;
 };
 
 export type ArtifactInterceptor = {
@@ -65,7 +64,7 @@ export class Artifact
 {
   readonly card: ArtifactCard;
 
-  private unitId: string;
+  private playerId: string;
 
   private modifierManager: ModifierManager<Artifact>;
 
@@ -76,20 +75,14 @@ export class Artifact
     protected game: Game,
     options: ArtifactOptions
   ) {
-    super(`${options.unitId}-artifact-${nanoid(6)}`, makeInterceptors());
+    super(`${options.card.player.id}-artifact-${nanoid(6)}`, makeInterceptors());
     this.card = options.card;
     this._durability = this.card.durability;
-    this.unitId = options.unitId;
+    this.playerId = options.card.player.id;
     this.modifierManager = new ModifierManager(this);
+
     this.cleanups.push(
-      this.unit.on(UNIT_EVENTS.AFTER_ATTACK, () => {
-        if (this.shouldLosedurabilityOnAttack) {
-          this.loseDurability(1);
-        }
-      })
-    );
-    this.cleanups.push(
-      this.unit.on(UNIT_EVENTS.AFTER_RECEIVE_DAMAGE, event => {
+      this.player.hero.on(UNIT_EVENTS.AFTER_RECEIVE_DAMAGE, event => {
         if (this.shouldLosedurabilityOnDamage(event.data.damage)) {
           this.loseDurability(1);
         }
@@ -108,19 +101,12 @@ export class Artifact
     };
   }
 
-  get unit() {
-    return this.game.unitSystem.getUnitById(this.unitId)!;
+  get player() {
+    return this.card.player;
   }
 
   get canLoseDurability() {
     return this.interceptors.canLoseDurability.getValue(true, {});
-  }
-
-  get shouldLosedurabilityOnAttack() {
-    return this.interceptors.shouldLosedurabilityOnAttack.getValue(
-      this.canLoseDurability && this.card.artifactKind === ARTIFACT_KINDS.WEAPON,
-      {}
-    );
   }
 
   shouldLosedurabilityOnDamage(damage: Damage<any>) {
@@ -194,8 +180,8 @@ export class Artifact
   destroy() {
     this.emitter.emit(ARTIFACT_EVENTS.BEFORE_DESTROY, new ArtifactDestroyEvent({}));
 
-    this.unit.artifacts.unequip(this.card.artifactKind);
-    this.unit.cards.sendToDiscardPile(this.card);
+    this.player.artifacts.unequip(this);
+    this.player.cards.sendToDiscardPile(this.card);
 
     this.emitter.emit(ARTIFACT_EVENTS.AFTER_DESTROY, new ArtifactDestroyEvent({}));
   }

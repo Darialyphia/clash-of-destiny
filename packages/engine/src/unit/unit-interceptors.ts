@@ -10,29 +10,22 @@ import type { Unit } from './entities/unit.entity';
 export type UnitInterceptors = {
   canMove: Interceptable<boolean>;
   canMoveThrough: Interceptable<boolean, { unit: Unit }>;
-  apCostPerMovement: Interceptable<number>;
+  movementReach: Interceptable<number>;
 
   canAttack: Interceptable<boolean, { unit: Unit }>;
   canBeAttackTarget: Interceptable<boolean, { attacker: Unit }>;
-  apCostPerAttack: Interceptable<number>;
 
-  canPlayCard: Interceptable<boolean, { card: AnyCard }>;
   canBeCardTarget: Interceptable<boolean, { card: AnyCard }>;
-  apCostPerCard: Interceptable<number>;
-  abilityPower: Interceptable<number>;
+  spellPower: Interceptable<number>;
 
   canReceiveModifier: Interceptable<boolean, { modifier: Modifier<Unit> }>;
   canBeDestroyed: Interceptable<boolean>;
 
   maxHp: Interceptable<number>;
-  maxAp: Interceptable<number>;
-  maxMp: Interceptable<number>;
-
-  mpRegen: Interceptable<number>;
 
   initiative: Interceptable<number>;
 
-  attackDamage: Interceptable<number>;
+  atk: Interceptable<number>;
   attackTargetingPattern: Interceptable<TargetingStrategy>;
   attackTargetType: Interceptable<TargetingType>;
   attackAOEShape: Interceptable<AOEShape>;
@@ -45,7 +38,7 @@ export type UnitInterceptors = {
   damageDealt: Interceptable<number, { target: Unit }>;
   damageReceived: Interceptable<
     number,
-    { amount: number; source: Unit; damage: Damage<any> }
+    { amount: number; source: AnyCard; damage: Damage<any> }
   >;
 
   healReceived: Interceptable<number, { source: AnyCard }>;
@@ -56,28 +49,22 @@ export const makeUnitInterceptors = (): UnitInterceptors => {
   return {
     canMove: new Interceptable(),
     canMoveThrough: new Interceptable(),
-    apCostPerMovement: new Interceptable(),
+    movementReach: new Interceptable(),
 
     canAttack: new Interceptable(),
     canBeAttackTarget: new Interceptable(),
-    apCostPerAttack: new Interceptable(),
 
-    canPlayCard: new Interceptable(),
     canBeCardTarget: new Interceptable(),
-    apCostPerCard: new Interceptable(),
-    abilityPower: new Interceptable(),
+    spellPower: new Interceptable(),
 
     canReceiveModifier: new Interceptable(),
     canBeDestroyed: new Interceptable(),
 
     maxHp: new Interceptable(),
-    maxAp: new Interceptable(),
-    maxMp: new Interceptable(),
 
-    mpRegen: new Interceptable(),
     initiative: new Interceptable(),
 
-    attackDamage: new Interceptable(),
+    atk: new Interceptable(),
     attackTargetingPattern: new Interceptable(),
     attackTargetType: new Interceptable(),
     attackAOEShape: new Interceptable(),

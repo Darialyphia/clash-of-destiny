@@ -1,10 +1,10 @@
 import type { Cell } from '../../board/cell';
 import type { Game } from '../../game/game';
 import type { EffectTarget, SelectedTarget } from '../../game/systems/interaction.system';
-import type { AbilityCard } from '../entities/ability-card.entity';
+import type { AnyCard } from '../entities/card.entity';
 
-export type AbilityFollowup = {
-  getTargets(game: Game, card: AbilityCard): EffectTarget[];
-  getRange(game: Game, card: AbilityCard): Cell[];
+export type Followup<T extends AnyCard> = {
+  getTargets(game: Game, card: T): EffectTarget[];
+  getRange(game: Game, card: T): Cell[];
   canCommit(targets: SelectedTarget[]): boolean;
 };

@@ -13,8 +13,6 @@ export class PlayerSystem extends System<PlayerSystemOptions> {
       const player = new Player(this.game, p);
       this.playerMap.set(p.id, player);
     });
-
-    this.players.forEach(player => player.initialize());
   }
 
   shutdown() {

@@ -1,13 +1,14 @@
-import type { Serializable, Values } from '@game/shared';
+import type { Values } from '@game/shared';
+import type { Player } from '../../player/player.entity';
 import { System } from '../../system';
-import { TypedEventEmitter, TypedSerializableEvent } from '../../utils/typed-emitter';
+import {
+  TypedSerializableEvent,
+  TypedSerializableEventEmitter
+} from '../../utils/typed-emitter';
 import { GAME_EVENTS } from '../game.events';
-import type { Unit } from '../../unit/entities/unit.entity';
+import { TURN_EVENTS } from '../game.enums';
 
-export const TURN_EVENTS = {
-  TURN_START: 'turn_start',
-  TURN_END: 'turn_end'
-} as const;
+export type TurnEvent = Values<typeof TURN_EVENTS>;
 
 export class GameTurnEvent extends TypedSerializableEvent<
   { turnCount: number },
@@ -19,32 +20,26 @@ export class GameTurnEvent extends TypedSerializableEvent<
     };
   }
 }
-export type TurnEvent = Values<typeof TURN_EVENTS>;
 
 export type TurnEventMap = {
   [TURN_EVENTS.TURN_START]: GameTurnEvent;
   [TURN_EVENTS.TURN_END]: GameTurnEvent;
 };
+export class TurnSystem extends System<never> {
+  private _elapsedTurns = 0;
 
-export type SerializedTurnOrder = string[];
+  private _activePlayer!: Player;
 
-export class TurnSystem
-  extends System<never>
-  implements Serializable<SerializedTurnOrder>
-{
-  private _turnCount = 0;
+  private firstPlayer!: Player;
 
-  private _processedUnits = new Set<Unit>();
-
-  queue: Unit[] = [];
-
-  private emitter = new TypedEventEmitter<TurnEventMap>();
+  private emitter = new TypedSerializableEventEmitter<TurnEventMap>();
 
   initialize() {
-    this.game.on(GAME_EVENTS.UNIT_END_TURN, this.onUnitTurnEnd.bind(this));
-    this.game.on(GAME_EVENTS.UNIT_AFTER_DESTROY, e => {
-      this.removeFromCurrentQueue(e.data.unit);
-    });
+    // const idx = this.game.rngSystem.nextInt(this.game.playerSystem.players.length);
+    this._activePlayer = this.game.playerSystem.players[0];
+    this.firstPlayer = this._activePlayer;
+
+    this.game.on(GAME_EVENTS.PLAYER_END_TURN, this.onPlayerTurnEnd.bind(this));
 
     this.on(TURN_EVENTS.TURN_START, e => {
       this.game.emit(GAME_EVENTS.TURN_START, e);
@@ -52,27 +47,18 @@ export class TurnSystem
     this.on(TURN_EVENTS.TURN_END, e => {
       this.game.emit(GAME_EVENTS.TURN_END, e);
     });
-    this.buildQueue();
   }
 
   shutdown() {
     this.emitter.removeAllListeners();
   }
 
-  serialize() {
-    return this.queue.map(unit => unit.id);
+  get activePlayer() {
+    return this._activePlayer;
   }
 
-  get turnCount() {
-    return this._turnCount;
-  }
-
-  get activeUnit() {
-    return [...this.queue][0];
-  }
-
-  get processedUnits() {
-    return this._processedUnits;
+  get elapsedTurns() {
+    return this._elapsedTurns;
   }
 
   get on() {
@@ -87,56 +73,31 @@ export class TurnSystem
     return this.emitter.off.bind(this.emitter);
   }
 
-  private buildQueue() {
-    this.game.unitSystem.units
-      .sort((a, b) => b.initiative - a.initiative)
-      .forEach(unit => this.queue.push(unit));
-  }
-
   startGameTurn() {
-    this._turnCount++;
-    this.queue = [];
-    this._processedUnits.clear();
-
-    this.buildQueue();
     this.emitter.emit(
       TURN_EVENTS.TURN_START,
-      new GameTurnEvent({ turnCount: this.turnCount })
+      new GameTurnEvent({ turnCount: this.elapsedTurns })
     );
-
-    this.activeUnit?.starturn();
-  }
-
-  removeFromCurrentQueue(unit: Unit) {
-    const idx = this.queue.findIndex(u => u.equals(unit));
-    if (idx === -1) return;
-    this.queue.splice(idx, 1);
-  }
-
-  insertInCurrentQueue(unit: Unit) {
-    let idx = this.queue.findIndex(u => u.initiative < unit.initiative);
-    if (idx === -1) idx = this.queue.length;
-    this.queue.splice(idx, 0, unit);
+    this._activePlayer.startTurn();
   }
 
   endGameTurn() {
+    this._elapsedTurns++;
     this.emitter.emit(
       TURN_EVENTS.TURN_END,
-      new GameTurnEvent({ turnCount: this.turnCount })
+      new GameTurnEvent({ turnCount: this.elapsedTurns })
     );
   }
 
-  onUnitTurnEnd() {
-    this._processedUnits.add(
-      this.queue.splice(this.queue.indexOf(this.activeUnit), 1)[0]
-    );
-
-    if (!this.activeUnit) {
+  onPlayerTurnEnd() {
+    const nextPlayer = this._activePlayer.opponent;
+    if (nextPlayer.equals(this.firstPlayer)) {
       this.endGameTurn();
+      this._activePlayer = nextPlayer;
       this.startGameTurn();
-      return;
     } else {
-      this.activeUnit.starturn();
+      this._activePlayer = nextPlayer;
+      this._activePlayer.startTurn();
     }
   }
 }
