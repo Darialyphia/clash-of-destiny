@@ -144,6 +144,19 @@
       "assets": [
         {
           "alias": [
+            "icon-card-acolyte"
+          ],
+          "src": [
+            "/assets/icons/card-acolyte.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-card-arcane-knowledge"
           ],
           "src": [
@@ -183,6 +196,32 @@
         },
         {
           "alias": [
+            "icon-card-elementalist"
+          ],
+          "src": [
+            "/assets/icons/card-elementalist.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-card-exorcist"
+          ],
+          "src": [
+            "/assets/icons/card-exorcist.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-card-experience-globe"
           ],
           "src": [
@@ -196,10 +235,36 @@
         },
         {
           "alias": [
+            "icon-card-fireball"
+          ],
+          "src": [
+            "/assets/icons/card-fireball.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-card-frost-nova"
           ],
           "src": [
             "/assets/icons/card-frost-nova.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-card-mage"
+          ],
+          "src": [
+            "/assets/icons/card-mage.png"
           ],
           "data": {
             "tags": {

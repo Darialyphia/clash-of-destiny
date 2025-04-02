@@ -24,6 +24,7 @@ export type CardBlueprintBase = {
   setId: CardSetId;
   rarity: Rarity;
   cardIconId: string;
+  collectable: boolean;
 };
 
 export type HeroBlueprint = {
@@ -44,6 +45,7 @@ export type HeroBlueprint = {
 export type UnitBlueprint = CardBlueprintBase & {
   kind: Extract<CardKind, typeof CARD_KINDS.UNIT>;
   getDescription(game: Game, unit: Unit): string;
+  staticDescription: string;
   maxHp: number;
   initiative: number;
   spriteId: string;
@@ -56,6 +58,7 @@ export type UnitBlueprint = CardBlueprintBase & {
 export type AbilityBlueprint = CardBlueprintBase & {
   kind: Extract<CardKind, typeof CARD_KINDS.ABILITY>;
   getDescription(game: Game, card: AbilityCard): string;
+  staticDescription: string;
   manaCost: number;
   levelCost: 1 | 2 | 3;
   exp: number;
@@ -73,6 +76,7 @@ export type AbilityBlueprint = CardBlueprintBase & {
 export type ArtifactBlueprint = CardBlueprintBase & {
   kind: Extract<CardKind, typeof CARD_KINDS.ARTIFACT>;
   getDescription(game: Game, card: ArtifactCard): string;
+  staticDescription: string;
   durability: number;
   levelCost: 1 | 2 | 3;
   artifactKind: ArtifactKind;
@@ -83,6 +87,7 @@ export type ArtifactBlueprint = CardBlueprintBase & {
 export type QuestBlueprint = CardBlueprintBase & {
   kind: Extract<CardKind, typeof CARD_KINDS.QUEST>;
   getDescription(game: Game, card: QuestCard): string;
+  staticDescription: string;
   levelCost: 1 | 2 | 3;
   classIds: string[];
   onPlay(game: Game, card: QuestCard): void;
@@ -92,6 +97,7 @@ export type QuestBlueprint = CardBlueprintBase & {
 export type StatusEffectBlueprint = CardBlueprintBase & {
   kind: Extract<CardKind, typeof CARD_KINDS.STATUS>;
   getDescription(game: Game, card: StatusEffectCard): string;
+  staticDescription: string;
   onPlay(game: Game, card: StatusEffectCard): void;
 };
 

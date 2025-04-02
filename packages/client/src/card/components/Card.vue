@@ -17,10 +17,10 @@ const { card } = defineProps<{
     manaCost?: number;
     exp?: number;
     rarity: Rarity;
+    level?: number;
     allowedJobs?: Array<{ id: string; name: string }>;
   };
 }>();
-const emit = defineEmits<{}>();
 
 const rarityBg = computed(() => {
   if (
@@ -55,10 +55,21 @@ const imageBg = computed(() => {
       <div class="image-frame" />
       <div class="rarity" />
       <div class="description">
-        <div v-if="card.allowedJobs">
+        <div v-if="card.allowedJobs?.length">
           [{{ card.allowedJobs.map(j => j.name).join(' - ') }}]
         </div>
         <div>{{ card.description }}</div>
+      </div>
+      <div class="level" v-if="card.level">
+        <img
+          v-for="i in 3"
+          :key="i"
+          :src="
+            card.level >= i
+              ? '/assets/ui/card-level-filled.png'
+              : '/assets/ui/card-level-empty.png'
+          "
+        />
       </div>
       <div class="kind">
         {{ card.kind }}
@@ -87,7 +98,7 @@ const imageBg = computed(() => {
   background: url('/assets/ui/card-bg.png');
   background-size: cover;
   color: black;
-  font-family: 'NotJamSlab14', monospace;
+  /* font-family: 'NotJamSlab14', monospace; */
   font-size: 14px;
 }
 
@@ -115,16 +126,17 @@ const imageBg = computed(() => {
   height: calc(20px * var(--pixel-scale));
   background: url('/assets/ui/card-name.png');
   background-size: cover;
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: 500;
   text-align: center;
   display: grid;
   place-content: center;
   padding-top: calc(3px * var(--pixel-scale));
-  text-shadow:
+  /* text-shadow:
     0 1px 0 #efef9f,
     0 -1px 0 #efef9f,
     1px 0 0 #efef9f,
-    -1px 0 0 #efef9f;
+    -1px 0 0 #efef9f; */
 }
 
 .dual-text {
@@ -207,11 +219,26 @@ const imageBg = computed(() => {
   height: calc(56px * var(--pixel-scale));
   background: url('/assets/ui/card-description.png');
   background-size: cover;
-  padding-inline: calc(11px * var(--pixel-scale));
-  padding-block: calc(4px * var(--pixel-scale));
+  padding-inline: calc(12px * var(--pixel-scale));
+  padding-block: calc(5px * var(--pixel-scale));
   line-height: 1;
-  font-family: 'Jersey 10';
-  font-size: 18px;
+  /* font-family: 'Jersey 10'; */
+  font-size: 13px;
+}
+
+.level {
+  position: absolute;
+  top: calc(110px * var(--pixel-scale));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: calc(1px * var(--pixel-scale));
+  justify-content: center;
+
+  img {
+    width: calc(13px * var(--pixel-scale));
+    height: calc(13px * var(--pixel-scale));
+  }
 }
 
 .kind {
@@ -225,5 +252,6 @@ const imageBg = computed(() => {
   background-size: cover;
   display: grid;
   place-content: center;
+  font-weight: 500;
 }
 </style>

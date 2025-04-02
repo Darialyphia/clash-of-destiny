@@ -123,7 +123,7 @@ Artifact - Armor
 
 You have +1 Ability Power
 
-[ ] Implemented
+[x] Implemented
 
 ## Acolyte
 
@@ -205,7 +205,7 @@ Ability
 
 Inflict Root(2) to yourself. Gain 2 mana.
 
-[ ] Implemented
+[x] Implemented
 
 ### Sky Teachings
 
@@ -240,3 +240,5 @@ Artifact - Relic
 2 Durability
 
 At the start of the turn, put a Cure wounds in your hand and lose 1 durability.
+
+[x] Implemented

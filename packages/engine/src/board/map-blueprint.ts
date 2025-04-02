@@ -7,7 +7,6 @@ export type MapBlueprint = {
   cells: Array<{
     terrain: Terrain;
     obstacles: string[];
-    player: 'p1' | 'p2' | null;
     spriteId: string;
   }>;
   generalPositions: Point[];

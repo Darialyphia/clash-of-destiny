@@ -2,111 +2,224 @@
 
 ## What is this game about ?
 
-Clashes of destiny is a turn based game where two players control a squad of heroes and battle against each other. The goal of the game is to acquire Victory Points (VP) by reducing the health of every enemy hero to 0. During battle, heroes can attack and use cards to cast powerful spells, as well as gain experience to evolve into stronger heroes, able to use even better cards.
-The first player go accumulate 3 VP wins.
+Clashes of destiny is a turn based game where two players control a hero, summon creatures, cast spells and equip artifacts to defeat the opponent hero.
 
-Main inspirations: Dungeon Drafters, Duelyst, Grand Archive TCG
+Main inspirations: Duelyst, Grand Archive TCG
 
 ## Start of the game
 
-Both player prepare a squad of 3 heroes, that each have a deck of cards representing abilities they can case, quest they can fulfill to gain experience, as well as items they can equip.
+Both player prepare 2 decks: a **Main deck** and a **Destiny deck**. They also choose a **Shrine** among the four available ones: Fire, Water, Air or Earth.
 
-At the beginning of the game, both players enter the Deploy phase, during which they're able to place their heroes wherever they want in their deploy zone.
+When the game starts they draw 4 cards from their main deck.
+
+## Win Condition
+
+The goal of the game is to reduce the Health of the opponent's Shrine OR Hero to zero.
 
 ## Board
 
-There will be a certain number of maps, each with their own layout and specificities, such as traps, teleporters, areas providing various bonuses, etc. The map is selected at random.
+The board is of 7 X 5 dimensions with square tiles. The player's Shrines are placed on the middle row on both extremity of the board.
 
-Maps have 2 deploy zones, one for each player. These are the board tiles where players are able to deploy their heroes at the start of the game.
+## Resources
 
-## Heroes
+The game uses 3 types or resources used to play cards and activate abilities: Mana, Destiny and Elements
 
-Heroes are the main pieces on the board. They have the following stats:
+### Mana
 
-- Health Points (HP): once is reaches 0, the hero is removed from the board.
-- Action Points (AP): used to perform any actions. It gets reset to 3 at the start of every game turn.
-- Mana Points (MP): used to play cards. A hero can have a maximum of 5 MP, and regenerate 2 MP at the start of every game turn.
-- Initiative: dictates how soon a hero get to act during the turn
-- Class: determines which card the hero can but it their deck.
-- Experience: is gained by performing various actions during the game. Once enough experience is gained, the hero can advance to a new class.
+Mana is a resource that is used to play cards from the Main Deck. If a players has unspent mana at the end of their turn, that mana is lost.
+Players start at 1 mana, and the amount of mana they gain per turn increases every turn, up to  a maximum of 10.
 
-Other stats are not present on a hero by default but can be acquired via card effects:
-- Attack Damage: increases the damage done with attacks
-- Ability Damage: increases the damage done with abilities
-- Shield: When taking damage, loses shield before losing HP
+### Destiny
 
-## Class Advancement system
+Destiny is a resource that is used to play cards from the Destiny Deck. Unlike mana, Destiny accumulates between turns, and is gained at the rate of 1 destiny per turn.
 
-Heroes start with a basic class at Level 1. When they reach enough experience, they can level up and advance to a new class, which makes them able to play the cards of this class that they put into their deck. For exemple, a swordsman can advance to a Knight then a Crusader, at which point they will be able to play their swordsman, knight and crusader cards.
-Note that, while a level 1 class can advance to multiple other classes, the chosen advancement is decided at deck building time.
-There should be, at most, 3 levels of class advancement.
+### Elements
 
-Heroes gain experience by:
+Elements that a player unlocks determines which cards they are able to play. They start the game with the element associated with their Shrine. However, as their Hero evolves, they will be able to unlock new elements based on the hero evolution.
+The 4 basic elements are: Fire, Water, Air and Earth.
+The 5 advanced elements are : Life, Death, Order, Chaos and Arcane.
+There is also a Normal element that can be used regardless of which elements are unlocked.
 
-- attacking: one attack grants 1 EXP
-- using cards: playing a card grant EXP equal to the EXP stat of the card
-- fulfilling quest cards
-- picking up Experience Globes
+### Resource action
 
-In addition, every hero receives 1 EXP at the beginning of the turn.
+In addition to their mana and destiny gain, players have the ability to perform one resource action every turn. Here are the available resource actions:
+- Spend 1 mana to draw 1 card.
+- Put a card in their hand at the bottom of their deck and draw 1 card.
+- Banish a card in their hand to gain 1 destiny.
 
-### Experience Globes
+## Decks
 
-At the start of each turn, 2 tiles on the map will be marked. At the end of the turn, an experience globe will appear on those tiles. Picking up an experience globe grants some EXP. If a her is standing on the marked tile at the end of the turn, the globe does not appear.
-If there are already at least 6 experience globes on the board, new ones will not spawn.
+### Main deck
+
+The Main deck is made of 40 cards. A maximum of 4 copies of the same crd can be put into the main deck. At the beginning of their turn, player draw one card from the main deck.
+
+The Main deck can contain cards of the following type:
+- Minion
+- Spell
+- Artifact
+- Secret
+
+### Destiny Deck
+
+The destiny deck is made of 10 unique cards. At the beginning of their turn, after they have drawn from their main deck, a player may spend destiny points to play one and only one card from the Destiny Deck by paying its Destiny cost. If they choose to do so, they must do it before any other action.
+
+The Destiny deck deck contain cards of the following types:
+- Minion
+- Spell
+- Artifact
+- Secret
+- Hero
+
+Note that a card that has a Destiny cost can be put in the destiny deck : if a card has a mana cost instead, it must go into the Main deck.
+
+When a card from the Destiny deck leaves the field it is banished instead of being sent to its owner's discard pile.
 
 ## Cards
 
-There are 3 types of cards: Weapons, Artifacts, and Quests.
+There are 5 types of cards: Minions, Heroes, Spells, Artifacts and Secrets.
 
-Abilities can only be put in to the deck of a hero with the corresponding class. Items and quests do not necessarily have specific class requirement, but they can have class-specific additional effects.
+### Heroes
 
-### Abilities
+Heroes are the main pieces on the board. the goal of the game is to reduce their Health Points to 0.
 
-These cards represent skill learned by the hero that they can cast. Once used, an ability is sent to its owner's discard pile.
+A hero starts in the Destiny deck.
+
+When a hero is played, it will either, depending on the state of the game, replace the player's Shrine or its current Hero.
+
+To be able to play a hero, a player must meet its Destiny cost requirement, as wel las its base level requirement. There are three base level: 1, 2 and 3. Only a hero level 1 can be placed on a Shrine, then a level 2 hero placed on a level 1 hero, and so on.
+
+Note that a card effect may increase a hero's level. This does not affect the hero's base level. For instance, a base level 1 hero with +1 level can not be used to play a base level 3 hero from your destiny deck.
+
+For all intents and purposes, the Shrine a player starts the game with is considered a base level 0 hero that cannot move, attack or use abilities.
+
+#### Level up
+
+When playing a base level 2 or 3 hero, the previous level card are not destroyed or banished. Instead, they are placed on top of each other, to make it easier to track lineage and unlocked elements.
+
+Leveling up a hero will not change its **exhaustion status** nor will it remove the damage they have suffere so far.
+
+#### Lineage
+
+In addition, most heroes follow a lineage: only heroes that share the same lineage can be played. The lineage is indicated on the card.
+
+For example, you can only play *Aiden, Caller of Storms*, hat has the Aiden lineage, if your current hero also posess the Aiden lineage.
+
+Note that not all heroes have a lineage requirement. However, playing a hero without a lineage breaks the "lineage chains". For example, playing the base level 2 hero *Ohm, the Forgotten* on top of a base level 1 *Aiden, Child of the Storm*, breaks the Aiden Lineage. ITs player will then not be able to play a level 3 hero with the Aiden lineage, such as *Aiden, Thunder Incarnate*.
+
+### Deckbuilding restrictions
+
+There are not deckbuilding restrictions regarding which heroes a player can put in their Destiny Deck. However, once they played a base level hero, they might lock themselves out from using other heroes due to lineage / level restrictions.
+
+#### Elements
+
+Most heroes of base level 3 will unlock one of the five advanced elements for its player.
+
+#### Stats
+
+A Hero has the following stats:
+- Health Points (HP): how much damage they can take before being defeated.
+- Attack Points (ATK): how much damage they deal through combat.
+- Spellpower (SP): influences the effects of some spells and abilties.
+
+### Minions
+
+Minions represent creatures that are summoned on the board and can fight other minions and heroes. They can start either in the Main deck or the Destiny deck.
+
+Unless specified otherwise on the card, a minion must be summoned on a tile adjacent to its owner's Hero or Shrine (diagonals are allowed).
+
+#### Summoning sickness
+
+There is not "summoning sickness" in this game: minions can move attack or use abilties the turn they are summoned. They cannot however, attack the enemy shrine or Hero the turn they are summoned, unless specified otherwise on the card.
+
+#### Stats
+
+A Minion has the following stats:
+- Health Points (HP): how much damage they can take before being defeated.
+- Attack Points (ATK): how much damage they deal through combat.
+
+### Spells
+
+Spells one time effect cards: once they are resolved, they go to it's owner discard pile.
+
+Some spell's effects may be affected by its owner's Heros Spellpower in various ways. They may also be affected by it owner's Hero's level.
+
+Example: Deal 2 + SP damage, draw LV cards, etc...
 
 ### Artifacts
 
-Heroes can equip items, granting them increased stats or powerful effects. There are three kinds of items: Weapon, Armor and Relic. A hero can have, at most, one item of each type equiped. Attempting to equip another one will send the previously equipped to its owners discard pile.
+Artifacts are equipements that are attached to its owner's Hero. Note that a Shrine cannot equip artifacts.
 
-Artifacts have a Durability stat. Once it reaches zero, the artifact is destroyed. 
-- Weapons loses durability whenever its wielder attack. 
-- Armors loses durability whenever its wielder takes damage. 
-- Relics don't lose durability by default.
+Artifacts grant various effects or abilities to its wielder while they are equipped.
 
-Artifacts will often have effect that are triggered when a specific thing occurs resulting in a loss of durability. For exemple "Whenever this hero plays a card, gain one mana and lose 1 durability".
+When a hero changes by playing another one from the Destiny deck, artifacts stay in place, without any change.
 
-### Quests
+#### Stats
 
-These cards give heroes objectives to fulfill to gain a reward like EXP or a powerful artifact. A hero can only have one ongoing quest.
+An artifact has the following stats:
+- Durability: an artifact starts at full durability. Whenever its hero takes damage, the artifact loses 1 durability. When it reaches zero, the artifact is destroyed. The durability loss does not scale with the damage taken: it will always lose one and only one durability.
+
+### Secrets
+
+Secrets are cards that are played face down on the board and cannot be activated manually. They trigger when some specific conditions are met, such as the opponent using a spell, or attacking the enemy hero. Once triggered, the secret is destroyed.
+
+### Card Classes and Class Bonus
+
+Each card may have a **Class**, which represents its combat or magical specialization. The available classes are:
+
+- **Fighter** – Close-range martial combatants.
+- **Spellcaster** – Masters of destructive or utility magic.
+- **Avenger** – Agile skirmishers, assassins, and archers.
+- **Guardian** – Defensive stalwarts who protect allies.
+- **Wanderer** – Versatile adventurers and rogues.
+- **Summoner** – Masters of conjuring minions or spirits.
+
+Cards of any type (Minion, Spell, Artifact, etc.) may have a class.
+
+Your **Hero also has a class**, indicated on their card.
+
+Some card effects include a **Class Bonus**: this is an additional effect that is only applied if the card's class matches your Hero’s class.
+
+#### Example:
+> **Arcane Bolt** *(Spell – Spellcaster)*  
+> Deal 2 damage.  
+> **Class Bonus – Draw a card.**  
+> (This effect only triggers if your Hero is a Spellcaster.)
+
+Class Bonuses allow you to create synergies between your Hero and your deck, rewarding themed builds while still allowing off-class flexibility.
 
 
-## Status effects
+## Units
 
-A lot of the negative status effects cause the afflicted hero to gain cards in their hand eual to the amounts of stacks. The afflicted hero has the opportunity to play those cards to get rid of the status effect. Depending of the effect, these can be do nothing cards, or have negative effects. These cards are then discarded at the end of the hero's turn at a certain rate. Here are some examples:
-- Root(1): prevents the hero from moving and give 1 "Rooted" card.
-- Disarm(2): prevents the hero from attacking and give 2 "Disarmed" cards.
-- Poison(1): the unit takes 1 damage every time they play a card or attack and give 1 "Poisoned" card.
+A **Unit** represents either a Creature, Shrine or Hero on the board. During its owner's turn, a unit can
+- Move up to 2 tiles. Moving diagonally counts as 2 spaces.
+- Attack another unit.
+- Use an ability.
 
-## Structure of a turn
+### Exhaustion
 
-At the beginning of the game turn, all heroes draw one card from their deck, thenare sorted according to their **Initiative** stat. After that, they get to play their turn in descending order: a hero with higher initiative will get to act sooner.
-During its turn, a hero can
+An *exhausted* unit cannot move, attack, counterattack or use an ability. A unit becomes exhausted when
+- it attacks.
+- it uses an ability (note: not all abilities exhaust the unit).
+- it counterattacks.
 
-- move: 1 AP is spent for every cell moved
-- attack: deals 1 damage to a nearby enemy. A hero's first attack in a turn costs 1AP, then 2AP, 3AP, etc. There is no counterattack.
-- play a card: in addition to its MP cost, playing a card costs 1AP
-- meditate: The hero can put 3 cards at random from their discard pile and shuffle them back into their deck. This action consume all AP of the hero and cannot be used if they have already performed other actions this turn.
+A unit loses its exhausted status at the end of any player's turn.
 
-Once every hero has acted, the turn ends, and a new one begin.
+## Combat
 
-## Victory Points
+When attacking, a unit deals damage to it equals to its attack, then, if able, the defender will counter attack, doing the same.
 
-Victory Points are awarded by reducing a hero's HP to 0. This awards 1 VP. When this happens, the hero is removed from play for the current turn, as well as the following turn. At the start of te turn after that, the hero is redeployed in its player deploy zone. When a hero is redeployed, they keep teir exp and class advancement, but lose the artifact they had equiped as well as other buffs and debuffs tey had on them before being destroyed.
+An exhausted unit will not counterattack
 
-## Additional units
+A unit will counterattack even if the attacked reduced it's HP to 0.
 
-Some heroes may have abilities to summon other units on the board. These units do not award victory point when destroyed: only the heroes matter in this case. 
+## Discard Pile and Banish Pile
 
-Some summoned unit can have their own deck of cards that they're able to play, but they do not gain exp.
+Once a card leaves the board, it will go to its owner's discard pile if it is a main deck card, or its banish pile if it is a destiny deck cards. Some cards effect may also require a player to banish some cards.
+From a gameplay perspective, the banish pile is way harder to interact with, while the discard pile may be used for resurrection or recursion effects, etc...
+
+## First player advantage
+
+To counterbalance first player advantage, the layer going second:
+- starts with an additional card in their hand at the start of the game, that allows them to either gain one additional mana, or gain  Destiny
+- will draw 2 cards on their first turn's Draw phase.
 
