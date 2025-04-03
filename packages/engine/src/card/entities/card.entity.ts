@@ -151,7 +151,7 @@ export abstract class Card<
     return () => this.removeModifier(modifier);
   }
 
-  addtoHand() {
+  addToHand() {
     this.emitter.emit(CARD_EVENTS.ADD_TO_HAND, new CardAddtoHandEvent({}));
   }
 

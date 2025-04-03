@@ -252,8 +252,26 @@ export class Player
     );
   }
 
-  replaceCardAtIndex(index: number) {
+  resourceActionReplaceCardAtIndex(index: number) {
     this.cards.replaceCardAt(index);
+    this.resourceActionsDoneThisTurn++;
+  }
+
+  resourceActionGainDestiny(indices: number[]) {
+    indices.forEach(index => {
+      const card = this.cards.getCardAt(index);
+      if (!card) return;
+      this.cards.removeFromHand(card);
+      this.cards.sendToBanishPile(card);
+    });
+
+    this.destiny.gain(indices.length);
+    this.resourceActionsDoneThisTurn++;
+  }
+
+  resourceActionDraw() {
+    this.mana.spend(this.game.config.DRAW_RESOURCE_ACTION_COST);
+    this.cards.draw(1);
     this.resourceActionsDoneThisTurn++;
   }
 

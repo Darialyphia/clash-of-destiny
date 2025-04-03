@@ -87,13 +87,22 @@ export class CardManagerComponent {
 
     cards.forEach(card => {
       this.hand.push(card);
-      card.addtoHand();
+      card.addToHand();
     });
   }
 
   removeFromHand(card: AnyCard) {
     const index = this.hand.findIndex(handCard => handCard.equals(card));
+    if (index === -1) return;
     this.hand.splice(index, 1);
+  }
+
+  removeFromDestinyDeck(card: AnyCard) {
+    const index = this.destinyDeck.cards.findIndex(destinyCard =>
+      destinyCard.equals(card)
+    );
+    if (index === -1) return;
+    this.destinyDeck.cards.splice(index, 1);
   }
 
   discard(card: AnyCard) {
@@ -105,6 +114,9 @@ export class CardManagerComponent {
   play(card: AnyCard) {
     if (this.hand.includes(card)) {
       this.removeFromHand(card);
+    }
+    if (this.destinyDeck.cards.includes(card)) {
+      this.removeFromDestinyDeck(card);
     }
     card.play();
   }
@@ -136,7 +148,7 @@ export class CardManagerComponent {
     const replacement = this.mainDeck.replace(card);
     this.hand[index] = replacement;
     card.replace();
-    replacement.addtoHand();
+    replacement.addToHand();
 
     return replacement;
   }

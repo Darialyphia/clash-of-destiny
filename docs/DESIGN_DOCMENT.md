@@ -31,7 +31,7 @@ Players start at 1 mana, and the amount of mana they gain per turn increases eve
 
 ### Destiny
 
-Destiny is a resource that is used to play cards from the Destiny Deck. Unlike mana, Destiny accumulates between turns, and is gained at the rate of 1 destiny per turn.
+Destiny is a resource that is used to play cards from the Destiny Deck. Unlike mana, Players do not gain Destiny automatically at the start of their turn. Instead, they may chose to use their *Resource Acrtion* to gain Destiny. Some card effects may add or remove a player's Destiny.
 
 ### Elements
 
@@ -45,7 +45,7 @@ There is also a Normal element that can be used regardless of which elements are
 In addition to their mana and destiny gain, players have the ability to perform one resource action every turn. Here are the available resource actions:
 - Spend 1 mana to draw 1 card.
 - Put a card in their hand at the bottom of their deck and draw 1 card.
-- Banish a card in their hand to gain 1 destiny.
+- Banish up to 3 cards in their hand to gain up to 3 destiny.
 
 ## Decks
 
@@ -70,9 +70,11 @@ The Destiny deck deck contain cards of the following types:
 - Secret
 - Hero
 
-Note that a card that has a Destiny cost can be put in the destiny deck : if a card has a mana cost instead, it must go into the Main deck.
+Note that only a card that has a Destiny cost can be put in the destiny deck : if a card has a mana cost instead, it must go into the Main deck.
 
 When a card from the Destiny deck leaves the field it is banished instead of being sent to its owner's discard pile.
+
+Players are able to play one (and only one) destiny card during the Destiny Phase; however, some card effects could allow playing additional cards from the destiny deck at other points during the course of the game, for exemple "On Enter: play an artifact card from your destiny deck with a destiny cost of 0."
 
 ## Cards
 

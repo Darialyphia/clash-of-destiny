@@ -28,7 +28,7 @@ export class GameTurnEvent extends TypedSerializableEvent<
   }
 }
 
-export type TurnEventMap = {
+export type GamePhaseEventMap = {
   [GAME_PHASE_EVENTS.TURN_START]: GameTurnEvent;
   [GAME_PHASE_EVENTS.TURN_END]: GameTurnEvent;
 };
@@ -60,7 +60,7 @@ export class GamePhaseSystem extends StateMachine<
 
   private firstPlayer!: Player;
 
-  private emitter = new TypedSerializableEventEmitter<TurnEventMap>();
+  private emitter = new TypedSerializableEventEmitter<GamePhaseEventMap>();
 
   constructor(private game: Game) {
     super(GAME_PHASES.DRAW);

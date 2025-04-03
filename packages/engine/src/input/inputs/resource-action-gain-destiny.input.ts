@@ -2,19 +2,20 @@ import { z } from 'zod';
 import { defaultInputSchema, Input } from '../input';
 import { GAME_PHASES } from '../../game/game.enums';
 import { assert } from '@game/shared';
-import {
-  InvalidCardIndexError,
-  NotTurnPlayerError,
-  TooManyReplacesError
-} from '../input-errors';
+import { InvalidCardIndexError, NotTurnPlayerError } from '../input-errors';
 import { PlayerAlreadyPerformedResourceActionError } from '../../player/player-errors';
+import { defaultConfig } from '../../config';
 
 const schema = defaultInputSchema.extend({
-  index: z.number()
+  indices: z
+    .number()
+    .array()
+    .min(defaultConfig.DESTINY_RESOURCE_ACTION_MIN_BANISHED_CARDS)
+    .max(defaultConfig.DESTINY_RESOURCE_ACTION_MAX_BANISHED_CARDS)
 });
 
-export class ReplaceCardInput extends Input<typeof schema> {
-  readonly name = 'replaceCard';
+export class ResourceActionGainDestinyInput extends Input<typeof schema> {
+  readonly name = 'resourceActionGainDestiny';
 
   readonly allowedPhases = [GAME_PHASES.MAIN];
 
@@ -27,7 +28,7 @@ export class ReplaceCardInput extends Input<typeof schema> {
     );
 
     assert(
-      this.player.cards.hand.length > this.payload.index,
+      this.payload.indices.every(index => this.player.cards.hand.length > index),
       new InvalidCardIndexError()
     );
 
@@ -35,6 +36,7 @@ export class ReplaceCardInput extends Input<typeof schema> {
       this.player.canPerformResourceAction,
       new PlayerAlreadyPerformedResourceActionError()
     );
-    // this.game.gamePhaseSystem.activeUnit.replaceCardAtIndex(this.payload.index);
+
+    this.player.resourceActionGainDestiny(this.payload.indices);
   }
 }

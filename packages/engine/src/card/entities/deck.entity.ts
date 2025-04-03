@@ -84,23 +84,9 @@ export class Deck<TCard extends AnyCard> extends Entity<DeckEventMap, EmptyObjec
   }
 
   replace(replacedCard: TCard) {
-    let replacement: TCard;
-    let index: number;
+    this.addToBottom(replacedCard);
 
-    const shouldForceDifferentCard = this.cards.some(
-      c => c.blueprintId !== replacedCard.blueprintId
-    );
-
-    do {
-      index = this.game.rngSystem.nextInt(this.cards.length - 1);
-      replacement = this.cards[index];
-    } while (
-      shouldForceDifferentCard &&
-      replacement.blueprintId === replacedCard.blueprintId
-    );
-
-    this.cards[index] = replacedCard;
-    return replacement;
+    return this.draw(1)[0];
   }
 
   addToTop(card: TCard) {

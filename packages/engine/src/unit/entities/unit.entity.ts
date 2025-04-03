@@ -470,21 +470,6 @@ export class Unit
     this.movement.move(to);
   }
 
-  deployAt(cell: Cell) {
-    if (cell.unit) {
-      this.swapPosition(cell.unit);
-    } else {
-      this.teleport(cell.position);
-    }
-  }
-
-  swapPosition(unit: Unit) {
-    const prevPosition = this.position.clone();
-    const prevUnitPosition = unit.position.clone();
-    this.teleport(prevUnitPosition);
-    unit.teleport(prevPosition);
-  }
-
   teleport(to: Point) {
     this.emitter.emit(
       UNIT_EVENTS.BEFORE_TELEPORT,

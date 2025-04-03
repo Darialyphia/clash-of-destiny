@@ -17,12 +17,14 @@ import { CommitPlayCardInput } from './inputs/commit-play-card.input';
 import { EndTurnInput } from './inputs/end-turn.input';
 import { MoveInput } from './inputs/move.input';
 import { PlayCardInput } from './inputs/play-card.input';
-import { ReplaceCardInput } from './inputs/replace-card.input';
+import { ResourceActionReplaceCardInput } from './inputs/resource-action-replace-card.input';
 import { AddNextTargetIntentCardInput } from './inputs/add-next-target-intent';
 import { UseUnitAbilityInput } from './inputs/use-unit-ability.input';
 import { UseArtifactAbilityInput } from './inputs/use-artifact-ability.input';
 import { SkipDestinyInput } from './inputs/skip-destiny.input';
 import { PlayDestinyCardInput } from './inputs/play-destiny-card.input';
+import { ResourceActionDrawInput } from './inputs/resource-action-draw.input';
+import { ResourceActionGainDestinyInput } from './inputs/resource-action-gain-destiny.input';
 
 type GenericInputMap = Record<string, Constructor<Input<DefaultSchema>>>;
 
@@ -37,11 +39,13 @@ type ValidatedInputMap<T extends GenericInputMap> = {
 const validateinputMap = <T extends GenericInputMap>(data: ValidatedInputMap<T>) => data;
 
 const inputMap = validateinputMap({
+  resourceActionReplaceCard: ResourceActionReplaceCardInput,
+  resourceActionDraw: ResourceActionDrawInput,
+  resourceActionGainDestiny: ResourceActionGainDestinyInput,
   move: MoveInput,
   attack: AttackInput,
   playCard: PlayCardInput,
   playDestinyCard: PlayDestinyCardInput,
-  replaceCard: ReplaceCardInput,
   cancelPlayCard: CancelPlayCardInput,
   addCardTarget: AddCardTargetCardInput,
   commitPlayCard: CommitPlayCardInput,
