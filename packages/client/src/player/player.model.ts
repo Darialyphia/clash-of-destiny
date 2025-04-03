@@ -22,6 +22,26 @@ export class PlayerViewModel {
     return this.data.name;
   }
 
+  get currentHp() {
+    return this.data.currentHp;
+  }
+
+  get maxHp() {
+    return this.data.maxHp;
+  }
+
+  get mana() {
+    return this.data.mana;
+  }
+
+  get maxMana() {
+    return this.data.maxMana;
+  }
+
+  get destiny() {
+    return this.data.destiny;
+  }
+
   get handSize() {
     return this.data.handSize;
   }

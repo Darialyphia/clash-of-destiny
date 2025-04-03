@@ -66,19 +66,20 @@ export class BattleController implements UiController {
       // return this.handleQuickCast(cell);
     }
 
-    const isMoveIntent =
-      this.selectedUnit?.moveIntent &&
-      pointToCellId(this.selectedUnit.moveIntent.point) === cell.id;
-    if (isMoveIntent) {
-      this.selectedUnit.commitMove();
-      return;
-    }
+    // const isMoveIntent =
+    //   this.selectedUnit?.moveIntent &&
+    //   pointToCellId(this.selectedUnit.moveIntent.point) === cell.id;
+    // if (isMoveIntent) {
+    //   this.selectedUnit.commitMove();
+    //   return;
+    // }
 
     if (this.selectedUnit?.canMoveTo(cell)) {
       this.selectedUnit.moveTowards({
         x: cell.position.x,
         y: cell.position.y
       });
+      this.selectedUnit.commitMove();
       this.unselectUnit();
       return;
     }

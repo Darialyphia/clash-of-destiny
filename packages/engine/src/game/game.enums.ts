@@ -4,7 +4,7 @@ export const GAME_PHASES = {
   DRAW: 'draw',
   DESTINY: 'destiny',
   MAIN: 'main',
-  GAME_END: 'end'
+  GAME_END: 'game_end'
 } as const;
 export type GamePhase = Values<typeof GAME_PHASES>;
 

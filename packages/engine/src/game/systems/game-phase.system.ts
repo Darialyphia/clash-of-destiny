@@ -184,7 +184,16 @@ export class GamePhaseSystem extends StateMachine<
 
   draw() {
     assert(this.can(GAME_PHASE_TRANSITIONS.DRAW), new WrongGamePhaseError());
+
+    const drawCount =
+      this.game.gamePhaseSystem.elapsedTurns === 0 && !this.turnPlayer.isPlayer1
+        ? this.game.config.PLAYER_2_CARDS_DRAWN_ON_FIRST_TURN
+        : this.game.config.CARDS_DRAWN_PER_TURN;
+    this.turnPlayer.draw(drawCount);
     this.dispatch(GAME_PHASE_TRANSITIONS.DRAW);
+    if (this.elapsedTurns === 0) {
+      this.skipDestiny();
+    }
   }
 
   skipDestiny() {
@@ -201,6 +210,7 @@ export class GamePhaseSystem extends StateMachine<
   }
 
   declareWinner(player: Player) {
+    console.log('declare winner');
     assert(this.can(GAME_PHASE_TRANSITIONS.PLAYER_WON), new WrongGamePhaseError());
     this.dispatch(GAME_PHASE_TRANSITIONS.PLAYER_WON, player);
   }

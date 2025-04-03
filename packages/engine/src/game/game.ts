@@ -92,7 +92,7 @@ export class Game {
   }
 
   defaultWinCondition(game: Game, player: Player) {
-    return !player.enemyUnits.some(unit => unit.isHero);
+    return !player.enemyUnits.some(unit => unit.isHero || unit.isShrine);
   }
 
   // the event emitter doesnt provide the event name if you enable wildcards, so let's implement it ourselves
@@ -130,18 +130,9 @@ export class Game {
         }
       }
     });
+    this.gamePhaseSystem.turnPlayer.startTurn();
     this.snapshotSystem.takeSnapshot();
     this.emit(GAME_EVENTS.READY, new GameReadyEvent({}));
-  }
-
-  private makeCardBlueprint<T extends CardBlueprint>(
-    blueprintId: string,
-    playerId: string
-  ): { id: string; blueprint: T } {
-    return {
-      id: this.cardIdFactory(blueprintId, playerId),
-      blueprint: this.cardPool[blueprintId] as T
-    };
   }
 
   get on() {

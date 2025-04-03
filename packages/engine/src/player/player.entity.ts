@@ -25,10 +25,11 @@ import type {
 } from '../card/card-blueprint';
 import { ResourceTrackerComponent } from './components/resource-tracker.component';
 import type { AnyCard } from '../card/entities/card.entity';
-import { CARD_DECK_SOURCES, CARD_EVENTS, UNIT_KINDS } from '../card/card.enums';
+import { CARD_DECK_SOURCES, CARD_EVENTS } from '../card/card.enums';
 import { WrongDeckSourceError } from '../card/card-errors';
 import { ShrineCard } from '../card/entities/shrine-card.entity';
 import { MissingShrineError } from './player-errors';
+import { max } from 'lodash-es';
 
 export type PlayerOptions = {
   id: string;
@@ -47,11 +48,14 @@ export type SerializedPlayer = {
   banishPile: string[];
   artifacts: string[];
   mana: number;
+  maxMana: number;
   destiny: number;
   canPerformResourceAction: boolean;
   remainingCardsInDeck: number;
   destinyDeck: string[];
   currentlyPlayedCard?: string;
+  maxHp: number;
+  currentHp: number;
 };
 
 type PlayerInterceptors = EmptyObject;
@@ -120,11 +124,14 @@ export class Player
       banishPile: Array.from(this.cards.banishPile).map(card => card.id),
       artifacts: this.artifacts.artifacts.map(artifact => artifact.id),
       mana: this.mana.current,
+      maxMana: this.mana.max,
       destiny: this.destiny.current,
       canPerformResourceAction: this.canPerformResourceAction(),
       remainingCardsInDeck: this.cards.mainDeck.remaining,
       destinyDeck: this.cards.destinyDeck.cards.map(card => card.id),
-      currentlyPlayedCard: this.currentlyPlayedCard?.id
+      currentlyPlayedCard: this.currentlyPlayedCard?.id,
+      maxHp: this.hero?.hp.max ?? 0,
+      currentHp: this.hero?.hp.current ?? 0
     };
   }
 
@@ -318,20 +325,16 @@ export class Player
   }
 
   startTurn() {
-    this.resourceActionsDoneThisTurn = 0;
-
-    const drawCount =
-      this.game.gamePhaseSystem.elapsedTurns === 0 && !this.isPlayer1
-        ? this.game.config.PLAYER_2_CARDS_DRAWN_ON_FIRST_TURN
-        : this.game.config.CARDS_DRAWN_PER_TURN;
-    this.draw(drawCount);
+    this.emitter.emit(PLAYER_EVENTS.START_TURN, new PlayerStartTurnEvent({}));
 
     if (this.mana.max < this.game.config.MAX_MANA) {
       this.mana.setMax(this.mana.max + this.game.config.MAX_MANA_INCREASE_PER_TURN);
     }
     this.mana.fill();
     this.destiny.add(this.game.config.DESTINY_EARNED_PER_TURN);
-    this.emitter.emit(PLAYER_EVENTS.START_TURN, new PlayerStartTurnEvent({}));
+    this.resourceActionsDoneThisTurn = 0;
+
+    this.game.gamePhaseSystem.draw();
   }
 
   endTurn() {

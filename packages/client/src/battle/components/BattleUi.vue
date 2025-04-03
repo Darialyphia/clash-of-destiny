@@ -9,10 +9,15 @@ import PlayIntent from '@/card/components/PlayIntent.vue';
 import PlayedCard from '@/card/components/PlayedCard.vue';
 import { useBattleUiStore } from '../stores/battle-ui.store';
 import TurnIndicator from '@/player/components/TurnIndicator.vue';
-const { state } = useGameState();
+import { usePlayers } from '../stores/battle.store';
+
+import BattlePlayerInfos from '@/player/components/BattlePlayerInfos.vue';
 
 const turnPlayer = useTurnPlayer();
 const ui = useBattleUiStore();
+
+const players = usePlayers();
+const { state } = useGameState();
 </script>
 
 <template>
@@ -20,6 +25,16 @@ const ui = useBattleUiStore();
 
   <div class="battle-ui" :class="{ cinematic: ui.cardPlayIntent }">
     <BattleLog />
+    <header>
+      {{ state.phase }}
+      <div class="flex justify-between">
+        <BattlePlayerInfos
+          v-for="player in players"
+          :key="player.id"
+          :player="player"
+        />
+      </div>
+    </header>
 
     <!-- <PlayedCard />
     <PlayIntent />

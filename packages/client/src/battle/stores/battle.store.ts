@@ -266,7 +266,7 @@ export const useGameType = () => {
   return computed(() => store.gameType);
 };
 
-const usePlayers = () => {
+export const usePlayers = () => {
   const { state } = useGameState();
 
   return computed(() =>

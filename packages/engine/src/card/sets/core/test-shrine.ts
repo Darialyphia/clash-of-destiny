@@ -16,9 +16,9 @@ export const testShrine: UnitBlueprint = {
   unitKind: UNIT_KINDS.SHRINE,
   name: 'Test Shrine',
   getDescription: () => {
-    return `On Enter: draw 5 cards.`;
+    return `On Enter: draw 4 cards.`;
   },
-  staticDescription: `On Enter: draw 5 cards.`,
+  staticDescription: `On Enter: draw 4 cards.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'placeholder',
   spriteId: 'fire-shrine-of-knowledge',
@@ -38,6 +38,6 @@ export const testShrine: UnitBlueprint = {
     return new PointAOEShape(game, card.player, TARGETING_TYPE.UNIT);
   },
   onPlay(game, card) {
-    card.player.cards.draw(5);
+    card.player.cards.draw(4);
   }
 };
