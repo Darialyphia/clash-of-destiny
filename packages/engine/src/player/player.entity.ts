@@ -114,7 +114,7 @@ export class Player
   }
 
   get isActive() {
-    return this.game.turnSystem.activePlayer.equals(this);
+    return this.game.gamePhaseSystem.turnPlayer.equals(this);
   }
 
   get hero() {

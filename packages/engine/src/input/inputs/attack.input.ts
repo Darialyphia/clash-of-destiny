@@ -1,10 +1,10 @@
 import { z } from 'zod';
 import { defaultInputSchema, Input } from '../input';
 import { assert, isDefined } from '@game/shared';
-import { GAME_PHASES } from '../../game/systems/game-phase.system';
+import { GAME_PHASES } from '../../game/game.enums';
 import {
   IllegalAttackTargetError,
-  NotActivePlayerError,
+  NotturnPlayerError,
   UnitNotOwnedError,
   UnknownUnitError
 } from '../input-errors';
@@ -18,7 +18,7 @@ const schema = defaultInputSchema.extend({
 export class AttackInput extends Input<typeof schema> {
   readonly name = 'attack';
 
-  readonly allowedPhases = [GAME_PHASES.BATTLE];
+  readonly allowedPhases = [GAME_PHASES.MAIN];
 
   protected payloadSchema = schema;
 
@@ -28,8 +28,8 @@ export class AttackInput extends Input<typeof schema> {
 
   impl() {
     assert(
-      this.game.turnSystem.activePlayer.equals(this.player),
-      new NotActivePlayerError()
+      this.game.gamePhaseSystem.turnPlayer.equals(this.player),
+      new NotturnPlayerError()
     );
 
     assert(isDefined(this.unit), new UnknownUnitError(this.payload.unitId));

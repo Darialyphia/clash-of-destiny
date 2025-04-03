@@ -1,12 +1,7 @@
 import { type Point } from '@game/shared';
-import { Unit, type UnitOptions } from './entities/unit.entity';
+import { Unit } from './entities/unit.entity';
 import { System } from '../system';
-import { GAME_PHASES } from '../game/systems/game-phase.system';
-import type { UnitBlueprint } from '../card/card-blueprint';
-import type { Player } from '../player/player.entity';
-import type { MinionCard } from '../card/entities/minion-card.entity';
-import type { HeroCard } from '../card/entities/hero-card.entity';
-import type { ShrineCard } from '../card/entities/shrine-card.entity';
+
 import type { AnyUnitCard } from '../card/entities/unit-card.entity';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -63,9 +58,6 @@ export class UnitSystem extends System<UnitSystemOptions> {
     });
     this.unitMap.set(unit.id, unit);
 
-    if (this.game.phase === GAME_PHASES.BATTLE) {
-      // this.game.turnSystem.insertInCurrentQueue(unit);
-    }
     return unit;
   }
 

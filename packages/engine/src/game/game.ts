@@ -2,10 +2,9 @@ import { InputSystem, type SerializedInput } from '../input/input-system';
 import { defaultConfig, type Config } from '../config';
 import { TypedSerializableEventEmitter } from '../utils/typed-emitter';
 import { RngSystem } from '../rng/rng.system';
-import { GAME_PHASES, GamePhaseSystem } from './systems/game-phase.system';
+import { GamePhaseSystem } from './systems/game-phase.system';
 import { GameSnaphotSystem } from './systems/game-snapshot.system';
 import { PlayerSystem } from '../player/player.system';
-import { TurnSystem } from './systems/turn-system';
 import {
   GAME_EVENTS,
   GameReadyEvent,
@@ -24,6 +23,7 @@ import { MAPS_DICTIONARY } from '../board/maps/_index';
 import { InteractionSystem } from './systems/interaction.system';
 import { modifierIdFactory } from '../modifier/modifier.entity';
 import { InteractableSystem } from '../interactable/interactable.system';
+import { GAME_PHASES } from './game.enums';
 
 export type GameOptions = {
   id: string;
@@ -54,8 +54,6 @@ export class Game {
   readonly gamePhaseSystem = new GamePhaseSystem(this);
 
   readonly snapshotSystem = new GameSnaphotSystem(this);
-
-  readonly turnSystem = new TurnSystem(this);
 
   readonly playerSystem = new PlayerSystem(this);
 
@@ -122,12 +120,11 @@ export class Game {
     this.gamePhaseSystem.initialize();
     this.interaction.initialize();
     this.snapshotSystem.initialize();
-    this.turnSystem.initialize();
     const stop = this.on('*', () => {
-      if (this.gamePhaseSystem.phase === GAME_PHASES.END) return;
+      if (this.gamePhaseSystem.phase === GAME_PHASES.GAME_END) return;
       for (const player of this.playerSystem.players) {
         if (this.winCondition(this, player)) {
-          this.gamePhaseSystem.endBattle(player);
+          this.gamePhaseSystem.declareWinner(player);
           stop();
           break;
         }

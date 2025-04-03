@@ -1,10 +1,10 @@
 import { z } from 'zod';
 import { defaultInputSchema, Input } from '../input';
-import { GAME_PHASES } from '../../game/systems/game-phase.system';
+import { GAME_PHASES } from '../../game/game.enums';
 import { assert } from '@game/shared';
 import {
   InvalidCardIndexError,
-  NotActivePlayerError,
+  NotturnPlayerError,
   TooManyReplacesError
 } from '../input-errors';
 import { PlayerAlreadyPerformedResourceActionError } from '../../player/player-errors';
@@ -16,14 +16,14 @@ const schema = defaultInputSchema.extend({
 export class ReplaceCardInput extends Input<typeof schema> {
   readonly name = 'replaceCard';
 
-  readonly allowedPhases = [GAME_PHASES.BATTLE];
+  readonly allowedPhases = [GAME_PHASES.MAIN];
 
   protected payloadSchema = schema;
 
   impl() {
     assert(
-      this.game.turnSystem.activePlayer.equals(this.player),
-      new NotActivePlayerError()
+      this.game.gamePhaseSystem.turnPlayer.equals(this.player),
+      new NotturnPlayerError()
     );
 
     assert(
@@ -35,6 +35,6 @@ export class ReplaceCardInput extends Input<typeof schema> {
       this.player.canPerformResourceAction,
       new PlayerAlreadyPerformedResourceActionError()
     );
-    // this.game.turnSystem.activeUnit.replaceCardAtIndex(this.payload.index);
+    // this.game.gamePhaseSystem.activeUnit.replaceCardAtIndex(this.payload.index);
   }
 }

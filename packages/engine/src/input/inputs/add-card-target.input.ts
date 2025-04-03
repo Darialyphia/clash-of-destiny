@@ -1,9 +1,9 @@
 import { assert } from '@game/shared';
-import { GAME_PHASES } from '../../game/systems/game-phase.system';
 import { defaultInputSchema, Input } from '../input';
 import { z } from 'zod';
-import { InvalidInteractionStateError, NotActivePlayerError } from '../input-errors';
+import { InvalidInteractionStateError, NotturnPlayerError } from '../input-errors';
 import { INTERACTION_STATES } from '../../game/systems/interaction.system';
+import { GAME_PHASES } from '../../game/game.enums';
 
 const schema = defaultInputSchema.extend({
   x: z.number(),
@@ -13,14 +13,14 @@ const schema = defaultInputSchema.extend({
 export class AddCardTargetCardInput extends Input<typeof schema> {
   readonly name = 'addCardTarget';
 
-  readonly allowedPhases = [GAME_PHASES.BATTLE];
+  readonly allowedPhases = [GAME_PHASES.MAIN];
 
   protected payloadSchema = schema;
 
   impl() {
     assert(
-      this.game.turnSystem.activePlayer.equals(this.player),
-      new NotActivePlayerError()
+      this.game.gamePhaseSystem.turnPlayer.equals(this.player),
+      new NotturnPlayerError()
     );
     assert(
       this.game.interaction.context.state === INTERACTION_STATES.SELECTING_TARGETS,

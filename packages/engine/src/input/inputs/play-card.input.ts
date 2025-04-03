@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { defaultInputSchema, Input } from '../input';
-import { GAME_PHASES } from '../../game/systems/game-phase.system';
+import { GAME_PHASES } from '../../game/game.enums';
 import { assert } from '@game/shared';
-import { IllegalCardPlayedError, NotActivePlayerError } from '../input-errors';
+import { IllegalCardPlayedError, NotturnPlayerError } from '../input-errors';
 
 const schema = defaultInputSchema.extend({
   index: z.number()
@@ -11,14 +11,14 @@ const schema = defaultInputSchema.extend({
 export class PlayCardInput extends Input<typeof schema> {
   readonly name = 'playCard';
 
-  readonly allowedPhases = [GAME_PHASES.BATTLE];
+  readonly allowedPhases = [GAME_PHASES.MAIN];
 
   protected payloadSchema = schema;
 
   impl() {
     assert(
-      this.game.turnSystem.activePlayer.equals(this.player),
-      new NotActivePlayerError()
+      this.game.gamePhaseSystem.turnPlayer.equals(this.player),
+      new NotturnPlayerError()
     );
 
     const card = this.player.cards.getCardAt(this.payload.index);

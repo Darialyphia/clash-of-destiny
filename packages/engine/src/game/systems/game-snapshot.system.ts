@@ -3,7 +3,6 @@ import { System } from '../../system';
 import type { GameStarEvent, SerializedStarEvent } from '../game.events';
 import type { SerializedUnit } from '../../unit/entities/unit.entity';
 import type { SerializedPlayer } from '../../player/player.entity';
-import type { GamePhase } from './game-phase.system';
 import type { SerializedInteractionContext } from './interaction.system';
 import type { SerializedBoard } from '../../board/board-system';
 import type { SerializedCell } from '../../board/cell';
@@ -11,6 +10,7 @@ import type { SerializedCard } from '../../card/entities/card.entity';
 import type { SerializedModifier } from '../../modifier/modifier.entity';
 import type { SerializedArtifact } from '../../player/artifact.entity';
 import type { SerializedInteractable } from '../../interactable/interactable.entity';
+import type { GamePhase } from '../game.enums';
 
 export type GameStateSnapshot<T> = {
   id: number;
@@ -35,7 +35,7 @@ export type SerializedOmniscientState = {
   units: string[];
   interactables: string[];
   players: [string, string];
-  activePlayer: string;
+  turnPlayer: string;
   turnCount: number;
   interactionState: SerializedInteractionContext;
   phase: GamePhase;
@@ -143,8 +143,8 @@ export class GameSnaphotSystem extends System<EmptyObject> {
   serializeOmniscientState(): SerializedOmniscientState {
     return {
       entities: this.buildEntityDictionary(),
-      activePlayer: this.game.turnSystem.activePlayer.id,
-      turnCount: this.game.turnSystem.elapsedTurns,
+      turnPlayer: this.game.gamePhaseSystem.turnPlayer.id,
+      turnCount: this.game.gamePhaseSystem.elapsedTurns,
       interactionState: this.game.interaction.serialize(),
       phase: this.game.phase,
       board: this.game.boardSystem.serialize(),

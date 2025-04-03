@@ -1,6 +1,5 @@
 import { type BetterOmit, type Point } from '@game/shared';
 import { System } from '../system';
-import { GAME_PHASES } from '../game/systems/game-phase.system';
 import { Interactable, type InteractableOptions } from './interactable.entity';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -53,9 +52,7 @@ export class InteractableSystem extends System<InteractableSystemOptions> {
     const interactable = new Interactable(this.game, { id, ...options });
     this.interactableMap.set(interactable.id, interactable);
     interactable.addToBoard();
-    if (this.game.phase === GAME_PHASES.BATTLE) {
-      // this.game.turnSystem.insertInCurrentQueue(unit);
-    }
+
     return interactable;
   }
 
