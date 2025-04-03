@@ -155,8 +155,6 @@ export class GamePhaseSystem extends StateMachine<
     this._turnPlayer = this.game.playerSystem.players[0];
     this.firstPlayer = this._turnPlayer;
 
-    this.game.on(GAME_EVENTS.PLAYER_END_TURN, this.onPlayerTurnEnd.bind(this));
-
     this.on(GAME_PHASE_EVENTS.TURN_START, e => {
       this.game.emit(GAME_EVENTS.TURN_START, e);
     });
@@ -210,7 +208,6 @@ export class GamePhaseSystem extends StateMachine<
   }
 
   declareWinner(player: Player) {
-    console.log('declare winner');
     assert(this.can(GAME_PHASE_TRANSITIONS.PLAYER_WON), new WrongGamePhaseError());
     this.dispatch(GAME_PHASE_TRANSITIONS.PLAYER_WON, player);
   }

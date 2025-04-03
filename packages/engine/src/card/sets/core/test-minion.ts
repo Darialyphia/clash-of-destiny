@@ -3,17 +3,18 @@ import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
 import type { UnitBlueprint } from '../../card-blueprint';
 import {
   CARD_DECK_SOURCES,
+  CARD_JOBS,
   CARD_KINDS,
   CARD_SETS,
   RARITIES,
   UNIT_KINDS
 } from '../../card.enums';
-import { NoFollowup } from '../../followups/no-followup';
+import { MinionFollowup } from '../../followups/minion.followup';
 
 export const testMinion: UnitBlueprint = {
   id: 'test-minion',
   kind: CARD_KINDS.UNIT,
-  unitKind: UNIT_KINDS.SHRINE,
+  unitKind: UNIT_KINDS.MINION,
   name: 'Test Minion',
   getDescription: (game, card) => {
     return `todo description`;
@@ -25,14 +26,14 @@ export const testMinion: UnitBlueprint = {
   spriteParts: {},
   rarity: RARITIES.COMMON,
   collectable: true,
-  destinyCost: 0,
-  deckSource: CARD_DECK_SOURCES.DESTINY_DECK,
+  manaCost: 2,
+  deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
-  atk: 0,
-  maxHp: 15,
-  level: 0,
+  atk: 1,
+  maxHp: 2,
+  job: CARD_JOBS.FIGHTER,
   getFollowup: () => {
-    return new NoFollowup();
+    return new MinionFollowup();
   },
   getAoe(game, card) {
     return new PointAOEShape(game, card.player, TARGETING_TYPE.UNIT);

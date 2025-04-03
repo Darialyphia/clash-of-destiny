@@ -56,9 +56,9 @@ export class CardViewModel {
     return this.data.rarity;
   }
 
-  get allowedJobs() {
-    if ('allowedJobs' in this.data) {
-      return this.data.allowedJobs as Array<{ id: string; name: string }>;
+  get job() {
+    if ('job' in this.data) {
+      return this.data.job as string;
     }
   }
 
@@ -68,9 +68,33 @@ export class CardViewModel {
     }
   }
 
-  get exp() {
-    if ('exp' in this.data) {
-      return this.data.exp as number;
+  get destinyCost() {
+    if ('destinyCost' in this.data) {
+      return this.data.destinyCost as number;
+    }
+  }
+
+  get atk() {
+    if ('atk' in this.data) {
+      return this.data.atk as number;
+    }
+  }
+
+  get maxHp() {
+    if ('maxHp' in this.data) {
+      return this.data.maxHp as number;
+    }
+  }
+
+  get level() {
+    if ('level' in this.data) {
+      return this.data.level as number;
+    }
+  }
+
+  get spellpower() {
+    if ('spellpower' in this.data) {
+      return this.data.spellpower as number;
     }
   }
 

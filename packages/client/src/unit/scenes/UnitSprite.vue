@@ -65,12 +65,9 @@ const isInAoe = computed(() => {
       <outline-filter
         v-if="ui.highlightedUnit?.id === unit.id"
         :thickness="outlineThickness"
-        :color="0xffffff"
-      />
-      <outline-filter
-        v-else-if="ui.selectedUnit?.id === unit.id"
-        :thickness="outlineThickness"
-        :color="ui.selectedUnit?.playerId === player.id ? 0x00aaff : 0xff0000"
+        :color="
+          ui.highlightedUnit?.playerId === player.id ? 0x00aaff : 0xff0000
+        "
       />
 
       <adjustment-filter v-if="isInAoe" :red="3" :brightness="0.8" />

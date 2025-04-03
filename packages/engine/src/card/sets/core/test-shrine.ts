@@ -28,8 +28,8 @@ export const testShrine: UnitBlueprint = {
   destinyCost: 0,
   deckSource: CARD_DECK_SOURCES.DESTINY_DECK,
   abilities: [],
-  atk: 1,
-  maxHp: 2,
+  atk: 0,
+  maxHp: 15,
   level: 0,
   getFollowup: () => {
     return new NoFollowup();

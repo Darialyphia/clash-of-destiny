@@ -24,7 +24,7 @@ export const CARD_KINDS = {
 export type CardKind = Values<typeof CARD_KINDS>;
 
 export const CARD_JOBS = {
-  BRAWLER: 'BRAWLER',
+  FIGHTER: 'FIGHTER',
   AVENGER: 'AVENGER',
   GUARDIAN: 'GUARDIAN',
   SPELLCASTER: 'SPELLCASTER',

@@ -204,13 +204,13 @@ An *exhausted* unit cannot move, attack, counterattack or use an ability. A unit
 - it uses an ability (note: not all abilities exhaust the unit).
 - it counterattacks.
 
-A unit loses its exhausted status at the end of any player's turn.
+A unit loses its exhausted status at the end of any player's turn. Losing the exhausted status is referred as *activating*.
 
 ## Combat
 
 When attacking, a unit deals damage to it equals to its attack, then, if able, the defender will counter attack, doing the same.
 
-An exhausted unit will not counterattack
+An exhausted unit will not counterattack. (Keep in mind units activate at the start of **every** player turn, so attacking on your turn does not prevent you from counterattacking).
 
 A unit will counterattack even if the attacked reduced it's HP to 0.
 
@@ -222,6 +222,6 @@ From a gameplay perspective, the banish pile is way harder to interact with, whi
 ## First player advantage
 
 To counterbalance first player advantage, the layer going second:
-- starts with an additional card in their hand at the start of the game, that allows them to either gain one additional mana, or gain  Destiny
+- starts with an additional card in their hand at the start of the game, that allows them to gain one additional mana for this turn only.
 - will draw 2 cards on their first turn's Draw phase.
 

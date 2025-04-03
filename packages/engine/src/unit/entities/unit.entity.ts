@@ -369,9 +369,12 @@ export class Unit
   }
 
   canCounterAttack(unit: Unit): boolean {
-    return this.interceptors.canCounterAttack.getValue(!this.isExhausted, {
-      attacker: unit
-    });
+    return this.interceptors.canCounterAttack.getValue(
+      !this.isShrine && !this.isExhausted,
+      {
+        attacker: unit
+      }
+    );
   }
 
   canCounterAttackAt(point: Point) {
@@ -393,10 +396,12 @@ export class Unit
   }
 
   get canMove(): boolean {
-    return this.interceptors.canMove.getValue(
-      !this.isExhausted && this.movementsMadeThisTurn <= this.maxMovementsPerTurn,
-      {}
-    );
+    const baseValue =
+      !this.isShrine &&
+      !this.isExhausted &&
+      this.movementsMadeThisTurn <= this.maxMovementsPerTurn;
+
+    return this.interceptors.canMove.getValue(baseValue, {});
   }
 
   canMoveThrough(unit: Unit) {
@@ -408,7 +413,9 @@ export class Unit
   }
 
   canAttack(unit: Unit): boolean {
-    return this.interceptors.canAttack.getValue(!this.isExhausted, { unit });
+    return this.interceptors.canAttack.getValue(!this.isShrine && !this.isExhausted, {
+      unit
+    });
   }
 
   get isAt() {

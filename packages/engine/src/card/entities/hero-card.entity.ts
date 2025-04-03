@@ -14,6 +14,10 @@ import {
 export type SerializedHeroCard = SerializedUnitCard & {
   baseLevel: number;
   level: number;
+  atk: number;
+  maxHp: number;
+  spellpower: number;
+  job: string;
 };
 export type HeroCardEventMap = UnitCardEventMap;
 export type HeroCardInterceptors = UnitCardInterceptors & {
@@ -57,8 +61,12 @@ export class HeroCard extends UnitCard<
 
     return {
       ...base,
+      spellpower: this.spellpower,
+      atk: this.atk,
+      maxHp: this.maxHp,
       level: this.level,
-      baseLevel: this.baseLevel
+      baseLevel: this.baseLevel,
+      job: this.blueprint.job
     };
   }
 }

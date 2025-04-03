@@ -1,11 +1,11 @@
-import { assert, type Point } from '@game/shared';
+import { type Point } from '@game/shared';
 import type { Game } from '../../game/game';
 import {
   INTERACTION_STATES,
   type SelectedTarget
 } from '../../game/systems/interaction.system';
 import type { Player } from '../../player/player.entity';
-import type { Ability, SpellBlueprint, UnitBlueprint } from '../card-blueprint';
+import type { SpellBlueprint, UnitBlueprint } from '../card-blueprint';
 import { CARD_EVENTS, CARD_KINDS, type UnitKind } from '../card.enums';
 import {
   CardAfterPlayEvent,
@@ -39,11 +39,13 @@ export type UnitCardEventMap = CardEventMap;
 export type UnitCardInterceptors = CardInterceptors & {
   atk: Interceptable<number>;
   maxHp: Interceptable<number>;
+  canPlayAt: Interceptable<boolean, { point: Point }>;
 };
 export const makeUnitCardInterceptors = (): UnitCardInterceptors => ({
   ...makeCardInterceptors(),
   atk: new Interceptable(),
-  maxHp: new Interceptable()
+  maxHp: new Interceptable(),
+  canPlayAt: new Interceptable()
 });
 
 export type AnyUnitCard = UnitCard<
@@ -203,6 +205,15 @@ export abstract class UnitCard<
       cells: aoeShape.getCells(points).map(cell => cell.id),
       units: aoeShape.getUnits(points).map(unit => unit.id)
     };
+  }
+
+  canPlayAt(point: Point) {
+    const baseValue =
+      this.player.hero.position.isNearby(point) &&
+      !this.game.unitSystem.getUnitAt(point) &&
+      !!this.game.boardSystem.getCellAt(point)?.isWalkable;
+
+    return this.interceptors.canPlayAt.getValue(baseValue, { point });
   }
 
   protected serializeBase(): SerializedUnitCard {

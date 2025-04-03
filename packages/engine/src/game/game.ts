@@ -120,7 +120,7 @@ export class Game {
     this.gamePhaseSystem.initialize();
     this.interaction.initialize();
     this.snapshotSystem.initialize();
-    const stop = this.on('*', () => {
+    const stop = this.on('*', e => {
       if (this.gamePhaseSystem.phase === GAME_PHASES.GAME_END) return;
       for (const player of this.playerSystem.players) {
         if (this.winCondition(this, player)) {

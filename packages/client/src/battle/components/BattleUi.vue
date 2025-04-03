@@ -10,6 +10,7 @@ import PlayedCard from '@/card/components/PlayedCard.vue';
 import { useBattleUiStore } from '../stores/battle-ui.store';
 import TurnIndicator from '@/player/components/TurnIndicator.vue';
 import { usePlayers } from '../stores/battle.store';
+import PlayerActions from '@/player/components/PlayerActions.vue';
 
 import BattlePlayerInfos from '@/player/components/BattlePlayerInfos.vue';
 
@@ -26,7 +27,7 @@ const { state } = useGameState();
   <div class="battle-ui" :class="{ cinematic: ui.cardPlayIntent }">
     <BattleLog />
     <header>
-      {{ state.phase }}
+      {{ state.phase }} | {{ ui.selectedUnit?.id ?? 'no unit selected' }}
       <div class="flex justify-between">
         <BattlePlayerInfos
           v-for="player in players"
@@ -36,11 +37,12 @@ const { state } = useGameState();
       </div>
     </header>
 
-    <!-- <PlayedCard />
+    <PlayedCard />
     <PlayIntent />
-    <TurnIndicator /> -->
+    <TurnIndicator />
     <footer>
       <Hand :player="turnPlayer" />
+      <PlayerActions class="player-actions" />
     </footer>
   </div>
 
@@ -85,11 +87,8 @@ footer {
   grid-column: 2;
 }
 
-.active-unit {
-  grid-row: 2;
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: subgrid;
+.player-actions {
+  justify-self: end;
 }
 
 .slide-enter-active,

@@ -92,7 +92,11 @@ export class BattleController implements UiController {
       return;
     }
 
-    if (unit && (!this.selectedUnit || !unit.equals(this.selectedUnit))) {
+    const canSelect =
+      unit &&
+      unit.getPlayer().equals(this.turnPlayer) &&
+      (!this.selectedUnit || !unit.equals(this.selectedUnit));
+    if (canSelect) {
       if (this.selectedUnit) {
         this.selectedUnit.moveIntent = null;
       }

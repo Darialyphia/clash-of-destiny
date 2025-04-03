@@ -22,6 +22,7 @@ import {
 export type SerializedShrineCard = SerializedUnitCard & {
   baseLevel: number;
   level: number;
+  maxHp: number;
 };
 export type ShrineCardEventMap = UnitCardEventMap;
 export type ShrineCardInterceptors = UnitCardInterceptors & {
@@ -57,7 +58,8 @@ export class ShrineCard extends UnitCard<
     return {
       ...base,
       level: this.level,
-      baseLevel: this.baseLevel
+      baseLevel: this.baseLevel,
+      maxHp: this.blueprint.maxHp
     };
   }
 

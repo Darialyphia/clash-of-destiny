@@ -10,7 +10,11 @@ import {
   type UnitCardInterceptors
 } from './unit-card.entity';
 
-export type SerializedMinionCard = SerializedUnitCard;
+export type SerializedMinionCard = SerializedUnitCard & {
+  atk: number;
+  maxHp: number;
+  job: string;
+};
 export type MinionCardEventMap = UnitCardEventMap;
 export type MinionCardInterceptors = UnitCardInterceptors;
 
@@ -25,6 +29,11 @@ export class MinionCard extends UnitCard<
   }
 
   serialize(): SerializedMinionCard {
-    return this.serializeBase();
+    return {
+      ...this.serializeBase(),
+      atk: this.atk,
+      maxHp: this.maxHp,
+      job: this.blueprint.job
+    };
   }
 }
