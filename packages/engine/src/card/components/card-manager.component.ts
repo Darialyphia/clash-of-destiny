@@ -74,6 +74,10 @@ export class CardManagerComponent {
     return [...this.hand][index];
   }
 
+  getDestinyCardAt(index: number) {
+    return this.destinyDeck.cards[index];
+  }
+
   draw(amount: number) {
     if (this.isHandFull) return;
 

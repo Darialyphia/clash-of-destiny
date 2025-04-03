@@ -3,21 +3,19 @@ import { defaultInputSchema, Input } from '../input';
 import { assert, isDefined } from '@game/shared';
 import { GAME_PHASES } from '../../game/game.enums';
 import {
+  IllegalAbilityError,
   NotTurnPlayerError,
-  IllegalMovementError,
-  UnknownUnitError,
   UnitNotOwnedError,
-  IllegalTargetError
+  UnknownUnitError
 } from '../input-errors';
 
 const schema = defaultInputSchema.extend({
   unitId: z.string(),
-  x: z.number(),
-  y: z.number()
+  index: z.number()
 });
 
-export class MoveInput extends Input<typeof schema> {
-  readonly name = 'move';
+export class UseUnitAbilityInput extends Input<typeof schema> {
+  readonly name = 'useUnitAbility';
 
   readonly allowedPhases = [GAME_PHASES.MAIN];
 
@@ -36,8 +34,8 @@ export class MoveInput extends Input<typeof schema> {
     assert(isDefined(this.unit), new UnknownUnitError(this.payload.unitId));
     assert(this.unit.player.equals(this.player), new UnitNotOwnedError());
 
-    assert(this.unit.canMoveTo(this.payload), new IllegalTargetError());
+    assert(this.unit.canUseAbiliy(this.payload.index), new IllegalAbilityError());
 
-    this.unit.move(this.payload);
+    this.unit.useAbility(this.payload.index);
   }
 }

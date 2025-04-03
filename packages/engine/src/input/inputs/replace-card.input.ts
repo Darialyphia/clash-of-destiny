@@ -4,7 +4,7 @@ import { GAME_PHASES } from '../../game/game.enums';
 import { assert } from '@game/shared';
 import {
   InvalidCardIndexError,
-  NotturnPlayerError,
+  NotTurnPlayerError,
   TooManyReplacesError
 } from '../input-errors';
 import { PlayerAlreadyPerformedResourceActionError } from '../../player/player-errors';
@@ -23,7 +23,7 @@ export class ReplaceCardInput extends Input<typeof schema> {
   impl() {
     assert(
       this.game.gamePhaseSystem.turnPlayer.equals(this.player),
-      new NotturnPlayerError()
+      new NotTurnPlayerError()
     );
 
     assert(

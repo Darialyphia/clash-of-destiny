@@ -4,7 +4,7 @@ import { assert, isDefined } from '@game/shared';
 import { GAME_PHASES } from '../../game/game.enums';
 import {
   IllegalAttackTargetError,
-  NotturnPlayerError,
+  NotTurnPlayerError,
   UnitNotOwnedError,
   UnknownUnitError
 } from '../input-errors';
@@ -29,7 +29,7 @@ export class AttackInput extends Input<typeof schema> {
   impl() {
     assert(
       this.game.gamePhaseSystem.turnPlayer.equals(this.player),
-      new NotturnPlayerError()
+      new NotTurnPlayerError()
     );
 
     assert(isDefined(this.unit), new UnknownUnitError(this.payload.unitId));

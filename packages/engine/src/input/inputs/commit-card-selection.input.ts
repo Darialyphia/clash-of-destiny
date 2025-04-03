@@ -2,7 +2,7 @@ import { defaultInputSchema, Input } from '../input';
 import { GAME_PHASES } from '../../game/game.enums';
 import { z } from 'zod';
 import { assert } from '@game/shared';
-import { InvalidInteractionStateError, NotturnPlayerError } from '../input-errors';
+import { InvalidInteractionStateError, NotTurnPlayerError } from '../input-errors';
 import { INTERACTION_STATE_TRANSITIONS } from '../../game/systems/interaction.system';
 
 const schema = defaultInputSchema.extend({
@@ -19,7 +19,7 @@ export class CommitCardSelectionCardInput extends Input<typeof schema> {
   impl() {
     assert(
       this.game.gamePhaseSystem.turnPlayer.equals(this.player),
-      new NotturnPlayerError()
+      new NotTurnPlayerError()
     );
 
     assert(

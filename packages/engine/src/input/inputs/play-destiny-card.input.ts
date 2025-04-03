@@ -8,10 +8,10 @@ const schema = defaultInputSchema.extend({
   index: z.number()
 });
 
-export class PlayCardInput extends Input<typeof schema> {
-  readonly name = 'playCard';
+export class PlayDestinyCardInput extends Input<typeof schema> {
+  readonly name = 'playDestinyCard';
 
-  readonly allowedPhases = [GAME_PHASES.MAIN];
+  readonly allowedPhases = [GAME_PHASES.DESTINY];
 
   protected payloadSchema = schema;
 
@@ -21,9 +21,10 @@ export class PlayCardInput extends Input<typeof schema> {
       new NotTurnPlayerError()
     );
 
-    const card = this.player.cards.getCardAt(this.payload.index);
+    const card = this.player.cards.getDestinyCardAt(this.payload.index);
+    assert(card, new IllegalCardPlayedError());
     assert(this.player.canPlayCard(card), new IllegalCardPlayedError());
 
-    this.player.playMainDeckCardAtIndex(this.payload.index);
+    this.game.gamePhaseSystem.playDestinyCard(this.payload.index);
   }
 }

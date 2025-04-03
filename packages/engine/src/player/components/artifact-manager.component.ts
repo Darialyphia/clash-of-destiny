@@ -26,4 +26,8 @@ export class ArtifactManagerComponent {
       this.artifacts.splice(index, 1);
     }
   }
+
+  getArtifactById(artifactId: string) {
+    return this.artifacts.find(artifact => artifact.id === artifactId);
+  }
 }

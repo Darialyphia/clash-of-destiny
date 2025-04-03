@@ -240,7 +240,7 @@ export class Artifact
   }
 
   canUseAbiliy(index: number) {
-    const ability = this.card.abilities[index] as Ability<this['card']>;
+    const ability = this.card.abilities[index];
     assert(isDefined(ability), new ArtifactAbilityNotFoundError());
 
     return this.interceptors.canUseAbility.getValue(
@@ -249,7 +249,10 @@ export class Artifact
     );
   }
 
-  useAbility(ability: Ability<this['card']>) {
+  useAbility(index: number) {
+    const ability = this.card.abilities[index];
+    assert(isDefined(ability), new ArtifactAbilityNotFoundError());
+
     const followup = ability.getFollowup(this.game, this.card);
     this.game.interaction.startSelectingTargets({
       player: this.player,

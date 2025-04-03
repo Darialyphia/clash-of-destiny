@@ -162,6 +162,13 @@ export class Player
     this.playCardFromHand(card);
   }
 
+  playDestinyDeckCardAtIndex(index: number, onComplete?: () => void) {
+    const card = this.cards.getCardAt(index);
+    if (!card) return;
+
+    this.playCardFromDestinyDeck(card, onComplete);
+  }
+
   draw(amount: number) {
     this.emitter.emit(PLAYER_EVENTS.BEFORE_DRAW, new PlayerDrawEvent({ amount }));
     this.cards.draw(amount);
@@ -186,6 +193,34 @@ export class Player
     this.cancelCardCleanups = [
       card.once(CARD_EVENTS.BEFORE_PLAY, this.onBeforePlayFromHand.bind(this, card)),
       card.once(CARD_EVENTS.AFTER_PLAY, this.onAfterPlayFromHand.bind(this, card))
+    ];
+    this.cards.play(card);
+  }
+
+  private onBeforePlayFromDestinyDeck(card: AnyCard) {
+    assert(isDefined(card.destinyCost), new WrongDeckSourceError(card));
+    this.emitter.emit(PLAYER_EVENTS.BEFORE_PLAY_CARD, new PlayerPlayCardEvent({ card }));
+    this.destiny.spend(card.destinyCost);
+  }
+
+  private onAfterPlayFromDestinyDeck(card: AnyCard) {
+    this.currentlyPlayedCard = null;
+    this.currentyPlayedCardIndexInHand = null;
+    this.emitter.emit(PLAYER_EVENTS.AFTER_PLAY_CARD, new PlayerPlayCardEvent({ card }));
+  }
+
+  playCardFromDestinyDeck(card: AnyCard, onComplete?: () => void) {
+    this.currentlyPlayedCard = card;
+    this.currentyPlayedCardIndexInHand = this.cards.destinyDeck.cards.indexOf(card);
+    this.cancelCardCleanups = [
+      card.once(
+        CARD_EVENTS.BEFORE_PLAY,
+        this.onBeforePlayFromDestinyDeck.bind(this, card)
+      ),
+      card.once(CARD_EVENTS.AFTER_PLAY, () => {
+        this.onAfterPlayFromDestinyDeck.bind(this, card);
+        onComplete?.();
+      })
     ];
     this.cards.play(card);
   }

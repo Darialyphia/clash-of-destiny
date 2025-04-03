@@ -1,7 +1,7 @@
 import { assert } from '@game/shared';
 import { defaultInputSchema, Input } from '../input';
 import { z } from 'zod';
-import { InvalidInteractionStateError, NotturnPlayerError } from '../input-errors';
+import { InvalidInteractionStateError, NotTurnPlayerError } from '../input-errors';
 import { INTERACTION_STATES } from '../../game/systems/interaction.system';
 import { GAME_PHASES } from '../../game/game.enums';
 
@@ -20,7 +20,7 @@ export class AddCardTargetCardInput extends Input<typeof schema> {
   impl() {
     assert(
       this.game.gamePhaseSystem.turnPlayer.equals(this.player),
-      new NotturnPlayerError()
+      new NotTurnPlayerError()
     );
     assert(
       this.game.interaction.context.state === INTERACTION_STATES.SELECTING_TARGETS,

@@ -19,6 +19,10 @@ import { MoveInput } from './inputs/move.input';
 import { PlayCardInput } from './inputs/play-card.input';
 import { ReplaceCardInput } from './inputs/replace-card.input';
 import { AddNextTargetIntentCardInput } from './inputs/add-next-target-intent';
+import { UseUnitAbilityInput } from './inputs/use-unit-ability.input';
+import { UseArtifactAbilityInput } from './inputs/use-artifact-ability.input';
+import { SkipDestinyInput } from './inputs/skip-destiny.input';
+import { PlayDestinyCardInput } from './inputs/play-destiny-card.input';
 
 type GenericInputMap = Record<string, Constructor<Input<DefaultSchema>>>;
 
@@ -36,13 +40,17 @@ const inputMap = validateinputMap({
   move: MoveInput,
   attack: AttackInput,
   playCard: PlayCardInput,
+  playDestinyCard: PlayDestinyCardInput,
   replaceCard: ReplaceCardInput,
   cancelPlayCard: CancelPlayCardInput,
   addCardTarget: AddCardTargetCardInput,
   commitPlayCard: CommitPlayCardInput,
   endTurn: EndTurnInput,
   commitCardSelection: CommitCardSelectionCardInput,
-  addNextTargetIntent: AddNextTargetIntentCardInput
+  addNextTargetIntent: AddNextTargetIntentCardInput,
+  useUnitAbility: UseUnitAbilityInput,
+  useArtifactAbility: UseArtifactAbilityInput,
+  skipDestiny: SkipDestinyInput
 });
 
 type InputMap = typeof inputMap;

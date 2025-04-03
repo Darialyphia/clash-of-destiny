@@ -28,7 +28,7 @@ export class GameTurnEvent extends TypedSerializableEvent<
   }
 }
 
-export type GamePhaseEventMap = {
+export type TurnEventMap = {
   [GAME_PHASE_EVENTS.TURN_START]: GameTurnEvent;
   [GAME_PHASE_EVENTS.TURN_END]: GameTurnEvent;
 };
@@ -60,7 +60,7 @@ export class GamePhaseSystem extends StateMachine<
 
   private firstPlayer!: Player;
 
-  private emitter = new TypedSerializableEventEmitter<GamePhaseEventMap>();
+  private emitter = new TypedSerializableEventEmitter<TurnEventMap>();
 
   constructor(private game: Game) {
     super(GAME_PHASES.DRAW);
@@ -190,9 +190,12 @@ export class GamePhaseSystem extends StateMachine<
     this.dispatch(GAME_PHASE_TRANSITIONS.SKIP_DESTINY);
   }
 
-  playDestinyCard() {
+  playDestinyCard(index: number) {
     assert(this.can(GAME_PHASE_TRANSITIONS.PLAY_DESTINY_CARD), new WrongGamePhaseError());
-    this.dispatch(GAME_PHASE_TRANSITIONS.PLAY_DESTINY_CARD);
+
+    this.turnPlayer.playDestinyDeckCardAtIndex(index, () => {
+      this.dispatch(GAME_PHASE_TRANSITIONS.PLAY_DESTINY_CARD);
+    });
   }
 
   declareWinner(player: Player) {
