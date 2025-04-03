@@ -244,7 +244,7 @@ export class Artifact
     assert(isDefined(ability), new ArtifactAbilityNotFoundError());
 
     return this.interceptors.canUseAbility.getValue(
-      !this.isExhausted && this.player.mana.amount >= ability.manaCost,
+      !this.isExhausted && this.player.mana.current >= ability.manaCost,
       { ability: ability }
     );
   }
@@ -263,7 +263,7 @@ export class Artifact
           ARTIFACT_EVENTS.BEFORE_USE_ABILITY,
           new ArtifactUseAbilityEvent({})
         );
-        this.player.mana.spend(ability.manaCost);
+        this.player.mana.add(ability.manaCost);
         ability.onResolve(this.game, this.card, targets);
         if (ability.shouldExhaust) {
           this.exhaust();

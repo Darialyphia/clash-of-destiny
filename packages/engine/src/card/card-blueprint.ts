@@ -70,6 +70,7 @@ export type HeroBlueprint = {
   atk: number;
   abilities: Array<Ability<HeroCard>>;
   spellpower: number;
+  job: CardJob;
   getDescription(game: Game, card: HeroCard): string;
   getFollowup(game: Game, card: HeroCard): Followup<HeroCard>;
   getAoe(game: Game, card: HeroCard, points: Point[]): AOEShape;
@@ -96,6 +97,7 @@ export type MinionBlueprint = {
   unitKind: typeof UNIT_KINDS.MINION;
   abilities: Array<Ability<MinionCard>>;
   atk: number;
+  job: CardJob;
   getDescription(game: Game, card: MinionCard): string;
   getFollowup(game: Game, card: MinionCard): Followup<MinionCard>;
   getAoe(game: Game, card: MinionCard, points: Point[]): AOEShape;
@@ -112,9 +114,7 @@ export type UnitBlueprint = (MainDeckCardBlueprint | DestinyDeckCardBlueprint) &
   staticDescription: string;
   maxHp: number;
   spriteId: string;
-  iconId: string;
   spriteParts: Record<string, string>;
-  job: CardJob;
 } & (HeroBlueprint | MinionBlueprint | ShrineBlueprint);
 
 export type SpellBlueprint = (MainDeckCardBlueprint | DestinyDeckCardBlueprint) & {

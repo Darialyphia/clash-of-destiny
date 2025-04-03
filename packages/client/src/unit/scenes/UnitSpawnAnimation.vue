@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { Container } from 'pixi.js';
 import { PTransition } from 'vue3-pixi';
-import type { UnitViewModel } from '../unit.model';
 
 const emit = defineEmits<{
   done: [];

@@ -4,7 +4,6 @@ import { useShaker } from '@/shared/composables/vfx/useShaker';
 import type { Container } from 'pixi.js';
 import { waitFor } from '@game/shared';
 import { useBattleEvent, useGameState } from '@/battle/stores/battle.store';
-import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
 import { GAME_EVENTS } from '@game/engine/src/game/game.events';
 
 const { unit } = defineProps<{ unit: UnitViewModel }>();

@@ -1,41 +1,45 @@
 import { assert } from '@game/shared';
 
 export class ResourceTrackerComponent {
-  private _amount: number;
+  private _current: number;
 
   private _max: number;
 
   constructor(initialAmount: number, maxAmount: number) {
-    this._amount = initialAmount;
+    this._current = initialAmount;
     this._max = maxAmount;
   }
 
   canSpend(amount: number) {
-    return this._amount >= amount;
+    return this._current >= amount;
   }
 
   setTo(amount: number) {
-    this._amount = amount;
+    this._current = amount;
   }
 
-  spend(amount: number) {
+  add(amount: number) {
     assert(this.canSpend(amount), 'Not enough mana');
-    this._amount -= amount;
+    this._current -= amount;
   }
 
-  gain(amount: number) {
-    this._amount += amount;
+  remove(amount: number) {
+    this._current += amount;
   }
 
   setMax(amount: number) {
     this._max = amount;
   }
 
-  get maxAmount() {
+  fill() {
+    this._current = this._max;
+  }
+
+  get max() {
     return this._max;
   }
 
-  get amount() {
-    return this._amount;
+  get current() {
+    return this._current;
   }
 }

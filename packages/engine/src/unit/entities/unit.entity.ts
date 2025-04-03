@@ -52,7 +52,6 @@ export type SerializedUnit = {
   entityType: 'unit';
   position: Point;
   playerId: string;
-  iconId: string;
   spriteId: string;
   spriteParts: Record<string, string>;
   name: string;
@@ -135,7 +134,6 @@ export class Unit
       entityType: 'unit' as const,
       position: this.position.serialize(),
       playerId: this.player.id,
-      iconId: this.card.blueprint.iconId,
       spriteId: this.card.blueprint.spriteId,
       spriteParts: this.card.blueprint.spriteParts,
       name: this.card.blueprint.name,
@@ -632,7 +630,7 @@ export class Unit
     assert(isDefined(ability), new UnitAbilityNotFoundError());
 
     return this.interceptors.canUseAbility.getValue(
-      !this.isExhausted && this.player.mana.amount >= ability.manaCost,
+      !this.isExhausted && this.player.mana.current >= ability.manaCost,
       { ability: ability }
     );
   }
@@ -648,7 +646,7 @@ export class Unit
       canCommit: followup.canCommit,
       onComplete: (targets: SelectedTarget[]) => {
         this.emitter.emit(UNIT_EVENTS.BEFORE_USE_ABILITY, new UnitUseAbilityEvent({}));
-        this.player.mana.spend(ability.manaCost);
+        this.player.mana.add(ability.manaCost);
         ability.onResolve(this.game, this.card, targets);
         if (ability.shouldExhaust) {
           this.exhaust();

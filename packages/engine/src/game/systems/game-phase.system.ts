@@ -132,6 +132,8 @@ export class GamePhaseSystem extends StateMachine<
   }
 
   private onPlayerTurnEnd() {
+    this.turnPlayer.endTurn();
+
     const nextPlayer = this._turnPlayer.opponent;
     if (nextPlayer.equals(this.firstPlayer)) {
       this.endGameTurn();

@@ -15,8 +15,8 @@ export const map1v1: MapBlueprint = {
   boundaries: {
     topLeft: { x: 0, y: 0 },
     topRight: { x: 8, y: 0 },
-    bottomLeft: { x: 0, y: 6 },
-    bottomRight: { x: 8, y: 6 }
+    bottomLeft: { x: 0, y: 4 },
+    bottomRight: { x: 8, y: 4 }
   },
   // prettier-ignore
   cells: [
@@ -26,5 +26,5 @@ export const map1v1: MapBlueprint = {
     grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(),
     grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(),
   ],
-  generalPositions: [new Vec2(0, 2), new Vec2(8, 2)]
+  shrinePositions: [new Vec2(0, 2), new Vec2(8, 2)]
 };

@@ -132,6 +132,12 @@ export class GameSnaphotSystem extends System<EmptyObject> {
       player.cards.discardPile.forEach(card => {
         entities[card.id] = card.serialize();
       });
+      player.cards.banishPile.forEach(card => {
+        entities[card.id] = card.serialize();
+      });
+      player.cards.destinyDeck.cards.forEach(card => {
+        entities[card.id] = card.serialize();
+      });
     });
 
     this.game.interaction.getEntities().forEach(entity => {

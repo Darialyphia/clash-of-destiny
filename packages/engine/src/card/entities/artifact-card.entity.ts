@@ -1,6 +1,5 @@
 import type { Game } from '../../game/game';
 import type { Player } from '../../player/player.entity';
-import type { Unit } from '../../unit/entities/unit.entity';
 import type { ArtifactBlueprint } from '../card-blueprint';
 import { CARD_EVENTS, CARD_KINDS } from '../card.enums';
 import {
@@ -71,7 +70,7 @@ export class ArtifactCard extends Card<
       name: this.blueprint.name,
       description: this.blueprint.getDescription(this.game, this),
       rarity: this.blueprint.rarity,
-      unit: this.player.id,
+      player: this.player.id,
       canPlay: this.player.canPlayCard(this)
     };
   }

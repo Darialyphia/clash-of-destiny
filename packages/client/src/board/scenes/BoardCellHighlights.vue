@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
 import { useBattleStore } from '@/battle/stores/battle.store';
-import { PTransition } from 'vue3-pixi';
 import UiAnimatedSprite from '@/ui/scenes/UiAnimatedSprite.vue';
 import type { CellViewModel } from '../cell.model';
 

@@ -1,13 +1,25 @@
 import type { GameStateEntities } from '@/battle/stores/battle.store';
 import type { CellViewModel } from '@/board/cell.model';
+import type { PlayerViewModel } from '@/player/player.model';
 import type { UnitViewModel } from '@/unit/unit.model';
 import { CARD_KINDS } from '@game/engine/src/card/card.enums';
-import type { SerializedAbilityCard } from '@game/engine/src/card/entities/ability-card.entity';
 import type { SerializedArtifactCard } from '@game/engine/src/card/entities/artifact-card.entity';
 import type { SerializedCard } from '@game/engine/src/card/entities/card.entity';
-import type { SerializedQuestCard } from '@game/engine/src/card/entities/quest-card.entity';
+import type { SerializedHeroCard } from '@game/engine/src/card/entities/hero-card.entity';
+import type { SerializedMinionCard } from '@game/engine/src/card/entities/minion-card.entity';
+import type { SerializedSecretCard } from '@game/engine/src/card/entities/secret-card.entity';
+import type { SerializedShrineCard } from '@game/engine/src/card/entities/shrine-card.entity';
+import type { SerializedSpellCard } from '@game/engine/src/card/entities/spell-card.entity';
 import type { InputDispatcher } from '@game/engine/src/input/input-system';
 import { match } from 'ts-pattern';
+
+type CardData =
+  | SerializedSpellCard
+  | SerializedArtifactCard
+  | SerializedHeroCard
+  | SerializedShrineCard
+  | SerializedMinionCard
+  | SerializedSecretCard;
 
 export class CardViewModel {
   constructor(
@@ -72,116 +84,81 @@ export class CardViewModel {
     return this.data.canPlay;
   }
 
-  getUnit() {
-    return this.entityDictionary[this.data.unit] as UnitViewModel;
+  getPlayer() {
+    return this.entityDictionary[this.data.player] as PlayerViewModel;
   }
 
   get needsTargets() {
-    const data = this.data as
-      | SerializedAbilityCard
-      | SerializedArtifactCard
-      | SerializedQuestCard;
-    return match(data)
-      .with({ kind: CARD_KINDS.ABILITY }, data => {
-        return !!data.elligibleFirstTargets.length;
-      })
-      .with({ kind: CARD_KINDS.ARTIFACT }, () => {
-        return false;
-      })
-      .with({ kind: CARD_KINDS.QUEST }, () => {
-        return false;
-      })
-      .exhaustive();
+    return true;
   }
 
   get maxTargets() {
-    const data = this.data as
-      | SerializedAbilityCard
-      | SerializedArtifactCard
-      | SerializedQuestCard;
-    return match(data)
-      .with({ kind: CARD_KINDS.ABILITY }, data => {
-        return data.maxTargets;
-      })
-      .with({ kind: CARD_KINDS.ARTIFACT }, () => {
-        return 0;
-      })
-      .with({ kind: CARD_KINDS.QUEST }, () => {
-        return 0;
-      })
-      .exhaustive();
-  }
+    const data = this.data as CardData;
 
-  canPlayAt(cell: CellViewModel) {
-    const data = this.data as
-      | SerializedAbilityCard
-      | SerializedArtifactCard
-      | SerializedQuestCard;
     return match(data)
-      .with({ kind: CARD_KINDS.ABILITY }, data => {
-        if (!data.elligibleFirstTargets.length) return true; // card has no followup
-
-        return data.elligibleFirstTargets.some(id => id === cell.id);
-      })
+      .with(
+        { kind: CARD_KINDS.UNIT },
+        { kind: CARD_KINDS.SPELL },
+        { kind: CARD_KINDS.SECRET },
+        data => {
+          return data.maxTargets;
+        }
+      )
       .with({ kind: CARD_KINDS.ARTIFACT }, () => {
-        return cell.getUnit() === this.getUnit();
-      })
-      .with({ kind: CARD_KINDS.QUEST }, () => {
-        return true;
+        return { cells: [], units: [] };
       })
       .exhaustive();
   }
 
   getAoe() {
-    const data = this.data as
-      | SerializedAbilityCard
-      | SerializedArtifactCard
-      | SerializedQuestCard;
+    const data = this.data as CardData;
+
     return match(data)
-      .with({ kind: CARD_KINDS.ABILITY }, data => {
-        return {
-          cells:
-            data.aoe?.cells.map(
-              id => this.entityDictionary[id] as CellViewModel
-            ) ?? [],
-          units:
-            data.aoe?.units.map(
-              id => this.entityDictionary[id] as UnitViewModel
-            ) ?? []
-        };
-      })
+      .with(
+        { kind: CARD_KINDS.UNIT },
+        { kind: CARD_KINDS.SPELL },
+        { kind: CARD_KINDS.SECRET },
+        data => {
+          return {
+            cells:
+              data.aoe?.cells.map(
+                id => this.entityDictionary[id] as CellViewModel
+              ) ?? [],
+            units:
+              data.aoe?.units.map(
+                id => this.entityDictionary[id] as UnitViewModel
+              ) ?? []
+          };
+        }
+      )
       .with({ kind: CARD_KINDS.ARTIFACT }, () => {
-        return { cells: [], units: [] };
-      })
-      .with({ kind: CARD_KINDS.QUEST }, () => {
         return { cells: [], units: [] };
       })
       .exhaustive();
   }
 
   getRange() {
-    const data = this.data as
-      | SerializedAbilityCard
-      | SerializedArtifactCard
-      | SerializedQuestCard;
+    const data = this.data as CardData;
     return match(data)
-      .with({ kind: CARD_KINDS.ABILITY }, data => {
-        return (
-          data.range?.map(id => this.entityDictionary[id] as CellViewModel) ??
-          []
-        );
-      })
+      .with(
+        { kind: CARD_KINDS.UNIT },
+        { kind: CARD_KINDS.SPELL },
+        { kind: CARD_KINDS.SECRET },
+        data => {
+          return (
+            data.range?.map(id => this.entityDictionary[id] as CellViewModel) ??
+            []
+          );
+        }
+      )
       .with({ kind: CARD_KINDS.ARTIFACT }, () => {
-        return [];
-      })
-      .with({ kind: CARD_KINDS.QUEST }, () => {
         return [];
       })
       .exhaustive();
   }
 
   play() {
-    const unit = this.getUnit();
+    const unit = this.getPlayer();
     const hand = unit.getHand();
     const index = hand.findIndex(card => card.equals(this));
     if (index === -1) return;

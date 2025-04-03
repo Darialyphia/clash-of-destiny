@@ -13,7 +13,6 @@ export type Config = {
   MAX_DESTINY: number;
   DESTINY_EARNED_PER_TURN: number;
 
-  INITIAL_HAND_SIZE: number;
   MAX_HAND_SIZE: number;
   CARDS_DRAWN_PER_TURN: number;
   PLAYER_2_CARDS_DRAWN_ON_FIRST_TURN: number;
@@ -44,7 +43,6 @@ export const defaultConfig: Config = {
   MAX_MANA: 5,
   MAX_MANA_INCREASE_PER_TURN: 2,
 
-  INITIAL_HAND_SIZE: 5,
   MAX_HAND_SIZE: 999,
   SHUFFLE_DECK_ON_GAME_START: true,
   CARDS_DRAWN_PER_TURN: 1,

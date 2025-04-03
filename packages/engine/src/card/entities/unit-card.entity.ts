@@ -219,7 +219,7 @@ export abstract class UnitCard<
       name: this.blueprint.name,
       description: this.blueprint.getDescription(this.game, this as any),
       rarity: this.blueprint.rarity,
-      unit: this.player.id,
+      player: this.player.id,
       manaCost: this.manaCost,
       destinyCost: this.destinyCost,
       deckSource: this.deckSource,

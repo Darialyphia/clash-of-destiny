@@ -313,10 +313,36 @@
         },
         {
           "alias": [
+            "icon-card-prayer"
+          ],
+          "src": [
+            "/assets/icons/card-prayer.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-card-staff-of-focus"
           ],
           "src": [
             "/assets/icons/card-staff-of-focus.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-card-word-of-light"
+          ],
+          "src": [
+            "/assets/icons/card-word-of-light.png"
           ],
           "data": {
             "tags": {
@@ -1664,6 +1690,114 @@
           ],
           "src": [
             "/assets/units/acolyte.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "earth-shrine-of-knowledge"
+          ],
+          "src": [
+            "/assets/units/earth-shrine-of-knowledge.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "earth-shrine-of-knowledge.png"
+          ],
+          "src": [
+            "/assets/units/earth-shrine-of-knowledge.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "fire-shrine-of-knowledge"
+          ],
+          "src": [
+            "/assets/units/fire-shrine-of-knowledge.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "fire-shrine-of-knowledge.png"
+          ],
+          "src": [
+            "/assets/units/fire-shrine-of-knowledge.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "test-unit"
+          ],
+          "src": [
+            "/assets/units/test-unit.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "test-unit.png"
+          ],
+          "src": [
+            "/assets/units/test-unit.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "wind-shrine-of-knowledge"
+          ],
+          "src": [
+            "/assets/units/wind-shrine-of-knowledge.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "wind-shrine-of-knowledge.png"
+          ],
+          "src": [
+            "/assets/units/wind-shrine-of-knowledge.png"
           ],
           "data": {
             "tags": {

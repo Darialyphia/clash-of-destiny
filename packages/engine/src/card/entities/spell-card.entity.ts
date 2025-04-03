@@ -136,7 +136,7 @@ export class SpellCard extends Card<
       name: this.blueprint.name,
       description: this.blueprint.getDescription(this.game, this),
       rarity: this.blueprint.rarity,
-      unit: this.player.id,
+      player: this.player.id,
       canPlay: this.player.canPlayCard(this),
       maxTargets: this.followupTargets.length,
       aoe: this.getSerializedAoe(),

@@ -5,9 +5,7 @@ import { assert } from '@game/shared';
 import { InvalidCardIndexError, NotTurnPlayerError } from '../input-errors';
 import { PlayerAlreadyPerformedResourceActionError } from '../../player/player-errors';
 
-const schema = defaultInputSchema.extend({
-  index: z.number()
-});
+const schema = defaultInputSchema;
 
 export class ResourceActionDrawInput extends Input<typeof schema> {
   readonly name = 'resourceActionDraw';
@@ -23,7 +21,7 @@ export class ResourceActionDrawInput extends Input<typeof schema> {
     );
 
     assert(
-      this.player.mana.amount >= this.game.config.DRAW_RESOURCE_ACTION_COST,
+      this.player.mana.current >= this.game.config.DRAW_RESOURCE_ACTION_COST,
       new InvalidCardIndexError()
     );
 

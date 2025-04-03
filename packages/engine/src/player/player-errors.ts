@@ -15,3 +15,9 @@ export class ArtifactAbilityNotFoundError extends Error {
     super('Artifact ability not found');
   }
 }
+
+export class MissingShrineError extends Error {
+  constructor() {
+    super('Missing shrine');
+  }
+}

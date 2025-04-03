@@ -18,6 +18,6 @@ export class EndTurnInput extends Input<typeof schema> {
       new NotTurnPlayerError()
     );
 
-    this.game.gamePhaseSystem.turnPlayer.endTurn();
+    this.game.gamePhaseSystem.endTurn();
   }
 }

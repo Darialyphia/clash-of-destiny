@@ -5,11 +5,11 @@ import { PlayerViewModel } from '@/player/player.model';
 import { ArtifactViewModel } from '@/unit/artifact.model';
 import { ModifierViewModel } from '@/unit/modifier.model';
 import { UnitViewModel } from '@/unit/unit.model';
+import { GAME_PHASES } from '@game/engine/src/game/game.enums';
 import {
   GAME_EVENTS,
   type GameEventMap
 } from '@game/engine/src/game/game.events';
-import { GAME_PHASES } from '@game/engine/src/game/systems/game-phase.system';
 import type {
   EntityDictionary,
   GameStateSnapshot,
@@ -21,12 +21,7 @@ import type {
   SerializedInput
 } from '@game/engine/src/input/input-system';
 import { TypedEventEmitter } from '@game/engine/src/utils/typed-emitter';
-import {
-  waitFor,
-  type Override,
-  type PartialBy,
-  type Values
-} from '@game/shared';
+import { type Override, type PartialBy, type Values } from '@game/shared';
 import { defineStore } from 'pinia';
 import { match } from 'ts-pattern';
 
@@ -184,13 +179,8 @@ export const useBattleStore = defineStore('battle', () => {
             entities: buildentities(snapshot.state.entities, dispatch)
           };
 
-          if (
-            gameType.value === GAME_TYPES.LOCAL &&
-            state.value.phase === GAME_PHASES.BATTLE
-          ) {
-            playerId.value = (
-              state.value.entities[state.value.activeUnit] as UnitViewModel
-            ).playerId;
+          if (gameType.value === GAME_TYPES.LOCAL) {
+            playerId.value = state.value.turnPlayer;
           }
         } catch (err) {
           console.error(err);
@@ -318,34 +308,34 @@ export const useModifiers = () => {
   );
 };
 
-export const useActiveUnit = () => {
+export const useTurnPlayer = () => {
   const { state } = useGameState();
 
   return computed(
-    () => state.value.entities[state.value.activeUnit] as UnitViewModel
+    () => state.value.entities[state.value.turnPlayer] as PlayerViewModel
   );
 };
 
 export const useUserPlayer = () => {
   const store = useBattleStore();
   const players = usePlayers();
-  const activeUnit = useActiveUnit();
+  const turnPlayer = useTurnPlayer();
 
   return computed(() =>
     store.playerId
       ? players.value.find(p => p.id === store.playerId)!
-      : players.value.find(p => p.id === activeUnit.value.id)!
+      : players.value.find(p => p.id === turnPlayer.value.id)!
   );
 };
 
 export const useOpponentPlayer = () => {
   const store = useBattleStore();
   const players = usePlayers();
-  const activeUnit = useActiveUnit();
+  const turnPlayer = useTurnPlayer();
 
   return computed(() =>
     store.playerId
       ? players.value.find(p => p.id !== store.playerId)!
-      : players.value.find(p => p.id !== activeUnit.value.id)!
+      : players.value.find(p => p.id !== turnPlayer.value.id)!
   );
 };

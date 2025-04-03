@@ -1,9 +1,7 @@
 import type { GameStateEntities } from '@/battle/stores/battle.store';
-import { CellViewModel } from '@/board/cell.model';
-import type { UnitViewModel } from '@/unit/unit.model';
+import type { CardViewModel } from '@/card/card.model';
 import type { InputDispatcher } from '@game/engine/src/input/input-system';
 import type { SerializedPlayer } from '@game/engine/src/player/player.entity';
-import type { Unit } from '@game/engine/src/unit/entities/unit.entity';
 
 export class PlayerViewModel {
   constructor(
@@ -24,20 +22,41 @@ export class PlayerViewModel {
     return this.data.name;
   }
 
-  get hasDeployed() {
-    return this.data.hasCommitedDeployment;
+  get handSize() {
+    return this.data.handSize;
   }
 
-  getDeployZone() {
-    return this.data.deployZone.map(cellId => {
-      return this.entityDictionary[cellId] as CellViewModel;
+  get remainingCardsInDeck() {
+    return this.data.remainingCardsInDeck;
+  }
+
+  get canPerformResourceAction() {
+    return this.data.canPerformResourceAction;
+  }
+
+  getHand() {
+    return this.data.hand.map(cardId => {
+      return this.entityDictionary[cardId] as CardViewModel;
     });
   }
 
-  getHeroes() {
-    return this.data.heroes.map(heroId => {
-      return this.entityDictionary[heroId] as UnitViewModel;
+  getDiscardPile() {
+    return this.data.discardPile.map(cardId => {
+      return this.entityDictionary[cardId] as CardViewModel;
     });
+  }
+
+  getBanishPile() {
+    return this.data.banishPile.map(cardId => {
+      return this.entityDictionary[cardId] as CardViewModel;
+    });
+  }
+
+  getCurrentlyPlayedCard() {
+    if (!this.data.currentlyPlayedCard) return null;
+    return this.entityDictionary[
+      this.data.currentlyPlayedCard
+    ] as CardViewModel;
   }
 
   getOpponent() {
@@ -47,11 +66,73 @@ export class PlayerViewModel {
     return entity as PlayerViewModel;
   }
 
-  commitDeployment() {
+  getDestinyDeck() {
+    return this.data.destinyDeck.map(cardId => {
+      return this.entityDictionary[cardId] as CardViewModel;
+    });
+  }
+
+  endTurn() {
     this.dispatcher({
-      type: 'commitDeployment',
+      type: 'endTurn',
+      payload: {
+        playerId: this.data.id
+      }
+    });
+  }
+
+  playCard(index: number) {
+    const card = this.getHand()[index];
+    if (!card) return;
+    if (!card.canPlay) return;
+
+    this.dispatcher({
+      type: 'playCard',
+      payload: {
+        playerId: this.data.id,
+        index: index
+      }
+    });
+  }
+
+  playDestinyCard(index: number) {
+    const card = this.getDestinyDeck()[index];
+    if (!card) return;
+    if (!card.canPlay) return;
+    this.dispatcher({
+      type: 'playDestinyCard',
+      payload: {
+        playerId: this.data.id,
+        index: index
+      }
+    });
+  }
+
+  replaceResourceAction(index: number) {
+    this.dispatcher({
+      type: 'resourceActionReplaceCard',
+      payload: {
+        playerId: this.id,
+        index: index
+      }
+    });
+  }
+
+  drawResourceAction() {
+    this.dispatcher({
+      type: 'resourceActionDraw',
       payload: {
         playerId: this.id
+      }
+    });
+  }
+
+  gainDestinyResourceAction(indices: number[]) {
+    this.dispatcher({
+      type: 'resourceActionGainDestiny',
+      payload: {
+        playerId: this.id,
+        indices: indices
       }
     });
   }

@@ -1,54 +1,31 @@
 <script setup lang="ts">
-import { GAME_PHASES } from '@game/engine/src/game/systems/game-phase.system';
-import { useActiveUnit, useGameState } from '../stores/battle.store';
-import DeployUi from './DeployUi.vue';
+import { useTurnPlayer, useGameState } from '../stores/battle.store';
 import Hand from '@/card/components/Hand.vue';
-import ActiveUnitPanel from '@/unit/components/ActiveUnitPanel.vue';
 import TargetingUi from './TargetingUi.vue';
 import BattleLog from '@/battle/components/BattleLog.vue';
 import DraggedCard from '@/card/components/DraggedCard.vue';
 import InspectedCard from '@/card/components/InspectedCard.vue';
-import TurnOrder from './TurnOrder.vue';
 import PlayIntent from '@/card/components/PlayIntent.vue';
 import PlayedCard from '@/card/components/PlayedCard.vue';
-import UnitPanel from '@/unit/components/UnitPanel.vue';
 import { useBattleUiStore } from '../stores/battle-ui.store';
-import ActiveUnitActions from '@/unit/components/ActiveUnitActions.vue';
 import TurnIndicator from '@/player/components/TurnIndicator.vue';
 const { state } = useGameState();
 
-const activeUnit = useActiveUnit();
+const turnPlayer = useTurnPlayer();
 const ui = useBattleUiStore();
 </script>
 
 <template>
   <TargetingUi />
 
-  <DeployUi v-if="state.phase === GAME_PHASES.DEPLOY" />
-  <div v-else class="battle-ui" :class="{ cinematic: ui.cardPlayIntent }">
+  <div class="battle-ui" :class="{ cinematic: ui.cardPlayIntent }">
     <BattleLog />
-    <TurnOrder />
-    <PlayedCard />
+
+    <!-- <PlayedCard />
     <PlayIntent />
-    <TurnIndicator />
+    <TurnIndicator /> -->
     <footer>
-      <Hand :unit="activeUnit" />
-      <div class="unit-section">
-        <transition appear mode="out-in" name="slide">
-          <UnitPanel
-            v-if="ui.selectedUnit"
-            :key="ui.selectedUnit.id"
-            :unit="ui.selectedUnit"
-            class="selected-unit"
-          />
-        </transition>
-        <transition appear mode="out-in" name="slide">
-          <div :key="activeUnit.id" class="active-unit">
-            <ActiveUnitActions />
-            <UnitPanel :unit="activeUnit" />
-          </div>
-        </transition>
-      </div>
+      <Hand :player="turnPlayer" />
     </footer>
   </div>
 
@@ -62,7 +39,7 @@ const ui = useBattleUiStore();
   user-select: none;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  transparent: background 0.3s var(--ease-2);
+  transition: background 0.3s var(--ease-2);
   &.cinematic {
     background: radial-gradient(
       circle at center,

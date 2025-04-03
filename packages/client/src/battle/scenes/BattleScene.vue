@@ -25,86 +25,22 @@ const session = new GameSession({
     {
       id: 'p1',
       name: 'Player 1',
-      heroes: [
-        {
-          blueprintId: 'archMage',
-          deck: {
-            cards: [
-              ...Array.from({ length: 4 }, () => 'magic-missile'),
-              ...Array.from({ length: 4 }, () => 'arcane-knowledge'),
-              ...Array.from({ length: 4 }, () => 'mana-shield'),
-              ...Array.from({ length: 4 }, () => 'frost-nova'),
-              ...Array.from({ length: 4 }, () => 'force-wave')
-            ]
-          }
-        },
-        {
-          blueprintId: 'exorcist',
-          deck: {
-            cards: [
-              ...Array.from({ length: 4 }, () => 'inspire'),
-              ...Array.from({ length: 4 }, () => 'purify'),
-              ...Array.from({ length: 4 }, () => 'cure-wounds'),
-              ...Array.from({ length: 4 }, () => 'equinox'),
-              ...Array.from({ length: 4 }, () => 'pacify')
-            ]
-          }
-        },
-        {
-          blueprintId: 'archMage',
-          deck: {
-            cards: [
-              ...Array.from({ length: 4 }, () => 'cone-of-flames'),
-              ...Array.from({ length: 4 }, () => 'magic-missile'),
-              ...Array.from({ length: 4 }, () => 'arcane-knowledge'),
-              ...Array.from({ length: 4 }, () => 'mana-shield'),
-              ...Array.from({ length: 4 }, () => 'magic-amplification')
-            ]
-          }
-        }
-      ]
+      mainDeck: {
+        cards: Array.from({ length: 40 }, () => 'test-minion')
+      },
+      destinyDeck: {
+        cards: ['test-shrine']
+      }
     },
     {
       id: 'p2',
       name: 'Player 2',
-      heroes: [
-        {
-          blueprintId: 'archMage',
-          deck: {
-            cards: [
-              ...Array.from({ length: 4 }, () => 'magic-missile'),
-              ...Array.from({ length: 4 }, () => 'arcane-knowledge'),
-              ...Array.from({ length: 4 }, () => 'mana-shield'),
-              ...Array.from({ length: 4 }, () => 'staff-of-focus'),
-              ...Array.from({ length: 4 }, () => 'magic-amplification')
-            ]
-          }
-        },
-        {
-          blueprintId: 'exorcist',
-          deck: {
-            cards: [
-              ...Array.from({ length: 4 }, () => 'inspire'),
-              ...Array.from({ length: 4 }, () => 'purify'),
-              ...Array.from({ length: 4 }, () => 'cure-wounds'),
-              ...Array.from({ length: 4 }, () => 'equinox'),
-              ...Array.from({ length: 4 }, () => 'pacify')
-            ]
-          }
-        },
-        {
-          blueprintId: 'archMage',
-          deck: {
-            cards: [
-              ...Array.from({ length: 4 }, () => 'magic-missile'),
-              ...Array.from({ length: 4 }, () => 'arcane-knowledge'),
-              ...Array.from({ length: 4 }, () => 'mana-shield'),
-              ...Array.from({ length: 4 }, () => 'staff-of-focus'),
-              ...Array.from({ length: 4 }, () => 'magic-amplification')
-            ]
-          }
-        }
-      ]
+      mainDeck: {
+        cards: Array.from({ length: 40 }, () => 'test-minion')
+      },
+      destinyDeck: {
+        cards: ['test-shrine']
+      }
     }
   ]
 });

@@ -20,7 +20,7 @@ import {
   type SerializedCard
 } from './card.entity';
 
-export type SerializedSpellCard = SerializedCard & {
+export type SerializedSecretCard = SerializedCard & {
   kind: typeof CARD_KINDS.SECRET;
   maxTargets: number;
   aoe: {
@@ -96,7 +96,7 @@ export class SecretCard extends Card<
     );
   }
 
-  private getSerializedAoe(): SerializedSpellCard['aoe'] {
+  private getSerializedAoe(): SerializedSecretCard['aoe'] {
     if (!this.player.currentlyPlayedCard?.equals(this)) {
       return null;
     }
@@ -123,7 +123,7 @@ export class SecretCard extends Card<
     };
   }
 
-  serialize(): SerializedSpellCard {
+  serialize(): SerializedSecretCard {
     return {
       id: this.id,
       entityType: 'card' as const,
@@ -137,7 +137,7 @@ export class SecretCard extends Card<
       destinyCost: this.destinyCost,
       manaCost: this.manaCost,
       rarity: this.blueprint.rarity,
-      unit: this.player.id,
+      player: this.player.id,
       canPlay: this.player.canPlayCard(this),
       maxTargets: this.followupTargets.length,
       aoe: this.getSerializedAoe(),

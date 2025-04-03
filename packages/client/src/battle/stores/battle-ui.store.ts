@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import {
-  useActiveUnit,
+  useTurnPlayer,
   useBattleStore,
   useCells,
   useDispatcher,
@@ -15,14 +15,13 @@ import { pointToCellId } from '@game/engine/src/board/board-utils';
 import type { UnitViewModel } from '@/unit/unit.model';
 import type { CellViewModel } from '@/board/cell.model';
 import { match } from 'ts-pattern';
-import { GAME_PHASES } from '@game/engine/src/game/systems/game-phase.system';
 import { BattleController } from '../controllers/battle.controller';
-import { DeployController } from '../controllers/deploy.controller';
 import { EndGameController } from '../controllers/end-game.controller';
 import type { UiController } from '../controllers/ui-controller';
 import type { CardViewModel } from '@/card/card.model';
 import { Flip } from 'gsap/Flip';
 import { GAME_EVENTS } from '@game/engine/src/game/game.events';
+import { GAME_PHASES } from '@game/engine/src/game/game.enums';
 
 export const useInternalBattleUiStore = defineStore(
   'internal-battle-ui',
@@ -57,7 +56,7 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
   const battle = useBattleStore();
   const { state } = useGameState();
   const dispatch = useDispatcher();
-  const activeUnit = useActiveUnit();
+  const turnPlayer = useTurnPlayer();
 
   const cells = useCells();
 
@@ -163,7 +162,7 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
       dispatch({
         type: 'addCardTarget',
         payload: {
-          playerId: activeUnit.value.playerId,
+          playerId: turnPlayer.value.id,
           x,
           y
         }
@@ -212,7 +211,7 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
       });
     }
   });
-  battle.on(GAME_EVENTS.UNIT_BEFORE_PLAY_CARD, async () => {
+  battle.on(GAME_EVENTS.PLAYER_BEFORE_PLAY_CARD, async () => {
     cardPlayIntent.value = null;
     firstTargetIntent.value = null;
     internals.selectedCardId = null;
@@ -225,23 +224,12 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
     }
   });
 
-  const userPlayer = useUserPlayer();
-
   const controller = computed<UiController>(() =>
     match(state.value.phase)
       .with(
-        GAME_PHASES.DEPLOY,
-        () =>
-          new DeployController({
-            selectedUnit,
-            selectUnit,
-            unselectUnit,
-            player: userPlayer,
-            gameState: state
-          })
-      )
-      .with(
-        GAME_PHASES.BATTLE,
+        GAME_PHASES.DRAW,
+        GAME_PHASES.DESTINY,
+        GAME_PHASES.MAIN,
         () =>
           new BattleController({
             cardPlayIntent,
@@ -271,15 +259,12 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
                 }
               }
             }),
-            activeUnit: computed(
-              () =>
-                state.value.entities[state.value.activeUnit] as UnitViewModel
-            ),
+            turnPlayer,
             state,
             dispatcher: dispatch
           })
       )
-      .with(GAME_PHASES.END, () => new EndGameController())
+      .with(GAME_PHASES.GAME_END, () => new EndGameController())
       .exhaustive()
   );
 

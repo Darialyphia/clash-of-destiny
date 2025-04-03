@@ -9,7 +9,7 @@ export type MapBlueprint = {
     obstacles: string[];
     spriteId: string;
   }>;
-  generalPositions: Point[];
+  shrinePositions: Point[];
   boundaries: {
     topLeft: Point;
     topRight: Point;

@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import type { UnitViewModel } from '@/unit/unit.model';
 import { useResizeObserver } from '@vueuse/core';
 import { throttle } from 'lodash-es';
 import HandCard from './HandCard.vue';
 import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
+import type { PlayerViewModel } from '@/player/player.model';
 
-const { unit } = defineProps<{
-  unit: UnitViewModel;
+const { player } = defineProps<{
+  player: PlayerViewModel;
 }>();
 
-const hand = computed(() => unit.getHand());
+const hand = computed(() => player.getHand());
 const ui = useBattleUiStore();
 const cardSpacing = ref(0);
 const root = useTemplateRef('root');
 
 const computeMargin = () => {
   if (!root.value) return 0;
-  if (!unit.handSize) return 0;
+  if (!player.handSize) return 0;
 
   const allowedWidth = root.value.clientWidth;
   const totalWidth = [...root.value.children].reduce((total, child) => {
@@ -25,11 +25,11 @@ const computeMargin = () => {
 
   const excess = totalWidth - allowedWidth;
 
-  return Math.min(-excess / (unit.handSize - 1), 0);
+  return Math.min(-excess / (player.handSize - 1), 0);
 };
 
 watch(
-  [root, computed(() => unit.handSize)],
+  [root, computed(() => player.handSize)],
   async () => {
     await nextTick();
     cardSpacing.value = computeMargin();
@@ -47,7 +47,7 @@ useResizeObserver(
 
 <template>
   <transition appear mode="out-in">
-    <div class="hand" ref="root" :key="unit.id">
+    <div class="hand" ref="root" :key="player.id">
       <div
         v-for="(card, index) in hand"
         :key="card.id"

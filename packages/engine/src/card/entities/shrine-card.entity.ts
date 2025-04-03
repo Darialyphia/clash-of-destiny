@@ -1,5 +1,6 @@
 import type { Game } from '../../game/game';
 import type { Player } from '../../player/player.entity';
+import { UNIT_EVENTS } from '../../unit/unit-enums';
 import { Interceptable } from '../../utils/interceptable';
 import type {
   ShrineBlueprint,
@@ -7,6 +8,8 @@ import type {
   SpellBlueprint,
   UnitBlueprint
 } from '../card-blueprint';
+import { CARD_EVENTS } from '../card.enums';
+import { CardAfterPlayEvent, CardBeforePlayEvent } from '../card.events';
 import { type CardOptions } from './card.entity';
 import {
   makeUnitCardInterceptors,
@@ -56,5 +59,44 @@ export class ShrineCard extends UnitCard<
       level: this.level,
       baseLevel: this.baseLevel
     };
+  }
+
+  override play() {
+    const summonPosition = this.player.shrinePosition;
+    this.unit = this.game.unitSystem.addUnit(this, summonPosition);
+
+    const onLeaveBoardCleanups = [
+      UNIT_EVENTS.AFTER_DESTROY,
+      UNIT_EVENTS.AFTER_BOUNCE
+    ].map(e =>
+      this.unit.once(e, () => {
+        // @ts-expect-error
+        this.unit = undefined;
+        onLeaveBoardCleanups.forEach(cleanup => cleanup());
+      })
+    );
+
+    this.emitter.emit(
+      CARD_EVENTS.BEFORE_PLAY,
+      new CardBeforePlayEvent({ targets: [summonPosition] })
+    );
+
+    const aoeShape = this.blueprint.getAoe(this.game, this as any, [summonPosition]);
+    this.unit.addToBoard({
+      affectedCells: aoeShape.getCells([summonPosition]),
+      affectedUnits: aoeShape.getUnits([summonPosition])
+    });
+
+    this.blueprint.onPlay(
+      this.game,
+      this as any,
+      aoeShape.getCells([summonPosition]),
+      aoeShape.getUnits([summonPosition])
+    );
+
+    this.emitter.emit(
+      CARD_EVENTS.AFTER_PLAY,
+      new CardAfterPlayEvent({ targets: [summonPosition] })
+    );
   }
 }

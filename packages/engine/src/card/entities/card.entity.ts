@@ -35,7 +35,7 @@ export const makeCardInterceptors = (): CardInterceptors => ({
 export type SerializedCard = {
   id: string;
   entityType: 'card';
-  unit: string;
+  player: string;
   iconId: string;
   blueprintId: string;
   description: string;

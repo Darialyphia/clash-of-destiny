@@ -9,7 +9,9 @@ import {
 } from '@game/shared';
 import {
   PlayerDrawEvent,
+  PlayerEndTurnEvent,
   PlayerPlayCardEvent,
+  PlayerStartTurnEvent,
   type PlayerEventMap
 } from './player.events';
 import { PLAYER_EVENTS } from './player-enums';
@@ -23,8 +25,10 @@ import type {
 } from '../card/card-blueprint';
 import { ResourceTrackerComponent } from './components/resource-tracker.component';
 import type { AnyCard } from '../card/entities/card.entity';
-import { CARD_DECK_SOURCES, CARD_EVENTS } from '../card/card.enums';
+import { CARD_DECK_SOURCES, CARD_EVENTS, UNIT_KINDS } from '../card/card.enums';
 import { WrongDeckSourceError } from '../card/card-errors';
+import { ShrineCard } from '../card/entities/shrine-card.entity';
+import { MissingShrineError } from './player-errors';
 
 export type PlayerOptions = {
   id: string;
@@ -37,6 +41,17 @@ export type SerializedPlayer = {
   id: string;
   entityType: 'player';
   name: string;
+  hand: string[];
+  handSize: number;
+  discardPile: string[];
+  banishPile: string[];
+  artifacts: string[];
+  mana: number;
+  destiny: number;
+  canPerformResourceAction: boolean;
+  remainingCardsInDeck: number;
+  destinyDeck: string[];
+  currentlyPlayedCard?: string;
 };
 
 type PlayerInterceptors = EmptyObject;
@@ -98,7 +113,18 @@ export class Player
     return {
       id: this.id,
       entityType: 'player' as const,
-      name: this.options.name
+      name: this.options.name,
+      hand: this.cards.hand.map(card => card.id),
+      handSize: this.cards.hand.length,
+      discardPile: Array.from(this.cards.discardPile).map(card => card.id),
+      banishPile: Array.from(this.cards.banishPile).map(card => card.id),
+      artifacts: this.artifacts.artifacts.map(artifact => artifact.id),
+      mana: this.mana.current,
+      destiny: this.destiny.current,
+      canPerformResourceAction: this.canPerformResourceAction(),
+      remainingCardsInDeck: this.cards.mainDeck.remaining,
+      destinyDeck: this.cards.destinyDeck.cards.map(card => card.id),
+      currentlyPlayedCard: this.currentlyPlayedCard?.id
     };
   }
 
@@ -137,14 +163,30 @@ export class Player
     return this.game.playerSystem.players[0].equals(this);
   }
 
+  get shrinePosition() {
+    return this.isPlayer1
+      ? this.game.boardSystem.map.shrinePositions[0]
+      : this.game.boardSystem.map.shrinePositions[1];
+  }
+
+  initialize() {
+    this.placeShrine();
+  }
+
+  placeShrine() {
+    const shrine = this.cards.destinyDeck.cards.find(card => card instanceof ShrineCard);
+    assert(isDefined(shrine), new MissingShrineError());
+    this.playCardFromDestinyDeck(shrine);
+  }
+
   private canPlayMainDeckCard(card: AnyCard) {
     assert(isDefined(card.manaCost), new WrongDeckSourceError(card));
-    return this.mana.amount >= card.manaCost;
+    return this.mana.current >= card.manaCost;
   }
 
   private canPlayDestinyDeckCard(card: AnyCard) {
     assert(isDefined(card.destinyCost), new WrongDeckSourceError(card));
-    return this.destiny.amount >= card.destinyCost;
+    return this.destiny.current >= card.destinyCost;
   }
 
   canPlayCard(card: AnyCard) {
@@ -178,7 +220,7 @@ export class Player
   private onBeforePlayFromHand(card: AnyCard) {
     assert(isDefined(card.manaCost), new WrongDeckSourceError(card));
     this.emitter.emit(PLAYER_EVENTS.BEFORE_PLAY_CARD, new PlayerPlayCardEvent({ card }));
-    this.mana.spend(card.manaCost);
+    this.mana.add(card.manaCost);
   }
 
   private onAfterPlayFromHand(card: AnyCard) {
@@ -200,7 +242,7 @@ export class Player
   private onBeforePlayFromDestinyDeck(card: AnyCard) {
     assert(isDefined(card.destinyCost), new WrongDeckSourceError(card));
     this.emitter.emit(PLAYER_EVENTS.BEFORE_PLAY_CARD, new PlayerPlayCardEvent({ card }));
-    this.destiny.spend(card.destinyCost);
+    this.destiny.add(card.destinyCost);
   }
 
   private onAfterPlayFromDestinyDeck(card: AnyCard) {
@@ -265,17 +307,34 @@ export class Player
       this.cards.sendToBanishPile(card);
     });
 
-    this.destiny.gain(indices.length);
+    this.destiny.remove(indices.length);
     this.resourceActionsDoneThisTurn++;
   }
 
   resourceActionDraw() {
-    this.mana.spend(this.game.config.DRAW_RESOURCE_ACTION_COST);
+    this.mana.add(this.game.config.DRAW_RESOURCE_ACTION_COST);
     this.cards.draw(1);
     this.resourceActionsDoneThisTurn++;
   }
 
-  startTurn() {}
+  startTurn() {
+    this.resourceActionsDoneThisTurn = 0;
 
-  endTurn() {}
+    const drawCount =
+      this.game.gamePhaseSystem.elapsedTurns === 0 && !this.isPlayer1
+        ? this.game.config.PLAYER_2_CARDS_DRAWN_ON_FIRST_TURN
+        : this.game.config.CARDS_DRAWN_PER_TURN;
+    this.draw(drawCount);
+
+    if (this.mana.max < this.game.config.MAX_MANA) {
+      this.mana.setMax(this.mana.max + this.game.config.MAX_MANA_INCREASE_PER_TURN);
+    }
+    this.mana.fill();
+    this.destiny.add(this.game.config.DESTINY_EARNED_PER_TURN);
+    this.emitter.emit(PLAYER_EVENTS.START_TURN, new PlayerStartTurnEvent({}));
+  }
+
+  endTurn() {
+    this.emitter.emit(PLAYER_EVENTS.END_TURN, new PlayerEndTurnEvent({}));
+  }
 }
