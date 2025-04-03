@@ -9,3 +9,9 @@ export class PlayerAlreadyPerformedResourceActionError extends Error {
     super('Player already performed resource action');
   }
 }
+
+export class ArtifactAbilityNotFoundError extends Error {
+  constructor() {
+    super('Artifact ability not found');
+  }
+}

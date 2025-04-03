@@ -3,7 +3,7 @@ import { ModifierMixin } from '../modifier-mixin';
 import type { Game } from '../../game/game';
 import type { Unit } from '../../unit/entities/unit.entity';
 import type { UnitEventMap } from '../../unit/unit.events';
-import type { Artifact, ArtifactEventMap } from '../../unit/entities/artifact.entity';
+import type { Artifact, ArtifactEventMap } from '../../player/artifact.entity';
 
 export class UnitSelfEventModifierMixin<
   TEvent extends keyof UnitEventMap

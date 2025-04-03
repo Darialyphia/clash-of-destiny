@@ -1,12 +1,7 @@
 import type { Game } from '../../game/game';
 import type { Player } from '../../player/player.entity';
 import { Interceptable } from '../../utils/interceptable';
-import type {
-  HeroBlueprint,
-  MinionBlueprint,
-  SpellBlueprint,
-  UnitBlueprint
-} from '../card-blueprint';
+import type { HeroBlueprint, SpellBlueprint, UnitBlueprint } from '../card-blueprint';
 import { type CardOptions } from './card.entity';
 import {
   makeUnitCardInterceptors,
@@ -23,6 +18,7 @@ export type SerializedHeroCard = SerializedUnitCard & {
 export type HeroCardEventMap = UnitCardEventMap;
 export type HeroCardInterceptors = UnitCardInterceptors & {
   level: Interceptable<number>;
+  spellpower: Interceptable<number>;
 };
 
 export class HeroCard extends UnitCard<
@@ -35,7 +31,11 @@ export class HeroCard extends UnitCard<
     super(
       game,
       player,
-      { ...makeUnitCardInterceptors(), level: new Interceptable() },
+      {
+        ...makeUnitCardInterceptors(),
+        level: new Interceptable(),
+        spellpower: new Interceptable()
+      },
       options
     );
   }
@@ -46,6 +46,10 @@ export class HeroCard extends UnitCard<
 
   get level() {
     return this.interceptors.level.getValue(this.baseLevel, {});
+  }
+
+  get spellpower() {
+    return this.interceptors.spellpower.getValue(this.blueprint.spellpower, {});
   }
 
   serialize(): SerializedHeroCard {

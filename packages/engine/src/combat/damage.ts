@@ -42,15 +42,15 @@ export abstract class Damage<T> {
   abstract getFinalAmount(target: Unit): number;
 }
 
-export class CombatDamage extends Damage<Unit> {
-  constructor(options: BetterOmit<DamageOptions<Unit>, 'type'>) {
+export class CombatDamage extends Damage<AnyUnitCard> {
+  constructor(options: BetterOmit<DamageOptions<AnyUnitCard>, 'type'>) {
     super({ ...options, type: DAMAGE_TYPES.COMBAT });
   }
 
   getFinalAmount(target: Unit) {
-    const scaled = this._source.getDealtDamage(target);
+    const scaled = this._source.unit.getDealtDamage(target);
 
-    return Math.max(0, target.getReceivedDamage(scaled, this, this._source.card));
+    return Math.max(0, target.getReceivedDamage(scaled, this, this._source));
   }
 }
 

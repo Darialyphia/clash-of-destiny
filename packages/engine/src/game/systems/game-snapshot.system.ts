@@ -9,7 +9,7 @@ import type { SerializedBoard } from '../../board/board-system';
 import type { SerializedCell } from '../../board/cell';
 import type { SerializedCard } from '../../card/entities/card.entity';
 import type { SerializedModifier } from '../../modifier/modifier.entity';
-import type { SerializedArtifact } from '../../unit/entities/artifact.entity';
+import type { SerializedArtifact } from '../../player/artifact.entity';
 import type { SerializedInteractable } from '../../interactable/interactable.entity';
 
 export type GameStateSnapshot<T> = {

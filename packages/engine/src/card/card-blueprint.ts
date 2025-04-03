@@ -14,7 +14,7 @@ import type {
   CardJob
 } from './card.enums';
 import type { SpellCard } from './entities/spell-card.entity';
-import type { Artifact } from '../unit/entities/artifact.entity';
+import type { Artifact } from '../player/artifact.entity';
 import type { ArtifactCard } from './entities/artifact-card.entity';
 import type { Followup } from './followups/ability-followup';
 import type { AnyCard } from './entities/card.entity';
@@ -45,7 +45,10 @@ export type DestinyDeckCardBlueprint = CardBlueprintBase & {
 
 export type Ability<T extends AnyCard> = {
   manaCost: number;
-  description: string;
+  shouldExhaust: boolean;
+  staticDescription: string;
+  label: string;
+  getDescription(game: Game, card: T): string;
   getFollowup(
     game: Game,
     card: T

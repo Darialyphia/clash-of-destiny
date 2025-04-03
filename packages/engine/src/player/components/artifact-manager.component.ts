@@ -1,4 +1,4 @@
-import { Artifact } from '../../unit/entities/artifact.entity';
+import { Artifact } from '../artifact.entity';
 import type { ArtifactCard } from '../../card/entities/artifact-card.entity';
 import type { Game } from '../../game/game';
 import type { Player } from '../player.entity';

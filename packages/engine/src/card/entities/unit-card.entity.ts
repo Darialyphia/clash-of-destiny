@@ -1,11 +1,11 @@
-import type { Point } from '@game/shared';
+import { assert, type Point } from '@game/shared';
 import type { Game } from '../../game/game';
 import {
   INTERACTION_STATES,
   type SelectedTarget
 } from '../../game/systems/interaction.system';
 import type { Player } from '../../player/player.entity';
-import type { SpellBlueprint, UnitBlueprint } from '../card-blueprint';
+import type { Ability, SpellBlueprint, UnitBlueprint } from '../card-blueprint';
 import { CARD_EVENTS, CARD_KINDS, type UnitKind } from '../card.enums';
 import {
   CardAfterPlayEvent,
@@ -21,6 +21,9 @@ import {
 } from './card.entity';
 import { Interceptable } from '../../utils/interceptable';
 import type { Unit } from '../../unit/entities/unit.entity';
+import { UNIT_EVENTS } from '../../unit/unit-enums';
+import { MeleeTargetingStrategy } from '../../targeting/melee-targeting.straegy';
+import { PointAOEShape } from '../../aoe/point.aoe-shape';
 
 export type SerializedUnitCard = SerializedCard & {
   kind: typeof CARD_KINDS.UNIT;
@@ -83,12 +86,40 @@ export abstract class UnitCard<
     return this.blueprint.getFollowup(this.game, this as any) as any;
   }
 
+  get abilities() {
+    return this.blueprint.abilities;
+  }
+
   getAoe(points: Point[]) {
     return this.blueprint.getAoe(this.game, this as any, points);
   }
 
   get followupTargets(): ReturnType<TBlueprint['getFollowup']>['getTargets'] {
     return this.followup.getTargets(this.game, this as any) as any;
+  }
+
+  get attackPattern() {
+    return new MeleeTargetingStrategy(this.game, this.unit, {
+      type: this.unit.attackTargetType,
+      allowCenter: false,
+      allowDiagonals: true
+    });
+  }
+
+  get attackAOEShape() {
+    return new PointAOEShape(this.game, this.player);
+  }
+
+  get counterattackPattern() {
+    return new MeleeTargetingStrategy(this.game, this.unit, {
+      type: this.unit.attackTargetType,
+      allowCenter: false,
+      allowDiagonals: true
+    });
+  }
+
+  get counterattackAOEShape() {
+    return new PointAOEShape(this.game, this.player);
   }
 
   selectTargets(onComplete: (targets: SelectedTarget[]) => void) {
@@ -109,12 +140,31 @@ export abstract class UnitCard<
   playWithTargets(targets: SelectedTarget[]) {
     const points = targets.map(t => t.cell);
 
+    const [summonPosition] = points;
+    this.unit = this.game.unitSystem.addUnit(this, summonPosition);
+
+    const onLeaveBoardCleanups = [
+      UNIT_EVENTS.AFTER_DESTROY,
+      UNIT_EVENTS.AFTER_BOUNCE
+    ].map(e =>
+      this.unit.once(e, () => {
+        // @ts-expect-error
+        this.unit = undefined;
+        onLeaveBoardCleanups.forEach(cleanup => cleanup());
+      })
+    );
+
     this.emitter.emit(
       CARD_EVENTS.BEFORE_PLAY,
       new CardBeforePlayEvent({ targets: points })
     );
 
-    const aoeShape = this.getAoe(points);
+    const aoeShape = this.blueprint.getAoe(this.game, this as any, points);
+    this.unit.addToBoard({
+      affectedCells: aoeShape.getCells(points),
+      affectedUnits: aoeShape.getUnits(points)
+    });
+
     this.blueprint.onPlay(
       this.game,
       this as any,
@@ -122,7 +172,6 @@ export abstract class UnitCard<
       aoeShape.getUnits(points)
     );
 
-    this.player.cards.sendToDiscardPile(this);
     this.emitter.emit(
       CARD_EVENTS.AFTER_PLAY,
       new CardAfterPlayEvent({ targets: points })

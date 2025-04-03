@@ -1,4 +1,4 @@
-import { Vec2, type Point, type Point3D, type Serializable } from '@game/shared';
+import { assert, isDefined, Vec2, type Point, type Serializable } from '@game/shared';
 import { Entity } from '../../entity';
 import { type AnyCard } from '../../card/entities/card.entity';
 import { type Game } from '../../game/game';
@@ -20,9 +20,11 @@ import {
   UnitBeforeMoveEvent,
   UnitCreatedEvent,
   UnitDealDamageEvent,
+  UnitExhaustEvent,
   UnitReceiveDamageEvent,
   UnitReceiveHealEvent,
-  UnitTurnEvent,
+  UnitUseAbilityEvent,
+  UnitWakeUpEvent,
   type UnitEventMap
 } from '../unit.events';
 import type { Damage } from '../../combat/damage';
@@ -38,9 +40,12 @@ import { ModifierManager } from '../../modifier/modifier-manager.component';
 import { MeleeTargetingStrategy } from '../../targeting/melee-targeting.straegy';
 import { PointAOEShape } from '../../aoe/point.aoe-shape';
 import { makeUnitInterceptors, type UnitInterceptors } from '../unit-interceptors';
-import type { MinionCard } from '../../card/entities/minion-card.entity';
-import type { HeroCard } from '../../card/entities/hero-card.entity';
-import type { ShrineCard } from '../../card/entities/shrine-card.entity';
+import type { AnyUnitCard } from '../../card/entities/unit-card.entity';
+import { SingleCounterAttackParticipantStrategy } from '../../combat/counterattack-participants';
+import { HeroCard } from '../../card/entities/hero-card.entity';
+import type { Ability } from '../../card/card-blueprint';
+import type { SelectedTarget } from '../../game/systems/interaction.system';
+import { UnitAbilityNotFoundError } from '../unet-errors';
 
 export type SerializedUnit = {
   id: string;
@@ -61,6 +66,11 @@ export type SerializedUnit = {
   moveZone: Array<{ point: Point; path: Point[] }>;
   attackableCells: Point[];
   modifiers: string[];
+  abilities: Array<{
+    label: string;
+    canUse: boolean;
+  }>;
+  isExhausted: boolean;
 };
 
 export type UnitOptions = {
@@ -87,9 +97,11 @@ export class Unit
 
   private readonly combat: CombatComponent;
 
+  _isExhausted = false;
+
   constructor(
     game: Game,
-    readonly card: MinionCard | HeroCard | ShrineCard,
+    readonly card: AnyUnitCard,
     options: UnitOptions
   ) {
     super(`${options.id}`, makeUnitInterceptors());
@@ -131,7 +143,7 @@ export class Unit
       hp: this.hp.current,
       maxHp: this.hp.max,
       atk: this.atk,
-      spellPower: this.spellPower,
+      spellPower: this.spellpower,
       keywords: this.keywords.map(keyword => ({
         id: keyword.id,
         name: keyword.name,
@@ -142,7 +154,12 @@ export class Unit
       attackableCells: this.game.boardSystem.cells
         .filter(cell => this.canAttackAt(cell.position))
         .map(cell => cell.position.serialize()),
-      modifiers: this.modifiers.map(modifier => modifier.id)
+      modifiers: this.modifiers.map(modifier => modifier.id),
+      abilities: this.card.abilities.map(ability => ({
+        label: ability.label,
+        canUse: this.canUseAbiliy(this.card.abilities.indexOf(ability as any))
+      })),
+      isExhausted: this.isExhausted
     };
   }
 
@@ -191,8 +208,12 @@ export class Unit
     return this.interceptors.player.getValue(this.originalPlayer, {});
   }
 
-  get spellPower() {
-    return this.interceptors.spellPower.getValue(0, {});
+  get spellpower() {
+    if (this.card instanceof HeroCard) {
+      return this.interceptors.spellpower.getValue(this.card.spellpower, {});
+    }
+
+    return 0;
   }
 
   get position() {
@@ -223,12 +244,44 @@ export class Unit
     return this.card.blueprint.unitKind === UNIT_KINDS.MINION;
   }
 
+  get isExhausted() {
+    return this._isExhausted;
+  }
+
+  exhaust() {
+    this.emitter.emit(UNIT_EVENTS.BEFORE_EXHAUST, new UnitExhaustEvent({}));
+    this._isExhausted = true;
+    this.emitter.emit(UNIT_EVENTS.AFTER_EXHAUST, new UnitExhaustEvent({}));
+  }
+
+  wakeUp() {
+    this.emitter.emit(UNIT_EVENTS.BEFORE_WAKE_UP, new UnitWakeUpEvent({}));
+    this._isExhausted = false;
+    this.emitter.emit(UNIT_EVENTS.AFTER_WAKE_UP, new UnitWakeUpEvent({}));
+  }
+
   canBeAttackedBy(unit: Unit): boolean {
     return this.interceptors.canBeAttackTarget.getValue(!this.isDead, { attacker: unit });
   }
 
+  canBeCounterattackedBy(unit: Unit): boolean {
+    return this.interceptors.canBeCounterattackTarget.getValue(!this.isDead, {
+      attacker: unit
+    });
+  }
+
   canBeTargetedByCard(card: AnyCard): boolean {
     return this.interceptors.canBeCardTarget.getValue(!this.isDead, { card });
+  }
+
+  getCounterattackParticipants(initialTarget: Unit) {
+    return this.interceptors.attackCounterattackParticipants
+      .getValue(new SingleCounterAttackParticipantStrategy(), {})
+      .getCounterattackParticipants({
+        attacker: this,
+        initialTarget,
+        affectedUnits: this.attackAOEShape.getUnits([initialTarget.position])
+      });
   }
 
   get enemiesInRange() {
@@ -255,6 +308,13 @@ export class Unit
     );
   }
 
+  get maxCounterattacksPerTurn() {
+    return this.interceptors.maxCounterattacksPerTurn.getValue(
+      this.game.config.MAX_COUNTERATTACKS_PER_TURN,
+      {}
+    );
+  }
+
   get attackTargettingPattern(): TargetingStrategy {
     return this.interceptors.attackTargetingPattern.getValue(
       new MeleeTargetingStrategy(this.game, this, {
@@ -267,7 +327,7 @@ export class Unit
   }
 
   get atk() {
-    return this.interceptors.atk.getValue(this.card.atk, {});
+    return this.interceptors.attack.getValue(this.card.atk, {});
   }
 
   get attackTargetType(): TargetingType {
@@ -281,8 +341,53 @@ export class Unit
     );
   }
 
+  get counterattackTargetingPattern(): TargetingStrategy {
+    return this.interceptors.counterattackTargetingPattern.getValue(
+      this.card.counterattackPattern,
+      {}
+    );
+  }
+
+  get counterattackTargetType(): TargetingType {
+    return this.interceptors.counterattackTargetType.getValue(
+      TARGETING_TYPE.ENEMY_UNIT,
+      {}
+    );
+  }
+
+  get counterattackAOEShape(): AOEShape {
+    return this.interceptors.counterattackAOEShape.getValue(
+      this.card.counterattackAOEShape,
+      {}
+    );
+  }
+
   get attacksPerformedThisTurn() {
     return this.combat.attacksCount;
+  }
+
+  get counterAttacksPerformedThisTurn() {
+    return this.combat.counterAttacksCount;
+  }
+
+  canCounterAttack(unit: Unit): boolean {
+    return this.interceptors.canCounterAttack.getValue(!this.isExhausted, {
+      attacker: unit
+    });
+  }
+
+  canCounterAttackAt(point: Point) {
+    if (this.position.equals(point)) {
+      return false;
+    }
+
+    const target = this.game.unitSystem.getUnitAt(point);
+    if (!target) return false;
+
+    return (
+      this.canCounterAttack(target) &&
+      this.counterattackTargetingPattern.canTargetAt(point)
+    );
   }
 
   get movementsMadeThisTurn() {
@@ -290,7 +395,10 @@ export class Unit
   }
 
   get canMove(): boolean {
-    return this.interceptors.canMove.getValue(this.remainingMovement > 0, {});
+    return this.interceptors.canMove.getValue(
+      !this.isExhausted && this.movementsMadeThisTurn <= this.maxMovementsPerTurn,
+      {}
+    );
   }
 
   canMoveThrough(unit: Unit) {
@@ -302,10 +410,7 @@ export class Unit
   }
 
   canAttack(unit: Unit): boolean {
-    return this.interceptors.canAttack.getValue(
-      this.attacksPerformedThisTurn < this.maxAttacksPerTurn,
-      { unit }
-    );
+    return this.interceptors.canAttack.getValue(!this.isExhausted, { unit });
   }
 
   get isAt() {
@@ -355,6 +460,7 @@ export class Unit
       {}
     );
   }
+
   canMoveTo(point: Point) {
     if (!this.canMove) return false;
     return this.movement.canMoveTo(point, this.speed);
@@ -416,11 +522,12 @@ export class Unit
 
   getDealtDamage(target: Unit) {
     return this.interceptors.damageDealt.getValue(this.atk, {
-      target
+      target,
+      source: this.card
     });
   }
 
-  getReceivedDamage<T>(amount: number, damage: Damage<T>, from: AnyCard) {
+  getReceivedDamage<T extends AnyCard>(amount: number, damage: Damage<T>, from: AnyCard) {
     return this.interceptors.damageReceived.getValue(amount, {
       source: from,
       damage,
@@ -451,6 +558,16 @@ export class Unit
 
   attack(point: Point) {
     this.combat.attack(point);
+    if (this.attacksPerformedThisTurn >= this.maxAttacksPerTurn) {
+      this.exhaust();
+    }
+  }
+
+  counterAttack(unit: Unit) {
+    this.combat.counterAttack(unit);
+    if (this.counterAttacksPerformedThisTurn >= this.maxCounterattacksPerTurn) {
+      this.exhaust();
+    }
   }
 
   canAttackAt(point: Point) {
@@ -483,7 +600,7 @@ export class Unit
     this.game.unitSystem.removeUnit(this);
   }
 
-  destroy(source: Unit) {
+  destroy(source: AnyCard) {
     this.emitter.emit(UNIT_EVENTS.BEFORE_DESTROY, new UnitBeforeDestroyEvent({ source }));
     if (!this.canBeDestroyed) return;
     const position = this.position;
@@ -525,11 +642,34 @@ export class Unit
     return () => this.removeModifier(modifier);
   }
 
-  starturn() {
-    this.emitter.emit(UNIT_EVENTS.START_TURN, new UnitTurnEvent({}));
+  canUseAbiliy(index: number) {
+    const ability = this.card.abilities[index] as Ability<this['card']>;
+    assert(isDefined(ability), new UnitAbilityNotFoundError());
+
+    return this.interceptors.canUseAbility.getValue(
+      !this.isExhausted && this.player.mana.amount >= ability.manaCost,
+      { ability: ability }
+    );
   }
 
-  endTurn() {
-    this.emitter.emit(UNIT_EVENTS.END_TURN, new UnitTurnEvent({}));
+  useAbility(index: number) {
+    const ability = this.card.abilities[index] as Ability<this['card']>;
+    assert(isDefined(ability), new UnitAbilityNotFoundError());
+
+    const followup = ability.getFollowup(this.game, this.card);
+    this.game.interaction.startSelectingTargets({
+      player: this.player,
+      getNextTarget: targets => followup.targets[targets.length] ?? null,
+      canCommit: followup.canCommit,
+      onComplete: (targets: SelectedTarget[]) => {
+        this.emitter.emit(UNIT_EVENTS.BEFORE_USE_ABILITY, new UnitUseAbilityEvent({}));
+        this.player.mana.spend(ability.manaCost);
+        ability.onResolve(this.game, this.card, targets);
+        if (ability.shouldExhaust) {
+          this.exhaust();
+        }
+        this.emitter.emit(UNIT_EVENTS.AFTER_USE_ABILITY, new UnitUseAbilityEvent({}));
+      }
+    });
   }
 }

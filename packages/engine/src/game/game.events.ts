@@ -25,7 +25,7 @@ import {
   ARTIFACT_EVENTS,
   type Artifact,
   type ArtifactEventMap
-} from '../unit/entities/artifact.entity';
+} from '../player/artifact.entity';
 import type { HeroCard, SerializedHeroCard } from '../card/entities/hero-card.entity';
 import type {
   MinionCard,

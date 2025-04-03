@@ -113,6 +113,10 @@ export class Player
     });
   }
 
+  get isActive() {
+    return this.game.turnSystem.activePlayer.equals(this);
+  }
+
   get hero() {
     return this.units.find(u => u.player.equals(this) && (u.isHero || u.isShrine))!;
   }

@@ -15,7 +15,7 @@ import type {
   ArtifactCard,
   ArtifactCardInterceptors
 } from '../../card/entities/artifact-card.entity';
-import type { Artifact, ArtifactInterceptor } from '../../unit/entities/artifact.entity';
+import type { Artifact, ArtifactInterceptor } from '../../player/artifact.entity';
 import type { UnitInterceptors } from '../../unit/unit-interceptors';
 import type {
   AnyUnitCard,

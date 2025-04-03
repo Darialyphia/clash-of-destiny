@@ -1,15 +1,24 @@
-import type { EmptyObject, Serializable, Values } from '@game/shared';
+import {
+  assert,
+  isDefined,
+  type EmptyObject,
+  type Serializable,
+  type Values
+} from '@game/shared';
 import { nanoid } from 'nanoid';
-import type { ArtifactCard } from '../../card/entities/artifact-card.entity';
-import type { Modifier } from '../../modifier/modifier.entity';
-import { Entity } from '../../entity';
-import type { Game } from '../../game/game';
-import { ModifierManager } from '../../modifier/modifier-manager.component';
-import { TypedSerializableEvent } from '../../utils/typed-emitter';
-import { Interceptable } from '../../utils/interceptable';
-import type { Damage } from '../../combat/damage';
-import { UNIT_EVENTS } from '../unit-enums';
-import { ARTIFACT_KINDS } from '../../card/card.enums';
+import type { ArtifactCard } from '../card/entities/artifact-card.entity';
+import type { Modifier } from '../modifier/modifier.entity';
+import { Entity } from '../entity';
+import type { Game } from '../game/game';
+import { ModifierManager } from '../modifier/modifier-manager.component';
+import { TypedSerializableEvent } from '../utils/typed-emitter';
+import { Interceptable } from '../utils/interceptable';
+import type { Damage } from '../combat/damage';
+import { UNIT_EVENTS } from '../unit/unit-enums';
+import { ARTIFACT_KINDS } from '../card/card.enums';
+import type { Ability } from '../card/card-blueprint';
+import { ArtifactAbilityNotFoundError } from './player-errors';
+import type { SelectedTarget } from '../game/systems/interaction.system';
 
 export const ARTIFACT_EVENTS = {
   EQUIPED: 'equiped',
@@ -17,7 +26,16 @@ export const ARTIFACT_EVENTS = {
   BEFORE_DESTROY: 'before_destroy',
   AFTER_DESTROY: 'after_destroy',
 
-  DURABILITY_CHANGE: 'durability_change'
+  DURABILITY_CHANGE: 'durability_change',
+
+  BEFORE_USE_ABILITY: 'before_use_ability',
+  AFTER_USE_ABILITY: 'after_use_ability',
+
+  BEFORE_EXHAUST: 'before_exhaust',
+  AFTER_EXHAUST: 'after_exhaust',
+
+  BEFORE_WAKE_UP: 'before_wake_up',
+  AFTER_WAKE_UP: 'after_wake_up'
 } as const;
 
 export type ArtifactEvent = Values<typeof ARTIFACT_EVENTS>;
@@ -29,6 +47,14 @@ export type ArtifactEventMap = {
   [ARTIFACT_EVENTS.AFTER_DESTROY]: ArtifactDestroyEvent;
 
   [ARTIFACT_EVENTS.DURABILITY_CHANGE]: ArtifactDurabilityChangeEvent;
+
+  [ARTIFACT_EVENTS.BEFORE_USE_ABILITY]: ArtifactUseAbilityEvent;
+  [ARTIFACT_EVENTS.AFTER_USE_ABILITY]: ArtifactUseAbilityEvent;
+
+  [ARTIFACT_EVENTS.BEFORE_EXHAUST]: ArtifactExhaustEvent;
+  [ARTIFACT_EVENTS.AFTER_EXHAUST]: ArtifactExhaustEvent;
+  [ARTIFACT_EVENTS.BEFORE_WAKE_UP]: ArtifactWakeUpEvent;
+  [ARTIFACT_EVENTS.AFTER_WAKE_UP]: ArtifactWakeUpEvent;
 };
 
 export type ArtifactOptions = {
@@ -40,13 +66,15 @@ export type ArtifactInterceptor = {
   shouldLosedurabilityOnDamage: Interceptable<boolean, Damage<any>>;
   maxDurability: Interceptable<number>;
   canLoseDurability: Interceptable<boolean>;
+  canUseAbility: Interceptable<boolean, { ability: Ability<ArtifactCard> }>;
 };
 
 const makeInterceptors = (): ArtifactInterceptor => ({
   shouldLosedurabilityOnAttack: new Interceptable(),
   shouldLosedurabilityOnDamage: new Interceptable(),
   maxDurability: new Interceptable(),
-  canLoseDurability: new Interceptable()
+  canLoseDurability: new Interceptable(),
+  canUseAbility: new Interceptable()
 });
 
 export type SerializedArtifact = {
@@ -56,6 +84,11 @@ export type SerializedArtifact = {
   modifiers: string[];
   durability: number;
   maxDurability: number;
+  isExhausted: boolean;
+  abilities: Array<{
+    label: string;
+    canUse: boolean;
+  }>;
 };
 
 export class Artifact
@@ -64,11 +97,11 @@ export class Artifact
 {
   readonly card: ArtifactCard;
 
-  private playerId: string;
-
   private modifierManager: ModifierManager<Artifact>;
 
   private _durability: number;
+
+  private _isExhausted = false;
 
   private cleanups: Array<() => void> = [];
   constructor(
@@ -78,7 +111,6 @@ export class Artifact
     super(`${options.card.player.id}-artifact-${nanoid(6)}`, makeInterceptors());
     this.card = options.card;
     this._durability = this.card.durability;
-    this.playerId = options.card.player.id;
     this.modifierManager = new ModifierManager(this);
 
     this.cleanups.push(
@@ -97,7 +129,12 @@ export class Artifact
       card: this.card.id,
       modifiers: this.modifiers.map(modifier => modifier.id),
       durability: this.durability,
-      maxDurability: this.maxDurability
+      maxDurability: this.maxDurability,
+      isExhausted: this.isExhausted,
+      abilities: this.card.abilities.map(ability => ({
+        label: ability.label,
+        canUse: this.canUseAbiliy(this.card.abilities.indexOf(ability))
+      }))
     };
   }
 
@@ -185,6 +222,56 @@ export class Artifact
 
     this.emitter.emit(ARTIFACT_EVENTS.AFTER_DESTROY, new ArtifactDestroyEvent({}));
   }
+
+  get isExhausted() {
+    return this._isExhausted;
+  }
+
+  exhaust() {
+    this.emitter.emit(ARTIFACT_EVENTS.BEFORE_EXHAUST, new ArtifactExhaustEvent({}));
+    this._isExhausted = true;
+    this.emitter.emit(ARTIFACT_EVENTS.AFTER_EXHAUST, new ArtifactExhaustEvent({}));
+  }
+
+  wakeUp() {
+    this.emitter.emit(ARTIFACT_EVENTS.BEFORE_WAKE_UP, new ArtifactWakeUpEvent({}));
+    this._isExhausted = false;
+    this.emitter.emit(ARTIFACT_EVENTS.AFTER_WAKE_UP, new ArtifactWakeUpEvent({}));
+  }
+
+  canUseAbiliy(index: number) {
+    const ability = this.card.abilities[index] as Ability<this['card']>;
+    assert(isDefined(ability), new ArtifactAbilityNotFoundError());
+
+    return this.interceptors.canUseAbility.getValue(
+      !this.isExhausted && this.player.mana.amount >= ability.manaCost,
+      { ability: ability }
+    );
+  }
+
+  useAbility(ability: Ability<this['card']>) {
+    const followup = ability.getFollowup(this.game, this.card);
+    this.game.interaction.startSelectingTargets({
+      player: this.player,
+      getNextTarget: targets => followup.targets[targets.length] ?? null,
+      canCommit: followup.canCommit,
+      onComplete: (targets: SelectedTarget[]) => {
+        this.emitter.emit(
+          ARTIFACT_EVENTS.BEFORE_USE_ABILITY,
+          new ArtifactUseAbilityEvent({})
+        );
+        this.player.mana.spend(ability.manaCost);
+        ability.onResolve(this.game, this.card, targets);
+        if (ability.shouldExhaust) {
+          this.exhaust();
+        }
+        this.emitter.emit(
+          ARTIFACT_EVENTS.AFTER_USE_ABILITY,
+          new ArtifactUseAbilityEvent({})
+        );
+      }
+    });
+  }
 }
 
 export class ArtifactEquipedEvent extends TypedSerializableEvent<
@@ -214,5 +301,31 @@ export class ArtifactDurabilityChangeEvent extends TypedSerializableEvent<
       durability: this.data.durability,
       previousDurability: this.data.previousDurability
     };
+  }
+}
+
+export class ArtifactUseAbilityEvent extends TypedSerializableEvent<
+  EmptyObject,
+  EmptyObject
+> {
+  serialize() {
+    return {};
+  }
+}
+
+export class ArtifactExhaustEvent extends TypedSerializableEvent<
+  EmptyObject,
+  EmptyObject
+> {
+  serialize() {
+    return {};
+  }
+}
+export class ArtifactWakeUpEvent extends TypedSerializableEvent<
+  EmptyObject,
+  EmptyObject
+> {
+  serialize() {
+    return {};
   }
 }

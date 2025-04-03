@@ -21,6 +21,7 @@ export type Config = {
 
   MAX_MOVEMENT_PER_TURN: number;
   MAX_ATTACKS_PER_TURN: number;
+  MAX_COUNTERATTACKS_PER_TURN: number;
 
   MAX_RESOURCE_ACTIONS_PER_TURN: number;
 
@@ -46,6 +47,7 @@ export const defaultConfig: Config = {
 
   MAX_MOVEMENT_PER_TURN: 1,
   MAX_ATTACKS_PER_TURN: 1,
+  MAX_COUNTERATTACKS_PER_TURN: 1,
 
   INITIAL_DESTINY: 0,
   MAX_DESTINY: 10,

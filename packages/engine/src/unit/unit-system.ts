@@ -7,6 +7,7 @@ import type { Player } from '../player/player.entity';
 import type { MinionCard } from '../card/entities/minion-card.entity';
 import type { HeroCard } from '../card/entities/hero-card.entity';
 import type { ShrineCard } from '../card/entities/shrine-card.entity';
+import type { AnyUnitCard } from '../card/entities/unit-card.entity';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type UnitSystemOptions = {};
@@ -53,11 +54,11 @@ export class UnitSystem extends System<UnitSystemOptions> {
     ].filter
   }
 
-  addUnit(player: Player, card: MinionCard | HeroCard | ShrineCard, position: Point) {
+  addUnit(card: AnyUnitCard, position: Point) {
     const id = `unit_${++this.nextUnitId}`;
     const unit = new Unit(this.game, card, {
       id,
-      player,
+      player: card.player,
       position
     });
     this.unitMap.set(unit.id, unit);
