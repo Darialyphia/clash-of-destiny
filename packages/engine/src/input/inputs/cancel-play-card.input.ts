@@ -9,7 +9,7 @@ const schema = defaultInputSchema;
 export class CancelPlayCardInput extends Input<typeof schema> {
   readonly name = 'cancelPlayCard';
 
-  readonly allowedPhases = [GAME_PHASES.MAIN];
+  readonly allowedPhases = [GAME_PHASES.DESTINY, GAME_PHASES.MAIN];
 
   protected payloadSchema = schema;
 

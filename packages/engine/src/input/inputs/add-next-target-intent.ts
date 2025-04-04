@@ -13,7 +13,7 @@ const schema = defaultInputSchema.extend({
 export class AddNextTargetIntentCardInput extends Input<typeof schema> {
   readonly name = 'addNextTargetIntent';
 
-  readonly allowedPhases = [GAME_PHASES.MAIN];
+  readonly allowedPhases = [GAME_PHASES.DESTINY, GAME_PHASES.MAIN];
 
   protected payloadSchema = schema;
 

@@ -792,6 +792,19 @@
               "m": true
             }
           }
+        },
+        {
+          "alias": [
+            "icon-unit-test-minion"
+          ],
+          "src": [
+            "/assets/icons/unit-test-minion.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
         }
       ]
     },
@@ -1027,6 +1040,19 @@
           ],
           "src": [
             "/assets/ui/attack.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "button-disabled.png"
+          ],
+          "src": [
+            "/assets/ui/button-disabled.png"
           ],
           "data": {
             "tags": {

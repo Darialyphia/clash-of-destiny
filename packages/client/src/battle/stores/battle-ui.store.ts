@@ -275,44 +275,22 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
     },
     set(value) {
       _isDestinyResourceActionModalOpened.value = value;
+
       window.requestAnimationFrame(() => {
-        if (value) {
-          const root = document.querySelector('.destiny-resource-action')!;
-          const elements = Array.from(
-            root.querySelectorAll('.card')
-          ) as HTMLElement[];
-          elements.forEach(element => {
-            const handElement = document.querySelector(
-              `.hand [data-flip-id="${element.dataset.flipId}"]`
-            );
-            const flipState = Flip.getState([handElement, element]);
-            window.requestAnimationFrame(() => {
-              Flip.from(flipState, {
-                duration: 0.5,
-                absolute: false,
-                ease: Power3.easeOut
-              });
-            });
+        const handElements = document.querySelectorAll(
+          `.hand .card[data-flip-id]`
+        );
+        const modalElements = document.querySelectorAll(
+          `.destiny-resource-action .card[data-flip-id]`
+        );
+        const flipState = Flip.getState([...modalElements, ...handElements]);
+        window.requestAnimationFrame(() => {
+          Flip.from(flipState, {
+            duration: 0.5,
+            absolute: false,
+            ease: Power3.easeOut
           });
-        } else {
-          const root = document.querySelector('.hand')!;
-          const elements = Array.from(
-            root.querySelectorAll('.card')
-          ) as HTMLElement[];
-          elements.forEach(element => {
-            const handElement = document.querySelector(
-              `.destiny-resource-action [data-flip-id="${element.dataset.flipId}"]`
-            );
-            const flipState = Flip.getState([handElement, element]);
-            window.requestAnimationFrame(() => {
-              Flip.from(flipState, {
-                duration: 0.5,
-                absolute: false,
-                ease: Power3.easeOut
-              });
-            });
-          });
-        }
+        });
       });
     }
   });

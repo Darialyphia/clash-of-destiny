@@ -11,7 +11,7 @@ import { useBattleUiStore } from '../stores/battle-ui.store';
 import TurnIndicator from '@/player/components/TurnIndicator.vue';
 import { usePlayers } from '../stores/battle.store';
 import PlayerActions from '@/player/components/PlayerActions.vue';
-
+import DestinyPhaseUi from './DestinyPhaseUi.vue';
 import BattlePlayerInfos from '@/player/components/BattlePlayerInfos.vue';
 
 const turnPlayer = useTurnPlayer();
@@ -40,6 +40,7 @@ const { state } = useGameState();
     <PlayedCard />
     <PlayIntent />
     <TurnIndicator />
+    <DestinyPhaseUi />
     <footer>
       <Hand :player="turnPlayer" />
       <PlayerActions class="player-actions" />

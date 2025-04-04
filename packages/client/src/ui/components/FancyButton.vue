@@ -85,6 +85,7 @@ const tag = computed(() => {
     }
 
     &:disabled {
+      border-image-source: url('/assets/ui/button-disabled.png');
       cursor: not-allowed;
     }
 

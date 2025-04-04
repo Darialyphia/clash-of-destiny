@@ -212,7 +212,7 @@ export class Player
   }
 
   playDestinyDeckCardAtIndex(index: number, onComplete?: () => void) {
-    const card = this.cards.getCardAt(index);
+    const card = this.cards.getDestinyCardAt(index);
     if (!card) return;
 
     this.playCardFromDestinyDeck(card, onComplete);

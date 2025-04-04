@@ -72,6 +72,7 @@ const banish = () => {
       <h2>Select up to 3 cards to banish to gain this much Destiny.</h2>
       <div
         class="card-list"
+        :class="{ hidden: !ui.isDestinyResourceActionModalOpened }"
         ref="root"
         :style="{ '--card-spacing': cardSpacing }"
       >
@@ -112,6 +113,9 @@ h2 {
   display: flex;
   gap: var(--size-2);
 
+  .hidden {
+    opacity: 0;
+  }
   > label {
     position: relative;
     transition: transform 0.1s var(--ease-in-2);

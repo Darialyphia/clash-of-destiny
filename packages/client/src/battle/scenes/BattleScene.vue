@@ -29,7 +29,7 @@ const session = new GameSession({
         cards: Array.from({ length: 40 }, () => 'test-minion')
       },
       destinyDeck: {
-        cards: ['test-shrine']
+        cards: ['test-shrine', 'test-destiny-spell']
       }
     },
     {
@@ -39,7 +39,7 @@ const session = new GameSession({
         cards: Array.from({ length: 40 }, () => 'test-minion')
       },
       destinyDeck: {
-        cards: ['test-shrine']
+        cards: ['test-shrine', 'test-destiny-spell']
       }
     }
   ]

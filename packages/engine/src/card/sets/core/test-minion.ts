@@ -21,7 +21,7 @@ export const testMinion: UnitBlueprint = {
   },
   staticDescription: `todo static description`,
   setId: CARD_SETS.CORE,
-  cardIconId: 'placeholder',
+  cardIconId: 'card-test-minion',
   spriteId: 'test-unit',
   spriteParts: {},
   rarity: RARITIES.COMMON,

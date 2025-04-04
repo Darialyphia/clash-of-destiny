@@ -12,7 +12,7 @@ const schema = defaultInputSchema.extend({
 export class CommitCardSelectionCardInput extends Input<typeof schema> {
   readonly name = 'commitCardSelection';
 
-  readonly allowedPhases = [GAME_PHASES.MAIN];
+  readonly allowedPhases = [GAME_PHASES.DESTINY, GAME_PHASES.MAIN];
 
   protected payloadSchema = schema;
 
