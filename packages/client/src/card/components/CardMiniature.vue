@@ -1,13 +1,21 @@
 <script setup lang="ts">
 import type { CardViewModel } from '../card.model';
 import InspectableCard from './InspectableCard.vue';
-import { HoverCardContent, HoverCardRoot, HoverCardTrigger } from 'reka-ui';
+import {
+  HoverCardContent,
+  HoverCardRoot,
+  HoverCardTrigger,
+  HoverCardPortal
+} from 'reka-ui';
 
-const { card } = defineProps<{ card: CardViewModel }>();
+const { card, side = 'right' } = defineProps<{
+  card: CardViewModel;
+  side?: 'left' | 'right';
+}>();
 </script>
 
 <template>
-  <HoverCardRoot :open-delay="200" :close-delay="0">
+  <HoverCardRoot :open-delay="200" :close-delay="100">
     <HoverCardTrigger>
       <div class="card-miniature">
         <span>{{ card.name }}</span>
@@ -15,9 +23,11 @@ const { card } = defineProps<{ card: CardViewModel }>();
       </div>
     </HoverCardTrigger>
 
-    <HoverCardContent side="right" :side-offset="20">
-      <InspectableCard :card="card" />
-    </HoverCardContent>
+    <HoverCardPortal to="#card-portal">
+      <HoverCardContent :side="side" :side-offset="20">
+        <InspectableCard :card="card" />
+      </HoverCardContent>
+    </HoverCardPortal>
   </HoverCardRoot>
 </template>
 

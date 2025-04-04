@@ -2,6 +2,7 @@ import { PointAOEShape } from '../../../aoe/point.aoe-shape';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
 import type { UnitBlueprint } from '../../card-blueprint';
 import {
+  AFFINITIES,
   CARD_DECK_SOURCES,
   CARD_KINDS,
   CARD_SETS,
@@ -14,6 +15,7 @@ export const testShrine: UnitBlueprint = {
   id: 'test-shrine',
   kind: CARD_KINDS.UNIT,
   unitKind: UNIT_KINDS.SHRINE,
+  affinity: AFFINITIES.FIRE,
   name: 'Test Shrine',
   getDescription: () => {
     return `On Enter: draw 4 cards.`;

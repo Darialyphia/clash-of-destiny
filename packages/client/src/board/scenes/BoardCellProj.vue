@@ -46,7 +46,7 @@ const textures = computed(() => {
   <container-2d
     :position="[
       config.TILE_SIZE_PROJ.x * cell.position.x,
-      -config.TILE_SIZE_PROJ.y * cell.position.y
+      config.TILE_SIZE_PROJ.y * cell.position.y
     ]"
     @pointerenter="
       () => {

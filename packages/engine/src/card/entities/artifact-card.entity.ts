@@ -66,6 +66,7 @@ export class ArtifactCard extends Card<
       manaCost: this.manaCost,
       iconId: this.blueprint.cardIconId,
       kind: this.blueprint.kind,
+      affinity: this.blueprint.affinity,
       setId: this.blueprint.setId,
       name: this.blueprint.name,
       description: this.blueprint.getDescription(this.game, this),

@@ -11,7 +11,8 @@ import type {
   Rarity,
   UNIT_KINDS,
   CARD_DECK_SOURCES,
-  CardJob
+  CardJob,
+  Affinity
 } from './card.enums';
 import type { SpellCard } from './entities/spell-card.entity';
 import type { Artifact } from '../player/artifact.entity';
@@ -31,6 +32,7 @@ export type CardBlueprintBase = {
   rarity: Rarity;
   cardIconId: string;
   collectable: boolean;
+  affinity: Affinity;
 };
 
 export type MainDeckCardBlueprint = CardBlueprintBase & {

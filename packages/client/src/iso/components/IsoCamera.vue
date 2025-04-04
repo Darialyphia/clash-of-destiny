@@ -83,10 +83,8 @@ watchEffect(() => {
     :disable-on-context-menu="true"
     :sortable-children="true"
   >
-    <container
-      :sortable-children="true"
-      v-bind="camera.offset.value"
-    ></container>
+    <container :sortable-children="true" v-bind="camera.offset.value">
+      <slot :worldSize="worldSize" />
+    </container>
   </viewport>
-  <slot :worldSize="worldSize" />
 </template>

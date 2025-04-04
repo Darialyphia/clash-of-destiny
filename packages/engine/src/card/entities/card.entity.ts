@@ -5,6 +5,7 @@ import type { CardBlueprint } from '../card-blueprint';
 import {
   CARD_DECK_SOURCES,
   CARD_EVENTS,
+  type Affinity,
   type CardDeckSource,
   type CardKind,
   type Rarity
@@ -47,6 +48,7 @@ export type SerializedCard = {
   deckSource: CardDeckSource;
   manaCost: number | null;
   destinyCost: number | null;
+  affinity: Affinity;
 };
 
 export abstract class Card<

@@ -63,3 +63,18 @@ export const RARITIES = {
 } as const;
 
 export type Rarity = Values<typeof RARITIES>;
+
+export const AFFINITIES = {
+  NORMAL: 'NORMAL',
+  FIRE: 'FIRE',
+  WATER: 'WATER',
+  EARTH: 'EARTH',
+  AIR: 'AIR',
+  CREATION: 'CREATION',
+  DESTRUCTION: 'DESTRUCTION',
+  ORDER: 'ORDER',
+  OBLIVION: 'OBLIVION',
+  ARCANE: 'ARCANE'
+} as const;
+
+export type Affinity = Values<typeof AFFINITIES>;

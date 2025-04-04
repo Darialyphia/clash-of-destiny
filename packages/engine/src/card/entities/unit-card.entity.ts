@@ -223,6 +223,7 @@ export abstract class UnitCard<
       id: this.id,
       entityType: 'card' as const,
       unitKind: this.blueprint.unitKind,
+      affinity: this.blueprint.affinity,
       blueprintId: this.blueprint.id,
       iconId: this.blueprint.cardIconId,
       kind: this.blueprint.kind,

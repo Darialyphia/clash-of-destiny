@@ -5,7 +5,6 @@ import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
 import { useBattleEvent } from '@/battle/stores/battle.store';
 import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
 import { GAME_EVENTS } from '@game/engine/src/game/game.events';
-import AnimatedIsoPoint from '@/iso/components/AnimatedIsoPoint.vue';
 import type { UnitViewModel } from '../unit.model';
 
 const { unit } = defineProps<{
@@ -80,7 +79,7 @@ const ui = useBattleUiStore();
     :position="[
       config.TILE_SIZE_PROJ.x * unit.position.x +
         config.UNIT_SPRITE_OFFSET_PROJ.x,
-      -config.TILE_SIZE_PROJ.y * unit.position.y +
+      config.TILE_SIZE_PROJ.y * unit.position.y +
         config.UNIT_SPRITE_OFFSET_PROJ.y
     ]"
   >

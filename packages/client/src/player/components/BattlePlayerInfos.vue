@@ -53,12 +53,15 @@ const userPlayer = useUserPlayer();
         :title="`Discard Pile (${discardPile.length})`"
         :position="player.isPlayer1 ? 'left' : 'right'"
       >
-        <ul>
+        <p v-if="!discardPile.length">Your discard pile is empty.</p>
+        <ul v-else>
           <li v-for="card in discardPile" :key="card.id">
-            <CardMiniature :card="card" />
+            <CardMiniature
+              :card="card"
+              :side="player.isPlayer1 ? 'right' : 'left'"
+            />
           </li>
         </ul>
-        <p v-if="!discardPile.length">Your discard pile is empty.</p>
       </UiDrawer>
 
       <FancyButton
@@ -70,16 +73,19 @@ const userPlayer = useUserPlayer();
         :title="`Banish Pile (${banishPile.length})`"
         :position="player.isPlayer1 ? 'left' : 'right'"
       >
-        <ul>
+        <p v-if="!banishPile.length">Your banish pile is empty.</p>
+        <ul v-else>
           <li v-for="card in banishPile" :key="card.id">
-            <CardMiniature :card="card" />
+            <CardMiniature
+              :card="card"
+              :side="player.isPlayer1 ? 'right' : 'left'"
+            />
           </li>
         </ul>
-        <p v-if="!banishPile.length">Your banish pile is empty.</p>
       </UiDrawer>
 
       <FancyButton
-        v-if="userPlayer.equals(player)"
+        :disabled="!userPlayer.equals(player)"
         :text="`Destiny Deck (${destinyDeck.length})`"
         @click="isDestinyDeckDrawerOpened = !isDestinyDeckDrawerOpened"
       />
@@ -88,12 +94,15 @@ const userPlayer = useUserPlayer();
         :title="`Destiny deck (${destinyDeck.length})`"
         :position="player.isPlayer1 ? 'left' : 'right'"
       >
-        <ul>
+        <p v-if="!destinyDeck.length">Your destiny deck is empty.</p>
+        <ul v-else>
           <li v-for="card in destinyDeck" :key="card.id">
-            <CardMiniature :card="card" />
+            <CardMiniature
+              :card="card"
+              :side="player.isPlayer1 ? 'right' : 'left'"
+            />
           </li>
         </ul>
-        <p v-if="!destinyDeck.length">Your destiny deck is empty.</p>
       </UiDrawer>
     </div>
   </div>

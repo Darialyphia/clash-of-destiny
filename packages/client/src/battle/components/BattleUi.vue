@@ -27,7 +27,17 @@ const { state } = useGameState();
   <div class="battle-ui" :class="{ cinematic: ui.cardPlayIntent }">
     <BattleLog />
     <header>
-      {{ state.phase }} | {{ ui.selectedUnit?.id ?? 'no unit selected' }}
+      <div class="flex gap-4 pointer-events-auto">
+        <label>
+          <input type="radio" v-model="ui.viewMode" value="top-down" />
+          Top down
+        </label>
+
+        <label>
+          <input type="radio" v-model="ui.viewMode" value="isometric" />
+          Isometric
+        </label>
+      </div>
       <div class="flex justify-between">
         <BattlePlayerInfos
           v-for="player in players"

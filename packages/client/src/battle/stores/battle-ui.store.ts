@@ -294,7 +294,10 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
       });
     }
   });
+
+  const viewMode = ref<'top-down' | 'isometric'>('top-down');
   return {
+    viewMode,
     controller,
 
     isDestinyResourceActionModalOpened,

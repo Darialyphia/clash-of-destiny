@@ -129,6 +129,7 @@ export class SpellCard extends Card<
       blueprintId: this.blueprint.id,
       iconId: this.blueprint.cardIconId,
       kind: this.blueprint.kind,
+      affinity: this.blueprint.affinity,
       deckSource: this.deckSource,
       destinyCost: this.destinyCost,
       manaCost: this.manaCost,

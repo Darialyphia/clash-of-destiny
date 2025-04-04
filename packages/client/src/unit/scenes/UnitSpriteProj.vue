@@ -3,14 +3,12 @@ import { useSpritesheet } from '@/shared/composables/useSpritesheet';
 import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
 import { OutlineFilter } from '@pixi/filter-outline';
 import { AdjustmentFilter } from '@pixi/filter-adjustment';
-import { useIsoCamera } from '@/iso/composables/useIsoCamera';
 import { useMultiLayerTexture } from '@/shared/composables/useMultiLayerTexture';
 import { config } from '@/utils/config';
 import type { UnitViewModel } from '../unit.model';
 import { useGameState, useUserPlayer } from '@/battle/stores/battle.store';
 import { INTERACTION_STATES } from '@game/engine/src/game/systems/interaction.system';
 import { pointToCellId } from '@game/engine/src/board/board-utils';
-import { GAME_PHASES } from '@game/engine/src/game/game.enums';
 import { Sprite2d, AFFINE } from 'pixi-projection';
 
 const { unit, hasFilters = true } = defineProps<{
@@ -20,14 +18,10 @@ const { unit, hasFilters = true } = defineProps<{
 
 const sheet = useSpritesheet<'', 'base' | 'destroyed'>(() => unit.spriteId);
 const ui = useBattleUiStore();
-const camera = useIsoCamera();
 const { state } = useGameState();
 const player = useUserPlayer();
 
-const outlineThickness = ref(camera.viewport.value!.scale.x);
-camera.viewport.value?.on('zoomed-end', () => {
-  outlineThickness.value = camera.viewport.value!.scale.x;
-});
+const outlineThickness = ref(2);
 
 const textures = useMultiLayerTexture({
   sheet,

@@ -9,6 +9,7 @@ import { useBattleStore, useGameState } from '../stores/battle.store';
 import { useBattleUiStore } from '../stores/battle-ui.store';
 import Board from '@/board/scenes/Board.vue';
 import { GameSession } from '@game/engine/src/game/game-session';
+import BoardProj from '@/board/scenes/BoardProj.vue';
 
 const battleStore = useBattleStore();
 const settingsStore = useSettingsStore();
@@ -104,26 +105,29 @@ until(() => isoWorld.value)
 </script>
 
 <template>
-  <IsoWorld
-    ref="isoWorld"
-    v-if="state"
-    :angle="0"
-    :width="state.board.columns"
-    :height="state.board.rows"
-    :tile-size="config.TILE_SIZE"
-    @pointerup="
-      e => {
-        if (e.target !== isoWorld?.camera.viewport.value) return;
-        uiStore.unselectUnit();
-      }
-    "
-  >
-    <IsoCamera :columns="state.board.columns" :rows="state.board.rows">
-      <Board />
-    </IsoCamera>
+  <template v-if="state">
+    <IsoWorld
+      ref="isoWorld"
+      v-if="ui.viewMode === 'isometric'"
+      :angle="0"
+      :width="state.board.columns"
+      :height="state.board.rows"
+      :tile-size="config.TILE_SIZE"
+      @pointerup="
+        e => {
+          if (e.target !== isoWorld?.camera.viewport.value) return;
+          uiStore.unselectUnit();
+        }
+      "
+    >
+      <IsoCamera :columns="state.board.columns" :rows="state.board.rows">
+        <Board />
+      </IsoCamera>
 
-    <Layer :ref="(layer: any) => ui.registerLayer(layer, 'scene')" />
-    <Layer :ref="(layer: any) => ui.registerLayer(layer, 'fx')" />
-    <Layer :ref="(layer: any) => ui.registerLayer(layer, 'ui')" />
-  </IsoWorld>
+      <Layer :ref="(layer: any) => ui.registerLayer(layer, 'scene')" />
+      <Layer :ref="(layer: any) => ui.registerLayer(layer, 'fx')" />
+      <Layer :ref="(layer: any) => ui.registerLayer(layer, 'ui')" />
+    </IsoWorld>
+    <BoardProj v-else />
+  </template>
 </template>

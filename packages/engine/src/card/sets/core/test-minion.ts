@@ -2,6 +2,7 @@ import { PointAOEShape } from '../../../aoe/point.aoe-shape';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
 import type { UnitBlueprint } from '../../card-blueprint';
 import {
+  AFFINITIES,
   CARD_DECK_SOURCES,
   CARD_JOBS,
   CARD_KINDS,
@@ -15,6 +16,7 @@ export const testMinion: UnitBlueprint = {
   id: 'test-minion',
   kind: CARD_KINDS.UNIT,
   unitKind: UNIT_KINDS.MINION,
+  affinity: AFFINITIES.NORMAL,
   name: 'Test Minion',
   getDescription: (game, card) => {
     return `todo description`;

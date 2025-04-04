@@ -4,7 +4,6 @@ import {
   type SelectedTarget
 } from '../../game/systems/interaction.system';
 import type { Player } from '../../player/player.entity';
-import type { Unit } from '../../unit/entities/unit.entity';
 import type { SecretBlueprint, SpellBlueprint } from '../card-blueprint';
 import { CARD_EVENTS, CARD_KINDS } from '../card.enums';
 import {
@@ -130,6 +129,7 @@ export class SecretCard extends Card<
       blueprintId: this.blueprint.id,
       iconId: this.blueprint.cardIconId,
       kind: this.blueprint.kind,
+      affinity: this.blueprint.affinity,
       setId: this.blueprint.setId,
       name: this.blueprint.name,
       description: this.blueprint.getDescription(this.game, this),
