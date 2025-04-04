@@ -54,6 +54,10 @@ export class PlayerViewModel {
     return this.data.canPerformResourceAction;
   }
 
+  get isPlayer1() {
+    return this.data.isPlayer1;
+  }
+
   getHand() {
     return this.data.hand.map(cardId => {
       return this.entityDictionary[cardId] as CardViewModel;

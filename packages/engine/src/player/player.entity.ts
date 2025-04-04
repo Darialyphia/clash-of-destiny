@@ -56,6 +56,7 @@ export type SerializedPlayer = {
   currentlyPlayedCard?: string;
   maxHp: number;
   currentHp: number;
+  isPlayer1: boolean;
 };
 
 type PlayerInterceptors = EmptyObject;
@@ -131,7 +132,8 @@ export class Player
       destinyDeck: this.cards.destinyDeck.cards.map(card => card.id),
       currentlyPlayedCard: this.currentlyPlayedCard?.id,
       maxHp: this.hero?.hp.max ?? 0,
-      currentHp: this.hero?.hp.current ?? 0
+      currentHp: this.hero?.hp.current ?? 0,
+      isPlayer1: this.isPlayer1
     };
   }
 

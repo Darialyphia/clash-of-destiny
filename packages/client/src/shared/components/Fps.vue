@@ -27,7 +27,7 @@ const isDev = import.meta.env.DEV;
 .fps {
   position: fixed;
   top: var(--size-5);
-  left: var(--size-11);
+  left: var(--size-15);
   transform: translateZ(0);
 }
 </style>

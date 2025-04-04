@@ -6,6 +6,7 @@ import { VisuallyHidden } from 'reka-ui';
 import FancyButton from '@/ui/components/FancyButton.vue';
 import { isDefined } from '@game/shared';
 import { useBattleUiStore } from '../stores/battle-ui.store';
+import CardMiniature from '@/card/components/CardMiniature.vue';
 
 const { state } = useGameState();
 const player = useTurnPlayer();
@@ -65,18 +66,18 @@ const play = () => {
     <ul class="grid gap-3">
       <li v-for="(card, index) in deck" :key="card.id">
         <label>
-          <div class="card-miniature">
-            <span>{{ card.name }}</span>
-            <span>Cost: {{ card.destinyCost }}</span>
-            <VisuallyHidden>
-              <input
-                type="radio"
-                name="destiny-card"
-                :value="index"
-                v-model="selectedCardIndex"
-                :disabled="card.destinyCost! > player.destiny"
-            </VisuallyHidden>
-          </div>
+          <CardMiniature
+            :card="card"
+            class="card-miniature"
+          />
+          <VisuallyHidden>
+            <input
+              type="radio"
+              name="destiny-card"
+              :value="index"
+              v-model="selectedCardIndex"
+              :disabled="card.destinyCost! > player.destiny"
+          </VisuallyHidden>
         </label>
       </li>
     </ul>
@@ -100,23 +101,12 @@ h2 {
 }
 
 .card-miniature {
-  display: flex;
-  gap: var(--size-5);
-  align-items: center;
-  padding: var(--size-5);
-  background-color: #32021b;
-  border: solid 6px #efef9f;
-  border-right-color: #d7ad42;
-  border-bottom-color: #d7ad42;
-  box-shadow: 3px 3px 0 black;
-
-
-  cursor: pointer;
-  transition: background-color 0.3s var(--ease-2);
-
   &:hover {
     background-color: #5d1529;
   }
+}
+
+li {
 
    &:has(input:checked) {
       filter: drop-shadow(0 0 0.5rem yellow);
