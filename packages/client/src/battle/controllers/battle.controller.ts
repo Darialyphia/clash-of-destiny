@@ -194,7 +194,10 @@ export class BattleController implements UiController {
           return 'danger';
         }
 
-        return null;
+        if (this.hoveredCell?.equals(cell)) {
+          return 'hovered';
+        }
+        return 'normal';
       })
       .with({ state: INTERACTION_STATES.SELECTING_CARDS }, () => {
         return null;

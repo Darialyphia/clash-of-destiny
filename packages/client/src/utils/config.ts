@@ -9,6 +9,11 @@ export const config = {
     z: 16
   },
 
+  TILE_SIZE_PROJ: {
+    x: 64,
+    y: 64
+  },
+
   UNIT_SPRITE_SIZE: {
     width: 128,
     height: 128

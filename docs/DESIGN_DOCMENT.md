@@ -41,7 +41,7 @@ There is also a Normal element that can be used regardless of which elements are
 
 ### Resource action
 
-In addition to their mana and destiny gain, players have the ability to perform one resource action every turn. Here are the available resource actions:
+In addition to their mana gain, players have the ability to perform one resource action every turn. Here are the available resource actions:
 - Spend 1 mana to draw 1 card.
 - Put a card in their hand at the bottom of their deck and draw 1 card.
 - Banish up to 3 cards in their hand to gain up to 3 destiny.
@@ -83,6 +83,10 @@ There are 6 types of cards: Minions, Heroes, Spells, Artifacts and Secrets.
 ### Shrines
 
 Shrines are what a player starts the game with. They start in the Destiny Deck and players must only have one Shrine.
+
+At the start of the game, the Shrine is automatically played from the destiny deck, and the players draw their starting hand (shrines have different way of drawing your starting hand, for example "On Enter: draw 6 cards" vs "On Enter: Scry(6), then draw 6 cards").
+
+Shrines have a fixed starting position: {x: 0, y: 2} for player 1, ans {x: 8, y: 2} for player 2.
 
 A shrine behaves like a hero, except it cannot move, attack, or counterattack.
 

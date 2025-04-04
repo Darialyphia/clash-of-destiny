@@ -12,7 +12,7 @@ import { NoFollowup } from '../../followups/no-followup';
 export const testDestiySpell: SpellBlueprint = {
   id: 'test-destiny-spell',
   kind: CARD_KINDS.SPELL,
-  name: 'Test Minion',
+  name: 'Test Destiny Spell',
   getDescription: () => {
     return `Draw 1 card.`;
   },

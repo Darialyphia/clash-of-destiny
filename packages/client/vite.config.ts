@@ -18,7 +18,20 @@ const customElements = [
   'viewport',
   'layer',
   'outline-filter',
-  'adjustment-filter'
+  'adjustment-filter',
+  'camera-3d',
+  'container-2d',
+  'container-3d',
+  'mesh-2d',
+  'mesh-3d-2d',
+  'simple-mesh-2d',
+  'simple-mesh-3d-2d',
+  'sprite-2d',
+  'sprite-2s',
+  'sprite-3d',
+  'text-2d',
+  'text-2s',
+  'text-3d'
 ];
 const prefix = 'pixi-';
 

@@ -21,7 +21,7 @@ const isSpawnAnimationDone = ref(false);
     <UnitSpawnAnimation @done="isSpawnAnimationDone = true">
       <UnitOrientation :unit="unit">
         <UnitShadow :unit="unit" />
-        <UnitSprite :unit="unit" :alpha="unit.moveIntent ? 0.35 : 1" />
+        <UnitSprite :unit="unit" />
       </UnitOrientation>
     </UnitSpawnAnimation>
     <UnitVFX :unit="unit" />

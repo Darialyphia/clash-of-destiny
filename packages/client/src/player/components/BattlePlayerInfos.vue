@@ -117,7 +117,8 @@ const userPlayer = useUserPlayer();
 }
 
 ul {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: var(--size-3);
   height: 100dvh;
   padding: var(--size-5);

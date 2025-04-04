@@ -1453,6 +1453,33 @@
         },
         {
           "alias": [
+            "path-end-proj"
+          ],
+          "src": [
+            "/assets/ui/path-end-proj.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "path-end-proj.png"
+          ],
+          "src": [
+            "/assets/ui/path-end-proj.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "path-end"
           ],
           "src": [
@@ -1471,6 +1498,33 @@
           ],
           "src": [
             "/assets/ui/path-end.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "path-start-proj"
+          ],
+          "src": [
+            "/assets/ui/path-start-proj.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "path-start-proj.png"
+          ],
+          "src": [
+            "/assets/ui/path-start-proj.png"
           ],
           "data": {
             "tags": {
@@ -1507,6 +1561,33 @@
         },
         {
           "alias": [
+            "path-straight-proj"
+          ],
+          "src": [
+            "/assets/ui/path-straight-proj.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "path-straight-proj.png"
+          ],
+          "src": [
+            "/assets/ui/path-straight-proj.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "path-straight"
           ],
           "src": [
@@ -1525,6 +1606,33 @@
           ],
           "src": [
             "/assets/ui/path-straight.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "path-turn-proj"
+          ],
+          "src": [
+            "/assets/ui/path-turn-proj.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "path-turn-proj.png"
+          ],
+          "src": [
+            "/assets/ui/path-turn-proj.png"
           ],
           "data": {
             "tags": {
@@ -1617,6 +1725,46 @@
           ],
           "src": [
             "/assets/ui/speed.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "test-projection.png"
+          ],
+          "src": [
+            "/assets/ui/test-projection.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "tile-highlights-proj"
+          ],
+          "src": [
+            "/assets/ui/tile-highlights-proj.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "tile-highlights-proj.png"
+          ],
+          "src": [
+            "/assets/ui/tile-highlights-proj.png"
           ],
           "data": {
             "tags": {
