@@ -6,7 +6,8 @@ import {
   DialogContent,
   DialogTitle,
   DialogDescription,
-  DialogPortal
+  DialogPortal,
+  VisuallyHidden
 } from 'reka-ui';
 export type ModalStyleVariables = '--ui-modal-size';
 
@@ -18,8 +19,8 @@ const {
   closable = true,
   usePortal = true
 } = defineProps<{
-  title?: string;
-  description?: string;
+  title: string;
+  description: string;
   closable?: boolean;
   style?: StyleProp<ModalStyleVariables>;
   usePortal?: boolean;
@@ -54,13 +55,14 @@ const {
           "
         >
           <div class="content">
-            <DialogTitle v-if="title" class="pb-5">
-              <slot name="title" :title="title">{{ title }}</slot>
-            </DialogTitle>
-
-            <DialogDescription v-if="description">
-              {{ description }}
-            </DialogDescription>
+            <VisuallyHidden>
+              <DialogTitle>
+                <slot name="title" :title="title">{{ title }}</slot>
+              </DialogTitle>
+              <DialogDescription>
+                {{ description }}
+              </DialogDescription>
+            </VisuallyHidden>
 
             <slot />
           </div>

@@ -47,7 +47,12 @@ useResizeObserver(
 
 <template>
   <transition appear mode="out-in">
-    <div class="hand" ref="root" :key="player.id">
+    <div
+      class="hand"
+      ref="root"
+      :key="player.id"
+      :class="{ hidden: ui.isDestinyResourceActionModalOpened }"
+    >
       <div
         v-for="(card, index) in hand"
         :key="card.id"
@@ -65,6 +70,9 @@ useResizeObserver(
 <style scoped lang="postcss">
 .hand {
   display: flex;
+  &.hidden {
+    opacity: 0;
+  }
   > div {
     pointer-events: auto;
     transform: translateY(35%);

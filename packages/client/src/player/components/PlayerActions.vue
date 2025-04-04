@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import DestinyResourceActionUi from '@/battle/components/DestinyResourceActionUi.vue';
 import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
 import { useTurnPlayer, useUserPlayer } from '@/battle/stores/battle.store';
 import FancyButton from '@/ui/components/FancyButton.vue';
@@ -39,6 +40,7 @@ const isTurnPlayer = computed(() => {
         v-if="player.canPerformResourceAction"
         class="pointer-events-auto w-full"
         text="Resource action: Destiny"
+        @click="ui.isDestinyResourceActionModalOpened = true"
       />
     </transition>
 
@@ -49,6 +51,8 @@ const isTurnPlayer = computed(() => {
         @click="player.endTurn()"
       />
     </transition>
+
+    <DestinyResourceActionUi />
   </div>
 </template>
 
