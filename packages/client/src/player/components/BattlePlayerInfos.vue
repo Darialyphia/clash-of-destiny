@@ -45,7 +45,6 @@ const userPlayer = useUserPlayer();
 
     <div class="flex flex-col gap-2 pointer-events-auto">
       <FancyButton
-        v-if="userPlayer.equals(player)"
         :text="`Discard Pile (${discardPile.length})`"
         @click="isDiscardPileDrawerOpened = !isDiscardPileDrawerOpened"
       />
@@ -80,6 +79,7 @@ const userPlayer = useUserPlayer();
       </UiDrawer>
 
       <FancyButton
+        v-if="userPlayer.equals(player)"
         :text="`Destiny Deck (${destinyDeck.length})`"
         @click="isDestinyDeckDrawerOpened = !isDestinyDeckDrawerOpened"
       />

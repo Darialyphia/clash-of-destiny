@@ -8,17 +8,17 @@ Main inspirations: Duelyst, Grand Archive TCG
 
 ## Start of the game
 
-Both player prepare 2 decks: a **Main deck** and a **Destiny deck**. They also choose a **Shrine** among the four available ones: Fire, Water, Air or Earth.
+Both player prepare 2 decks: a **Main deck** and a **Destiny deck**. 
 
 When the game starts they draw 4 cards from their main deck.
 
 ## Win Condition
 
-The goal of the game is to reduce the Health of the opponent's Shrine OR Hero to zero.
+The goal of the game is to reduce the Health of the opponent's **Shrine** OR **Hero** to zero.
 
 ## Board
 
-The board is of 7 X 5 dimensions with square tiles. The player's Shrines are placed on the middle row on both extremity of the board.
+The board is of 9 X 5 dimensions with square tiles. The player's Shrines are placed on the middle row on both extremity of the board.
 
 ## Resources
 
@@ -26,12 +26,11 @@ The game uses 3 types or resources used to play cards and activate abilities: Ma
 
 ### Mana
 
-Mana is a resource that is used to play cards from the Main Deck. If a players has unspent mana at the end of their turn, that mana is lost.
-Players start at 1 mana, and the amount of mana they gain per turn increases every turn, up to  a maximum of 10.
+Mana is a resource that is used to play cards from the Main Deck. It is earned at a rate of a flat 4 mana per turn, but can be banked for use in the following turn, up to a maximum of 10 mana.
 
 ### Destiny
 
-Destiny is a resource that is used to play cards from the Destiny Deck. Unlike mana, Players do not gain Destiny automatically at the start of their turn. Instead, they may chose to use their *Resource Acrtion* to gain Destiny. Some card effects may add or remove a player's Destiny.
+Destiny is a resource that is used to play cards from the Destiny Deck. Unlike mana, Players do not gain Destiny automatically at the start of their turn. Instead, they may chose to use their *Resource Action* to gain Destiny. In addition, some card effects may add or remove a player's Destiny.
 
 ### Elements
 
@@ -63,12 +62,13 @@ The Main deck can contain cards of the following type:
 
 The destiny deck is made of 10 unique cards. At the beginning of their turn, after they have drawn from their main deck, a player may spend destiny points to play one and only one card from the Destiny Deck by paying its Destiny cost. If they choose to do so, they must do it before any other action.
 
-The Destiny deck deck contain cards of the following types:
+The Destiny Deck **MUST** contain one and only one Shrine card. The other cards can be of the following types:
 - Minion
 - Spell
 - Artifact
 - Secret
 - Hero
+- Shrine
 
 Note that only a card that has a Destiny cost can be put in the destiny deck : if a card has a mana cost instead, it must go into the Main deck.
 
@@ -78,7 +78,15 @@ Players are able to play one (and only one) destiny card during the Destiny Phas
 
 ## Cards
 
-There are 5 types of cards: Minions, Heroes, Spells, Artifacts and Secrets.
+There are 6 types of cards: Minions, Heroes, Spells, Artifacts and Secrets.
+
+### Shrines
+
+Shrines are what a player starts the game with. They start in the Destiny Deck and players must only have one Shrine.
+
+A shrine behaves like a hero, except it cannot move, attack, or counterattack.
+
+For all intents and purposes, Shrines are considered level 0 heroes.
 
 ### Heroes
 
@@ -98,7 +106,7 @@ For all intents and purposes, the Shrine a player starts the game with is consid
 
 When playing a base level 2 or 3 hero, the previous level card are not destroyed or banished. Instead, they are placed on top of each other, to make it easier to track lineage and unlocked elements.
 
-Leveling up a hero will not change its **exhaustion status** nor will it remove the damage they have suffere so far.
+Leveling up a hero will not change its **exhaustion status** nor will it remove the damage they have suffered so far.
 
 #### Lineage
 
@@ -106,11 +114,13 @@ In addition, most heroes follow a lineage: only heroes that share the same linea
 
 For example, you can only play *Aiden, Caller of Storms*, hat has the Aiden lineage, if your current hero also posess the Aiden lineage.
 
-Note that not all heroes have a lineage requirement. However, playing a hero without a lineage breaks the "lineage chains". For example, playing the base level 2 hero *Ohm, the Forgotten* on top of a base level 1 *Aiden, Child of the Storm*, breaks the Aiden Lineage. ITs player will then not be able to play a level 3 hero with the Aiden lineage, such as *Aiden, Thunder Incarnate*.
+Note that not all heroes have a lineage requirement. However, playing a hero without a lineage breaks the "lineage chain". For example, playing the base level 2 hero *Ohm, the Forgotten* on top of a base level 1 *Aiden, Child of the Storm*, breaks the Aiden Lineage. Its player will then not be able to play a level 3 hero with the Aiden lineage, such as *Aiden, Thunder Incarnate*.
+
+If the player has a Shrine on the board instead of a Hero, they can play any level 1 Hero on top of it.
 
 ### Deckbuilding restrictions
 
-There are not deckbuilding restrictions regarding which heroes a player can put in their Destiny Deck. However, once they played a base level hero, they might lock themselves out from using other heroes due to lineage / level restrictions.
+There are no deckbuilding restrictions regarding which, or how many, heroes a player can put in their Destiny Deck. However, once they played a base level hero, they might lock themselves out from using other heroes due to lineage / level restrictions.
 
 #### Elements
 
@@ -121,7 +131,8 @@ Most heroes of base level 3 will unlock one of the five advanced elements for it
 A Hero has the following stats:
 - Health Points (HP): how much damage they can take before being defeated.
 - Attack Points (ATK): how much damage they deal through combat.
-- Spellpower (SP): influences the effects of some spells and abilties.
+- Spellpower (SP): influences the effects of some other cards.
+- Level (LV): represents the level of the hero. It can influence the effects of some other cards.
 
 ### Minions
 
