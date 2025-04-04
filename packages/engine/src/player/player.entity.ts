@@ -48,7 +48,6 @@ export type SerializedPlayer = {
   banishPile: string[];
   artifacts: string[];
   mana: number;
-  maxMana: number;
   destiny: number;
   canPerformResourceAction: boolean;
   remainingCardsInDeck: number;
@@ -102,10 +101,7 @@ export class Player
       maxHandSize: this.game.config.MAX_HAND_SIZE,
       shouldShuffleDeck: this.game.config.SHUFFLE_DECK_ON_GAME_START
     });
-    this.mana = new ResourceTrackerComponent(
-      this.game.config.INITIAL_MANA,
-      this.game.config.INITIAL_MANA
-    );
+    this.mana = new ResourceTrackerComponent(this.game.config.INITIAL_MANA, Infinity);
     this.destiny = new ResourceTrackerComponent(
       this.game.config.INITIAL_DESTINY,
       this.game.config.MAX_DESTINY
@@ -125,7 +121,6 @@ export class Player
       banishPile: Array.from(this.cards.banishPile).map(card => card.id),
       artifacts: this.artifacts.artifacts.map(artifact => artifact.id),
       mana: this.mana.current,
-      maxMana: this.mana.max,
       destiny: this.destiny.current,
       canPerformResourceAction: this.canPerformResourceAction(),
       remainingCardsInDeck: this.cards.mainDeck.remaining,
@@ -229,7 +224,7 @@ export class Player
   private onBeforePlayFromHand(card: AnyCard) {
     assert(isDefined(card.manaCost), new WrongDeckSourceError(card));
     this.emitter.emit(PLAYER_EVENTS.BEFORE_PLAY_CARD, new PlayerPlayCardEvent({ card }));
-    this.mana.add(card.manaCost);
+    this.mana.remove(card.manaCost);
   }
 
   private onAfterPlayFromHand(card: AnyCard) {
@@ -251,7 +246,7 @@ export class Player
   private onBeforePlayFromDestinyDeck(card: AnyCard) {
     assert(isDefined(card.destinyCost), new WrongDeckSourceError(card));
     this.emitter.emit(PLAYER_EVENTS.BEFORE_PLAY_CARD, new PlayerPlayCardEvent({ card }));
-    this.destiny.add(card.destinyCost);
+    this.destiny.remove(card.destinyCost);
   }
 
   private onAfterPlayFromDestinyDeck(card: AnyCard) {
@@ -316,12 +311,12 @@ export class Player
       this.cards.sendToBanishPile(card);
     });
 
-    this.destiny.remove(indices.length);
+    this.destiny.add(indices.length);
     this.resourceActionsDoneThisTurn++;
   }
 
   resourceActionDraw() {
-    this.mana.add(this.game.config.DRAW_RESOURCE_ACTION_COST);
+    this.mana.remove(this.game.config.DRAW_RESOURCE_ACTION_COST);
     this.cards.draw(1);
     this.resourceActionsDoneThisTurn++;
   }
@@ -329,10 +324,7 @@ export class Player
   startTurn() {
     this.emitter.emit(PLAYER_EVENTS.START_TURN, new PlayerStartTurnEvent({}));
 
-    if (this.mana.max < this.game.config.MAX_MANA) {
-      this.mana.setMax(this.mana.max + this.game.config.MAX_MANA_INCREASE_PER_TURN);
-    }
-    this.mana.fill();
+    this.mana.add(this.game.config.MANA_EARNED_PER_TURN);
     this.destiny.add(this.game.config.DESTINY_EARNED_PER_TURN);
     this.resourceActionsDoneThisTurn = 0;
 
@@ -341,5 +333,6 @@ export class Player
 
   endTurn() {
     this.emitter.emit(PLAYER_EVENTS.END_TURN, new PlayerEndTurnEvent({}));
+    this.mana.setTo(Math.min(this.mana.current, this.game.config.MAX_BANKED_MANA));
   }
 }

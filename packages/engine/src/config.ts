@@ -6,8 +6,8 @@ export type Config = {
   MAX_DESTINY_DECK_CARD_COPIES: number;
 
   INITIAL_MANA: number;
-  MAX_MANA: number;
-  MAX_MANA_INCREASE_PER_TURN: number;
+  MAX_BANKED_MANA: number;
+  MANA_EARNED_PER_TURN: number;
 
   INITIAL_DESTINY: number;
   MAX_DESTINY: number;
@@ -40,8 +40,8 @@ export const defaultConfig: Config = {
   MAX_DESTINY_DECK_CARD_COPIES: 1,
 
   INITIAL_MANA: 0,
-  MAX_MANA: 10,
-  MAX_MANA_INCREASE_PER_TURN: 1,
+  MAX_BANKED_MANA: 10,
+  MANA_EARNED_PER_TURN: 4,
 
   MAX_HAND_SIZE: 999,
   SHUFFLE_DECK_ON_GAME_START: true,

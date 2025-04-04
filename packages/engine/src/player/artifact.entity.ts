@@ -263,7 +263,7 @@ export class Artifact
           ARTIFACT_EVENTS.BEFORE_USE_ABILITY,
           new ArtifactUseAbilityEvent({})
         );
-        this.player.mana.add(ability.manaCost);
+        this.player.mana.remove(ability.manaCost);
         ability.onResolve(this.game, this.card, targets);
         if (ability.shouldExhaust) {
           this.exhaust();

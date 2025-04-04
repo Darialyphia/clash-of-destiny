@@ -39,7 +39,7 @@ const userPlayer = useUserPlayer();
     <div>
       <div class="name">{{ player.name }}</div>
       <div>HP: {{ player.currentHp }} / {{ player.maxHp }}</div>
-      <div>Mana: {{ player.mana }} / {{ player.maxMana }}</div>
+      <div>Mana: {{ player.mana }}</div>
       <div>Destiny: {{ player.destiny }}</div>
     </div>
 

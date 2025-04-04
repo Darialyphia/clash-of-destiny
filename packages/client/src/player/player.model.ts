@@ -34,10 +34,6 @@ export class PlayerViewModel {
     return this.data.mana;
   }
 
-  get maxMana() {
-    return this.data.maxMana;
-  }
-
   get destiny() {
     return this.data.destiny;
   }

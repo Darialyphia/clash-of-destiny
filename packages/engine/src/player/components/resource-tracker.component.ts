@@ -18,12 +18,12 @@ export class ResourceTrackerComponent {
     this._current = amount;
   }
 
-  add(amount: number) {
+  remove(amount: number) {
     assert(this.canSpend(amount), 'Not enough mana');
     this._current -= amount;
   }
 
-  remove(amount: number) {
+  add(amount: number) {
     this._current += amount;
   }
 

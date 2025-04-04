@@ -653,7 +653,7 @@ export class Unit
       canCommit: followup.canCommit,
       onComplete: (targets: SelectedTarget[]) => {
         this.emitter.emit(UNIT_EVENTS.BEFORE_USE_ABILITY, new UnitUseAbilityEvent({}));
-        this.player.mana.add(ability.manaCost);
+        this.player.mana.remove(ability.manaCost);
         ability.onResolve(this.game, this.card, targets);
         if (ability.shouldExhaust) {
           this.exhaust();
