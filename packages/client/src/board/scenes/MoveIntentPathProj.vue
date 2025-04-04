@@ -108,5 +108,6 @@ const tag = computed(() => {
     v-if="positionInPath >= 0 && assetId && tag"
     :asset-id="assetId"
     :tag="tag"
+    :y="-24"
   />
 </template>

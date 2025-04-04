@@ -67,7 +67,6 @@ const { state } = useGameState();
     :position="cell.position"
     @pointerenter="
       () => {
-        ui.hoverAt(cell.position);
         if (!ui.cardPlayIntent) return;
 
         const isTargetable =

@@ -45,13 +45,25 @@ const textures = computed(() => {
 <template>
   <container-2d
     :position="[
-      -config.TILE_SIZE_PROJ.x * cell.position.x,
+      config.TILE_SIZE_PROJ.x * cell.position.x,
       -config.TILE_SIZE_PROJ.y * cell.position.y
     ]"
     @pointerenter="
       () => {
         ui.hoverAt(cell.position);
-        console.log('?');
+
+        ui.hoverAt(cell.position);
+        if (
+          state.interactionState.state === INTERACTION_STATES.IDLE &&
+          ui.selectedUnit
+        ) {
+          if (ui.selectedUnit.canMoveTo(cell)) {
+            ui.selectedUnit.moveTowards(cell.position);
+          } else {
+            ui.selectedUnit.moveIntent = null;
+          }
+        }
+
         if (!ui.cardPlayIntent) return;
 
         const isTargetable =
