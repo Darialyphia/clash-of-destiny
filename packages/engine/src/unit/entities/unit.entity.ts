@@ -124,7 +124,7 @@ export class Unit
     });
     this.combat = new CombatComponent(this.game, this);
 
-    this.game.on(GAME_EVENTS.TURN_START, () => {
+    this.game.on(GAME_EVENTS.PLAYER_START_TURN, () => {
       this.onTurnStart();
     });
 
@@ -425,8 +425,7 @@ export class Unit
     const baseValue =
       !this.isShrine &&
       !this.isExhausted &&
-      this.movementsMadeThisTurn <= this.maxMovementsPerTurn;
-
+      this.movementsMadeThisTurn < this.maxMovementsPerTurn;
     return this.interceptors.canMove.getValue(baseValue, {});
   }
 
@@ -630,6 +629,7 @@ export class Unit
   onTurnStart() {
     this.combat.resetAttackCount();
     this.movement.resetMovementsCount();
+    this.wakeUp();
   }
 
   get removeModifier() {

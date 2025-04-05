@@ -57,7 +57,7 @@ interface AdjustmentFilterComponent {
 declare module '@vue/runtime-core' {
   interface GlobalComponents {
     OutlineFilter: OutlineFilterComponent;
-    PixiYellowText: AdjustmentFilterComponent;
+    AdustmentFilter: AdjustmentFilterComponent;
   }
 }
 

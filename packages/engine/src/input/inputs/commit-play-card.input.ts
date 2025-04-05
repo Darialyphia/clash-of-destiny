@@ -23,7 +23,6 @@ export class CommitPlayCardInput extends Input<typeof schema> {
       this.game.interaction.can(INTERACTION_STATE_TRANSITIONS.COMMIT_SELECTING_TARGETS),
       new InvalidInteractionStateError()
     );
-
     this.game.interaction.commitTargets();
   }
 }

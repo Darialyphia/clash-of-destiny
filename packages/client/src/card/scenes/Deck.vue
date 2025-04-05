@@ -10,7 +10,7 @@ const { player } = defineProps<{ player: PlayerViewModel }>();
       texture="/assets/ui/card-back4.png"
       v-for="i in player.remainingCardsInDeck"
       :key="i"
-      :y="-i * 2"
+      :y="-i"
     />
   </container-2d>
 </template>

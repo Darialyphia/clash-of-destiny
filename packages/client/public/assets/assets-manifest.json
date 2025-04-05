@@ -828,6 +828,19 @@
         },
         {
           "alias": [
+            "banish-icon.png"
+          ],
+          "src": [
+            "/assets/ui/banish-icon.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "button-disabled.png"
           ],
           "src": [
@@ -910,6 +923,19 @@
           ],
           "src": [
             "/assets/ui/card-back3.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "card-back4.png"
+          ],
+          "src": [
+            "/assets/ui/card-back4.png"
           ],
           "data": {
             "tags": {
@@ -1140,10 +1166,36 @@
         },
         {
           "alias": [
+            "card-kind-minion.png"
+          ],
+          "src": [
+            "/assets/ui/card-kind-minion.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "card-kind-secret.png"
           ],
           "src": [
             "/assets/ui/card-kind-secret.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "card-kind-spell.png"
+          ],
+          "src": [
+            "/assets/ui/card-kind-spell.png"
           ],
           "data": {
             "tags": {
@@ -1374,6 +1426,19 @@
         },
         {
           "alias": [
+            "destiny-deck-icon.png"
+          ],
+          "src": [
+            "/assets/ui/destiny-deck-icon.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "enemy-indicator.png"
           ],
           "src": [
@@ -1521,6 +1586,19 @@
           ],
           "src": [
             "/assets/ui/gem-water.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "graveyard-icon.png"
+          ],
+          "src": [
+            "/assets/ui/graveyard-icon.png"
           ],
           "data": {
             "tags": {

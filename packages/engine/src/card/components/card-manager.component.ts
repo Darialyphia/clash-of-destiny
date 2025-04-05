@@ -111,16 +111,6 @@ export class CardManagerComponent {
     card.discard();
   }
 
-  play(card: AnyCard) {
-    if (this.hand.includes(card)) {
-      this.removeFromHand(card);
-    }
-    if (this.destinyDeck.cards.includes(card)) {
-      this.removeFromDestinyDeck(card);
-    }
-    card.play();
-  }
-
   sendToDiscardPile(card: AnyCard) {
     if (card.deckSource === CARD_DECK_SOURCES.DESTINY_DECK) {
       this.sendToBanishPile(card);

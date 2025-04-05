@@ -10,7 +10,6 @@ import type { UnitViewModel } from '../unit.model';
 import { useGameState, useUserPlayer } from '@/battle/stores/battle.store';
 import { INTERACTION_STATES } from '@game/engine/src/game/systems/interaction.system';
 import { pointToCellId } from '@game/engine/src/board/board-utils';
-import { GAME_PHASES } from '@game/engine/src/game/game.enums';
 
 const { unit, hasFilters = true } = defineProps<{
   unit: UnitViewModel;
@@ -71,6 +70,7 @@ const isInAoe = computed(() => {
       />
 
       <adjustment-filter v-if="isInAoe" :red="3" :brightness="0.8" />
+      <adjustment-filter v-if="unit.isExhausted" :saturation="0" />
     </template>
   </animated-sprite>
 </template>

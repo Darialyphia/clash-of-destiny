@@ -5,6 +5,7 @@ import FancyButton from '@/ui/components/FancyButton.vue';
 import UiDrawer from '@/ui/components/UiDrawer.vue';
 import CardMiniature from '@/card/components/CardMiniature.vue';
 import UiSimpleTooltip from '@/ui/components/UiSimpleTooltip.vue';
+import SimpleCardListModal from '@/card/components/SimpleCardListModal.vue';
 
 const { player } = defineProps<{
   player: PlayerViewModel;
@@ -12,9 +13,9 @@ const { player } = defineProps<{
 
 const turnPlayer = useTurnPlayer();
 
-const isDiscardPileDrawerOpened = ref(false);
-const isBanishPileDrawerOpened = ref(false);
-const isDestinyDeckDrawerOpened = ref(false);
+const isDiscardPileModalOpened = ref(false);
+const isBanishPileModalOpened = ref(false);
+const isDestinyDeckModalOpened = ref(false);
 
 const discardPile = computed(() => {
   return player.getDiscardPile();
@@ -50,7 +51,7 @@ const userPlayer = useUserPlayer();
         <template #trigger>
           <button
             class="toggle discard-pile-toggle"
-            @click="isDiscardPileDrawerOpened = !isDiscardPileDrawerOpened"
+            @click="isDiscardPileModalOpened = !isDiscardPileModalOpened"
           >
             {{ discardPile.length }}
           </button>
@@ -58,55 +59,37 @@ const userPlayer = useUserPlayer();
         Discard Pile
       </UiSimpleTooltip>
 
-      <UiDrawer
-        v-model:is-opened="isDiscardPileDrawerOpened"
+      <SimpleCardListModal
+        v-model="isDiscardPileModalOpened"
+        :cards="discardPile"
         :title="`Discard Pile (${discardPile.length})`"
-        :position="player.isPlayer1 ? 'left' : 'right'"
-      >
-        <p v-if="!discardPile.length">Your discard pile is empty.</p>
-        <ul v-else>
-          <li v-for="card in discardPile" :key="card.id">
-            <CardMiniature
-              :card="card"
-              :side="player.isPlayer1 ? 'right' : 'left'"
-            />
-          </li>
-        </ul>
-      </UiDrawer>
+        description=""
+      />
 
       <UiSimpleTooltip>
         <template #trigger>
           <button
             class="toggle banish-pile-toggle"
-            @click="isBanishPileDrawerOpened = !isBanishPileDrawerOpened"
+            @click="isBanishPileModalOpened = !isBanishPileModalOpened"
           >
             {{ banishPile.length }}
           </button>
         </template>
         Banish Pile
       </UiSimpleTooltip>
-      <UiDrawer
-        v-model:is-opened="isBanishPileDrawerOpened"
-        :title="`Banish Pile (${banishPile.length})`"
-        :position="player.isPlayer1 ? 'left' : 'right'"
-      >
-        <p v-if="!banishPile.length">Your banish pile is empty.</p>
-        <ul v-else>
-          <li v-for="card in banishPile" :key="card.id">
-            <CardMiniature
-              :card="card"
-              :side="player.isPlayer1 ? 'right' : 'left'"
-            />
-          </li>
-        </ul>
-      </UiDrawer>
+      <SimpleCardListModal
+        v-model="isBanishPileModalOpened"
+        :cards="banishPile"
+        :title="`Banish Pile (${discardPile.length})`"
+        description=""
+      />
 
       <UiSimpleTooltip>
         <template #trigger>
           <button
             class="toggle destiny-deck-toggle"
             :disabled="!userPlayer.equals(player)"
-            @click="isDestinyDeckDrawerOpened = !isDestinyDeckDrawerOpened"
+            @click="isDestinyDeckModalOpened = !isDestinyDeckModalOpened"
           >
             {{ destinyDeck.length }}
           </button>
@@ -114,21 +97,12 @@ const userPlayer = useUserPlayer();
         Destiny Deck
       </UiSimpleTooltip>
 
-      <UiDrawer
-        v-model:is-opened="isDestinyDeckDrawerOpened"
-        :title="`Destiny deck (${destinyDeck.length})`"
-        :position="player.isPlayer1 ? 'left' : 'right'"
-      >
-        <p v-if="!destinyDeck.length">Your destiny deck is empty.</p>
-        <ul v-else>
-          <li v-for="card in destinyDeck" :key="card.id">
-            <CardMiniature
-              :card="card"
-              :side="player.isPlayer1 ? 'right' : 'left'"
-            />
-          </li>
-        </ul>
-      </UiDrawer>
+      <SimpleCardListModal
+        v-model="isDestinyDeckModalOpened"
+        :cards="destinyDeck"
+        :title="`Destiny Deck (${discardPile.length})`"
+        description=""
+      />
     </div>
   </div>
 </template>
@@ -148,13 +122,6 @@ const userPlayer = useUserPlayer();
 .name {
   font-size: var(--font-size-4);
   font-weight: var(--font-weight-5);
-}
-
-ul {
-  display: flex;
-  flex-direction: column;
-  gap: var(--size-3);
-  padding: var(--size-5);
 }
 
 .discard-pile-toggle {

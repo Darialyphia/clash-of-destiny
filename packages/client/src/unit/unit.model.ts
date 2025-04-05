@@ -72,6 +72,10 @@ export class UnitViewModel {
     return this.data.spellPower;
   }
 
+  get isExhausted() {
+    return this.data.isExhausted;
+  }
+
   getPlayer() {
     return this.entityDictionary[this.data.playerId] as PlayerViewModel;
   }

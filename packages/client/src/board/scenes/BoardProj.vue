@@ -42,7 +42,11 @@ const players = usePlayers();
     ref="container"
     :scale="0.8"
   >
-    <container-2d :scale="2" :x="app.screen.width / 4" :y="-250">
+    <container-2d
+      :scale="2"
+      :x="app.screen.width / 4 + app.screen.width * 0.1"
+      :y="-250"
+    >
       <BoardCellProj
         v-for="cell in cells"
         :key="cell.id"

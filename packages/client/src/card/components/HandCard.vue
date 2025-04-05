@@ -81,7 +81,8 @@ const onMouseDown = (e: MouseEvent) => {
     }"
     @mousedown="onMouseDown"
     @mouseup="
-      () => {
+      e => {
+        if (e.button !== 0) return;
         if (!card.canPlay) return;
         ui.cardPlayIntent = card;
         card.play();

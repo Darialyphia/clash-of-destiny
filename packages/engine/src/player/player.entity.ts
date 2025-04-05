@@ -75,8 +75,6 @@ export class Player
 
   currentlyPlayedCard: Nullable<AnyCard> = null;
 
-  currentyPlayedCardIndexInHand: Nullable<number> = null;
-
   private cancelCardCleanups: Array<() => void> = [];
 
   private resourceActionsDoneThisTurn = 0;
@@ -214,39 +212,37 @@ export class Player
     assert(isDefined(card.manaCost), new WrongDeckSourceError(card));
     this.emitter.emit(PLAYER_EVENTS.BEFORE_PLAY_CARD, new PlayerPlayCardEvent({ card }));
     this.mana.remove(card.manaCost);
+    this.cards.removeFromHand(card);
   }
 
   private onAfterPlayFromHand(card: AnyCard) {
     this.currentlyPlayedCard = null;
-    this.currentyPlayedCardIndexInHand = null;
     this.emitter.emit(PLAYER_EVENTS.AFTER_PLAY_CARD, new PlayerPlayCardEvent({ card }));
   }
 
   playCardFromHand(card: AnyCard) {
     this.currentlyPlayedCard = card;
-    this.currentyPlayedCardIndexInHand = this.cards.hand.indexOf(card);
     this.cancelCardCleanups = [
       card.once(CARD_EVENTS.BEFORE_PLAY, this.onBeforePlayFromHand.bind(this, card)),
       card.once(CARD_EVENTS.AFTER_PLAY, this.onAfterPlayFromHand.bind(this, card))
     ];
-    this.cards.play(card);
+    card.play();
   }
 
   private onBeforePlayFromDestinyDeck(card: AnyCard) {
     assert(isDefined(card.destinyCost), new WrongDeckSourceError(card));
     this.emitter.emit(PLAYER_EVENTS.BEFORE_PLAY_CARD, new PlayerPlayCardEvent({ card }));
+    this.cards.removeFromDestinyDeck(card);
     this.destiny.remove(card.destinyCost);
   }
 
   private onAfterPlayFromDestinyDeck(card: AnyCard) {
     this.currentlyPlayedCard = null;
-    this.currentyPlayedCardIndexInHand = null;
     this.emitter.emit(PLAYER_EVENTS.AFTER_PLAY_CARD, new PlayerPlayCardEvent({ card }));
   }
 
   playCardFromDestinyDeck(card: AnyCard, onComplete?: () => void) {
     this.currentlyPlayedCard = card;
-    this.currentyPlayedCardIndexInHand = this.cards.destinyDeck.cards.indexOf(card);
     this.cancelCardCleanups = [
       card.once(
         CARD_EVENTS.BEFORE_PLAY,
@@ -257,18 +253,15 @@ export class Player
         onComplete?.();
       })
     ];
-    this.cards.play(card);
+    card.play();
   }
 
   cancelCardPlayed() {
     if (!isDefined(this.currentlyPlayedCard)) return;
-    if (!isDefined(this.currentyPlayedCardIndexInHand)) return;
     this.game.interaction.cancelSelectingTargets();
-    this.cards.addToHand(this.currentlyPlayedCard, this.currentyPlayedCardIndexInHand);
     this.cancelCardCleanups.forEach(cleanup => cleanup());
     this.cancelCardCleanups = [];
     this.currentlyPlayedCard = null;
-    this.currentyPlayedCardIndexInHand = null;
   }
 
   generateCard<T extends CardBlueprint = CardBlueprint>(blueprintId: string) {

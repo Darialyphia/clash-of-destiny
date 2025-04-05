@@ -116,6 +116,7 @@ const affinityGemBg = computed(() => {
         {{ card.kind }} - {{ card.job }}
       </div>
     </div>
+    <div class="card-back" />
   </div>
 </template>
 
@@ -146,7 +147,7 @@ const affinityGemBg = computed(() => {
 .card-back {
   transform: rotateY(0.5turn);
   backface-visibility: hidden;
-  background: url('/assets/ui/card-back3.png');
+  background: url('/assets/ui/card-back4.png');
   background-size: cover;
 }
 

@@ -4,15 +4,31 @@ import { throttle } from 'lodash-es';
 import HandCard from './HandCard.vue';
 import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
 import type { PlayerViewModel } from '@/player/player.model';
+import { useBattleEvent, useGameState } from '@/battle/stores/battle.store';
+import { INTERACTION_STATES } from '@game/engine/src/game/systems/interaction.system';
+import type { Nullable } from '@game/shared';
+import { GAME_EVENTS } from '@game/engine/src/game/game.events';
 
 const { player } = defineProps<{
   player: PlayerViewModel;
 }>();
 
-const hand = computed(() => player.getHand());
+const playedCardId = ref<Nullable<string>>();
+useBattleEvent(GAME_EVENTS.PLAYER_BEFORE_PLAY_CARD, async event => {
+  playedCardId.value = event.card.id;
+});
+
+const hand = computed(() => {
+  return player
+    .getHand()
+    .filter(
+      card => !ui.cardPlayIntent?.equals(card) && card.id !== playedCardId.value
+    );
+});
 const ui = useBattleUiStore();
 const cardSpacing = ref(0);
 const root = useTemplateRef('root');
+const { state } = useGameState();
 
 const computeMargin = () => {
   if (!root.value) return 0;
@@ -52,6 +68,9 @@ useResizeObserver(
       ref="root"
       :key="player.id"
       :class="{ hidden: ui.isDestinyResourceActionModalOpened }"
+      :inert="
+        state.interactionState.state === INTERACTION_STATES.SELECTING_TARGETS
+      "
     >
       <div
         v-for="(card, index) in hand"

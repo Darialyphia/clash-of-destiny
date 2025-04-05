@@ -30,7 +30,20 @@ const session = new GameSession({
         cards: Array.from({ length: 40 }, () => 'test-minion')
       },
       destinyDeck: {
-        cards: ['test-shrine', 'test-destiny-spell', 'test-hero']
+        cards: [
+          'test-shrine',
+          'test-destiny-spell',
+          'test-hero',
+          'test-destiny-spell',
+          'test-destiny-spell',
+          'test-destiny-spell',
+          'test-destiny-spell',
+          'test-destiny-spell',
+          'test-destiny-spell',
+          'test-destiny-spell',
+          'test-destiny-spell',
+          'test-destiny-spell'
+        ]
       }
     },
     {
