@@ -28,6 +28,7 @@ export type SerializedSpellCard = SerializedCard & {
     units: string[];
   } | null;
   range: string[] | null;
+  job: string;
 };
 export type AbilityCardEventMap = CardEventMap;
 export type AbilityCardInterceptors = CardInterceptors & {
@@ -149,6 +150,7 @@ export class SpellCard extends Card<
       description: this.blueprint.getDescription(this.game, this),
       rarity: this.blueprint.rarity,
       player: this.player.id,
+      job: this.blueprint.job,
       canPlay: this.player.canPlayCard(this),
       maxTargets: this.followupTargets.length,
       aoe: this.getSerializedAoe(),

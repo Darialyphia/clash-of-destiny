@@ -28,6 +28,7 @@ export type SerializedSecretCard = SerializedCard & {
     units: string[];
   } | null;
   range: string[] | null;
+  job: string;
 };
 export type SecretCardEventMap = CardEventMap;
 export type SecretCardInterceptors = CardInterceptors & {
@@ -140,6 +141,7 @@ export class SecretCard extends Card<
       blueprintId: this.blueprint.id,
       iconId: this.blueprint.cardIconId,
       kind: this.blueprint.kind,
+      job: this.blueprint.job,
       affinity: this.blueprint.affinity,
       setId: this.blueprint.setId,
       name: this.blueprint.name,

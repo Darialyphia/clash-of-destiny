@@ -14,15 +14,12 @@ const isTurnPlayer = computed(() => {
 </script>
 
 <template>
-  <div
-    class="flex flex-col gap-3 justify-end"
-    :class="{ 'is-hidden': !isTurnPlayer }"
-  >
+  <div class="player-actions" :class="{ 'is-hidden': !isTurnPlayer }">
     <transition>
       <FancyButton
         v-if="player.canPerformResourceAction"
         class="pointer-events-auto w-full"
-        text="Resource action: Draw"
+        text="Draw"
         @click="player.drawResourceAction()"
       />
     </transition>
@@ -31,7 +28,7 @@ const isTurnPlayer = computed(() => {
       <FancyButton
         v-if="player.canPerformResourceAction"
         class="pointer-events-auto w-full"
-        text="Resource action: Replace"
+        text="Replace"
       />
     </transition>
 
@@ -39,7 +36,7 @@ const isTurnPlayer = computed(() => {
       <FancyButton
         v-if="player.canPerformResourceAction"
         class="pointer-events-auto w-full"
-        text="Resource action: Destiny"
+        text="Destiny"
         @click="ui.isDestinyResourceActionModalOpened = true"
       />
     </transition>
@@ -48,6 +45,7 @@ const isTurnPlayer = computed(() => {
       <FancyButton
         class="pointer-events-auto w-full"
         text="End Turn"
+        variant="error"
         @click="player.endTurn()"
       />
     </transition>
@@ -59,6 +57,11 @@ const isTurnPlayer = computed(() => {
 <style scoped lang="postcss">
 .is-hidden {
   visibility: hidden;
+}
+
+.player-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 .v-enter-active,

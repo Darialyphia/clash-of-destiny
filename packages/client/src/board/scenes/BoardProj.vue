@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import { useCells, useUnits } from '@/battle/stores/battle.store';
+import { useCells, usePlayers, useUnits } from '@/battle/stores/battle.store';
 import { Sprite, Texture } from 'pixi.js';
 import { onTick, useApplication } from 'vue3-pixi';
 import { Container2d, TRANSFORM_STEP } from 'pixi-projection';
 import BoardCellProj from './BoardCellProj.vue';
 import UnitProj from '@/unit/scenes/UnitProj.vue';
+import Deck from '@/card/scenes/Deck.vue';
 
 const cells = useCells();
 const units = useUnits();
@@ -31,10 +32,16 @@ onTick(() => {
   pos.x = -pos.x;
   container.value!.proj.setAxisY(pos, -1);
 });
+
+const players = usePlayers();
 </script>
 
 <template>
-  <container-2d :position="[0, app.screen.height * 0.45]" ref="container">
+  <container-2d
+    :position="[0, app.screen.height * 0.45]"
+    ref="container"
+    :scale="0.8"
+  >
     <container-2d :scale="2" :x="app.screen.width / 4" :y="-250">
       <BoardCellProj
         v-for="cell in cells"
@@ -44,6 +51,7 @@ onTick(() => {
       />
 
       <UnitProj v-for="unit in units" :key="unit.id" :unit="unit" />
+      <!-- <Deck :x="-150" :y="200" :scale="0.35" :player="players[0]" /> -->
     </container-2d>
   </container-2d>
 

@@ -18,6 +18,8 @@ import {
 
 export type SerializedArtifactCard = SerializedCard & {
   kind: typeof CARD_KINDS.ARTIFACT;
+  job: string;
+  durability: number;
 };
 export type ArtifactCardEventMap = CardEventMap;
 export type ArtifactCardInterceptors = CardInterceptors & {
@@ -88,6 +90,8 @@ export class ArtifactCard extends Card<
       description: this.blueprint.getDescription(this.game, this),
       rarity: this.blueprint.rarity,
       player: this.player.id,
+      job: this.blueprint.job,
+      durability: this.blueprint.durability,
       canPlay: this.player.canPlayCard(this)
     };
   }

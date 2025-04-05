@@ -197,7 +197,6 @@ const affinityGemBg = computed(() => {
   font-size: 18px;
   font-family: 'NotJamSlab11', monospace;
   line-height: 1.1;
-  outline: solid 1px red;
 }
 
 .affinity-gem {
@@ -231,6 +230,7 @@ const affinityGemBg = computed(() => {
   gap: calc(2px * var(--pixel-scale));
   flex-direction: column;
   > * {
+    z-index: 0;
     background-size: cover;
     background-position: center;
     width: calc(28px * var(--pixel-scale));
@@ -297,6 +297,7 @@ const affinityGemBg = computed(() => {
   align-items: center;
   gap: calc(2px * var(--pixel-scale));
 
+  font-size: 14px;
   .kind-icon {
     background: v-bind(kindBg);
     background-size: cover;

@@ -61,6 +61,7 @@ useRafFn(() => {
   position: fixed;
   inset: 0;
   pointer-events: none;
+  transform-origin: center center;
 }
 #dragged-card {
   pointer-events: none !important;
@@ -73,5 +74,9 @@ useRafFn(() => {
   transform: translateY(var(--y)) translateX(var(--x))
     rotateX(calc(1deg * v-bind('cardRotation.x')))
     rotateY(calc(1deg * v-bind('cardRotation.y')));
+  > * {
+    transform: scale(0.5);
+    transform-origin: top left;
+  }
 }
 </style>

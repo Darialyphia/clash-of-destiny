@@ -23,12 +23,12 @@ const startDragging = () => {
     document.body.removeEventListener('mouseup', onMouseup);
   };
   const onMouseup = () => {
-    if (!ui.selectedCard?.canPlay) {
+    if (!ui.selectedCard?.canPlay || !ui.hoveredCell) {
       ui.unselectCard();
       return;
     }
     ui.cardPlayIntent = ui.selectedCard;
-    ui.selectedCard?.play();
+    // ui.selectedCard?.play();
     stopDragging();
   };
 
@@ -50,12 +50,13 @@ const onMouseDown = (e: MouseEvent) => {
 
   const target = e.currentTarget as HTMLElement;
   const cardElement = target.querySelector('.card') as HTMLElement;
-
+  let isPlayed = false;
   const onMousemove = (e: MouseEvent) => {
     if (!isClicking.value) return;
 
     if (Math.abs(e.clientY - clickedPosition.value.y) > SELECTION_THRESHOLD) {
       ui.selectCard(cardElement, card);
+      ui.selectedCard?.play();
       document.body.removeEventListener('mousemove', onMousemove);
     }
   };
@@ -79,7 +80,7 @@ const onMouseDown = (e: MouseEvent) => {
       disabled: !card.canPlay
     }"
     @mousedown="onMouseDown"
-    @dblclick="
+    @mouseup="
       () => {
         if (!card.canPlay) return;
         ui.cardPlayIntent = card;

@@ -135,6 +135,7 @@ export type ArtifactBlueprint = (MainDeckCardBlueprint | DestinyDeckCardBlueprin
   staticDescription: string;
   durability: number;
   artifactKind: ArtifactKind;
+  job: CardJob;
   abilities: Array<Ability<ArtifactCard>>;
   getFollowup(game: Game, card: SpellCard): Followup<ArtifactCard>;
   onPlay(game: Game, card: ArtifactCard, artifact: Artifact): void;
@@ -144,6 +145,7 @@ export type SecretBlueprint = (MainDeckCardBlueprint | DestinyDeckCardBlueprint)
   kind: Extract<CardKind, typeof CARD_KINDS.SECRET>;
   getDescription(game: Game, card: SecretCard): string;
   staticDescription: string;
+  job: CardJob;
   getFollowup(game: Game, card: SecretCard): Followup<SecretCard>;
   getAoe(game: Game, card: SecretCard, points: Point[]): AOEShape;
   onPlay(
