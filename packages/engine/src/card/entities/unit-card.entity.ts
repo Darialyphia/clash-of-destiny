@@ -80,9 +80,7 @@ export abstract class UnitCard<
     return this.interceptors.maxHp.getValue(this.blueprint.maxHp, {});
   }
 
-  canPlay(): boolean {
-    return true;
-  }
+  abstract canPlay(): boolean;
 
   get followup(): ReturnType<TBlueprint['getFollowup']> {
     return this.blueprint.getFollowup(this.game, this as any) as any;
@@ -135,16 +133,15 @@ export abstract class UnitCard<
     });
   }
 
-  play() {
-    this.selectTargets(this.playWithTargets.bind(this));
-  }
-
-  playWithTargets(targets: SelectedTarget[]) {
-    const points = targets.map(t => t.cell);
-
+  protected addToBoard(points: Point[]) {
     const [summonPosition] = points;
-    this.unit = this.game.unitSystem.addUnit(this, summonPosition);
 
+    this.unit = this.game.unitSystem.addUnit(this, summonPosition);
+    const aoeShape = this.blueprint.getAoe(this.game, this as any, points);
+    this.unit.addToBoard({
+      affectedCells: aoeShape.getCells(points),
+      affectedUnits: aoeShape.getUnits(points)
+    });
     const onLeaveBoardCleanups = [
       UNIT_EVENTS.AFTER_DESTROY,
       UNIT_EVENTS.AFTER_BOUNCE
@@ -156,23 +153,27 @@ export abstract class UnitCard<
       })
     );
 
-    this.emitter.emit(
-      CARD_EVENTS.BEFORE_PLAY,
-      new CardBeforePlayEvent({ targets: points })
-    );
-
-    const aoeShape = this.blueprint.getAoe(this.game, this as any, points);
-    this.unit.addToBoard({
-      affectedCells: aoeShape.getCells(points),
-      affectedUnits: aoeShape.getUnits(points)
-    });
-
     this.blueprint.onPlay(
       this.game,
       this as any,
       aoeShape.getCells(points),
       aoeShape.getUnits(points)
     );
+  }
+
+  play() {
+    this.selectTargets(this.playWithTargets.bind(this));
+  }
+
+  protected playWithTargets(targets: SelectedTarget[]) {
+    const points = targets.map(t => t.cell);
+
+    this.emitter.emit(
+      CARD_EVENTS.BEFORE_PLAY,
+      new CardBeforePlayEvent({ targets: points })
+    );
+
+    this.addToBoard(points);
 
     this.emitter.emit(
       CARD_EVENTS.AFTER_PLAY,

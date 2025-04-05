@@ -12,6 +12,7 @@ const { card } = defineProps<{ card: CardViewModel }>();
       description: card.description,
       image: card.imagePath,
       kind: card.kind,
+      affinity: card.affinity,
       manaCost: card.manaCost,
       destinyCost: card.destinyCost,
       rarity: card.rarity,

@@ -1,5 +1,6 @@
 import type { Game } from '../../game/game';
 import type { Player } from '../../player/player.entity';
+import { Interceptable } from '../../utils/interceptable';
 import type { MinionBlueprint, SpellBlueprint, UnitBlueprint } from '../card-blueprint';
 import { type CardOptions } from './card.entity';
 import {
@@ -16,7 +17,9 @@ export type SerializedMinionCard = SerializedUnitCard & {
   job: string;
 };
 export type MinionCardEventMap = UnitCardEventMap;
-export type MinionCardInterceptors = UnitCardInterceptors;
+export type MinionCardInterceptors = UnitCardInterceptors & {
+  canPlay: Interceptable<boolean, MinionCard>;
+};
 
 export class MinionCard extends UnitCard<
   SerializedMinionCard,
@@ -25,7 +28,18 @@ export class MinionCard extends UnitCard<
   UnitBlueprint & MinionBlueprint
 > {
   constructor(game: Game, player: Player, options: CardOptions<SpellBlueprint>) {
-    super(game, player, makeUnitCardInterceptors(), options);
+    super(
+      game,
+      player,
+      { ...makeUnitCardInterceptors(), canPlay: new Interceptable() },
+      options
+    );
+  }
+  canPlay(): boolean {
+    return this.interceptors.canPlay.getValue(
+      this.fulfillsAffinity && this.fulfillsResourceCost,
+      this
+    );
   }
 
   serialize(): SerializedMinionCard {

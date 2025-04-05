@@ -4,6 +4,7 @@ import {
   type SelectedTarget
 } from '../../game/systems/interaction.system';
 import type { Player } from '../../player/player.entity';
+import { Interceptable } from '../../utils/interceptable';
 import type { SecretBlueprint, SpellBlueprint } from '../card-blueprint';
 import { CARD_EVENTS, CARD_KINDS } from '../card.enums';
 import {
@@ -29,7 +30,9 @@ export type SerializedSecretCard = SerializedCard & {
   range: string[] | null;
 };
 export type SecretCardEventMap = CardEventMap;
-export type SecretCardInterceptors = CardInterceptors;
+export type SecretCardInterceptors = CardInterceptors & {
+  canPlay: Interceptable<boolean, SecretCard>;
+};
 
 export class SecretCard extends Card<
   SerializedCard,
@@ -38,11 +41,19 @@ export class SecretCard extends Card<
   SecretBlueprint
 > {
   constructor(game: Game, player: Player, options: CardOptions<SpellBlueprint>) {
-    super(game, player, makeCardInterceptors(), options);
+    super(
+      game,
+      player,
+      { ...makeCardInterceptors(), canPlay: new Interceptable() },
+      options
+    );
   }
 
   canPlay(): boolean {
-    return true;
+    return this.interceptors.canPlay.getValue(
+      this.fulfillsAffinity && this.fulfillsResourceCost,
+      this
+    );
   }
 
   get followup() {

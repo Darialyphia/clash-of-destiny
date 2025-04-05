@@ -25,7 +25,9 @@ export const UNIT_EVENTS = {
   BEFORE_WAKE_UP: 'before_wake_up',
   AFTER_WAKE_UP: 'after_wake_up',
   BEFORE_USE_ABILITY: 'before_use_ability',
-  AFTER_USE_ABILITY: 'after_use_ability'
+  AFTER_USE_ABILITY: 'after_use_ability',
+  BEFORE_EVOLVE_HERO: 'before_evolve_hero',
+  AFTER_EVOLVE_HERO: 'after_evolve_hero'
 } as const;
 
 export type UnitEvent = Values<typeof UNIT_EVENTS>;

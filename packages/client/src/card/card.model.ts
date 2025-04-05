@@ -104,6 +104,10 @@ export class CardViewModel {
     }
   }
 
+  get affinity() {
+    return this.data.affinity;
+  }
+
   get canPlay() {
     return this.data.canPlay;
   }
@@ -129,7 +133,7 @@ export class CardViewModel {
         }
       )
       .with({ kind: CARD_KINDS.ARTIFACT }, () => {
-        return { cells: [], units: [] };
+        return 0;
       })
       .exhaustive();
   }

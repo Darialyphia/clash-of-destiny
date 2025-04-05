@@ -1,5 +1,6 @@
 import type { Game } from '../../game/game';
 import type { Player } from '../../player/player.entity';
+import { Interceptable } from '../../utils/interceptable';
 import type { ArtifactBlueprint } from '../card-blueprint';
 import { CARD_EVENTS, CARD_KINDS } from '../card.enums';
 import {
@@ -7,14 +8,21 @@ import {
   CardBeforePlayEvent,
   type CardEventMap
 } from '../card.events';
-import { Card, type CardOptions, type SerializedCard } from './card.entity';
-import { makeUnitCardInterceptors, type UnitCardInterceptors } from './unit-card.entity';
+import {
+  Card,
+  makeCardInterceptors,
+  type CardInterceptors,
+  type CardOptions,
+  type SerializedCard
+} from './card.entity';
 
 export type SerializedArtifactCard = SerializedCard & {
   kind: typeof CARD_KINDS.ARTIFACT;
 };
 export type ArtifactCardEventMap = CardEventMap;
-export type ArtifactCardInterceptors = UnitCardInterceptors;
+export type ArtifactCardInterceptors = CardInterceptors & {
+  canPlay: Interceptable<boolean, ArtifactCard>;
+};
 
 export class ArtifactCard extends Card<
   SerializedCard,
@@ -23,11 +31,19 @@ export class ArtifactCard extends Card<
   ArtifactBlueprint
 > {
   constructor(game: Game, player: Player, options: CardOptions<ArtifactBlueprint>) {
-    super(game, player, makeUnitCardInterceptors(), options);
+    super(
+      game,
+      player,
+      { ...makeCardInterceptors(), canPlay: new Interceptable() },
+      options
+    );
   }
 
   canPlay(): boolean {
-    return true;
+    return this.interceptors.canPlay.getValue(
+      this.fulfillsAffinity && this.fulfillsResourceCost,
+      this
+    );
   }
 
   play() {

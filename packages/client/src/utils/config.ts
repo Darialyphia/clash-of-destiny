@@ -26,7 +26,7 @@ export const config = {
 
   UNIT_SPRITE_OFFSET_PROJ: {
     x: 0,
-    y: -40
+    y: -56
   },
 
   TILE_SPRITE_SIZE: {

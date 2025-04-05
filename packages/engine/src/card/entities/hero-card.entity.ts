@@ -1,7 +1,11 @@
 import type { Game } from '../../game/game';
+import type { SelectedTarget } from '../../game/systems/interaction.system';
 import type { Player } from '../../player/player.entity';
+import { UNIT_EVENTS } from '../../unit/unit-enums';
 import { Interceptable } from '../../utils/interceptable';
 import type { HeroBlueprint, SpellBlueprint, UnitBlueprint } from '../card-blueprint';
+import { CARD_EVENTS } from '../card.enums';
+import { CardAfterPlayEvent, CardBeforePlayEvent } from '../card.events';
 import { type CardOptions } from './card.entity';
 import {
   makeUnitCardInterceptors,
@@ -23,6 +27,7 @@ export type HeroCardEventMap = UnitCardEventMap;
 export type HeroCardInterceptors = UnitCardInterceptors & {
   level: Interceptable<number>;
   spellpower: Interceptable<number>;
+  canPlay: Interceptable<boolean, HeroCard>;
 };
 
 export class HeroCard extends UnitCard<
@@ -38,7 +43,8 @@ export class HeroCard extends UnitCard<
       {
         ...makeUnitCardInterceptors(),
         level: new Interceptable(),
-        spellpower: new Interceptable()
+        spellpower: new Interceptable(),
+        canPlay: new Interceptable()
       },
       options
     );
@@ -54,6 +60,42 @@ export class HeroCard extends UnitCard<
 
   get spellpower() {
     return this.interceptors.spellpower.getValue(this.blueprint.spellpower, {});
+  }
+
+  get lineage() {
+    return this.blueprint.lineage;
+  }
+
+  get fulfillsLineage() {
+    if (this.player.hero.isShrine) return true;
+    return (this.player.hero.card as HeroCard).lineage === this.blueprint.lineage;
+  }
+
+  override canPlay(): boolean {
+    return this.interceptors.canPlay.getValue(
+      this.fulfillsAffinity && this.fulfillsResourceCost && this.fulfillsLineage,
+      this
+    );
+  }
+
+  protected override playWithTargets(targets: SelectedTarget[]): void {
+    const points = targets.map(t => t.cell);
+
+    const summonPosition = this.player.hero.position;
+    this.player.hero.evoleHero(this);
+
+    this.emitter.emit(
+      CARD_EVENTS.BEFORE_PLAY,
+      new CardBeforePlayEvent({ targets: points })
+    );
+
+    this.player.unlockedAffinities.add(this.blueprint.affinity);
+    this.addToBoard(points);
+
+    this.emitter.emit(
+      CARD_EVENTS.AFTER_PLAY,
+      new CardAfterPlayEvent({ targets: points })
+    );
   }
 
   serialize(): SerializedHeroCard {

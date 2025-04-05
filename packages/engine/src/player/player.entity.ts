@@ -25,11 +25,10 @@ import type {
 } from '../card/card-blueprint';
 import { ResourceTrackerComponent } from './components/resource-tracker.component';
 import type { AnyCard } from '../card/entities/card.entity';
-import { CARD_DECK_SOURCES, CARD_EVENTS } from '../card/card.enums';
+import { AFFINITIES, CARD_EVENTS, type Affinity } from '../card/card.enums';
 import { WrongDeckSourceError } from '../card/card-errors';
 import { ShrineCard } from '../card/entities/shrine-card.entity';
 import { MissingShrineError } from './player-errors';
-import { max } from 'lodash-es';
 
 export type PlayerOptions = {
   id: string;
@@ -80,6 +79,8 @@ export class Player
   private cancelCardCleanups: Array<() => void> = [];
 
   private resourceActionsDoneThisTurn = 0;
+
+  readonly unlockedAffinities = new Set<Affinity>([AFFINITIES.NORMAL]);
 
   constructor(
     game: Game,
@@ -183,22 +184,8 @@ export class Player
     this.playCardFromDestinyDeck(shrine);
   }
 
-  private canPlayMainDeckCard(card: AnyCard) {
-    assert(isDefined(card.manaCost), new WrongDeckSourceError(card));
-    return this.mana.current >= card.manaCost;
-  }
-
-  private canPlayDestinyDeckCard(card: AnyCard) {
-    assert(isDefined(card.destinyCost), new WrongDeckSourceError(card));
-    return this.destiny.current >= card.destinyCost;
-  }
-
   canPlayCard(card: AnyCard) {
-    if (card.deckSource === CARD_DECK_SOURCES.DESTINY_DECK) {
-      return this.canPlayDestinyDeckCard(card);
-    } else {
-      return this.canPlayMainDeckCard(card);
-    }
+    return card.canPlay();
   }
 
   playMainDeckCardAtIndex(index: number) {

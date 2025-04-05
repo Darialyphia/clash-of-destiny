@@ -99,6 +99,20 @@ export abstract class Card<
     );
   }
 
+  get fulfillsResourceCost() {
+    if (this.blueprint.deckSource === CARD_DECK_SOURCES.MAIN_DECK) {
+      return this.player.mana.canSpend(this.blueprint.manaCost);
+    }
+    if (this.blueprint.deckSource === CARD_DECK_SOURCES.DESTINY_DECK) {
+      return this.player.destiny.canSpend(this.blueprint.destinyCost);
+    }
+    return false;
+  }
+
+  get fulfillsAffinity() {
+    return this.player.unlockedAffinities.has(this.blueprint.affinity);
+  }
+
   get deckSource() {
     return this.blueprint.deckSource;
   }
@@ -109,6 +123,10 @@ export abstract class Card<
 
   get kind() {
     return this.blueprint.kind;
+  }
+
+  get affinity() {
+    return this.blueprint.affinity;
   }
 
   get name() {

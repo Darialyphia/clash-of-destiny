@@ -13,6 +13,8 @@ import {
 import { UNIT_EVENTS } from '../unit-enums';
 import { KeywordManagerComponent } from '../../card/components/keyword-manager.component';
 import {
+  HeroAfterEvolveEvent,
+  HeroBeforeEvolveEvent,
   UnitAfterDestroyEvent,
   UnitAfterMoveEvent,
   UnitAttackEvent,
@@ -45,7 +47,7 @@ import { SingleCounterAttackParticipantStrategy } from '../../combat/counteratta
 import { HeroCard } from '../../card/entities/hero-card.entity';
 import type { Ability } from '../../card/card-blueprint';
 import type { SelectedTarget } from '../../game/systems/interaction.system';
-import { UnitAbilityNotFoundError } from '../unet-errors';
+import { UnitAbilityNotFoundError, WrongUnitKindError } from '../unit-errors';
 
 export type SerializedUnit = {
   id: string;
@@ -100,7 +102,7 @@ export class Unit
 
   constructor(
     game: Game,
-    readonly card: AnyUnitCard,
+    private _card: AnyUnitCard,
     options: UnitOptions
   ) {
     super(`${options.id}`, makeUnitInterceptors());
@@ -109,8 +111,8 @@ export class Unit
     this.modifierManager = new ModifierManager(this);
     this.keywordManager = new KeywordManagerComponent();
     this.hp = new HealthComponent({
-      initialValue: this.card.blueprint.maxHp,
-      max: this.card.blueprint.maxHp
+      initialValue: this._card.blueprint.maxHp,
+      max: this._card.blueprint.maxHp
     });
     this.movement = new MovementComponent({
       position: options.position,
@@ -134,10 +136,10 @@ export class Unit
       entityType: 'unit' as const,
       position: this.position.serialize(),
       playerId: this.player.id,
-      spriteId: this.card.blueprint.spriteId,
-      spriteParts: this.card.blueprint.spriteParts,
-      name: this.card.blueprint.name,
-      description: this.card.blueprint.getDescription(this.game, this as any),
+      spriteId: this._card.blueprint.spriteId,
+      spriteParts: this._card.blueprint.spriteParts,
+      name: this._card.blueprint.name,
+      description: this._card.blueprint.getDescription(this.game, this as any),
       hp: this.hp.current,
       maxHp: this.hp.max,
       atk: this.atk,
@@ -153,9 +155,9 @@ export class Unit
         .filter(cell => this.canAttackAt(cell.position))
         .map(cell => cell.position.serialize()),
       modifiers: this.modifiers.map(modifier => modifier.id),
-      abilities: this.card.abilities.map(ability => ({
+      abilities: this._card.abilities.map(ability => ({
         label: ability.label,
-        canUse: this.canUseAbiliy(this.card.abilities.indexOf(ability as any))
+        canUse: this.canUseAbiliy(this._card.abilities.indexOf(ability as any))
       })),
       isExhausted: this.isExhausted
     };
@@ -207,8 +209,8 @@ export class Unit
   }
 
   get spellpower() {
-    if (this.card instanceof HeroCard) {
-      return this.interceptors.spellpower.getValue(this.card.spellpower, {});
+    if (this._card instanceof HeroCard) {
+      return this.interceptors.spellpower.getValue(this._card.spellpower, {});
     }
 
     return 0;
@@ -231,19 +233,40 @@ export class Unit
   }
 
   get isHero() {
-    return this.card.blueprint.unitKind === UNIT_KINDS.HERO;
+    return this._card.blueprint.unitKind === UNIT_KINDS.HERO;
   }
 
   get isShrine() {
-    return this.card.blueprint.unitKind === UNIT_KINDS.SHRINE;
+    return this._card.blueprint.unitKind === UNIT_KINDS.SHRINE;
   }
 
   get isMinion() {
-    return this.card.blueprint.unitKind === UNIT_KINDS.MINION;
+    return this._card.blueprint.unitKind === UNIT_KINDS.MINION;
   }
 
   get isExhausted() {
     return this._isExhausted;
+  }
+
+  get card() {
+    return this._card;
+  }
+
+  evoleHero(card: HeroCard) {
+    assert(
+      this.isHero,
+      new WrongUnitKindError(UNIT_KINDS.HERO, this._card.blueprint.unitKind)
+    );
+    this.emitter.emit(
+      UNIT_EVENTS.BEFORE_EVOLVE_HERO,
+      new HeroBeforeEvolveEvent({ newCard: card })
+    );
+    const prev = this._card as HeroCard;
+    this._card = card;
+    this.emitter.emit(
+      UNIT_EVENTS.AFTER_EVOLVE_HERO,
+      new HeroAfterEvolveEvent({ prevCard: prev, newCard: card })
+    );
   }
 
   exhaust() {
@@ -325,7 +348,7 @@ export class Unit
   }
 
   get atk() {
-    return this.interceptors.attack.getValue(this.card.atk, {});
+    return this.interceptors.attack.getValue(this._card.atk, {});
   }
 
   get attackTargetType(): TargetingType {
@@ -341,7 +364,7 @@ export class Unit
 
   get counterattackTargetingPattern(): TargetingStrategy {
     return this.interceptors.counterattackTargetingPattern.getValue(
-      this.card.counterattackPattern,
+      this._card.counterattackPattern,
       {}
     );
   }
@@ -355,7 +378,7 @@ export class Unit
 
   get counterattackAOEShape(): AOEShape {
     return this.interceptors.counterattackAOEShape.getValue(
-      this.card.counterattackAOEShape,
+      this._card.counterattackAOEShape,
       {}
     );
   }
@@ -513,7 +536,7 @@ export class Unit
   getDealtDamage(target: Unit) {
     return this.interceptors.damageDealt.getValue(this.atk, {
       target,
-      source: this.card
+      source: this._card
     });
   }
 
@@ -633,7 +656,7 @@ export class Unit
   }
 
   canUseAbiliy(index: number) {
-    const ability = this.card.abilities[index] as Ability<this['card']>;
+    const ability = this._card.abilities[index] as Ability<this['card']>;
     assert(isDefined(ability), new UnitAbilityNotFoundError());
 
     return this.interceptors.canUseAbility.getValue(
@@ -643,10 +666,10 @@ export class Unit
   }
 
   useAbility(index: number) {
-    const ability = this.card.abilities[index] as Ability<this['card']>;
+    const ability = this._card.abilities[index] as Ability<this['card']>;
     assert(isDefined(ability), new UnitAbilityNotFoundError());
 
-    const followup = ability.getFollowup(this.game, this.card);
+    const followup = ability.getFollowup(this.game, this._card);
     this.game.interaction.startSelectingTargets({
       player: this.player,
       getNextTarget: targets => followup.targets[targets.length] ?? null,

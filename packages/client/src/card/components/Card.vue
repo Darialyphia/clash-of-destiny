@@ -2,6 +2,7 @@
 import {
   CARD_KINDS,
   RARITIES,
+  type Affinity,
   type CardKind,
   type Rarity
 } from '@game/engine/src/card/card.enums';
@@ -14,6 +15,7 @@ const { card } = defineProps<{
     description: string;
     image: string;
     kind: CardKind;
+    affinity: Affinity;
     manaCost?: number;
     destinyCost?: number;
     rarity: Rarity;
@@ -51,6 +53,7 @@ const imageBg = computed(() => {
       <div v-if="isDefined(card.destinyCost)" class="dual-text">
         {{ card.destinyCost }} Destiny
       </div>
+      <div>{{ card.affinity }}</div>
       <div class="kind">{{ card.kind }} - {{ card.job }}</div>
       <div class="flex gap-2">
         <div v-if="isDefined(card.atk)">{{ card.atk }} /</div>

@@ -13,6 +13,7 @@ const { blueprint } = defineProps<{ blueprint: CardBlueprint }>();
       description: blueprint.staticDescription,
       image: `/assets/icons/${blueprint.cardIconId}.png`,
       kind: blueprint.kind,
+      affinity: blueprint.affinity,
       manaCost: (blueprint as any).manaCost,
       rarity: (blueprint as any).rarity,
       job: (blueprint as any).job,

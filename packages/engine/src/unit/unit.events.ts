@@ -6,6 +6,7 @@ import type { SerializedUnit, Unit } from './entities/unit.entity';
 import type { AnyCard, SerializedCard } from '../card/entities/card.entity';
 import type { Cell, SerializedCell } from '../board/cell';
 import type { Position } from '../utils/position.component';
+import type { HeroCard, SerializedHeroCard } from '../card/entities/hero-card.entity';
 
 export class UnitCreatedEvent extends TypedSerializableEvent<
   { affectedCells: Cell[]; affectedUnits: Unit[] },
@@ -166,6 +167,29 @@ export class UnitUseAbilityEvent extends TypedSerializableEvent<
   }
 }
 
+export class HeroBeforeEvolveEvent extends TypedSerializableEvent<
+  { newCard: HeroCard },
+  { newCard: SerializedHeroCard }
+> {
+  serialize() {
+    return {
+      newCard: this.data.newCard.serialize()
+    };
+  }
+}
+
+export class HeroAfterEvolveEvent extends TypedSerializableEvent<
+  { prevCard: HeroCard; newCard: HeroCard },
+  { prevCard: SerializedHeroCard; newCard: SerializedHeroCard }
+> {
+  serialize() {
+    return {
+      prevCard: this.data.prevCard.serialize(),
+      newCard: this.data.newCard.serialize()
+    };
+  }
+}
+
 export type UnitEventMap = {
   [UNIT_EVENTS.CREATED]: UnitCreatedEvent;
   [UNIT_EVENTS.BEFORE_MOVE]: UnitBeforeMoveEvent;
@@ -192,4 +216,6 @@ export type UnitEventMap = {
   [UNIT_EVENTS.AFTER_WAKE_UP]: UnitWakeUpEvent;
   [UNIT_EVENTS.BEFORE_USE_ABILITY]: UnitUseAbilityEvent;
   [UNIT_EVENTS.AFTER_USE_ABILITY]: UnitUseAbilityEvent;
+  [UNIT_EVENTS.BEFORE_EVOLVE_HERO]: HeroBeforeEvolveEvent;
+  [UNIT_EVENTS.AFTER_EVOLVE_HERO]: HeroAfterEvolveEvent;
 };
