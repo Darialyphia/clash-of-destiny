@@ -38,6 +38,10 @@ export class PlayerViewModel {
     return this.data.destiny;
   }
 
+  get unlockedAffinities() {
+    return this.data.unlockedAffinities;
+  }
+
   get handSize() {
     return this.data.handSize;
   }

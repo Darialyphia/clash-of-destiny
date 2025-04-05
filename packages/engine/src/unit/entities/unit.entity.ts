@@ -252,9 +252,9 @@ export class Unit
     return this._card;
   }
 
-  evoleHero(card: HeroCard) {
+  evolveHero(card: HeroCard) {
     assert(
-      this.isHero,
+      this.isHero || this.isShrine,
       new WrongUnitKindError(UNIT_KINDS.HERO, this._card.blueprint.unitKind)
     );
     this.emitter.emit(
@@ -263,6 +263,7 @@ export class Unit
     );
     const prev = this._card as HeroCard;
     this._card = card;
+    this.hp.max = card.maxHp;
     this.emitter.emit(
       UNIT_EVENTS.AFTER_EVOLVE_HERO,
       new HeroAfterEvolveEvent({ prevCard: prev, newCard: card })

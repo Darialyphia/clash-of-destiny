@@ -148,7 +148,7 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
         targets: [`.hand-card__card[data-flip-id="card_${card.id}"]`],
         duration: 0.35,
         absolute: false,
-        ease: Back.easeIn
+        ease: Power2.easeOut
       });
     });
   };

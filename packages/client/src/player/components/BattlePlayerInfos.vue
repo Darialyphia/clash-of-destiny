@@ -41,6 +41,7 @@ const userPlayer = useUserPlayer();
       <div>HP: {{ player.currentHp }} / {{ player.maxHp }}</div>
       <div>Mana: {{ player.mana }}</div>
       <div>Destiny: {{ player.destiny }}</div>
+      <div>Affinities: {{ player.unlockedAffinities.join(', ') }}</div>
     </div>
 
     <div class="flex flex-col gap-2 pointer-events-auto">
@@ -129,7 +130,6 @@ ul {
   display: flex;
   flex-direction: column;
   gap: var(--size-3);
-  height: 100dvh;
   padding: var(--size-5);
 }
 </style>

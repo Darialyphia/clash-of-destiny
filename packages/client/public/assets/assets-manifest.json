@@ -1873,6 +1873,33 @@
         },
         {
           "alias": [
+            "aiden-lv1"
+          ],
+          "src": [
+            "/assets/units/aiden-lv1.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "aiden-lv1.png"
+          ],
+          "src": [
+            "/assets/units/aiden-lv1.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "earth-shrine-of-knowledge"
           ],
           "src": [

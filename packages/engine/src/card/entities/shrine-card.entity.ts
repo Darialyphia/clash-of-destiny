@@ -60,6 +60,8 @@ export class ShrineCard extends UnitCard<
   }
 
   override play() {
+    this.player.unlockedAffinities.add(this.blueprint.affinity);
+
     this.playWithTargets([{ type: 'cell', cell: this.player.shrinePosition }]);
   }
 }

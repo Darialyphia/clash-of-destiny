@@ -1,3 +1,4 @@
+import type { Point } from '@game/shared';
 import type { Game } from '../../game/game';
 import type { SelectedTarget } from '../../game/systems/interaction.system';
 import type { Player } from '../../player/player.entity';
@@ -71,6 +72,11 @@ export class HeroCard extends UnitCard<
     return (this.player.hero.card as HeroCard).lineage === this.blueprint.lineage;
   }
 
+  get fulfillsLevel() {
+    if (this.player.hero.isShrine) return true;
+    return this.baseLevel === (this.player.hero.card as HeroCard).baseLevel - 1;
+  }
+
   override canPlay(): boolean {
     return this.interceptors.canPlay.getValue(
       this.fulfillsAffinity && this.fulfillsResourceCost && this.fulfillsLineage,
@@ -81,9 +87,7 @@ export class HeroCard extends UnitCard<
   protected override playWithTargets(targets: SelectedTarget[]): void {
     const points = targets.map(t => t.cell);
 
-    const summonPosition = this.player.hero.position;
-    this.player.hero.evoleHero(this);
-
+    this.player.hero.evolveHero(this);
     this.emitter.emit(
       CARD_EVENTS.BEFORE_PLAY,
       new CardBeforePlayEvent({ targets: points })
@@ -95,6 +99,29 @@ export class HeroCard extends UnitCard<
     this.emitter.emit(
       CARD_EVENTS.AFTER_PLAY,
       new CardAfterPlayEvent({ targets: points })
+    );
+  }
+
+  protected override addToBoard(points: Point[]) {
+    const aoeShape = this.blueprint.getAoe(this.game, this as any, points);
+    this.unit = this.player.hero;
+
+    const onLeaveBoardCleanups = [
+      UNIT_EVENTS.AFTER_DESTROY,
+      UNIT_EVENTS.AFTER_BOUNCE
+    ].map(e =>
+      this.unit.once(e, () => {
+        // @ts-expect-error
+        this.unit = undefined;
+        onLeaveBoardCleanups.forEach(cleanup => cleanup());
+      })
+    );
+
+    this.blueprint.onPlay(
+      this.game,
+      this as any,
+      aoeShape.getCells(points),
+      aoeShape.getUnits(points)
     );
   }
 
