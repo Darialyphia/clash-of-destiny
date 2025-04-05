@@ -23,7 +23,7 @@ export const testHero: UnitBlueprint = {
   },
   staticDescription: ``,
   setId: CARD_SETS.CORE,
-  cardIconId: 'placeholder',
+  cardIconId: 'unit-aiden-lv1',
   spriteId: 'aiden-lv1',
   spriteParts: {},
   rarity: RARITIES.RARE,

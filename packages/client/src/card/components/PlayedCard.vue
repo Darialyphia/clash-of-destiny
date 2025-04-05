@@ -23,9 +23,9 @@ useBattleEvent(GAME_EVENTS.PLAYER_BEFORE_PLAY_CARD, async event => {
     card.value = model;
   }
 
-  await waitFor(1500);
+  await waitFor(1200);
   card.value = null;
-  await waitFor(600);
+  await waitFor(300);
 });
 </script>
 
@@ -59,7 +59,7 @@ useBattleEvent(GAME_EVENTS.PLAYER_BEFORE_PLAY_CARD, async event => {
     transform: rotateY(0.5turn);
   }
   100% {
-    transform: rotateY(0) scale(1.5);
+    transform: rotateY(0);
   }
 }
 
@@ -68,10 +68,9 @@ useBattleEvent(GAME_EVENTS.PLAYER_BEFORE_PLAY_CARD, async event => {
   perspective: 500px;
   perspective-origin: center;
   padding-bottom: var(--size-13);
-  transform: scale(1.5);
 
   &.v-enter-active {
-    animation: play-card-reveal 1.2s var(--ease-3);
+    animation: play-card-reveal 1s var(--ease-3);
   }
 
   &.v-leave-active {
@@ -80,7 +79,7 @@ useBattleEvent(GAME_EVENTS.PLAYER_BEFORE_PLAY_CARD, async event => {
 
   &.v-leave-to {
     opacity: 0;
-    transform: scale(1.5) translateY(calc(-1 * var(--size-9)));
+    transform: translateY(calc(-1 * var(--size-9)));
   }
 }
 </style>

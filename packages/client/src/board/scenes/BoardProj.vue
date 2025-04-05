@@ -34,7 +34,7 @@ onTick(() => {
 </script>
 
 <template>
-  <container-2d :position="[0, 400]" ref="container">
+  <container-2d :position="[0, app.screen.height * 0.45]" ref="container">
     <container-2d :scale="2" :x="app.screen.width / 4" :y="-250">
       <BoardCellProj
         v-for="cell in cells"

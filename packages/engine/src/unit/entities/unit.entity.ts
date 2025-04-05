@@ -72,6 +72,7 @@ export type SerializedUnit = {
     canUse: boolean;
   }>;
   isExhausted: boolean;
+  card: string;
 };
 
 export type UnitOptions = {
@@ -134,6 +135,7 @@ export class Unit
     return {
       id: this.id,
       entityType: 'unit' as const,
+      card: this._card.id,
       position: this.position.serialize(),
       playerId: this.player.id,
       spriteId: this._card.blueprint.spriteId,

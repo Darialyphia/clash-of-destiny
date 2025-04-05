@@ -44,14 +44,6 @@ export class UnitViewModel {
     this.data.position = val;
   }
 
-  get iconId() {
-    return this.data.iconId;
-  }
-
-  get iconPath() {
-    return `/assets/icons/${this.iconId}.png`;
-  }
-
   get spriteId() {
     return this.data.spriteId;
   }
@@ -94,6 +86,10 @@ export class UnitViewModel {
     return this.data.modifiers.map(modifierId => {
       return this.entityDictionary[modifierId] as ModifierViewModel;
     });
+  }
+
+  getCard() {
+    return this.entityDictionary[this.data.card] as CardViewModel;
   }
 
   getCell() {

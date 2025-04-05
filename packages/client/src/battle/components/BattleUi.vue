@@ -13,6 +13,7 @@ import { usePlayers } from '../stores/battle.store';
 import PlayerActions from '@/player/components/PlayerActions.vue';
 import DestinyPhaseUi from './DestinyPhaseUi.vue';
 import BattlePlayerInfos from '@/player/components/BattlePlayerInfos.vue';
+import HighlightedUnit from './HighlightedUnit.vue';
 
 const turnPlayer = useTurnPlayer();
 const ui = useBattleUiStore();
@@ -27,7 +28,7 @@ const { state } = useGameState();
   <div class="battle-ui" :class="{ cinematic: ui.cardPlayIntent }">
     <BattleLog />
     <header>
-      <div class="flex gap-4 pointer-events-auto">
+      <!-- <div class="flex gap-4 pointer-events-auto">
         <label>
           <input type="radio" v-model="ui.viewMode" value="top-down" />
           Top down
@@ -37,7 +38,7 @@ const { state } = useGameState();
           <input type="radio" v-model="ui.viewMode" value="isometric" />
           Isometric
         </label>
-      </div>
+      </div> -->
       <div class="flex justify-between">
         <BattlePlayerInfos
           v-for="player in players"
@@ -51,6 +52,7 @@ const { state } = useGameState();
     <PlayIntent />
     <TurnIndicator />
     <DestinyPhaseUi />
+    <HighlightedUnit />
     <footer>
       <Hand :player="turnPlayer" />
       <PlayerActions class="player-actions" />

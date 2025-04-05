@@ -2,7 +2,7 @@ import type { GameStateEntities } from '@/battle/stores/battle.store';
 import type { CellViewModel } from '@/board/cell.model';
 import type { PlayerViewModel } from '@/player/player.model';
 import type { UnitViewModel } from '@/unit/unit.model';
-import { CARD_KINDS } from '@game/engine/src/card/card.enums';
+import { CARD_KINDS, type UnitKind } from '@game/engine/src/card/card.enums';
 import type { SerializedArtifactCard } from '@game/engine/src/card/entities/artifact-card.entity';
 import type { SerializedCard } from '@game/engine/src/card/entities/card.entity';
 import type { SerializedHeroCard } from '@game/engine/src/card/entities/hero-card.entity';
@@ -50,6 +50,12 @@ export class CardViewModel {
 
   get kind() {
     return this.data.kind;
+  }
+
+  get unitKind() {
+    if ('unitKind' in this.data) {
+      return this.data.unitKind as UnitKind;
+    }
   }
 
   get rarity() {
