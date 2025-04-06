@@ -340,14 +340,7 @@ export class Unit
   }
 
   get attackTargettingPattern(): TargetingStrategy {
-    return this.interceptors.attackTargetingPattern.getValue(
-      new MeleeTargetingStrategy(this.game, this, {
-        type: this.attackTargetType,
-        allowCenter: false,
-        allowDiagonals: false
-      }),
-      {}
-    );
+    return this.interceptors.attackTargetingPattern.getValue(this.card.attackPattern, {});
   }
 
   get atk() {
@@ -595,7 +588,6 @@ export class Unit
     if (!this.canAttack(target) || !target.canBeAttackedBy(this)) {
       return false;
     }
-
     return this.attackTargettingPattern.canTargetAt(point);
   }
 

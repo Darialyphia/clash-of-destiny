@@ -8,6 +8,7 @@ import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity'
 import { type Nullable, type Point } from '@game/shared';
 import type { ModifierViewModel } from './modifier.model';
 import type { ArtifactViewModel } from './artifact.model';
+import { UNIT_KINDS } from '@game/engine/src/card/card.enums';
 
 export class UnitViewModel {
   isAnimating = false;
@@ -74,6 +75,18 @@ export class UnitViewModel {
 
   get isExhausted() {
     return this.data.isExhausted;
+  }
+
+  get isHero() {
+    return this.getCard().unitKind === UNIT_KINDS.HERO;
+  }
+
+  get isShrine() {
+    return this.getCard().unitKind === UNIT_KINDS.SHRINE;
+  }
+
+  get isMinion() {
+    return this.getCard().unitKind === UNIT_KINDS.MINION;
   }
 
   getPlayer() {

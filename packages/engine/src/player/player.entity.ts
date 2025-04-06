@@ -11,6 +11,8 @@ import {
   PlayerDrawEvent,
   PlayerEndTurnEvent,
   PlayerPlayCardEvent,
+  PlayerResourceActionDestinyEvent,
+  PlayerResourceActionEvent,
   PlayerStartTurnEvent,
   type PlayerEventMap
 } from './player.events';
@@ -249,7 +251,7 @@ export class Player
         this.onBeforePlayFromDestinyDeck.bind(this, card)
       ),
       card.once(CARD_EVENTS.AFTER_PLAY, () => {
-        this.onAfterPlayFromDestinyDeck.bind(this, card);
+        this.onAfterPlayFromDestinyDeck(card);
         onComplete?.();
       })
     ];
@@ -281,11 +283,23 @@ export class Player
   }
 
   resourceActionReplaceCardAtIndex(index: number) {
+    this.emitter.emit(
+      PLAYER_EVENTS.BEFORE_RESOURCE_ACTION_REPLACE,
+      new PlayerResourceActionEvent({})
+    );
     this.cards.replaceCardAt(index);
     this.resourceActionsDoneThisTurn++;
+    this.emitter.emit(
+      PLAYER_EVENTS.AFTER_RESOURCE_ACTION_REPLACE,
+      new PlayerResourceActionEvent({})
+    );
   }
 
   resourceActionGainDestiny(indices: number[]) {
+    this.emitter.emit(
+      PLAYER_EVENTS.BEFORE_RESOURCE_ACTION_DESTINY,
+      new PlayerResourceActionDestinyEvent({ amount: indices.length })
+    );
     indices.forEach(index => {
       const card = this.cards.getCardAt(index);
       if (!card) return;
@@ -295,12 +309,24 @@ export class Player
 
     this.destiny.add(indices.length);
     this.resourceActionsDoneThisTurn++;
+    this.emitter.emit(
+      PLAYER_EVENTS.AFTER_RESOURCE_ACTION_DESTINY,
+      new PlayerResourceActionDestinyEvent({ amount: indices.length })
+    );
   }
 
   resourceActionDraw() {
+    this.emitter.emit(
+      PLAYER_EVENTS.BEFORE_RESOURCE_ACTION_DRAW,
+      new PlayerResourceActionEvent({})
+    );
     this.mana.remove(this.game.config.DRAW_RESOURCE_ACTION_COST);
     this.cards.draw(1);
     this.resourceActionsDoneThisTurn++;
+    this.emitter.emit(
+      PLAYER_EVENTS.AFTER_RESOURCE_ACTION_DRAW,
+      new PlayerResourceActionEvent({})
+    );
   }
 
   startTurn() {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import UnitOrientation from './UnitOrientation.vue';
 import UnitSprite from './UnitSprite.vue';
-import UnitShadow from './UnitShadow.vue';
+import UnitShadowProj from './UnitShadowProj.vue';
 import UnitPositioner from './UnitPositioner.vue';
 import type { UnitViewModel } from '../unit.model';
 import AlphaTransition from '@/ui/scenes/AlphaTransition.vue';
@@ -11,6 +11,7 @@ import UnitModifierSprite from './UnitModifierSprite.vue';
 import UnitPositionerProj from './UnitPositionerProj.vue';
 import UnitOrientationProj from './UnitOrientationProj.vue';
 import UnitSpriteProj from './UnitSpriteProj.vue';
+import UnitStats from './UnitStats.vue';
 
 const { unit } = defineProps<{ unit: UnitViewModel }>();
 
@@ -19,13 +20,15 @@ const isSpawnAnimationDone = ref(false);
 
 <template>
   <UnitPositionerProj :unit="unit" v-if="!unit.isDead">
-    <UnitOrientationProj :unit="unit">
-      <!-- <UnitShadow :unit="unit" /> -->
-      <UnitSpriteProj :unit="unit" />
-    </UnitOrientationProj>
+    <UnitSpawnAnimation @done="isSpawnAnimationDone = true">
+      <UnitOrientationProj :unit="unit">
+        <UnitShadowProj :unit="unit" />
+        <UnitSpriteProj :unit="unit" />
+      </UnitOrientationProj>
+    </UnitSpawnAnimation>
     <!-- <UnitVFX :unit="unit" /> -->
 
-    <!-- <AlphaTransition
+    <AlphaTransition
       :duration="{ enter: 200, leave: 200 }"
       v-if="isSpawnAnimationDone"
     >
@@ -37,7 +40,8 @@ const isSpawnAnimationDone = ref(false);
           :modifier="modifier"
           :index="index"
         />
+        <UnitStats :unit="unit" />
       </container>
-    </AlphaTransition> -->
+    </AlphaTransition>
   </UnitPositionerProj>
 </template>

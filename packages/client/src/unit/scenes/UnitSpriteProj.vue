@@ -65,7 +65,12 @@ const isInAoe = computed(() => {
   >
     <template v-if="hasFilters">
       <outline-filter
-        v-if="ui.highlightedUnit?.id === unit.id"
+        v-if="ui.selectedUnit?.equals(unit)"
+        :thickness="outlineThickness"
+        :color="0xffffff"
+      />
+      <outline-filter
+        v-else-if="ui.highlightedUnit?.equals(unit)"
         :thickness="outlineThickness"
         :color="
           ui.highlightedUnit?.playerId === player.id ? 0x00aaff : 0xff0000
@@ -73,6 +78,7 @@ const isInAoe = computed(() => {
       />
 
       <adjustment-filter v-if="isInAoe" :red="3" :brightness="0.8" />
+      <adjustment-filter v-else-if="unit.isExhausted" :saturation="0" />
     </template>
   </sprite-2d>
 </template>

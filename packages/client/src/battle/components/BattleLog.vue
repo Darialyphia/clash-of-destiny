@@ -148,6 +148,37 @@ useBattleEvent(GAME_EVENTS.UNIT_AFTER_DESTROY, async event => {
   ]);
 });
 
+useBattleEvent(GAME_EVENTS.PLAYER_BEFORE_RESOURCE_ACTION_DRAW, async event => {
+  events.value.push([
+    {
+      kind: 'text',
+      text: `${event.player.name} draws 1 card with their resource action.`
+    }
+  ]);
+});
+
+useBattleEvent(
+  GAME_EVENTS.PLAYER_BEFORE_RESOURCE_ACTION_REPLACE,
+  async event => {
+    events.value.push([
+      {
+        kind: 'text',
+        text: `${event.player.name} replaces a card with their resource action.`
+      }
+    ]);
+  }
+);
+useBattleEvent(
+  GAME_EVENTS.PLAYER_BEFORE_RESOURCE_ACTION_DESTINY,
+  async event => {
+    events.value.push([
+      {
+        kind: 'text',
+        text: `${event.player.name} banished ${event.amount} cards to gain destiny with their resource action.`
+      }
+    ]);
+  }
+);
 const isCollapsed = ref(true);
 
 const listEl = ref<HTMLElement>();

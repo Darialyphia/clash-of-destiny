@@ -46,7 +46,12 @@ const isTurnPlayer = computed(() => {
         class="pointer-events-auto w-full"
         text="End Turn"
         variant="error"
-        @click="player.endTurn()"
+        @click="
+          () => {
+            ui.unselectUnit();
+            player.endTurn();
+          }
+        "
       />
     </transition>
 

@@ -40,6 +40,26 @@ export class PlayerDrawEvent extends TypedSerializableEvent<
   }
 }
 
+export class PlayerResourceActionEvent extends TypedSerializableEvent<
+  EmptyObject,
+  EmptyObject
+> {
+  serialize() {
+    return {};
+  }
+}
+
+export class PlayerResourceActionDestinyEvent extends TypedSerializableEvent<
+  { amount: number },
+  { amount: number }
+> {
+  serialize() {
+    return {
+      amount: this.data.amount
+    };
+  }
+}
+
 export type PlayerEventMap = {
   [PLAYER_EVENTS.START_TURN]: PlayerStartTurnEvent;
   [PLAYER_EVENTS.END_TURN]: PlayerEndTurnEvent;
@@ -47,4 +67,10 @@ export type PlayerEventMap = {
   [PLAYER_EVENTS.AFTER_PLAY_CARD]: PlayerPlayCardEvent;
   [PLAYER_EVENTS.BEFORE_DRAW]: PlayerDrawEvent;
   [PLAYER_EVENTS.AFTER_DRAW]: PlayerDrawEvent;
+  [PLAYER_EVENTS.BEFORE_RESOURCE_ACTION_DRAW]: PlayerResourceActionEvent;
+  [PLAYER_EVENTS.AFTER_RESOURCE_ACTION_DRAW]: PlayerResourceActionEvent;
+  [PLAYER_EVENTS.BEFORE_RESOURCE_ACTION_REPLACE]: PlayerResourceActionEvent;
+  [PLAYER_EVENTS.AFTER_RESOURCE_ACTION_REPLACE]: PlayerResourceActionEvent;
+  [PLAYER_EVENTS.BEFORE_RESOURCE_ACTION_DESTINY]: PlayerResourceActionDestinyEvent;
+  [PLAYER_EVENTS.AFTER_RESOURCE_ACTION_DESTINY]: PlayerResourceActionDestinyEvent;
 };

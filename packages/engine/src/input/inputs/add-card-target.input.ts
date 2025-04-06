@@ -26,7 +26,6 @@ export class AddCardTargetCardInput extends Input<typeof schema> {
       this.game.interaction.context.state === INTERACTION_STATES.SELECTING_TARGETS,
       new InvalidInteractionStateError()
     );
-    console.log('commit', performance.now());
 
     this.game.interaction.addTarget({
       type: 'cell',
