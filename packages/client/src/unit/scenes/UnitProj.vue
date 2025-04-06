@@ -35,7 +35,6 @@ const isSpawnAnimationDone = ref(false);
       <container>
         <UnitModifierSprite
           v-for="(modifier, index) in unit.getModifiers()"
-          :unit="unit"
           :key="modifier.id"
           :modifier="modifier"
           :index="index"

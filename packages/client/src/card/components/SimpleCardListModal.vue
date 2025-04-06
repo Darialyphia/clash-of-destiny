@@ -83,7 +83,6 @@ h2 {
 .card-list {
   display: flex;
   gap: var(--size-2);
-
   .hidden {
     opacity: 0;
   }

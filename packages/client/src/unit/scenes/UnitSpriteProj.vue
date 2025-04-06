@@ -10,10 +10,10 @@ import { useGameState, useUserPlayer } from '@/battle/stores/battle.store';
 import { INTERACTION_STATES } from '@game/engine/src/game/systems/interaction.system';
 import { pointToCellId } from '@game/engine/src/board/board-utils';
 import { Sprite2d, AFFINE } from 'pixi-projection';
+import { Filter } from 'pixi.js';
 
-const { unit, hasFilters = true } = defineProps<{
+const { unit } = defineProps<{
   unit: UnitViewModel;
-  hasFilters?: boolean;
 }>();
 
 const sheet = useSpritesheet<'', 'base' | 'destroyed'>(() => unit.spriteId);
@@ -63,7 +63,9 @@ const isInAoe = computed(() => {
       }
     "
   >
-    <template v-if="hasFilters">
+    <adjustment-filter v-if="unit.isExhausted" :saturation="0" />
+    <!-- The adjustment filter on a Sprite2d seems to not behave well then are other filters -->
+    <template v-else>
       <outline-filter
         v-if="ui.selectedUnit?.equals(unit)"
         :thickness="outlineThickness"
@@ -76,9 +78,6 @@ const isInAoe = computed(() => {
           ui.highlightedUnit?.playerId === player.id ? 0x00aaff : 0xff0000
         "
       />
-
-      <adjustment-filter v-if="isInAoe" :red="3" :brightness="0.8" />
-      <adjustment-filter v-else-if="unit.isExhausted" :saturation="0" />
     </template>
   </sprite-2d>
 </template>

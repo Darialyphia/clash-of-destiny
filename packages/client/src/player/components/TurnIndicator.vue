@@ -10,10 +10,12 @@ import { waitFor } from '@game/shared';
 const userPlayer = useUserPlayer();
 
 const text = ref('');
-const { state } = useGameState();
 
-useBattleEvent(GAME_EVENTS.TURN_START, async e => {
-  text.value = `Turn ${state.value.turnCount + 1}`;
+useBattleEvent(GAME_EVENTS.PLAYER_START_TURN, async e => {
+  text.value =
+    userPlayer.value.id === e.player.id
+      ? 'Your turn'
+      : `${e.player.name}'s turn`;
 
   setTimeout(() => {
     text.value = '';

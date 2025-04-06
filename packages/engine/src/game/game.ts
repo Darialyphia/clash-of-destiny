@@ -99,8 +99,6 @@ export class Game {
   private setupStarEvents() {
     Object.values(GAME_EVENTS).forEach(eventName => {
       this.on(eventName as any, event => {
-        console.log(eventName);
-
         this.emit('*', new GameStarEvent({ e: { event, eventName } }));
       });
     });

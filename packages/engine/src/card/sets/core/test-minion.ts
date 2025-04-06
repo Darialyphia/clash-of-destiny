@@ -1,4 +1,5 @@
 import { PointAOEShape } from '../../../aoe/point.aoe-shape';
+import { ProvokeModifier } from '../../../modifier/modifiers/provoke.modifier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
 import type { UnitBlueprint } from '../../card-blueprint';
 import {
@@ -19,9 +20,9 @@ export const testMinion: UnitBlueprint = {
   affinity: AFFINITIES.NORMAL,
   name: 'Test Minion',
   getDescription: (game, card) => {
-    return `todo description`;
+    return `@Provoke@.`;
   },
-  staticDescription: `todo static description`,
+  staticDescription: `@Provoke@.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'unit-test-minion',
   spriteId: 'test-unit',
@@ -40,5 +41,7 @@ export const testMinion: UnitBlueprint = {
   getAoe(game, card) {
     return new PointAOEShape(game, card.player, TARGETING_TYPE.UNIT);
   },
-  onPlay() {}
+  onPlay(game, card) {
+    card.unit.addModifier(new ProvokeModifier(game, card));
+  }
 };

@@ -25,6 +25,19 @@ export const KEYWORDS = {
     name: 'Disarmed',
     description: 'Cannot attack. Lose 1 stack at the end of its turn.',
     aliases: []
+  },
+  PROVOKE: {
+    id: 'provoke',
+    name: 'Provoke',
+    description:
+      'Stops enemy minions and general from moving. They must attack this first.',
+    aliases: ['provoke']
+  },
+  PROVOKED: {
+    id: 'provoked',
+    name: 'Provoked',
+    description: 'Provoked - cannot move and must attack Provoker first.',
+    aliases: []
   }
 } as const satisfies Record<string, Keyword>;
 

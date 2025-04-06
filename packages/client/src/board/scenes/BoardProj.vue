@@ -62,11 +62,11 @@ const offsetX = computed(() => {
     texture="/assets/backgrounds/battle-bg2.png"
     :anchor="0.5"
     :x="screenWidth / 2"
-    :y="screenHeight / 2"
-    :scale="1.5"
+    :y="screenHeight / 2 - 50"
+    :scale="1.25"
   />
   <container-2d :position="[0, screenHeight * 0.45]" ref="container">
-    <container-2d :scale="config.INITIAL_ZOOM" :x="offsetX + 80" :y="-250">
+    <container-2d :scale="config.INITIAL_ZOOM" :x="offsetX + 80" :y="-200">
       <BoardCellProj
         v-for="cell in cells"
         :key="cell.id"
@@ -85,6 +85,6 @@ const offsetX = computed(() => {
     :tint="0xff0000"
     :factor="1"
     :anchor="0.5"
-    :position="[screenWidth / 2, -2400]"
+    :position="[screenWidth / 2, -2800]"
   />
 </template>

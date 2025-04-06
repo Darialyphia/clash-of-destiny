@@ -27,7 +27,14 @@ const isOpened = ref(false);
 watch(
   () => state.value.phase,
   phase => {
-    isOpened.value = phase === GAME_PHASES.DESTINY;
+    if (phase !== GAME_PHASES.DESTINY) {
+      isOpened.value = false;
+      return;
+    }
+
+    setTimeout(() => {
+      isOpened.value = true;
+    }, 1000);
   },
   { immediate: true }
 );

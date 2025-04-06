@@ -69,6 +69,7 @@ const attackAnimation = async (e: { unit: SerializedUnit; target: Point }) => {
   await tl.play();
 };
 useBattleEvent(GAME_EVENTS.UNIT_BEFORE_ATTACK, attackAnimation);
+useBattleEvent(GAME_EVENTS.UNIT_BEFORE_COUNTERATTACK, attackAnimation);
 
 const ui = useBattleUiStore();
 </script>

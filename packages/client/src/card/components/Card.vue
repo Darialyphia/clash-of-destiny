@@ -9,6 +9,7 @@ import {
   type UnitKind
 } from '@game/engine/src/card/card.enums';
 import { isDefined } from '@game/shared';
+import CardText from '@/card/components/CardText.vue';
 
 const { card } = defineProps<{
   card: {
@@ -114,6 +115,9 @@ const affinityGemBg = computed(() => {
       <div class="kind">
         <div class="kind-icon" />
         {{ card.kind }} - {{ card.job }}
+      </div>
+      <div class="description">
+        <CardText :text="card.description" />
       </div>
     </div>
     <div class="card-back" />
@@ -306,5 +310,14 @@ const affinityGemBg = computed(() => {
     width: calc(16px * var(--pixel-scale));
     aspect-ratio: 1;
   }
+}
+
+.description {
+  width: calc(120px * var(--pixel-scale));
+  height: calc(62px * var(--pixel-scale));
+  position: absolute;
+  top: calc(145px * var(--pixel-scale));
+  left: calc(20px * var(--pixel-scale));
+  font-size: 14px;
 }
 </style>
