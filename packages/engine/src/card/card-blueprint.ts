@@ -59,6 +59,7 @@ export type Ability<T extends AnyCard> = {
     targets: EffectTarget[];
     canCommit: (targets: SelectedTarget[]) => boolean;
   };
+  canUse(game: Game, card: T): boolean;
   onResolve: <TTarget extends SelectedTarget>(
     game: Game,
     card: T,
@@ -123,6 +124,7 @@ export type UnitBlueprint = (MainDeckCardBlueprint | DestinyDeckCardBlueprint) &
 export type SpellBlueprint = (MainDeckCardBlueprint | DestinyDeckCardBlueprint) & {
   kind: Extract<CardKind, typeof CARD_KINDS.SPELL>;
   getDescription(game: Game, card: SpellCard): string;
+  abilities: Array<Ability<SpellCard>>;
   staticDescription: string;
   job: CardJob;
   getFollowup(game: Game, card: SpellCard): Followup<SpellCard>;
@@ -145,6 +147,7 @@ export type ArtifactBlueprint = (MainDeckCardBlueprint | DestinyDeckCardBlueprin
 export type SecretBlueprint = (MainDeckCardBlueprint | DestinyDeckCardBlueprint) & {
   kind: Extract<CardKind, typeof CARD_KINDS.SECRET>;
   getDescription(game: Game, card: SecretCard): string;
+  abilities: Array<Ability<SecretCard>>;
   staticDescription: string;
   job: CardJob;
   getFollowup(game: Game, card: SecretCard): Followup<SecretCard>;

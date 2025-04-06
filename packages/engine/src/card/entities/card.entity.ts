@@ -1,7 +1,7 @@
-import { type JSONObject } from '@game/shared';
+import { assert, isDefined, type JSONObject } from '@game/shared';
 import { Entity } from '../../entity';
 import type { Game } from '../../game/game';
-import type { CardBlueprint } from '../card-blueprint';
+import type { Ability, CardBlueprint } from '../card-blueprint';
 import {
   CARD_DECK_SOURCES,
   CARD_EVENTS,
@@ -16,6 +16,9 @@ import type { Modifier } from '../../modifier/modifier.entity';
 import { ModifierManager } from '../../modifier/modifier-manager.component';
 import type { Player } from '../../player/player.entity';
 import { Interceptable } from '../../utils/interceptable';
+import { ArtifactAbilityNotFoundError } from '../../player/player-errors';
+import { AbilityNotFoundError } from '../card-errors';
+import type { SelectedTarget } from '../../game/systems/interaction.system';
 
 export type CardOptions<T extends CardBlueprint = CardBlueprint> = {
   id: string;
@@ -26,11 +29,13 @@ export type AnyCard = Card<any, any, any, any>;
 export type CardInterceptors = {
   manaCost: Interceptable<number | null>;
   destinyCost: Interceptable<number | null>;
+  abilities: Interceptable<Ability<AnyCard>[]>;
 };
 
 export const makeCardInterceptors = (): CardInterceptors => ({
   manaCost: new Interceptable(),
-  destinyCost: new Interceptable()
+  destinyCost: new Interceptable(),
+  abilities: new Interceptable()
 });
 
 export type SerializedCard = {
@@ -137,6 +142,13 @@ export abstract class Card<
     return this.blueprint.rarity;
   }
 
+  get abilities() {
+    return this.interceptors.abilities.getValue(
+      this.blueprint.abilities as Ability<AnyCard>[],
+      {}
+    );
+  }
+
   get keywords() {
     return this.keywordManager.keywords;
   }
@@ -181,6 +193,39 @@ export abstract class Card<
 
   replace() {
     this.emitter.emit(CARD_EVENTS.REPLACE, new CardAddtoHandEvent({}));
+  }
+
+  canUseAbiliy(id: string) {
+    const ability = this.abilities.find(ability => ability.label === id);
+    assert(isDefined(ability), new AbilityNotFoundError());
+
+    return (
+      this.player.mana.current >= ability.manaCost && ability.canUse(this.game, this)
+    );
+  }
+
+  useAbility(
+    id: string,
+    options: {
+      onBeforeUse?: (ability: Ability<AnyCard>) => void;
+      onAfterUse?: (ability: Ability<AnyCard>) => void;
+    } = {}
+  ) {
+    const ability = this.abilities.find(ability => ability.label === id);
+    assert(isDefined(ability), new AbilityNotFoundError());
+
+    const followup = ability.getFollowup(this.game, this);
+    this.game.interaction.startSelectingTargets({
+      player: this.player,
+      getNextTarget: targets => followup.targets[targets.length] ?? null,
+      canCommit: followup.canCommit,
+      onComplete: (targets: SelectedTarget[]) => {
+        options.onBeforeUse?.(ability);
+        this.player.mana.remove(ability.manaCost);
+        ability.onResolve(this.game, this, targets);
+        options.onAfterUse?.(ability);
+      }
+    });
   }
 
   abstract canPlay(): boolean;

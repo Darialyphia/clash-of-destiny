@@ -70,6 +70,28 @@ export class CardManagerComponent {
     return this.destinyDeck.size;
   }
 
+  findCard(id: string): {
+    card: AnyCard;
+    location: 'hand' | 'mainDeck' | 'destinyDeck' | 'discardPile' | 'banishPile';
+  } | null {
+    const card = this.hand.find(card => card.id === id);
+    if (card) return { card, location: 'hand' };
+
+    const mainDeckCard = this.mainDeck.cards.find(card => card.id === id);
+    if (mainDeckCard) return { card: mainDeckCard, location: 'mainDeck' };
+
+    const destinyDeckCard = this.destinyDeck.cards.find(card => card.id === id);
+    if (destinyDeckCard) return { card: destinyDeckCard, location: 'destinyDeck' };
+
+    const discardPileCard = [...this.discardPile].find(card => card.id === id);
+    if (discardPileCard) return { card: discardPileCard, location: 'discardPile' };
+
+    const banishPileCard = [...this.banishPile].find(card => card.id === id);
+    if (banishPileCard) return { card: banishPileCard, location: 'banishPile' };
+
+    return null;
+  }
+
   getCardAt(index: number) {
     return [...this.hand][index];
   }

@@ -25,6 +25,7 @@ export const testDestiySpell: SpellBlueprint = {
   destinyCost: 1,
   deckSource: CARD_DECK_SOURCES.DESTINY_DECK,
   job: CARD_JOBS.SPELLCASTER,
+  abilities: [],
   getFollowup: () => {
     return new NoFollowup();
   },

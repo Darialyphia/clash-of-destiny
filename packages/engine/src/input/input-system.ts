@@ -25,6 +25,7 @@ import { SkipDestinyInput } from './inputs/skip-destiny.input';
 import { PlayDestinyCardInput } from './inputs/play-destiny-card.input';
 import { ResourceActionDrawInput } from './inputs/resource-action-draw.input';
 import { ResourceActionGainDestinyInput } from './inputs/resource-action-gain-destiny.input';
+import { UseCardAbilityInput } from './inputs/use-card-ability.input';
 
 type GenericInputMap = Record<string, Constructor<Input<DefaultSchema>>>;
 
@@ -54,6 +55,7 @@ const inputMap = validateinputMap({
   addNextTargetIntent: AddNextTargetIntentCardInput,
   useUnitAbility: UseUnitAbilityInput,
   useArtifactAbility: UseArtifactAbilityInput,
+  useCardAbility: UseCardAbilityInput,
   skipDestiny: SkipDestinyInput
 });
 

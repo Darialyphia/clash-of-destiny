@@ -663,26 +663,18 @@ export class Unit
     assert(isDefined(ability), new UnitAbilityNotFoundError());
 
     return this.interceptors.canUseAbility.getValue(
-      !this.isExhausted && this.player.mana.current >= ability.manaCost,
+      !this.isExhausted && this._card.canUseAbiliy(id),
       { ability: ability }
     );
   }
 
   useAbility(id: string) {
-    const ability = this._card.abilities.find(ability => ability.label === id) as Ability<
-      this['card']
-    >;
-    assert(isDefined(ability), new UnitAbilityNotFoundError());
-
-    const followup = ability.getFollowup(this.game, this._card);
-    this.game.interaction.startSelectingTargets({
-      player: this.player,
-      getNextTarget: targets => followup.targets[targets.length] ?? null,
-      canCommit: followup.canCommit,
-      onComplete: (targets: SelectedTarget[]) => {
+    this._card.useAbility(id, {
+      onBeforeUse: ability => {
         this.emitter.emit(UNIT_EVENTS.BEFORE_USE_ABILITY, new UnitUseAbilityEvent({}));
         this.player.mana.remove(ability.manaCost);
-        ability.onResolve(this.game, this.card, targets);
+      },
+      onAfterUse: ability => {
         if (ability.shouldExhaust) {
           this.exhaust();
         }

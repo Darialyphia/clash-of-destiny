@@ -87,10 +87,6 @@ export abstract class UnitCard<
     return this.blueprint.getFollowup(this.game, this as any) as any;
   }
 
-  get abilities() {
-    return this.blueprint.abilities;
-  }
-
   getAoe(points: Point[]) {
     return this.blueprint.getAoe(this.game, this as any, points);
   }

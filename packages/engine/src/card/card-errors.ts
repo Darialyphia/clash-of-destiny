@@ -22,3 +22,9 @@ export class WrongDeckSourceError extends Error {
     );
   }
 }
+
+export class AbilityNotFoundError extends Error {
+  constructor() {
+    super('Ability not found');
+  }
+}

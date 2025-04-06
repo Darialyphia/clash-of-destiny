@@ -62,10 +62,6 @@ export class ArtifactCard extends Card<
     return 0;
   }
 
-  get abilities() {
-    return this.blueprint.abilities;
-  }
-
   get durability() {
     return this.blueprint.durability;
   }

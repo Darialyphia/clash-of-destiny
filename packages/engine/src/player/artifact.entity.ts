@@ -244,27 +244,21 @@ export class Artifact
     assert(isDefined(ability), new ArtifactAbilityNotFoundError());
 
     return this.interceptors.canUseAbility.getValue(
-      !this.isExhausted && this.player.mana.current >= ability.manaCost,
+      !this.isExhausted && this.card.canUseAbiliy(id),
       { ability: ability }
     );
   }
 
   useAbility(id: string) {
-    const ability = this.card.abilities.find(ability => ability.label === id);
-    assert(isDefined(ability), new ArtifactAbilityNotFoundError());
-
-    const followup = ability.getFollowup(this.game, this.card);
-    this.game.interaction.startSelectingTargets({
-      player: this.player,
-      getNextTarget: targets => followup.targets[targets.length] ?? null,
-      canCommit: followup.canCommit,
-      onComplete: (targets: SelectedTarget[]) => {
+    this.card.useAbility(id, {
+      onBeforeUse: ability => {
         this.emitter.emit(
           ARTIFACT_EVENTS.BEFORE_USE_ABILITY,
           new ArtifactUseAbilityEvent({})
         );
         this.player.mana.remove(ability.manaCost);
-        ability.onResolve(this.game, this.card, targets);
+      },
+      onAfterUse: ability => {
         if (ability.shouldExhaust) {
           this.exhaust();
         }
