@@ -295,12 +295,40 @@ export const useBattleUiStore = defineStore('battle-ui', () => {
     }
   });
 
+  const _isReplaceResourceActionModalOpened = ref(false);
+  const isReplaceResourceActionModalOpened = computed({
+    get() {
+      return _isReplaceResourceActionModalOpened.value;
+    },
+    set(value) {
+      _isReplaceResourceActionModalOpened.value = value;
+
+      window.requestAnimationFrame(() => {
+        const handElements = document.querySelectorAll(
+          `.hand .card[data-flip-id]`
+        );
+        const modalElements = document.querySelectorAll(
+          `.replace-resource-action .card[data-flip-id]`
+        );
+        const flipState = Flip.getState([...modalElements, ...handElements]);
+        window.requestAnimationFrame(() => {
+          Flip.from(flipState, {
+            duration: 0.5,
+            absolute: false,
+            ease: Power3.easeOut
+          });
+        });
+      });
+    }
+  });
+
   const viewMode = ref<'top-down' | 'isometric'>('top-down');
   return {
     viewMode,
     controller,
 
     isDestinyResourceActionModalOpened,
+    isReplaceResourceActionModalOpened,
 
     selectedUnit,
     selectUnit,

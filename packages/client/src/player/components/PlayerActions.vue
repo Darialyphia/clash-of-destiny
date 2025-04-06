@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import DestinyResourceActionUi from '@/battle/components/DestinyResourceActionUi.vue';
+import ReplaceResourceActionUi from '@/battle/components/ReplaceResourceActionUi.vue';
 import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
 import { useTurnPlayer, useUserPlayer } from '@/battle/stores/battle.store';
 import FancyButton from '@/ui/components/FancyButton.vue';
@@ -17,7 +18,7 @@ const isTurnPlayer = computed(() => {
   <div class="player-actions" :class="{ 'is-hidden': !isTurnPlayer }">
     <transition>
       <FancyButton
-        v-if="player.canPerformResourceAction"
+        :disabled="!player.canPerformResourceAction"
         class="pointer-events-auto w-full"
         text="Draw"
         @click="player.drawResourceAction()"
@@ -26,15 +27,16 @@ const isTurnPlayer = computed(() => {
 
     <transition>
       <FancyButton
-        v-if="player.canPerformResourceAction"
+        :disabled="!player.canPerformResourceAction"
         class="pointer-events-auto w-full"
         text="Replace"
+        @click="ui.isReplaceResourceActionModalOpened = true"
       />
     </transition>
 
     <transition>
       <FancyButton
-        v-if="player.canPerformResourceAction"
+        :disabled="!player.canPerformResourceAction"
         class="pointer-events-auto w-full"
         text="Destiny"
         @click="ui.isDestinyResourceActionModalOpened = true"
@@ -56,6 +58,7 @@ const isTurnPlayer = computed(() => {
     </transition>
 
     <DestinyResourceActionUi />
+    <ReplaceResourceActionUi />
   </div>
 </template>
 

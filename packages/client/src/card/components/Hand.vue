@@ -67,7 +67,11 @@ useResizeObserver(
       class="hand"
       ref="root"
       :key="player.id"
-      :class="{ hidden: ui.isDestinyResourceActionModalOpened }"
+      :class="{
+        hidden:
+          ui.isDestinyResourceActionModalOpened ||
+          ui.isReplaceResourceActionModalOpened
+      }"
       :inert="
         state.interactionState.state === INTERACTION_STATES.SELECTING_TARGETS
       "

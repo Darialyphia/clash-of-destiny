@@ -2,6 +2,7 @@
 import {
   useBattleEvent,
   useGameState,
+  useTurnPlayer,
   useUnits
 } from '@/battle/stores/battle.store';
 import { vOnClickOutside } from '@vueuse/components';
@@ -42,6 +43,13 @@ type Token =
   | { kind: 'action'; text: string };
 
 const events = shallowRef<Token[][]>([[]]);
+const turnPlayer = useTurnPlayer();
+events.value.push([
+  {
+    kind: 'turn_start',
+    player: turnPlayer.value
+  }
+]);
 
 useBattleEvent(GAME_EVENTS.PLAYER_BEFORE_PLAY_CARD, async event => {
   events.value.push([
