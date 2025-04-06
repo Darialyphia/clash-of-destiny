@@ -6,11 +6,18 @@ import { AdjustmentFilter } from '@pixi/filter-adjustment';
 import { useMultiLayerTexture } from '@/shared/composables/useMultiLayerTexture';
 import { config } from '@/utils/config';
 import type { UnitViewModel } from '../unit.model';
-import { useGameState, useUserPlayer } from '@/battle/stores/battle.store';
+import {
+  useBattleEvent,
+  useGameState,
+  useUserPlayer
+} from '@/battle/stores/battle.store';
 import { INTERACTION_STATES } from '@game/engine/src/game/systems/interaction.system';
 import { pointToCellId } from '@game/engine/src/board/board-utils';
 import { Sprite2d, AFFINE } from 'pixi-projection';
-import { Filter } from 'pixi.js';
+import { Filter, Point } from 'pixi.js';
+import { useShockwave } from '@/ui/composables/use-shockwave';
+import { GAME_EVENTS } from '@game/engine/src/game/game.events';
+import { waitFor } from '@game/shared';
 
 const { unit } = defineProps<{
   unit: UnitViewModel;
@@ -47,6 +54,62 @@ const isInAoe = computed(() => {
   const aoe = card.getAoe();
   return aoe.units.some(u => u.equals(unit));
 });
+
+const exhaustedfilter = computed(() => {
+  if (unit.isExhausted) {
+    return new AdjustmentFilter({ saturation: 0 });
+  }
+  return null;
+});
+
+const isEvolving = ref(false);
+const evolutionFilter = new AdjustmentFilter({ brightness: 1 });
+useBattleEvent(GAME_EVENTS.UNIT_BEFORE_EVOLVE_HERO, async event => {
+  if (event.unit.id === unit.id) {
+    isEvolving.value = true;
+    await gsap.to(evolutionFilter, {
+      brightness: 5,
+      gamma: 2,
+      duration: 0.3,
+      ease: Power2.easeIn
+    });
+    await waitFor(300);
+    unit.updateSprite(event.newCard.spriteId);
+    await gsap.to(evolutionFilter, {
+      brightness: 1,
+      gamma: 1,
+      duration: 0.3,
+      ease: Power2.easeIn
+    });
+    isEvolving.value = false;
+  }
+});
+
+const outlineFilter = computed(() => {
+  if (ui.selectedUnit?.equals(unit)) {
+    return new OutlineFilter(outlineThickness.value, 0xffffff);
+  }
+  if (ui.highlightedUnit?.equals(unit)) {
+    return new OutlineFilter(
+      outlineThickness.value,
+      ui.highlightedUnit.playerId === player.value.id ? 0x00aaff : 0xff0000
+    );
+  }
+  return null;
+});
+const filters = computed(() => {
+  const filters: Filter[] = [];
+  if (isEvolving.value) {
+    filters.push(evolutionFilter);
+  }
+  if (exhaustedfilter.value) {
+    filters.push(exhaustedfilter.value);
+  }
+  if (outlineFilter.value) {
+    filters.push(outlineFilter.value);
+  }
+  return filters;
+});
 </script>
 
 <template>
@@ -55,6 +118,7 @@ const isInAoe = computed(() => {
     :texture="textures[0]"
     event-mode="none"
     :anchor="0.5"
+    :filters="filters"
     :ref="
       (sprite: any) => {
         if (sprite) {
@@ -62,22 +126,5 @@ const isInAoe = computed(() => {
         }
       }
     "
-  >
-    <adjustment-filter v-if="unit.isExhausted" :saturation="0" />
-    <!-- The adjustment filter on a Sprite2d seems to not behave well then are other filters -->
-    <template v-else>
-      <outline-filter
-        v-if="ui.selectedUnit?.equals(unit)"
-        :thickness="outlineThickness"
-        :color="0xffffff"
-      />
-      <outline-filter
-        v-else-if="ui.highlightedUnit?.equals(unit)"
-        :thickness="outlineThickness"
-        :color="
-          ui.highlightedUnit?.playerId === player.id ? 0x00aaff : 0xff0000
-        "
-      />
-    </template>
-  </sprite-2d>
+  ></sprite-2d>
 </template>

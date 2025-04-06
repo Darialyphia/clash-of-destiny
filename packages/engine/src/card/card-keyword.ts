@@ -38,6 +38,12 @@ export const KEYWORDS = {
     name: 'Provoked',
     description: 'Provoked - cannot move and must attack Provoker first.',
     aliases: []
+  },
+  LASTING_DESTINY: {
+    id: 'lasting-destiny',
+    name: 'Lasting Destiny',
+    description: 'You can banish this card from your discard pile to gain 1 Destiny.',
+    aliases: []
   }
 } as const satisfies Record<string, Keyword>;
 

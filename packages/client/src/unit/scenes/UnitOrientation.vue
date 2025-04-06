@@ -32,16 +32,19 @@ useBattleEvent(GAME_EVENTS.UNIT_BEFORE_RECEIVE_DAMAGE, async e => {
   await waitFor(duration);
 });
 
-// useVFXEvent('SHAKE_UNIT', async params => {
-//   if (!params.unit.equals(unit.getUnit())) return;
+useBattleEvent(GAME_EVENTS.UNIT_BEFORE_EVOLVE_HERO, async e => {
+  if (e.unit.id !== unit.id) return;
+  const duration = 1200;
 
-//   shaker.trigger({
-//     isBidirectional: params.isBidirectional,
-//     shakeAmount: params.amplitude,
-//     shakeDelay: 35,
-//     shakeCountMax: Math.round(params.duration / 35)
-//   });
-// });
+  shaker.trigger({
+    isBidirectional: false,
+    shakeAmount: 10,
+    shakeDelay: 35,
+    shakeCountMax: Math.round(duration / 25)
+  });
+
+  await waitFor(duration);
+});
 
 useBattleEvent(GAME_EVENTS.UNIT_BEFORE_DESTROY, async e => {
   if (e.unit.id !== unit.id) return;

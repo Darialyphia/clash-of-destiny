@@ -178,6 +178,12 @@ export class Unit
     this.combat.on(COMBAT_EVENTS.AFTER_ATTACK, e =>
       this.emitter.emit(UNIT_EVENTS.AFTER_ATTACK, new UnitAttackEvent(e.data))
     );
+    this.combat.on(COMBAT_EVENTS.BEFORE_COUNTERATTACK, e =>
+      this.emitter.emit(UNIT_EVENTS.BEFORE_COUNTERATTACK, new UnitAttackEvent(e.data))
+    );
+    this.combat.on(COMBAT_EVENTS.AFTER_COUNTERATTACK, e =>
+      this.emitter.emit(UNIT_EVENTS.AFTER_COUNTERATTACK, new UnitAttackEvent(e.data))
+    );
     this.combat.on(COMBAT_EVENTS.BEFORE_DEAL_DAMAGE, e =>
       this.emitter.emit(UNIT_EVENTS.BEFORE_DEAL_DAMAGE, new UnitDealDamageEvent(e.data))
     );

@@ -14,6 +14,7 @@ const ui = useBattleUiStore();
     :y="20"
     :ref="
       (container: any) => {
+        if (!container) return;
         ui.assignLayer(container, 'ui');
         container.proj.affine = AFFINE.AXIS_X;
       }

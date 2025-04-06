@@ -10,7 +10,7 @@ const grass = (obstacles: string[] = []): CellBlueprint => ({
 
 export const map1v1: MapBlueprint = {
   id: '1v1',
-  cols: 9,
+  cols: 7,
   rows: 5,
   boundaries: {
     topLeft: { x: 0, y: 0 },
@@ -20,11 +20,11 @@ export const map1v1: MapBlueprint = {
   },
   // prettier-ignore
   cells: [
-    grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(),
-    grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(),
-    grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(),
-    grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(),
-    grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(),
+    grass(), grass(), grass(), grass(), grass(), grass(), grass(), 
+    grass(), grass(), grass(), grass(), grass(), grass(), grass(), 
+    grass(), grass(), grass(), grass(), grass(), grass(), grass(), 
+    grass(), grass(), grass(), grass(), grass(), grass(), grass(), 
+    grass(), grass(), grass(), grass(), grass(), grass(), grass(), 
   ],
-  shrinePositions: [new Vec2(0, 2), new Vec2(8, 2)]
+  shrinePositions: [new Vec2(0, 2), new Vec2(6, 2)]
 };

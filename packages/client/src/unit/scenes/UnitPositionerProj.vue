@@ -37,7 +37,6 @@ useBattleEvent(GAME_EVENTS.UNIT_AFTER_MOVE, async e => {
 
 const attackAnimation = async (e: { unit: SerializedUnit; target: Point }) => {
   if (!unit.equals(e.unit)) return;
-
   const start = e.unit.position;
   const end = e.target;
   const impactPoint = {

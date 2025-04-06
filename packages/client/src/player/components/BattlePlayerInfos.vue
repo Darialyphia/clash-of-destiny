@@ -40,13 +40,42 @@ const userPlayer = useUserPlayer();
   >
     <div>
       <div class="name">{{ player.name }}</div>
-      <div>HP: {{ player.currentHp }} / {{ player.maxHp }}</div>
-      <div>Mana: {{ player.mana }}</div>
-      <div>Destiny: {{ player.destiny }}</div>
-      <div>Affinities: {{ player.unlockedAffinities.join(', ') }}</div>
+      <div class="indicators">
+        <UiSimpleTooltip>
+          <template #trigger>
+            <div>
+              {{ player.currentHp }}
+            </div>
+          </template>
+          Health Points
+        </UiSimpleTooltip>
+        <div>
+          <UiSimpleTooltip>
+            <template #trigger>
+              <div>
+                {{ player.mana }}
+              </div>
+            </template>
+            Mana
+          </UiSimpleTooltip>
+        </div>
+        <div>
+          <UiSimpleTooltip>
+            <template #trigger>
+              <div>
+                {{ player.destiny }}
+              </div>
+            </template>
+            Destiny
+          </UiSimpleTooltip>
+        </div>
+      </div>
     </div>
 
-    <div class="flex gap-2 pointer-events-auto">
+    <div
+      class="flex pointer-events-auto"
+      :class="!player.equals(turnPlayer) && 'flex-row-reverse'"
+    >
       <UiSimpleTooltip>
         <template #trigger>
           <button
@@ -112,6 +141,7 @@ const userPlayer = useUserPlayer();
   display: flex;
   gap: var(--size-6);
   flex-direction: column;
+  margin-inline: var(--size-11);
   --pixel-scale: 2;
 
   &.is-active .name {
@@ -159,5 +189,38 @@ const userPlayer = useUserPlayer();
   place-content: center;
   font-size: 22px;
   font-family: 'NotJamSlab11', monospace;
+}
+
+.indicators {
+  display: flex;
+  gap: var(--size-6);
+  font-size: var(--font-size-5);
+  font-weight: var(--font-weight-7);
+  color: var(--white-1);
+  -webkit-text-stroke: 4px black;
+  paint-order: stroke fill;
+  pointer-events: auto;
+  --pixel-scale: 2;
+
+  > div {
+    display: grid;
+    place-content: center;
+    width: calc(32px * var(--pixel-scale));
+    height: calc(40px * var(--pixel-scale));
+    padding-bottom: 16px;
+
+    &:nth-of-type(1) {
+      background: url('/assets/icons/player-infos-hp.png') no-repeat center;
+      background-size: cover;
+    }
+    &:nth-of-type(2) {
+      background: url('/assets/icons/player-infos-mana.png') no-repeat center;
+      background-size: cover;
+    }
+    &:nth-of-type(3) {
+      background: url('/assets/icons/player-infos-destiny.png') no-repeat center;
+      background-size: cover;
+    }
+  }
 }
 </style>

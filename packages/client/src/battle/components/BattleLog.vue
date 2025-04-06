@@ -187,6 +187,15 @@ useBattleEvent(
     ]);
   }
 );
+useBattleEvent(GAME_EVENTS.UNIT_AFTER_DESTROY, async event => {
+  events.value.push([
+    {
+      kind: 'text',
+      text: `${event.unit.name} was destroyed.`
+    }
+  ]);
+});
+
 const isCollapsed = ref(true);
 
 const listEl = ref<HTMLElement>();

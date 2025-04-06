@@ -313,11 +313,11 @@ const affinityGemBg = computed(() => {
 }
 
 .description {
-  width: calc(120px * var(--pixel-scale));
-  height: calc(62px * var(--pixel-scale));
+  width: calc(116px * var(--pixel-scale));
+  height: calc(60px * var(--pixel-scale));
   position: absolute;
-  top: calc(145px * var(--pixel-scale));
-  left: calc(20px * var(--pixel-scale));
+  top: calc(147px * var(--pixel-scale));
+  left: calc(24px * var(--pixel-scale));
   font-size: 14px;
 }
 </style>

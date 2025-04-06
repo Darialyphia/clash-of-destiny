@@ -34,6 +34,7 @@ export type SerializedUnitCard = SerializedCard & {
     units: string[];
   } | null;
   range: string[] | null;
+  spriteId: string;
 };
 export type UnitCardEventMap = CardEventMap;
 export type UnitCardInterceptors = CardInterceptors & {
@@ -227,6 +228,7 @@ export abstract class UnitCard<
       affinity: this.blueprint.affinity,
       blueprintId: this.blueprint.id,
       iconId: this.blueprint.cardIconId,
+      spriteId: this.blueprint.spriteId,
       kind: this.blueprint.kind,
       setId: this.blueprint.setId,
       name: this.blueprint.name,

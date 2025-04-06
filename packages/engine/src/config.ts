@@ -58,7 +58,7 @@ export const defaultConfig: Config = {
 
   MAX_RESOURCE_ACTIONS_PER_TURN: 1,
 
-  UNIT_MOVEMENT_REACH: 2,
+  UNIT_MOVEMENT_REACH: 1,
 
   DRAW_RESOURCE_ACTION_COST: 1,
 

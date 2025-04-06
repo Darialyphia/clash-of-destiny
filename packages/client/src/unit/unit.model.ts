@@ -89,6 +89,10 @@ export class UnitViewModel {
     return this.getCard().unitKind === UNIT_KINDS.MINION;
   }
 
+  updateSprite(spriteId: string) {
+    this.data.spriteId = spriteId;
+  }
+
   getPlayer() {
     return this.entityDictionary[this.data.playerId] as PlayerViewModel;
   }

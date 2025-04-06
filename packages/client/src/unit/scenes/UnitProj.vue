@@ -26,7 +26,7 @@ const isSpawnAnimationDone = ref(false);
         <UnitSpriteProj :unit="unit" />
       </UnitOrientationProj>
     </UnitSpawnAnimation>
-    <!-- <UnitVFX :unit="unit" /> -->
+    <UnitVFX :unit="unit" />
 
     <AlphaTransition
       :duration="{ enter: 200, leave: 200 }"

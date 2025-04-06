@@ -370,6 +370,32 @@
         },
         {
           "alias": [
+            "icon-keyword-provoke"
+          ],
+          "src": [
+            "/assets/icons/keyword-provoke.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-provoked"
+          ],
+          "src": [
+            "/assets/icons/keyword-provoked.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-keyword-rage"
           ],
           "src": [
@@ -531,6 +557,45 @@
           ],
           "src": [
             "/assets/icons/placeholder.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-player-infos-destiny"
+          ],
+          "src": [
+            "/assets/icons/player-infos-destiny.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-player-infos-hp"
+          ],
+          "src": [
+            "/assets/icons/player-infos-hp.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-player-infos-mana"
+          ],
+          "src": [
+            "/assets/icons/player-infos-mana.png"
           ],
           "data": {
             "tags": {

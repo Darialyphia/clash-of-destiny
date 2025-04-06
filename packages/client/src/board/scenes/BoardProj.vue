@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import {
+  useBattleEvent,
   useCells,
   useGameState,
   usePlayers,
   useUnits
 } from '@/battle/stores/battle.store';
-import { Sprite, Texture } from 'pixi.js';
+import { Point, Sprite, Texture } from 'pixi.js';
 import { onTick, useApplication } from 'vue3-pixi';
 import { Container2d, TRANSFORM_STEP } from 'pixi-projection';
 import BoardCellProj from './BoardCellProj.vue';
@@ -13,6 +14,8 @@ import UnitProj from '@/unit/scenes/UnitProj.vue';
 import Deck from '@/card/scenes/Deck.vue';
 import { config } from '@/utils/config';
 import { useWindowSize } from '@vueuse/core';
+import { useShockwave } from '@/ui/composables/use-shockwave';
+import { GAME_EVENTS } from '@game/engine/src/game/game.events';
 
 const cells = useCells();
 const units = useUnits();
@@ -54,6 +57,23 @@ const boardWidth =
 const { width, height } = useWindowSize();
 const offsetX = computed(() => {
   return (width.value - boardWidth) / 2;
+});
+
+const shockwave = useShockwave(container);
+useBattleEvent(GAME_EVENTS.UNIT_BEFORE_EVOLVE_HERO, async e => {
+  const viewModel = units.value.find(u => u.id === e.unit.id);
+  if (!viewModel) return;
+
+  await shockwave.trigger({
+    duration: 700,
+    radius: 1000,
+    speed: 600,
+    wavelength: 150,
+    offset: new Point(
+      viewModel.position.x * config.TILE_SIZE_PROJ.x + offsetX.value / 2,
+      viewModel.position.y * config.TILE_SIZE_PROJ.y + 100
+    )
+  });
 });
 </script>
 
