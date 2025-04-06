@@ -133,7 +133,7 @@ export class Artifact
       isExhausted: this.isExhausted,
       abilities: this.card.abilities.map(ability => ({
         label: ability.label,
-        canUse: this.canUseAbiliy(this.card.abilities.indexOf(ability))
+        canUse: this.canUseAbiliy(ability.id)
       }))
     };
   }
@@ -239,8 +239,8 @@ export class Artifact
     this.emitter.emit(ARTIFACT_EVENTS.AFTER_WAKE_UP, new ArtifactWakeUpEvent({}));
   }
 
-  canUseAbiliy(index: number) {
-    const ability = this.card.abilities[index];
+  canUseAbiliy(id: string) {
+    const ability = this.card.abilities.find(ability => ability.label === id);
     assert(isDefined(ability), new ArtifactAbilityNotFoundError());
 
     return this.interceptors.canUseAbility.getValue(
@@ -249,8 +249,8 @@ export class Artifact
     );
   }
 
-  useAbility(index: number) {
-    const ability = this.card.abilities[index];
+  useAbility(id: string) {
+    const ability = this.card.abilities.find(ability => ability.label === id);
     assert(isDefined(ability), new ArtifactAbilityNotFoundError());
 
     const followup = ability.getFollowup(this.game, this.card);

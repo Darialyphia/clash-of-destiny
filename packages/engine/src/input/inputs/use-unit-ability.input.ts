@@ -11,7 +11,7 @@ import {
 
 const schema = defaultInputSchema.extend({
   unitId: z.string(),
-  index: z.number()
+  abilityId: z.string()
 });
 
 export class UseUnitAbilityInput extends Input<typeof schema> {
@@ -34,8 +34,8 @@ export class UseUnitAbilityInput extends Input<typeof schema> {
     assert(isDefined(this.unit), new UnknownUnitError(this.payload.unitId));
     assert(this.unit.player.equals(this.player), new UnitNotOwnedError());
 
-    assert(this.unit.canUseAbiliy(this.payload.index), new IllegalAbilityError());
+    assert(this.unit.canUseAbiliy(this.payload.abilityId), new IllegalAbilityError());
 
-    this.unit.useAbility(this.payload.index);
+    this.unit.useAbility(this.payload.abilityId);
   }
 }

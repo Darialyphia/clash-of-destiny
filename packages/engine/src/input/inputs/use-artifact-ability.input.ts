@@ -10,7 +10,7 @@ import {
 
 const schema = defaultInputSchema.extend({
   artifactId: z.string(),
-  index: z.number()
+  abilityId: z.string()
 });
 
 export class UseArtifactAbilityInput extends Input<typeof schema> {
@@ -32,8 +32,8 @@ export class UseArtifactAbilityInput extends Input<typeof schema> {
 
     assert(isDefined(this.artifact), new UnknownArtifactError(this.payload.artifactId));
 
-    assert(this.artifact.canUseAbiliy(this.payload.index), new IllegalAbilityError());
+    assert(this.artifact.canUseAbiliy(this.payload.abilityId), new IllegalAbilityError());
 
-    this.artifact.useAbility(this.payload.index);
+    this.artifact.useAbility(this.payload.abilityId);
   }
 }

@@ -146,7 +146,7 @@ Unless specified otherwise on the card, a minion must be summoned on a tile adja
 
 #### Summoning sickness
 
-There is not "summoning sickness" in this game: minions can move attack or use abilties the turn they are summoned. They cannot however, attack the enemy shrine or Hero the turn they are summoned, unless specified otherwise on the card.
+There is not "summoning sickness" in this game: minions can move attack or use abilties the turn they are summoned.
 
 #### Stats
 

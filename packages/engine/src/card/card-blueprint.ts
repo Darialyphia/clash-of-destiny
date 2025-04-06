@@ -46,6 +46,7 @@ export type DestinyDeckCardBlueprint = CardBlueprintBase & {
 };
 
 export type Ability<T extends AnyCard> = {
+  id: string;
   manaCost: number;
   shouldExhaust: boolean;
   staticDescription: string;

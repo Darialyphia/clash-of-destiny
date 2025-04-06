@@ -159,7 +159,7 @@ export class Unit
       modifiers: this.modifiers.map(modifier => modifier.id),
       abilities: this._card.abilities.map(ability => ({
         label: ability.label,
-        canUse: this.canUseAbiliy(this._card.abilities.indexOf(ability as any))
+        canUse: this.canUseAbiliy(ability.id)
       })),
       isExhausted: this.isExhausted
     };
@@ -656,8 +656,10 @@ export class Unit
     return () => this.removeModifier(modifier);
   }
 
-  canUseAbiliy(index: number) {
-    const ability = this._card.abilities[index] as Ability<this['card']>;
+  canUseAbiliy(id: string) {
+    const ability = this._card.abilities.find(ability => ability.label === id) as Ability<
+      this['card']
+    >;
     assert(isDefined(ability), new UnitAbilityNotFoundError());
 
     return this.interceptors.canUseAbility.getValue(
@@ -666,8 +668,10 @@ export class Unit
     );
   }
 
-  useAbility(index: number) {
-    const ability = this._card.abilities[index] as Ability<this['card']>;
+  useAbility(id: string) {
+    const ability = this._card.abilities.find(ability => ability.label === id) as Ability<
+      this['card']
+    >;
     assert(isDefined(ability), new UnitAbilityNotFoundError());
 
     const followup = ability.getFollowup(this.game, this._card);
