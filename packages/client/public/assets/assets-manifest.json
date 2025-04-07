@@ -605,6 +605,19 @@
         },
         {
           "alias": [
+            "icon-spell-spark"
+          ],
+          "src": [
+            "/assets/icons/spell-spark.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-unit-acolyte"
           ],
           "src": [
@@ -1067,32 +1080,6 @@
         },
         {
           "alias": [
-            "card-bg-creation.png"
-          ],
-          "src": [
-            "/assets/ui/card-bg-creation.png"
-          ],
-          "data": {
-            "tags": {
-              "m": true
-            }
-          }
-        },
-        {
-          "alias": [
-            "card-bg-destruction.png"
-          ],
-          "src": [
-            "/assets/ui/card-bg-destruction.png"
-          ],
-          "data": {
-            "tags": {
-              "m": true
-            }
-          }
-        },
-        {
-          "alias": [
             "card-bg-earth.png"
           ],
           "src": [
@@ -1119,6 +1106,32 @@
         },
         {
           "alias": [
+            "card-bg-genesis.png"
+          ],
+          "src": [
+            "/assets/ui/card-bg-genesis.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "card-bg-harmony.png"
+          ],
+          "src": [
+            "/assets/ui/card-bg-harmony.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "card-bg-normal.png"
           ],
           "src": [
@@ -1132,23 +1145,10 @@
         },
         {
           "alias": [
-            "card-bg-oblivion.png"
+            "card-bg-void.png"
           ],
           "src": [
-            "/assets/ui/card-bg-oblivion.png"
-          ],
-          "data": {
-            "tags": {
-              "m": true
-            }
-          }
-        },
-        {
-          "alias": [
-            "card-bg-order.png"
-          ],
-          "src": [
-            "/assets/ui/card-bg-order.png"
+            "/assets/ui/card-bg-void.png"
           ],
           "data": {
             "tags": {
@@ -1162,6 +1162,19 @@
           ],
           "src": [
             "/assets/ui/card-bg-water.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "card-bg-wrath.png"
+          ],
+          "src": [
+            "/assets/ui/card-bg-wrath.png"
           ],
           "data": {
             "tags": {
@@ -1587,32 +1600,6 @@
         },
         {
           "alias": [
-            "gem-creation.png"
-          ],
-          "src": [
-            "/assets/ui/gem-creation.png"
-          ],
-          "data": {
-            "tags": {
-              "m": true
-            }
-          }
-        },
-        {
-          "alias": [
-            "gem-destruction.png"
-          ],
-          "src": [
-            "/assets/ui/gem-destruction.png"
-          ],
-          "data": {
-            "tags": {
-              "m": true
-            }
-          }
-        },
-        {
-          "alias": [
             "gem-earth.png"
           ],
           "src": [
@@ -1630,6 +1617,32 @@
           ],
           "src": [
             "/assets/ui/gem-fire.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "gem-genesis.png"
+          ],
+          "src": [
+            "/assets/ui/gem-genesis.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "gem-hamony.png"
+          ],
+          "src": [
+            "/assets/ui/gem-hamony.png"
           ],
           "data": {
             "tags": {
@@ -1678,10 +1691,36 @@
         },
         {
           "alias": [
+            "gem-void.png"
+          ],
+          "src": [
+            "/assets/ui/gem-void.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "gem-water.png"
           ],
           "src": [
             "/assets/ui/gem-water.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "gem-wrath.png"
+          ],
+          "src": [
+            "/assets/ui/gem-wrath.png"
           ],
           "data": {
             "tags": {

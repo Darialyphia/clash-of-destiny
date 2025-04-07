@@ -22,7 +22,7 @@ The board is of 9 X 5 dimensions with square tiles. The player's Shrines are pla
 
 ## Resources
 
-The game uses 3 types or resources used to play cards and activate abilities: Mana, Destiny and Elements
+The game uses 3 types or resources used to play cards and activate abilities: Mana, Destiny and Affinities
 
 ### Mana
 
@@ -32,12 +32,12 @@ Mana is a resource that is used to play cards from the Main Deck. It is earned a
 
 Destiny is a resource that is used to play cards from the Destiny Deck. Unlike mana, Players do not gain Destiny automatically at the start of their turn. Instead, they may chose to use their *Resource Action* to gain Destiny. In addition, some card effects may add or remove a player's Destiny.
 
-### Elements
+### Affinities
 
-Elements that a player unlocks determines which cards they are able to play. They start the game with the element associated with their Shrine. However, as their Hero evolves, they will be able to unlock new elements based on the hero evolution.
-The 4 basic elements are: Fire, Water, Air and Earth.
-The 5 advanced elements are : Life, Death, Order, Chaos and Arcane.
-There is also a Normal element that can be used regardless of which elements are unlocked.
+Affinities that a player unlocks determines which cards they are able to play. They start the game with the affinity associated with their Shrine. However, as their Hero evolves, they will be able to unlock new affinities based on the hero evolution.
+The 4 basic affinities are: Fire, Water, Air and Earth.
+The 5 advanced affinities are : Creation, Destruction, Order, Oblivion and Arcane.
+There is also a Normal affinities that can be used regardless of which affinities are unlocked.
 
 ### Resource action
 
@@ -108,7 +108,7 @@ For all intents and purposes, the Shrine a player starts the game with is consid
 
 #### Level up
 
-When playing a base level 2 or 3 hero, the previous level card are not destroyed or banished. Instead, they are placed on top of each other, to make it easier to track lineage and unlocked elements.
+When playing a base level 2 or 3 hero, the previous level card are not destroyed or banished. Instead, they are placed on top of each other, to make it easier to track lineage and unlocked affinities.
 
 Leveling up a hero will not change its **exhaustion status** nor will it remove the damage they have suffered so far.
 
@@ -126,9 +126,9 @@ If the player has a Shrine on the board instead of a Hero, they can play any lev
 
 There are no deckbuilding restrictions regarding which, or how many, heroes a player can put in their Destiny Deck. However, once they played a base level hero, they might lock themselves out from using other heroes due to lineage / level restrictions.
 
-#### Elements
+#### Affinities
 
-Most heroes of base level 3 will unlock one of the five advanced elements for its player.
+Most heroes of base level 3 will unlock one of the five advanced affinities for its player.
 
 #### Stats
 
@@ -208,7 +208,7 @@ Class Bonuses allow you to create synergies between your Hero and your deck, rew
 ## Units
 
 A **Unit** represents either a Creature, Shrine or Hero on the board. During its owner's turn, a unit can
-- Move up to 2 tiles. Moving diagonally counts as 2 spaces.
+- Move 1 tile. Units cannot move diagonally.
 - Attack another unit.
 - Use an ability.
 

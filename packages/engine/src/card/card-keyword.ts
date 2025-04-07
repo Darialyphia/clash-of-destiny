@@ -8,29 +8,11 @@ export type Keyword = {
 };
 
 export const KEYWORDS = {
-  ROOTED: {
-    id: 'rooted',
-    name: 'Rooted',
-    description: 'Cannot move. Lose 1 stack at the end of its turn.',
-    aliases: []
-  },
-  SILENCED: {
-    id: 'silenced',
-    name: 'Silenced',
-    description: 'Cannot use Ability cards. Lose 1 stack at the end of its turn.',
-    aliases: []
-  },
-  DISARMED: {
-    id: 'disarmed',
-    name: 'Disarmed',
-    description: 'Cannot attack. Lose 1 stack at the end of its turn.',
-    aliases: []
-  },
   PROVOKE: {
     id: 'provoke',
     name: 'Provoke',
     description:
-      'Stops enemy minions and general from moving. They must attack this first.',
+      'Stops nearby enemy minions and general from moving. They must attack this first.',
     aliases: ['provoke']
   },
   PROVOKED: {
