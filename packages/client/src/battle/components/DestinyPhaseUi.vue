@@ -10,8 +10,12 @@ import { VisuallyHidden } from 'reka-ui';
 import FancyButton from '@/ui/components/FancyButton.vue';
 import { isDefined } from '@game/shared';
 import { useBattleUiStore } from '../stores/battle-ui.store';
-import { useResizeObserver } from '@vueuse/core';
-import { throttle } from 'lodash-es';
+import {
+  HoverCardContent,
+  HoverCardRoot,
+  HoverCardTrigger,
+  HoverCardPortal
+} from 'reka-ui';
 import BattleCard from '@/card/components/BattleCard.vue';
 
 const { state } = useGameState();
@@ -66,39 +70,6 @@ const play = () => {
   ui.cardPlayIntent = deck.value[selectedCardIndex.value];
   selectedCardIndex.value = null;
 };
-
-const cardSpacing = ref(0);
-const root = useTemplateRef('root');
-
-const computeMargin = () => {
-  if (!root.value) return 0;
-  if (!deck.value.length) return 0;
-
-  const allowedWidth = root.value.clientWidth;
-  const totalWidth = [...root.value.children].reduce((total, child) => {
-    return total + child.clientWidth;
-  }, 0);
-
-  const excess = totalWidth - allowedWidth;
-
-  return Math.min(-excess / (deck.value.length - 1), 0);
-};
-
-watch(
-  [root, computed(() => player.value.handSize)],
-  async () => {
-    await nextTick();
-    cardSpacing.value = computeMargin();
-  },
-  { immediate: true }
-);
-
-useResizeObserver(
-  root,
-  throttle(() => {
-    cardSpacing.value = computeMargin();
-  }, 50)
-);
 </script>
 
 <template>
@@ -108,43 +79,56 @@ useResizeObserver(
     description="You may choose to play one Destiny card"
     :closable="false"
     :style="{
-      '--ui-modal-size': 'var(--size-lg)'
+      '--ui-modal-size': 'var(--size-xl)'
     }"
   >
-    <h2>You may choose to play one Destiny card</h2>
+    <div class="content">
+      <h2>You may choose to play one Destiny card</h2>
 
-    <div
-      class="card-list"
-      :class="{ hidden: deck.length === 0 }"
-      ref="root"
-      :style="{ '--card-spacing': cardSpacing }"
-    >
-      <label v-for="(card, index) in deck" :key="card.id">
-        <BattleCard :card="card" />
-        <VisuallyHidden>
-          <input
-            type="radio"
-            name="destiny-card"
-            :value="index"
-            v-model="selectedCardIndex"
-            :disabled="card.destinyCost! > player.destiny"
-          />
-        </VisuallyHidden>
-      </label>
+      <div class="card-list" :class="{ hidden: deck.length === 0 }" ref="root">
+        <label v-for="(card, index) in deck" :key="card.id">
+          <HoverCardRoot :open-delay="300" :close-delay="0">
+            <HoverCardTrigger>
+              <BattleCard :card="card" class="card-miniature" />
+            </HoverCardTrigger>
+
+            <HoverCardPortal to="#card-portal">
+              <HoverCardContent side="right" :side-offset="20">
+                <BattleCard :card="card" class="hover-card" />
+              </HoverCardContent>
+            </HoverCardPortal>
+          </HoverCardRoot>
+          <VisuallyHidden>
+            <input
+              type="radio"
+              name="destiny-card"
+              :value="index"
+              v-model="selectedCardIndex"
+              :disabled="card.destinyCost! > player.destiny"
+            />
+          </VisuallyHidden>
+        </label>
+      </div>
+
+      <footer class="flex mt-7 gap-10 justify-center">
+        <FancyButton text="Skip" variant="error" @click="skip" />
+        <FancyButton
+          text="Play"
+          @click="play"
+          :disabled="selectedCardIndex === null"
+        />
+      </footer>
     </div>
-
-    <footer class="flex mt-7 gap-10 justify-center">
-      <FancyButton text="Skip" variant="error" @click="skip" />
-      <FancyButton
-        text="Play"
-        @click="play"
-        :disabled="selectedCardIndex === null"
-      />
-    </footer>
   </UiModal>
 </template>
 
 <style scoped lang="postcss">
+.content {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 80dvh;
+  overflow: hidden;
+}
 h2 {
   text-align: center;
   margin-bottom: var(--size-7);
@@ -152,30 +136,23 @@ h2 {
 }
 .card-list {
   display: flex;
-  gap: var(--size-2);
-
+  gap: var(--size-5);
+  flex-wrap: wrap;
+  overflow: auto;
   .hidden {
     opacity: 0;
   }
   > label {
     position: relative;
-    transition: transform 0.1s var(--ease-in-2);
-
-    &:hover {
-      z-index: 1;
-      transform: translateY(-10%);
-    }
-
-    &:hover ~ label {
-      transform: translateX(var(--size-5));
-    }
-
-    &:has(~ label:hover) {
-      transform: translateX(calc(-1 * var(--size-5)));
-    }
-
-    &:not(:last-child) {
-      margin-right: calc(1px * var(--card-spacing));
+    width: var(--card-width);
+    height: var(--card-height);
+    .card-miniature {
+      transform: scale(0.5);
+      transform-origin: top left;
+      transition: transform 0.2s var(--ease-2);
+      &:hover {
+        transform: scale(0.5) translateY(1rem);
+      }
     }
 
     &:has(input:checked) {

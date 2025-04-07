@@ -150,8 +150,10 @@ const userPlayer = useUserPlayer();
 }
 
 .name {
-  font-size: var(--font-size-4);
+  font-size: var(--font-size-5);
   font-weight: var(--font-weight-5);
+  -webkit-text-stroke: 4px black;
+  paint-order: stroke fill;
 }
 
 .discard-pile-toggle {
