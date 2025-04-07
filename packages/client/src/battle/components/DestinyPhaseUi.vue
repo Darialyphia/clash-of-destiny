@@ -79,7 +79,7 @@ const play = () => {
     description="You may choose to play one Destiny card"
     :closable="false"
     :style="{
-      '--ui-modal-size': 'var(--size-xl)'
+      '--ui-modal-size': 'var(--size-lg)'
     }"
   >
     <div class="content">

@@ -14,6 +14,7 @@ import PlayerActions from '@/player/components/PlayerActions.vue';
 import DestinyPhaseUi from './DestinyPhaseUi.vue';
 import BattlePlayerInfos from '@/player/components/BattlePlayerInfos.vue';
 import HighlightedUnit from './HighlightedUnit.vue';
+import EquipedArtifacts from './EquipedArtifacts.vue';
 
 const turnPlayer = useTurnPlayer();
 const ui = useBattleUiStore();
@@ -48,6 +49,13 @@ const { state } = useGameState();
       </div>
     </header>
 
+    <div class="flex justify-between mx-11">
+      <EquipedArtifacts
+        v-for="player in players"
+        :key="player.id"
+        :player="player"
+      />
+    </div>
     <PlayedCard />
     <PlayIntent />
     <TurnIndicator />

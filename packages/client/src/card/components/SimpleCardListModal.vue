@@ -42,7 +42,7 @@ const userPlayer = useUserPlayer();
     }"
   >
     <section>
-      <div class="simple-card-list-modal">
+      <div class="simple-card-list-modal" @click="isOpened = false">
         <h2>{{ description }}</h2>
         <div class="card-list">
           <HoverCardRoot
@@ -52,7 +52,7 @@ const userPlayer = useUserPlayer();
             :close-delay="0"
           >
             <HoverCardTrigger>
-              <BattleCard :card="card" class="card-miniature" />
+              <BattleCard :card="card" class="card-miniature" @click.stop />
             </HoverCardTrigger>
 
             <HoverCardPortal to="#hover-card">

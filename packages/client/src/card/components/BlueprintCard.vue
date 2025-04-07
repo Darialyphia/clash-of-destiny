@@ -21,7 +21,8 @@ const { blueprint } = defineProps<{ blueprint: CardBlueprint }>();
       hp: (blueprint as any).maxHp,
       spellpower: (blueprint as any).spellpower,
       level: (blueprint as any).level,
-      unitKind: (blueprint as any).unitKind
+      unitKind: (blueprint as any).unitKind,
+      durability: (blueprint as any).durability
     }"
   />
 </template>

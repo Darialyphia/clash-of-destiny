@@ -117,6 +117,7 @@ export class Artifact
 
     this.cleanups.push(
       this.player.hero.on(UNIT_EVENTS.AFTER_RECEIVE_DAMAGE, event => {
+        console.log(this.shouldLosedurabilityOnDamage(event.data.damage));
         if (this.shouldLosedurabilityOnDamage(event.data.damage)) {
           this.loseDurability(1);
         }
@@ -154,7 +155,7 @@ export class Artifact
 
   shouldLosedurabilityOnDamage(damage: Damage<any>) {
     return this.interceptors.shouldLosedurabilityOnDamage.getValue(
-      this.canLoseDurability && this.card.artifactKind === ARTIFACT_KINDS.ARMOR,
+      this.canLoseDurability,
       damage
     );
   }

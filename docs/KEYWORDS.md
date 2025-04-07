@@ -84,3 +84,10 @@ Note: Removed from play indicates that the card is removed from the game. It is 
 
 > This card is removed from play at the end of its owner's turn.
 
+### Commander
+
+> Minions can be summoned on spaces adjacent to this unit.
+
+### Ambush
+
+> This minion can be summoned on spaces adjacent to enemy minions.

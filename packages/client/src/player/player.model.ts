@@ -1,5 +1,6 @@
 import type { GameStateEntities } from '@/battle/stores/battle.store';
 import type { CardViewModel } from '@/card/card.model';
+import type { ArtifactViewModel } from '@/unit/artifact.model';
 import type { InputDispatcher } from '@game/engine/src/input/input-system';
 import type { SerializedPlayer } from '@game/engine/src/player/player.entity';
 
@@ -93,6 +94,12 @@ export class PlayerViewModel {
   getDestinyDeck() {
     return this.data.destinyDeck.map(cardId => {
       return this.entityDictionary[cardId] as CardViewModel;
+    });
+  }
+
+  getArtifacts() {
+    return this.data.artifacts.map(cardId => {
+      return this.entityDictionary[cardId] as ArtifactViewModel;
     });
   }
 

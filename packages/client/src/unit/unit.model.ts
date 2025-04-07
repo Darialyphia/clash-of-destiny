@@ -114,6 +114,7 @@ export class UnitViewModel {
   }
 
   getCell() {
+    if (this.isDead) return null;
     const id = pointToCellId(this.data.position);
     return this.entityDictionary[id] as CellViewModel;
   }

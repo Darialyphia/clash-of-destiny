@@ -3,14 +3,19 @@ import { RouterLink } from 'vue-router';
 import UiModal from '@/ui/components/UiModal.vue';
 import { useGameState, useUserPlayer } from '../stores/battle.store';
 import UiButton from '@/ui/components/UiButton.vue';
-import { GAME_PHASES } from '@game/engine/src/game/systems/game-phase.system';
+import { GAME_PHASES } from '@game/engine/src/game/game.enums';
 
 const { state } = useGameState();
 const player = useUserPlayer();
 </script>
 
 <template>
-  <UiModal :is-opened="state.phase === GAME_PHASES.END" :closable="false">
+  <UiModal
+    :is-opened="state.phase === GAME_PHASES.GAME_END"
+    :closable="false"
+    title="Game Over"
+    description="The game has ended."
+  >
     <div class="end-game-ui">
       <!-- <h2>{{ player.equals(state.winner!) ? 'VICTORY' : 'DEFEAT' }}</h2> -->
       <RouterLink :to="{ name: 'Home' }" custom v-slot="{ href, navigate }">

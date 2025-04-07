@@ -21,7 +21,8 @@ const { card } = defineProps<{ card: CardViewModel }>();
       hp: card.maxHp,
       spellpower: card.spellpower,
       level: card.level,
-      unitKind: card.unitKind
+      unitKind: card.unitKind,
+      durability: card.durability
     }"
   />
 </template>

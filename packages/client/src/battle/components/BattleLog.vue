@@ -81,7 +81,7 @@ useBattleEvent(GAME_EVENTS.UNIT_BEFORE_ATTACK, async event => {
     { kind: 'text', text: 'attacked' }
   ];
   const target = units.value.find(
-    u => u.getCell().id === pointToCellId(event.target)
+    u => u.getCell()?.id === pointToCellId(event.target)
   );
   if (target) {
     tokens.push({ kind: 'unit', unit: target });

@@ -175,6 +175,19 @@
       "assets": [
         {
           "alias": [
+            "icon-artifact-test"
+          ],
+          "src": [
+            "/assets/icons/artifact-test.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-keyword-ability-power-buff"
           ],
           "src": [

@@ -32,14 +32,11 @@ const session = new GameSession({
       destinyDeck: {
         cards: [
           'test-shrine',
-          'test-destiny-spell',
           'test-hero',
-          'test-destiny-spell',
-          'test-destiny-spell',
-          'test-destiny-spell',
-          'test-destiny-spell',
-          'test-destiny-spell',
-          'test-destiny-spell',
+          'test-destiny-artifact',
+          'test-destiny-artifact',
+          'test-destiny-artifact',
+          'test-destiny-artifact',
           'test-destiny-spell',
           'test-destiny-spell',
           'test-destiny-spell'
@@ -53,7 +50,17 @@ const session = new GameSession({
         cards: Array.from({ length: 40 }, () => 'test-minion')
       },
       destinyDeck: {
-        cards: ['test-shrine', 'test-destiny-spell', 'test-hero']
+        cards: [
+          'test-shrine',
+          'test-hero',
+          'test-destiny-artifact',
+          'test-destiny-artifact',
+          'test-destiny-artifact',
+          'test-destiny-artifact',
+          'test-destiny-spell',
+          'test-destiny-spell',
+          'test-destiny-spell'
+        ]
       }
     }
   ]

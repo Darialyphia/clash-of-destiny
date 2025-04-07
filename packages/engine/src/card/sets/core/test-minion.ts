@@ -21,9 +21,9 @@ export const testMinion: UnitBlueprint = {
   affinity: AFFINITIES.NORMAL,
   name: 'Test Minion',
   getDescription: () => {
-    return `@Provoke@, @Lasting Destiny@.`;
+    return `@Provoke@\n@Lasting Destiny@.`;
   },
-  staticDescription: `@Provoke@, @Lasting Destiny@.`,
+  staticDescription: `@Provoke@\n@Lasting Destiny@.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'unit-test-minion',
   spriteId: 'test-unit',

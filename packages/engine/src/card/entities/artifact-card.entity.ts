@@ -58,10 +58,6 @@ export class ArtifactCard extends Card<
     this.emitter.emit(CARD_EVENTS.AFTER_PLAY, new CardAfterPlayEvent({ targets: [] }));
   }
 
-  get manaCost() {
-    return 0;
-  }
-
   get durability() {
     return this.blueprint.durability;
   }
