@@ -11,7 +11,7 @@ const ui = useBattleUiStore();
 <template>
   <container-2d
     :x="-28"
-    :y="20"
+    :y="30"
     :ref="
       (container: any) => {
         if (!container) return;

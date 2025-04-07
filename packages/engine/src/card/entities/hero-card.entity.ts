@@ -49,6 +49,7 @@ export class HeroCard extends UnitCard<
       },
       options
     );
+    this.blueprint.onInit(this.game, this);
   }
 
   get baseLevel() {

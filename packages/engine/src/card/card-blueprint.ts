@@ -74,6 +74,7 @@ export type HeroBlueprint = {
   getDescription(game: Game, card: HeroCard): string;
   getFollowup(game: Game, card: HeroCard): Followup<HeroCard>;
   getAoe(game: Game, card: HeroCard, points: Point[]): AOEShape;
+  onInit(game: Game, card: HeroCard): void;
   onPlay(game: Game, card: HeroCard, affectedCells: Cell[], affectedUnits: Unit[]): void;
 };
 
@@ -85,6 +86,7 @@ export type ShrineBlueprint = {
   getDescription(game: Game, card: ShrineCard): string;
   getFollowup(game: Game, card: HeroCard): Followup<ShrineCard>;
   getAoe(game: Game, card: ShrineCard, points: Point[]): AOEShape;
+  onInit(game: Game, card: ShrineCard): void;
   onPlay(
     game: Game,
     card: ShrineCard,
@@ -101,6 +103,7 @@ export type MinionBlueprint = {
   getDescription(game: Game, card: MinionCard): string;
   getFollowup(game: Game, card: MinionCard): Followup<MinionCard>;
   getAoe(game: Game, card: MinionCard, points: Point[]): AOEShape;
+  onInit(game: Game, card: MinionCard): void;
   onPlay(
     game: Game,
     card: MinionCard,
@@ -125,6 +128,7 @@ export type SpellBlueprint = (MainDeckCardBlueprint | DestinyDeckCardBlueprint) 
   job: CardJob;
   getFollowup(game: Game, card: SpellCard): Followup<SpellCard>;
   getAoe(game: Game, card: SpellCard, points: Point[]): AOEShape;
+  onInit(game: Game, card: SpellCard): void;
   onPlay(game: Game, card: SpellCard, affectedCells: Cell[], affectedUnits: Unit[]): void;
 };
 
@@ -137,6 +141,7 @@ export type ArtifactBlueprint = (MainDeckCardBlueprint | DestinyDeckCardBlueprin
   job: CardJob;
   abilities: Array<Ability<ArtifactCard>>;
   getFollowup(game: Game, card: SpellCard): Followup<ArtifactCard>;
+  onInit(game: Game, card: ArtifactCard): void;
   onPlay(game: Game, card: ArtifactCard, artifact: Artifact): void;
 };
 
@@ -148,6 +153,7 @@ export type SecretBlueprint = (MainDeckCardBlueprint | DestinyDeckCardBlueprint)
   job: CardJob;
   getFollowup(game: Game, card: SecretCard): Followup<SecretCard>;
   getAoe(game: Game, card: SecretCard, points: Point[]): AOEShape;
+  onInit(game: Game, card: SecretCard): void;
   onPlay(
     game: Game,
     card: SecretCard,

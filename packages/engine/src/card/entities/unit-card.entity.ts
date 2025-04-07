@@ -134,6 +134,11 @@ export abstract class UnitCard<
     const [summonPosition] = points;
 
     this.unit = this.game.unitSystem.addUnit(this, summonPosition);
+    this.emitter.emit(
+      CARD_EVENTS.BEFORE_PLAY,
+      new CardBeforePlayEvent({ targets: points })
+    );
+
     const aoeShape = this.blueprint.getAoe(this.game, this as any, points);
     this.unit.addToBoard({
       affectedCells: aoeShape.getCells(points),
@@ -154,11 +159,6 @@ export abstract class UnitCard<
 
   protected playWithTargets(targets: SelectedTarget[]) {
     const points = targets.map(t => t.cell);
-
-    this.emitter.emit(
-      CARD_EVENTS.BEFORE_PLAY,
-      new CardBeforePlayEvent({ targets: points })
-    );
 
     this.addToBoard(points);
 
@@ -237,6 +237,7 @@ export abstract class UnitCard<
         id: ability.id,
         manaCost: ability.manaCost,
         label: ability.label,
+        text: ability.getDescription(this.game, this),
         canUse: this.canUseAbiliy(ability.id),
         isCardAbility: ability.isCardAbility
       }))

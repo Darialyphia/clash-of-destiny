@@ -27,7 +27,9 @@ const session = new GameSession({
       id: 'p1',
       name: 'Player 1',
       mainDeck: {
-        cards: Array.from({ length: 40 }, () => 'test-minion')
+        cards: Array.from({ length: 40 }, () =>
+          Math.random() > 0.5 ? 'stalwart-vanguard' : 'bubbly-slime'
+        )
       },
       destinyDeck: {
         cards: [
@@ -47,7 +49,9 @@ const session = new GameSession({
       id: 'p2',
       name: 'Player 2',
       mainDeck: {
-        cards: Array.from({ length: 40 }, () => 'test-minion')
+        cards: Array.from({ length: 40 }, () =>
+          Math.random() > 0.5 ? 'stalwart-vanguard' : 'bubbly-slime'
+        )
       },
       destinyDeck: {
         cards: [

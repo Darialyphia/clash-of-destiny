@@ -115,10 +115,7 @@ const filters = computed(() => {
 <template>
   <sprite-2d
     v-if="textures.length"
-    :texture="textures[0]"
-    event-mode="none"
-    :anchor="0.5"
-    :filters="filters"
+    texture="/assets/pedestals/pedestal-default.png"
     :ref="
       (sprite: any) => {
         if (sprite) {
@@ -126,5 +123,22 @@ const filters = computed(() => {
         }
       }
     "
-  ></sprite-2d>
+    event-mode="none"
+    :anchor="0.5"
+    :filters="filters"
+  />
+  <sprite-2d
+    v-if="textures.length"
+    :texture="textures[0]"
+    event-mode="none"
+    :anchor="0.5"
+    :ref="
+      (sprite: any) => {
+        if (sprite) {
+          (sprite as Sprite2d).proj.affine = AFFINE.AXIS_X;
+        }
+      }
+    "
+    :filters="filters"
+  />
 </template>

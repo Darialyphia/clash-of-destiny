@@ -34,6 +34,7 @@ export class MinionCard extends UnitCard<
       { ...makeUnitCardInterceptors(), canPlay: new Interceptable() },
       options
     );
+    this.blueprint.onInit(this.game, this);
   }
   canPlay(): boolean {
     return this.interceptors.canPlay.getValue(

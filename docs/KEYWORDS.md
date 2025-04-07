@@ -91,3 +91,11 @@ Note: Removed from play indicates that the card is removed from the game. It is 
 ### Ambush
 
 > This minion can be summoned on spaces adjacent to enemy minions.
+
+### Magic Ward
+
+> This card cannot be targeted or damaged by Spells.
+
+### Hero Ward
+
+> This card cannot be targeted or damaged by Heroes.

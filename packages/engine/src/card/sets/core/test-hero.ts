@@ -43,5 +43,6 @@ export const testHero: UnitBlueprint = {
   getAoe(game, card) {
     return new PointAOEShape(game, card.player, TARGETING_TYPE.UNIT);
   },
+  onInit() {},
   onPlay(game, card) {}
 };

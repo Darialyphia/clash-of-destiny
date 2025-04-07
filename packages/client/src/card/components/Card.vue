@@ -29,6 +29,7 @@ const { card } = defineProps<{
     hp?: number;
     spellpower?: number;
     durability?: number;
+    abilities?: string[];
   };
 }>();
 
@@ -69,7 +70,7 @@ const affinityGemBg = computed(() => {
   <div class="card" :class="card.kind" :data-flip-id="`card_${card.id}`">
     <div class="card-front">
       <div class="image" />
-      <div class="name dual-text" :data-text="card.name">
+      <div class="name" :data-text="card.name">
         {{ card.name }}
       </div>
       <div class="affinity-gem" />
@@ -118,6 +119,11 @@ const affinityGemBg = computed(() => {
       </div>
       <div class="description">
         <CardText :text="card.description" />
+        <CardText
+          v-for="ability in card.abilities"
+          :key="ability"
+          :text="ability"
+        />
       </div>
     </div>
     <div class="card-back" />
@@ -196,12 +202,13 @@ const affinityGemBg = computed(() => {
   text-align: center;
   text-wrap: pretty;
   position: absolute;
-  top: calc(96px * var(--pixel-scale));
+  top: calc(98px * var(--pixel-scale));
   left: 50%;
   transform: translateX(-50%);
   font-size: 18px;
-  font-family: 'NotJamSlab11', monospace;
   line-height: 1.1;
+  -webkit-text-stroke: 4px black;
+  paint-order: stroke fill;
 }
 
 .affinity-gem {

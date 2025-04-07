@@ -26,6 +26,12 @@ export const KEYWORDS = {
     name: 'Lasting Destiny',
     description: 'You can banish this card from your discard pile to gain 1 Destiny.',
     aliases: []
+  },
+  ON_ENTER: {
+    id: 'on-enter',
+    name: 'On Enter',
+    description: 'Does something when this card enters the board when played from hand..',
+    aliases: []
   }
 } as const satisfies Record<string, Keyword>;
 

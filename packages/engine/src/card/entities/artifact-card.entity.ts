@@ -1,4 +1,5 @@
 import type { Game } from '../../game/game';
+import type { Artifact } from '../../player/artifact.entity';
 import type { Player } from '../../player/player.entity';
 import { Interceptable } from '../../utils/interceptable';
 import type { ArtifactBlueprint } from '../card-blueprint';
@@ -32,6 +33,8 @@ export class ArtifactCard extends Card<
   ArtifactCardInterceptors,
   ArtifactBlueprint
 > {
+  artifact!: Artifact;
+
   constructor(game: Game, player: Player, options: CardOptions<ArtifactBlueprint>) {
     super(
       game,
@@ -39,6 +42,7 @@ export class ArtifactCard extends Card<
       { ...makeCardInterceptors(), canPlay: new Interceptable() },
       options
     );
+    this.blueprint.onInit(this.game, this);
   }
 
   canPlay(): boolean {
@@ -51,9 +55,9 @@ export class ArtifactCard extends Card<
   play() {
     this.emitter.emit(CARD_EVENTS.BEFORE_PLAY, new CardBeforePlayEvent({ targets: [] }));
 
-    const artifact = this.player.artifacts.equip(this);
+    this.artifact = this.player.artifacts.equip(this);
 
-    this.blueprint.onPlay(this.game, this, artifact);
+    this.blueprint.onPlay(this.game, this, this.artifact);
 
     this.emitter.emit(CARD_EVENTS.AFTER_PLAY, new CardAfterPlayEvent({ targets: [] }));
   }
@@ -89,6 +93,7 @@ export class ArtifactCard extends Card<
         id: ability.id,
         manaCost: ability.manaCost,
         label: ability.label,
+        text: ability.getDescription(this.game, this),
         canUse: this.canUseAbiliy(ability.id),
         isCardAbility: ability.isCardAbility
       }))

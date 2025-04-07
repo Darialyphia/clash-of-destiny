@@ -22,7 +22,8 @@ const { card } = defineProps<{ card: CardViewModel }>();
       spellpower: card.spellpower,
       level: card.level,
       unitKind: card.unitKind,
-      durability: card.durability
+      durability: card.durability,
+      abilities: card.abilities.map(a => a.text)
     }"
   />
 </template>

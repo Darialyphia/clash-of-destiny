@@ -57,6 +57,7 @@ export type SerializedCard = {
     id: string;
     manaCost: number;
     label: string;
+    text: string;
     canUse: boolean;
     isCardAbility: boolean;
   }>;

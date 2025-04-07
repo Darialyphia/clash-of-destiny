@@ -48,6 +48,7 @@ export class SecretCard extends Card<
       { ...makeCardInterceptors(), canPlay: new Interceptable() },
       options
     );
+    this.blueprint.onInit(this.game, this);
   }
 
   canPlay(): boolean {
@@ -164,6 +165,7 @@ export class SecretCard extends Card<
         id: ability.id,
         manaCost: ability.manaCost,
         label: ability.label,
+        text: ability.getDescription(this.game, this),
         canUse: this.canUseAbiliy(ability.id),
         isCardAbility: ability.isCardAbility
       }))

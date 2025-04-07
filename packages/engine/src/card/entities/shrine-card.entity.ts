@@ -34,6 +34,7 @@ export class ShrineCard extends UnitCard<
       { ...makeUnitCardInterceptors(), level: new Interceptable() },
       options
     );
+    this.blueprint.onInit(this.game, this);
   }
 
   get baseLevel() {

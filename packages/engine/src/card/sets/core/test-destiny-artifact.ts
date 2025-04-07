@@ -35,6 +35,7 @@ export const testDestinyArtifact: ArtifactBlueprint = {
   getFollowup: () => {
     return new NoFollowup();
   },
+  onInit() {},
   onPlay(game, card, artifact) {
     const buff = new Modifier('test-destiny-artifacg-buff', game, card, {
       stackable: true,

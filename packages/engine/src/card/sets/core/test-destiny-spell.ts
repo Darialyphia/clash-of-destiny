@@ -32,6 +32,7 @@ export const testDestiySpell: SpellBlueprint = {
   getAoe() {
     return new NoAOEShape();
   },
+  onInit() {},
   onPlay(game, card) {
     card.player.cards.draw(1);
   }

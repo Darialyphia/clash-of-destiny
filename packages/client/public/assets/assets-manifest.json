@@ -696,6 +696,19 @@
         },
         {
           "alias": [
+            "icon-unit-stalwart-vanguard"
+          ],
+          "src": [
+            "/assets/icons/unit-stalwart-vanguard.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-unit-test-minion"
           ],
           "src": [
@@ -759,6 +772,24 @@
           ],
           "src": [
             "/assets/obstacles/incoming-experience-globe.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "pedestals",
+      "assets": [
+        {
+          "alias": [
+            "default.png"
+          ],
+          "src": [
+            "/assets/pedestals/default.png"
           ],
           "data": {
             "tags": {
@@ -915,6 +946,19 @@
           ],
           "src": [
             "/assets/ui/ap.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "artifact-durability.png"
+          ],
+          "src": [
+            "/assets/ui/artifact-durability.png"
           ],
           "data": {
             "tags": {
@@ -2308,6 +2352,46 @@
         },
         {
           "alias": [
+            "bubbly-slime"
+          ],
+          "src": [
+            "/assets/units/bubbly-slime.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "bubbly-slime.png"
+          ],
+          "src": [
+            "/assets/units/bubbly-slime.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "bubbly-slimet.png"
+          ],
+          "src": [
+            "/assets/units/bubbly-slimet.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "earth-shrine-of-knowledge"
           ],
           "src": [
@@ -2353,6 +2437,33 @@
           ],
           "src": [
             "/assets/units/fire-shrine-of-knowledge.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "stalwart-vanguard"
+          ],
+          "src": [
+            "/assets/units/stalwart-vanguard.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "stalwart-vanguard.png"
+          ],
+          "src": [
+            "/assets/units/stalwart-vanguard.png"
           ],
           "data": {
             "tags": {

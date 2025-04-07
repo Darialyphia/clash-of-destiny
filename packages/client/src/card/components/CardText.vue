@@ -53,31 +53,33 @@ const tokens = computed<Token[]>(() => {
 </script>
 
 <template>
-  <span
-    v-for="(token, index) in tokens"
-    :key="index"
-    :class="highlighted && `token-${token.type}`"
-  >
-    <HoverCardRoot :open-delay="500" :close-delay="0">
-      <HoverCardTrigger>
-        {{ token.text }}
-      </HoverCardTrigger>
-      <HoverCardPortal>
-        <HoverCardContent v-if="highlighted" class="z-10">
-          <article>
-            <div v-if="token.type === 'keyword'" class="keyword-card">
-              <div class="font-600">{{ token.keyword.name }}</div>
-              <p class="text-0">{{ token.keyword.description }}</p>
-            </div>
-            <BlueprintCard
-              v-if="token.type === 'card'"
-              :blueprint="token.card"
-            />
-          </article>
-        </HoverCardContent>
-      </HoverCardPortal>
-    </HoverCardRoot>
-  </span>
+  <div class="card-text">
+    <span
+      v-for="(token, index) in tokens"
+      :key="index"
+      :class="highlighted && `token-${token.type}`"
+    >
+      <HoverCardRoot :open-delay="500" :close-delay="0">
+        <HoverCardTrigger>
+          {{ token.text }}
+        </HoverCardTrigger>
+        <HoverCardPortal>
+          <HoverCardContent v-if="highlighted" class="z-10">
+            <article>
+              <div v-if="token.type === 'keyword'" class="keyword-card">
+                <div class="font-600">{{ token.keyword.name }}</div>
+                <p class="text-0">{{ token.keyword.description }}</p>
+              </div>
+              <BlueprintCard
+                v-if="token.type === 'card'"
+                :blueprint="token.card"
+              />
+            </article>
+          </HoverCardContent>
+        </HoverCardPortal>
+      </HoverCardRoot>
+    </span>
+  </div>
 </template>
 
 <style scoped lang="postcss">
@@ -95,5 +97,9 @@ const tokens = computed<Token[]>(() => {
   padding: var(--size-3);
   color: var(--text-1);
   background-color: black;
+}
+
+.card-text {
+  white-space: pre-wrap;
 }
 </style>
