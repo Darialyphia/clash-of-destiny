@@ -35,7 +35,6 @@ export class UseCardAbilityInput extends Input<typeof schema> {
     assert(isDefined(this.card), new CardNotFoundError());
 
     assert(this.card.canUseAbiliy(this.payload.abilityId), new IllegalAbilityError());
-
     this.card.useAbility(this.payload.abilityId);
   }
 }

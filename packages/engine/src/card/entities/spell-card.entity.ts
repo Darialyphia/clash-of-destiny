@@ -159,7 +159,14 @@ export class SpellCard extends Card<
             .getFollowup(this.game, this)
             .getRange(this.game, this)
             .map(cell => cell.id)
-        : null
+        : null,
+      abilities: this.abilities.map(ability => ({
+        id: ability.id,
+        manaCost: ability.manaCost,
+        label: ability.label,
+        canUse: this.canUseAbiliy(ability.id),
+        isCardAbility: ability.isCardAbility
+      }))
     };
   }
 }

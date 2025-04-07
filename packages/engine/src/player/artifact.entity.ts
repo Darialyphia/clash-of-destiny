@@ -86,6 +86,8 @@ export type SerializedArtifact = {
   maxDurability: number;
   isExhausted: boolean;
   abilities: Array<{
+    id: string;
+    manaCost: number;
     label: string;
     canUse: boolean;
   }>;
@@ -131,10 +133,14 @@ export class Artifact
       durability: this.durability,
       maxDurability: this.maxDurability,
       isExhausted: this.isExhausted,
-      abilities: this.card.abilities.map(ability => ({
-        label: ability.label,
-        canUse: this.canUseAbiliy(ability.id)
-      }))
+      abilities: this.card.abilities
+        .filter(ability => !ability.isCardAbility)
+        .map(ability => ({
+          id: ability.id,
+          manaCost: ability.manaCost,
+          label: ability.label,
+          canUse: this.canUseAbiliy(ability.id)
+        }))
     };
   }
 

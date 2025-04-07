@@ -17,18 +17,20 @@ const {
   description,
   style = {},
   closable = true,
-  usePortal = true
+  usePortal = true,
+  modal = true
 } = defineProps<{
   title: string;
   description: string;
   closable?: boolean;
   style?: StyleProp<ModalStyleVariables>;
   usePortal?: boolean;
+  modal?: boolean;
 }>();
 </script>
 
 <template>
-  <DialogRoot v-model:open="isOpened" modal>
+  <DialogRoot v-model:open="isOpened" :modal="modal">
     <DialogPortal :disabled="!usePortal">
       <Transition appear>
         <DialogOverlay class="modal-overlay" />

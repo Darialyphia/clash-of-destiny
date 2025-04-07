@@ -54,7 +54,7 @@ useBattleEvent(GAME_EVENTS.UNIT_BEFORE_DESTROY, async e => {
       alpha: 0,
       ease: Power2.easeOut
     },
-    duration: 1.2
+    duration: 1
   });
 });
 </script>

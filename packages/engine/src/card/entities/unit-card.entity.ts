@@ -139,16 +139,6 @@ export abstract class UnitCard<
       affectedCells: aoeShape.getCells(points),
       affectedUnits: aoeShape.getUnits(points)
     });
-    const onLeaveBoardCleanups = [
-      UNIT_EVENTS.AFTER_DESTROY,
-      UNIT_EVENTS.AFTER_BOUNCE
-    ].map(e =>
-      this.unit.once(e, () => {
-        // @ts-expect-error
-        this.unit = undefined;
-        onLeaveBoardCleanups.forEach(cleanup => cleanup());
-      })
-    );
 
     this.blueprint.onPlay(
       this.game,
@@ -242,7 +232,14 @@ export abstract class UnitCard<
             .getFollowup(this.game, this as any)
             .getRange(this.game, this as any)
             .map(cell => cell.id)
-        : null
+        : null,
+      abilities: this.abilities.map(ability => ({
+        id: ability.id,
+        manaCost: ability.manaCost,
+        label: ability.label,
+        canUse: this.canUseAbiliy(ability.id),
+        isCardAbility: ability.isCardAbility
+      }))
     };
   }
 

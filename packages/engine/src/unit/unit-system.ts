@@ -23,6 +23,10 @@ export class UnitSystem extends System<UnitSystemOptions> {
     return [...this.unitMap.values()];
   }
 
+  get unitsOnBoard() {
+    return this.units.filter(unit => !unit.isDead);
+  }
+
   getUnitById(id: string) {
     return this.unitMap.get(id) ?? null;
   }
@@ -62,7 +66,8 @@ export class UnitSystem extends System<UnitSystemOptions> {
   }
 
   removeUnit(unit: Unit) {
-    this.unitMap.delete(unit.id);
+    unit.position.x = -1;
+    unit.position.y = -1;
   }
 
   getEntityBehind(unit: Unit) {

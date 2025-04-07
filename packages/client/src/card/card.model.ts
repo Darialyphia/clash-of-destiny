@@ -80,6 +80,14 @@ export class CardViewModel {
     }
   }
 
+  get abilities() {
+    return this.data.abilities;
+  }
+
+  get usableAbilities() {
+    return this.data.abilities.filter(a => a.isCardAbility && a.canUse);
+  }
+
   get atk() {
     if ('atk' in this.data) {
       return this.data.atk as number;

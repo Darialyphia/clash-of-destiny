@@ -16,7 +16,6 @@ import type { Modifier } from '../../modifier/modifier.entity';
 import { ModifierManager } from '../../modifier/modifier-manager.component';
 import type { Player } from '../../player/player.entity';
 import { Interceptable } from '../../utils/interceptable';
-import { ArtifactAbilityNotFoundError } from '../../player/player-errors';
 import { AbilityNotFoundError } from '../card-errors';
 import type { SelectedTarget } from '../../game/systems/interaction.system';
 
@@ -54,6 +53,13 @@ export type SerializedCard = {
   manaCost: number | null;
   destinyCost: number | null;
   affinity: Affinity;
+  abilities: Array<{
+    id: string;
+    manaCost: number;
+    label: string;
+    canUse: boolean;
+    isCardAbility: boolean;
+  }>;
 };
 
 export abstract class Card<
@@ -196,7 +202,7 @@ export abstract class Card<
   }
 
   canUseAbiliy(id: string) {
-    const ability = this.abilities.find(ability => ability.label === id);
+    const ability = this.abilities.find(ability => ability.id === id);
     assert(isDefined(ability), new AbilityNotFoundError());
 
     return (
@@ -211,13 +217,15 @@ export abstract class Card<
       onAfterUse?: (ability: Ability<AnyCard>) => void;
     } = {}
   ) {
-    const ability = this.abilities.find(ability => ability.label === id);
+    const ability = this.abilities.find(ability => ability.id === id);
     assert(isDefined(ability), new AbilityNotFoundError());
 
     const followup = ability.getFollowup(this.game, this);
     this.game.interaction.startSelectingTargets({
       player: this.player,
-      getNextTarget: targets => followup.targets[targets.length] ?? null,
+      getNextTarget: targets => {
+        return followup.getTargets(this.game, this as any)[targets.length] ?? null;
+      },
       canCommit: followup.canCommit,
       onComplete: (targets: SelectedTarget[]) => {
         options.onBeforeUse?.(ability);

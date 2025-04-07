@@ -52,14 +52,10 @@ export type Ability<T extends AnyCard> = {
   staticDescription: string;
   label: string;
   getDescription(game: Game, card: T): string;
-  getFollowup(
-    game: Game,
-    card: T
-  ): {
-    targets: EffectTarget[];
-    canCommit: (targets: SelectedTarget[]) => boolean;
-  };
+  getFollowup(game: Game, card: T): Followup<T>;
   canUse(game: Game, card: T): boolean;
+  // wether or not the card itself uses the ability, or the entity it is tied to (artifact / unit)
+  isCardAbility: boolean;
   onResolve: <TTarget extends SelectedTarget>(
     game: Game,
     card: T,

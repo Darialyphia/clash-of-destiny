@@ -39,14 +39,12 @@ import { GAME_EVENTS, GameUnitEvent } from '../../game/game.events';
 import type { Cell } from '../../board/cell';
 import type { Modifier } from '../../modifier/modifier.entity';
 import { ModifierManager } from '../../modifier/modifier-manager.component';
-import { MeleeTargetingStrategy } from '../../targeting/melee-targeting.straegy';
 import { PointAOEShape } from '../../aoe/point.aoe-shape';
 import { makeUnitInterceptors, type UnitInterceptors } from '../unit-interceptors';
 import type { AnyUnitCard } from '../../card/entities/unit-card.entity';
 import { SingleCounterAttackParticipantStrategy } from '../../combat/counterattack-participants';
 import { HeroCard } from '../../card/entities/hero-card.entity';
 import type { Ability } from '../../card/card-blueprint';
-import type { SelectedTarget } from '../../game/systems/interaction.system';
 import { UnitAbilityNotFoundError, WrongUnitKindError } from '../unit-errors';
 
 export type SerializedUnit = {
@@ -68,6 +66,8 @@ export type SerializedUnit = {
   attackableCells: Point[];
   modifiers: string[];
   abilities: Array<{
+    id: string;
+    manaCost: number;
     label: string;
     canUse: boolean;
   }>;
@@ -100,6 +100,8 @@ export class Unit
   private readonly combat: CombatComponent;
 
   _isExhausted = false;
+
+  _isDead = false;
 
   constructor(
     game: Game,
@@ -152,15 +154,21 @@ export class Unit
         description: keyword.description
       })),
       isDead: this.isDead,
-      moveZone: this.getPossibleMoves(),
-      attackableCells: this.game.boardSystem.cells
-        .filter(cell => this.canAttackAt(cell.position))
-        .map(cell => cell.position.serialize()),
+      moveZone: this.isDead ? [] : this.getPossibleMoves(),
+      attackableCells: this.isDead
+        ? []
+        : this.game.boardSystem.cells
+            .filter(cell => this.canAttackAt(cell.position))
+            .map(cell => cell.position.serialize()),
       modifiers: this.modifiers.map(modifier => modifier.id),
-      abilities: this._card.abilities.map(ability => ({
-        label: ability.label,
-        canUse: this.canUseAbiliy(ability.id)
-      })),
+      abilities: this.card.abilities
+        .filter(ability => !ability.isCardAbility)
+        .map(ability => ({
+          id: ability.id,
+          manaCost: ability.manaCost,
+          label: ability.label,
+          canUse: this.canUseAbiliy(ability.id)
+        })),
       isExhausted: this.isExhausted
     };
   }
@@ -321,7 +329,7 @@ export class Unit
   }
 
   get isDead() {
-    return this.hp.current <= 0;
+    return this._isDead;
   }
 
   get maxMovementsPerTurn() {
@@ -553,8 +561,13 @@ export class Unit
     return this.combat.dealDamage.bind(this.combat);
   }
 
-  get takeDamage() {
-    return this.combat.takeDamage.bind(this.combat);
+  takeDamage(from: AnyCard, damage: Damage<AnyCard>) {
+    this.combat.takeDamage(from, damage);
+    if (this.hp.current <= 0) {
+      this.game.inputSystem.schedule(() => {
+        this.destroy(from);
+      });
+    }
   }
 
   heal(source: AnyCard, amount: number) {
@@ -610,6 +623,7 @@ export class Unit
     for (const modifier of this.modifiers) {
       this.removeModifier(modifier);
     }
+    this.player.cards.sendToDiscardPile(this._card);
     this.game.unitSystem.removeUnit(this);
   }
 
@@ -617,6 +631,7 @@ export class Unit
     this.emitter.emit(UNIT_EVENTS.BEFORE_DESTROY, new UnitBeforeDestroyEvent({ source }));
     if (!this.canBeDestroyed) return;
     const position = this.position;
+    this._isDead = true;
     this.removeFromBoard();
     this.emitter.emit(
       UNIT_EVENTS.AFTER_DESTROY,

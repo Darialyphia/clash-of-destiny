@@ -2,7 +2,7 @@
 import { config } from '@/utils/config';
 import { type Point } from '@game/shared';
 import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
-import { useBattleEvent } from '@/battle/stores/battle.store';
+import { useBattleEvent, useUnits } from '@/battle/stores/battle.store';
 import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
 import { GAME_EVENTS } from '@game/engine/src/game/game.events';
 import type { UnitViewModel } from '../unit.model';
@@ -34,10 +34,9 @@ useBattleEvent(GAME_EVENTS.UNIT_AFTER_MOVE, async e => {
 
   await tl.play();
 });
-
 const attackAnimation = async (e: { unit: SerializedUnit; target: Point }) => {
   if (!unit.equals(e.unit)) return;
-  const start = e.unit.position;
+  const start = unit.position;
   const end = e.target;
   const impactPoint = {
     x: start.x + (end.x - start.x) * 0.55,

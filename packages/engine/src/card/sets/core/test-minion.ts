@@ -1,6 +1,7 @@
 import { PointAOEShape } from '../../../aoe/point.aoe-shape';
 import { ProvokeModifier } from '../../../modifier/modifiers/provoke.modifier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
+import { lastingDestiny } from '../../abilities/lasting-destiny';
 import type { UnitBlueprint } from '../../card-blueprint';
 import {
   AFFINITIES,
@@ -19,7 +20,7 @@ export const testMinion: UnitBlueprint = {
   unitKind: UNIT_KINDS.MINION,
   affinity: AFFINITIES.NORMAL,
   name: 'Test Minion',
-  getDescription: (game, card) => {
+  getDescription: () => {
     return `@Provoke@, @Lasting Destiny@.`;
   },
   staticDescription: `@Provoke@, @Lasting Destiny@.`,
@@ -31,7 +32,7 @@ export const testMinion: UnitBlueprint = {
   collectable: true,
   manaCost: 2,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
-  abilities: [],
+  abilities: [lastingDestiny],
   atk: 1,
   maxHp: 2,
   job: CARD_JOBS.FIGHTER,

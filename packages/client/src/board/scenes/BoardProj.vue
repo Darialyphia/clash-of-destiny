@@ -75,6 +75,10 @@ useBattleEvent(GAME_EVENTS.UNIT_BEFORE_EVOLVE_HERO, async e => {
     )
   });
 });
+
+const displayedUnits = computed(() => {
+  return units.value.filter(u => !u.isDead);
+});
 </script>
 
 <template>
@@ -94,7 +98,7 @@ useBattleEvent(GAME_EVENTS.UNIT_BEFORE_EVOLVE_HERO, async e => {
         @ready="readyCells++"
       />
 
-      <UnitProj v-for="unit in units" :key="unit.id" :unit="unit" />
+      <UnitProj v-for="unit in displayedUnits" :key="unit.id" :unit="unit" />
       <!-- <Deck :x="-150" :y="200" :scale="0.35" :player="players[0]" /> -->
     </container-2d>
   </container-2d>

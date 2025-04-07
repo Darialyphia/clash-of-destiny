@@ -159,11 +159,11 @@ export class Player
   }
 
   get units() {
-    return this.game.unitSystem.units.filter(u => u.player.equals(this));
+    return this.game.unitSystem.unitsOnBoard.filter(u => u.player.equals(this));
   }
 
   get enemyUnits() {
-    return this.game.unitSystem.units.filter(u => !u.player.equals(this));
+    return this.game.unitSystem.unitsOnBoard.filter(u => !u.player.equals(this));
   }
 
   get isPlayer1() {

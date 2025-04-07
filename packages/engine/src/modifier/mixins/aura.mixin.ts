@@ -34,7 +34,7 @@ export class AuraModifierMixin extends ModifierMixin<Unit> {
   private checkAura() {
     if (!this.isApplied) return;
 
-    this.game.unitSystem.units.forEach(unit => {
+    this.game.unitSystem.unitsOnBoard.forEach(unit => {
       if (!this.options.canSelfApply && unit.equals(this.modifier.target)) return;
       const shouldGetAura = this.options.isElligible(unit);
 

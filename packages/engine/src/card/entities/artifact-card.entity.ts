@@ -88,7 +88,14 @@ export class ArtifactCard extends Card<
       player: this.player.id,
       job: this.blueprint.job,
       durability: this.blueprint.durability,
-      canPlay: this.player.canPlayCard(this)
+      canPlay: this.player.canPlayCard(this),
+      abilities: this.abilities.map(ability => ({
+        id: ability.id,
+        manaCost: ability.manaCost,
+        label: ability.label,
+        canUse: this.canUseAbiliy(ability.id),
+        isCardAbility: ability.isCardAbility
+      }))
     };
   }
 }

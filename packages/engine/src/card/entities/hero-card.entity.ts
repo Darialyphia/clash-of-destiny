@@ -105,17 +105,6 @@ export class HeroCard extends UnitCard<
     const aoeShape = this.blueprint.getAoe(this.game, this as any, points);
     this.unit = this.player.hero;
 
-    const onLeaveBoardCleanups = [
-      UNIT_EVENTS.AFTER_DESTROY,
-      UNIT_EVENTS.AFTER_BOUNCE
-    ].map(e =>
-      this.unit.once(e, () => {
-        // @ts-expect-error
-        this.unit = undefined;
-        onLeaveBoardCleanups.forEach(cleanup => cleanup());
-      })
-    );
-
     this.blueprint.onPlay(
       this.game,
       this as any,
