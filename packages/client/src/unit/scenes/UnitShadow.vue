@@ -26,8 +26,6 @@ const textures = useMultiLayerTexture({
   tag: 'idle',
   dimensions: config.UNIT_SPRITE_SIZE
 });
-const battleStore = useBattleStore();
-const camera = useIsoCamera();
 const isSpriteFlipped = computed(() => {
   // let value = unit
   //   .getUnit()

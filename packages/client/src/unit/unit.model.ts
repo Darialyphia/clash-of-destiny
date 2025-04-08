@@ -5,9 +5,10 @@ import type { PlayerViewModel } from '@/player/player.model';
 import { pointToCellId } from '@game/engine/src/board/board-utils';
 import type { InputDispatcher } from '@game/engine/src/input/input-system';
 import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
-import { waitFor, type Nullable, type Point } from '@game/shared';
+import { type Nullable, type Point } from '@game/shared';
 import type { ModifierViewModel } from './modifier.model';
 import type { ArtifactViewModel } from './artifact.model';
+import { UNIT_KINDS } from '@game/engine/src/card/card.enums';
 
 export class UnitViewModel {
   isAnimating = false;
@@ -44,14 +45,6 @@ export class UnitViewModel {
     this.data.position = val;
   }
 
-  get iconId() {
-    return this.data.iconId;
-  }
-
-  get iconPath() {
-    return `/assets/icons/${this.iconId}.png`;
-  }
-
   get spriteId() {
     return this.data.spriteId;
   }
@@ -64,10 +57,6 @@ export class UnitViewModel {
     return this.data.name;
   }
 
-  get handSize() {
-    return this.data.handSize;
-  }
-
   get hp() {
     return this.data.hp;
   }
@@ -76,67 +65,38 @@ export class UnitViewModel {
     return this.data.maxHp;
   }
 
-  get ap() {
-    return this.data.ap;
+  get atk() {
+    return this.data.atk;
   }
 
-  get maxAp() {
-    return this.data.maxAp;
+  get spellpower() {
+    return this.data.spellPower;
   }
 
-  get mp() {
-    return this.data.mp;
+  get isExhausted() {
+    return this.data.isExhausted;
   }
 
-  get maxMp() {
-    return this.data.maxMp;
+  get isHero() {
+    return this.data.isHero;
   }
 
-  get exp() {
-    return this.data.exp;
+  get isShrine() {
+    return this.data.isShrine;
   }
 
-  get attackDamage() {
-    return this.data.attackDamage;
+  get isMinion() {
+    return this.data.isMinion;
   }
 
-  get abilityPower() {
-    return this.data.abilityPower;
+  get abilities() {
+    return this.data.abilities;
   }
 
-  getWeapon() {
-    return this.data.artifacts.weapon
-      ? (this.entityDictionary[this.data.artifacts.weapon] as ArtifactViewModel)
-      : null;
+  updateSprite(spriteId: string) {
+    this.data.spriteId = spriteId;
   }
 
-  getArmor() {
-    return this.data.artifacts.armor
-      ? (this.entityDictionary[this.data.artifacts.armor] as ArtifactViewModel)
-      : null;
-  }
-
-  getRelic() {
-    return this.data.artifacts.relic
-      ? (this.entityDictionary[this.data.artifacts.relic] as ArtifactViewModel)
-      : null;
-  }
-
-  get expToNextLevel() {
-    return this.data.expToNextLevel;
-  }
-
-  get canLevelUp() {
-    return this.data.canLevelup;
-  }
-
-  get isMaxLevel() {
-    return this.data.isMaxLevel;
-  }
-
-  get remainingCardsInDeck() {
-    return this.data.remainingCardsInDeck;
-  }
   getPlayer() {
     return this.entityDictionary[this.data.playerId] as PlayerViewModel;
   }
@@ -152,39 +112,15 @@ export class UnitViewModel {
       return this.entityDictionary[modifierId] as ModifierViewModel;
     });
   }
-  getHand() {
-    return this.data.hand.map(cardId => {
-      return this.entityDictionary[cardId] as CardViewModel;
-    });
-  }
 
-  getDiscardPile() {
-    return this.data.discardPile.map(cardId => {
-      return this.entityDictionary[cardId] as CardViewModel;
-    });
+  getCard() {
+    return this.entityDictionary[this.data.card] as CardViewModel;
   }
 
   getCell() {
+    if (this.isDead) return null;
     const id = pointToCellId(this.data.position);
     return this.entityDictionary[id] as CellViewModel;
-  }
-
-  getCurrentlyPlayedCard() {
-    if (!this.data.currentlyPlayedCard) return null;
-    return this.entityDictionary[
-      this.data.currentlyPlayedCard
-    ] as CardViewModel;
-  }
-
-  deploy() {
-    this.dispatcher({
-      type: 'deployUnit',
-      payload: {
-        playerId: this.playerId,
-        heroId: this.id,
-        ...this.position
-      }
-    });
   }
 
   canMoveTo(cell: CellViewModel) {
@@ -213,16 +149,8 @@ export class UnitViewModel {
       type: 'move',
       payload: {
         playerId: this.playerId,
+        unitId: this.id,
         ...destination
-      }
-    });
-  }
-
-  endTurn() {
-    this.dispatcher({
-      type: 'endTurn',
-      payload: {
-        playerId: this.playerId
       }
     });
   }
@@ -234,49 +162,31 @@ export class UnitViewModel {
   }
 
   attackAt(cell: CellViewModel) {
-    console.log('attack at', cell.position);
     this.dispatcher({
       type: 'attack',
       payload: {
         playerId: this.playerId,
+        unitId: this.id,
         ...cell.position
       }
     });
   }
 
-  playCard(index: number) {
-    const card = this.getHand()[index];
-    if (!card) return;
-    if (!card.canPlay) return;
+  canUseAbility(id: string) {
+    const ability = this.data.abilities.find(ability => ability.id === id);
+    if (!ability) return false;
+    return ability.canUse;
+  }
 
+  useAbility(id: string) {
+    const ability = this.data.abilities.find(ability => ability.id === id);
+    if (!ability) return;
     this.dispatcher({
-      type: 'playCard',
+      type: 'useUnitAbility',
       payload: {
         playerId: this.playerId,
-        index: index
-      }
-    });
-  }
-
-  get canReplace() {
-    return this.data.canReplace;
-  }
-
-  replaceCard(index: number) {
-    this.dispatcher({
-      type: 'replaceCard',
-      payload: {
-        playerId: this.playerId,
-        index: index
-      }
-    });
-  }
-
-  levelUp() {
-    this.dispatcher({
-      type: 'levelUp',
-      payload: {
-        playerId: this.playerId
+        unitId: this.id,
+        abilityId: id
       }
     });
   }

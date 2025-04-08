@@ -8,11 +8,11 @@ import type { GameState } from '../stores/battle.store';
 import { match } from 'ts-pattern';
 import {
   INTERACTION_STATES,
-  type InteractionState,
   type SerializedInteractionContext
 } from '@game/engine/src/game/systems/interaction.system';
 import type { InputDispatcher } from '@game/engine/src/input/input-system';
 import type { CardViewModel } from '@/card/card.model';
+import type { PlayerViewModel } from '@/player/player.model';
 
 export type BattleControllerOptions = {
   cardPlayIntent: Ref<Nullable<CardViewModel>>;
@@ -20,7 +20,7 @@ export type BattleControllerOptions = {
   selectedUnit: Ref<Nullable<UnitViewModel>>;
   selectedCard: Ref<Nullable<CardViewModel>>;
   firstTargetIntent: Ref<Nullable<CellViewModel>>;
-  activeUnit: Ref<UnitViewModel>;
+  turnPlayer: Ref<PlayerViewModel>;
   state: Ref<GameState>;
   dispatcher: InputDispatcher;
 };
@@ -28,8 +28,8 @@ export type BattleControllerOptions = {
 export class BattleController implements UiController {
   constructor(private options: BattleControllerOptions) {}
 
-  get activeUnit() {
-    return this.options.activeUnit.value;
+  get turnPlayer() {
+    return this.options.turnPlayer.value;
   }
 
   get selectedUnit() {
@@ -60,65 +60,54 @@ export class BattleController implements UiController {
     this.options.selectedUnit.value = null;
   }
 
-  private handleQuickCast(cell: CellViewModel) {
-    if (!this.selectedCard) return;
-    this.options.cardPlayIntent.value = this.selectedCard;
-    this.selectedCard.play();
-    if (this.selectedCard.canPlayAt(cell)) {
-      // const hand = this.selectedCard.getUnit().getHand();
-      // const index = hand.findIndex(c => c.id === this.selectedCard!.id);
-      // if (this.selectedCard.needsTargets) {
-      //   this.options.firstTargetIntent.value = cell;
-      // }
-      // this.options.cardPlayIntent.value = this.selectedCard;
-      // this.selectedCard.getUnit().playCard(index);
-    } else {
-      this.options.selectedCard.value = null;
-    }
-  }
-
   private handleIdleState(cell: CellViewModel) {
     if (this.selectedCard) {
       return;
       // return this.handleQuickCast(cell);
     }
 
-    const isMoveIntent =
-      this.activeUnit.moveIntent &&
-      pointToCellId(this.activeUnit.moveIntent.point) === cell.id;
-    if (isMoveIntent) {
-      this.activeUnit.commitMove();
-      return;
-    }
+    // const isMoveIntent =
+    //   this.selectedUnit?.moveIntent &&
+    //   pointToCellId(this.selectedUnit.moveIntent.point) === cell.id;
+    // if (isMoveIntent) {
+    //   this.selectedUnit.commitMove();
+    //   return;
+    // }
 
-    if (this.activeUnit.canMoveTo(cell)) {
-      this.activeUnit.moveTowards({
+    if (this.selectedUnit?.canMoveTo(cell)) {
+      this.selectedUnit.moveTowards({
         x: cell.position.x,
         y: cell.position.y
       });
+      this.selectedUnit.commitMove();
       this.unselectUnit();
       return;
     }
 
     const unit = cell.getUnit();
-    const canAttack =
-      this.activeUnit.canAttackAt(cell) &&
-      unit &&
-      this.selectedUnit?.equals(unit);
+    const canAttack = this.selectedUnit?.canAttackAt(cell);
 
     if (canAttack) {
-      this.activeUnit.attackAt(cell);
+      this.selectedUnit!.attackAt(cell);
       return;
     }
 
-    if (unit && !unit.equals(this.activeUnit)) {
+    const canSelect =
+      unit &&
+      unit.getPlayer().equals(this.turnPlayer) &&
+      (!this.selectedUnit || !unit.equals(this.selectedUnit));
+    if (canSelect) {
+      if (this.selectedUnit) {
+        this.selectedUnit.moveIntent = null;
+      }
       this.selectUnit(unit);
-      this.activeUnit.moveIntent = null;
       return;
     }
 
+    if (this.selectedUnit) {
+      this.selectedUnit.moveIntent = null;
+    }
     this.options.selectedUnit.value = null;
-    this.activeUnit.moveIntent = null;
   }
 
   handleTargetingState(
@@ -138,7 +127,7 @@ export class BattleController implements UiController {
       this.options.dispatcher({
         type: 'addCardTarget',
         payload: {
-          playerId: this.activeUnit.playerId,
+          playerId: this.turnPlayer.id,
           ...cell.position
         }
       });
@@ -149,7 +138,7 @@ export class BattleController implements UiController {
       this.options.dispatcher({
         type: 'cancelPlayCard',
         payload: {
-          playerId: this.activeUnit.playerId
+          playerId: this.turnPlayer.id
         }
       });
     }
@@ -198,14 +187,17 @@ export class BattleController implements UiController {
         // ) {
         //   return 'movement-path';
         // }
-        if (this.activeUnit.canMoveTo(cell)) {
+        if (this.selectedUnit?.canMoveTo(cell)) {
           return 'movement';
         }
-        if (this.activeUnit.canAttackAt(cell)) {
+        if (this.selectedUnit?.canAttackAt(cell)) {
           return 'danger';
         }
 
-        return null;
+        if (this.hoveredCell?.equals(cell)) {
+          return 'hovered';
+        }
+        return 'normal';
       })
       .with({ state: INTERACTION_STATES.SELECTING_CARDS }, () => {
         return null;
@@ -213,7 +205,7 @@ export class BattleController implements UiController {
       .with(
         { state: INTERACTION_STATES.SELECTING_TARGETS },
         interactionState => {
-          const card = this.activeUnit.getCurrentlyPlayedCard();
+          const card = this.turnPlayer.getCurrentlyPlayedCard();
           const aoe = card?.getAoe();
           if (aoe) {
             const isInAOE = aoe.cells.some(c => c.equals(cell));

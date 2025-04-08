@@ -9,6 +9,7 @@ import { useBattleStore, useGameState } from '../stores/battle.store';
 import { useBattleUiStore } from '../stores/battle-ui.store';
 import Board from '@/board/scenes/Board.vue';
 import { GameSession } from '@game/engine/src/game/game-session';
+import BoardProj from '@/board/scenes/BoardProj.vue';
 
 const battleStore = useBattleStore();
 const settingsStore = useSettingsStore();
@@ -25,86 +26,50 @@ const session = new GameSession({
     {
       id: 'p1',
       name: 'Player 1',
-      heroes: [
-        {
-          blueprintId: 'archMage',
-          deck: {
-            cards: [
-              ...Array.from({ length: 4 }, () => 'magic-missile'),
-              ...Array.from({ length: 4 }, () => 'arcane-knowledge'),
-              ...Array.from({ length: 4 }, () => 'mana-shield'),
-              ...Array.from({ length: 4 }, () => 'frost-nova'),
-              ...Array.from({ length: 4 }, () => 'force-wave')
-            ]
-          }
-        },
-        {
-          blueprintId: 'exorcist',
-          deck: {
-            cards: [
-              ...Array.from({ length: 4 }, () => 'inspire'),
-              ...Array.from({ length: 4 }, () => 'purify'),
-              ...Array.from({ length: 4 }, () => 'cure-wounds'),
-              ...Array.from({ length: 4 }, () => 'equinox'),
-              ...Array.from({ length: 4 }, () => 'pacify')
-            ]
-          }
-        },
-        {
-          blueprintId: 'archMage',
-          deck: {
-            cards: [
-              ...Array.from({ length: 4 }, () => 'cone-of-flames'),
-              ...Array.from({ length: 4 }, () => 'magic-missile'),
-              ...Array.from({ length: 4 }, () => 'arcane-knowledge'),
-              ...Array.from({ length: 4 }, () => 'mana-shield'),
-              ...Array.from({ length: 4 }, () => 'magic-amplification')
-            ]
-          }
-        }
-      ]
+      mainDeck: {
+        cards: [
+          ...Array.from({ length: 10 }, () => 'stalwart-vanguard'),
+          ...Array.from({ length: 10 }, () => 'bubbly-slime'),
+          ...Array.from({ length: 10 }, () => 'esteemed-erudite')
+        ]
+      },
+      destinyDeck: {
+        cards: [
+          'test-shrine',
+          'test-hero',
+          'test-destiny-artifact',
+          'test-destiny-artifact',
+          'test-destiny-artifact',
+          'test-destiny-artifact',
+          'test-destiny-spell',
+          'test-destiny-spell',
+          'test-destiny-spell'
+        ]
+      }
     },
     {
       id: 'p2',
       name: 'Player 2',
-      heroes: [
-        {
-          blueprintId: 'archMage',
-          deck: {
-            cards: [
-              ...Array.from({ length: 4 }, () => 'magic-missile'),
-              ...Array.from({ length: 4 }, () => 'arcane-knowledge'),
-              ...Array.from({ length: 4 }, () => 'mana-shield'),
-              ...Array.from({ length: 4 }, () => 'staff-of-focus'),
-              ...Array.from({ length: 4 }, () => 'magic-amplification')
-            ]
-          }
-        },
-        {
-          blueprintId: 'exorcist',
-          deck: {
-            cards: [
-              ...Array.from({ length: 4 }, () => 'inspire'),
-              ...Array.from({ length: 4 }, () => 'purify'),
-              ...Array.from({ length: 4 }, () => 'cure-wounds'),
-              ...Array.from({ length: 4 }, () => 'equinox'),
-              ...Array.from({ length: 4 }, () => 'pacify')
-            ]
-          }
-        },
-        {
-          blueprintId: 'archMage',
-          deck: {
-            cards: [
-              ...Array.from({ length: 4 }, () => 'magic-missile'),
-              ...Array.from({ length: 4 }, () => 'arcane-knowledge'),
-              ...Array.from({ length: 4 }, () => 'mana-shield'),
-              ...Array.from({ length: 4 }, () => 'staff-of-focus'),
-              ...Array.from({ length: 4 }, () => 'magic-amplification')
-            ]
-          }
-        }
-      ]
+      mainDeck: {
+        cards: [
+          ...Array.from({ length: 10 }, () => 'stalwart-vanguard'),
+          ...Array.from({ length: 10 }, () => 'bubbly-slime'),
+          ...Array.from({ length: 10 }, () => 'esteemed-erudite')
+        ]
+      },
+      destinyDeck: {
+        cards: [
+          'test-shrine',
+          'test-hero',
+          'test-destiny-artifact',
+          'test-destiny-artifact',
+          'test-destiny-artifact',
+          'test-destiny-artifact',
+          'test-destiny-spell',
+          'test-destiny-spell',
+          'test-destiny-spell'
+        ]
+      }
     }
   ]
 });
@@ -168,26 +133,29 @@ until(() => isoWorld.value)
 </script>
 
 <template>
-  <IsoWorld
-    ref="isoWorld"
-    v-if="state"
-    :angle="0"
-    :width="state.board.columns"
-    :height="state.board.rows"
-    :tile-size="config.TILE_SIZE"
-    @pointerup="
-      e => {
-        if (e.target !== isoWorld?.camera.viewport.value) return;
-        uiStore.unselectUnit();
-      }
-    "
-  >
-    <IsoCamera :columns="state.board.columns" :rows="state.board.rows">
-      <Board />
-    </IsoCamera>
+  <template v-if="state">
+    <IsoWorld
+      ref="isoWorld"
+      v-if="ui.viewMode === 'isometric'"
+      :angle="0"
+      :width="state.board.columns"
+      :height="state.board.rows"
+      :tile-size="config.TILE_SIZE"
+      @pointerup="
+        e => {
+          if (e.target !== isoWorld?.camera.viewport.value) return;
+          uiStore.unselectUnit();
+        }
+      "
+    >
+      <IsoCamera :columns="state.board.columns" :rows="state.board.rows">
+        <Board />
+      </IsoCamera>
 
-    <Layer :ref="(layer: any) => ui.registerLayer(layer, 'scene')" />
-    <Layer :ref="(layer: any) => ui.registerLayer(layer, 'fx')" />
-    <Layer :ref="(layer: any) => ui.registerLayer(layer, 'ui')" />
-  </IsoWorld>
+      <Layer :ref="(layer: any) => ui.registerLayer(layer, 'scene')" />
+      <Layer :ref="(layer: any) => ui.registerLayer(layer, 'fx')" />
+      <Layer :ref="(layer: any) => ui.registerLayer(layer, 'ui')" />
+    </IsoWorld>
+    <BoardProj v-else />
+  </template>
 </template>

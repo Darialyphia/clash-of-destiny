@@ -23,12 +23,12 @@ const startDragging = () => {
     document.body.removeEventListener('mouseup', onMouseup);
   };
   const onMouseup = () => {
-    if (!ui.selectedCard?.canPlay) {
+    if (!ui.selectedCard?.canPlay || !ui.hoveredCell) {
       ui.unselectCard();
       return;
     }
     ui.cardPlayIntent = ui.selectedCard;
-    ui.selectedCard?.play();
+    // ui.selectedCard?.play();
     stopDragging();
   };
 
@@ -44,18 +44,20 @@ const startDragging = () => {
 
 const onMouseDown = (e: MouseEvent) => {
   if (e.button !== 0) return;
+  if (!card.canPlay) return;
 
   isClicking.value = true;
   clickedPosition.value = { x: e.clientX, y: e.clientY };
 
   const target = e.currentTarget as HTMLElement;
   const cardElement = target.querySelector('.card') as HTMLElement;
-
+  let isPlayed = false;
   const onMousemove = (e: MouseEvent) => {
     if (!isClicking.value) return;
 
     if (Math.abs(e.clientY - clickedPosition.value.y) > SELECTION_THRESHOLD) {
       ui.selectCard(cardElement, card);
+      ui.selectedCard?.play();
       document.body.removeEventListener('mousemove', onMousemove);
     }
   };
@@ -79,8 +81,9 @@ const onMouseDown = (e: MouseEvent) => {
       disabled: !card.canPlay
     }"
     @mousedown="onMouseDown"
-    @dblclick="
-      () => {
+    @mouseup="
+      e => {
+        if (e.button !== 0) return;
         if (!card.canPlay) return;
         ui.cardPlayIntent = card;
         card.play();
@@ -111,16 +114,9 @@ const onMouseDown = (e: MouseEvent) => {
   transition: width 0.2s ease;
   cursor: url('/assets/ui/cursor-hover.png'), auto;
 
-  &.disabled::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      circle,
-      hsl(0 0% 0% / 0.15),
-      hsl(0 0% 0% / 0.5)
-    );
-    pointer-events: none;
+  &.disabled {
+    cursor: url('/assets/ui/cursor-disabled.png'), auto;
+    filter: brightness(0.65);
   }
 
   &:not(:has(.hand-card__card)) {

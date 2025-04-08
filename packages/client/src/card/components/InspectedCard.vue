@@ -50,8 +50,8 @@ onClickOutside(
 
 #inspected-card {
   --pixel-scale: 2;
-  width: calc(126px * var(--pixel-scale));
-  height: calc(178px * var(--pixel-scale));
+  width: calc(160px * var(--pixel-scale));
+  height: calc(224px * var(--pixel-scale));
   transform-style: preserve-3d;
   > * {
     width: 100%;

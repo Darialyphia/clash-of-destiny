@@ -8,22 +8,67 @@ export type Keyword = {
 };
 
 export const KEYWORDS = {
-  ROOTED: {
-    id: 'rooted',
-    name: 'Rooted',
-    description: 'Cannot move. Lose 1 stack at the end of its turn.',
+  LINEAGE: {
+    id: 'lineage',
+    name: 'Lineage',
+    description:
+      'This Hero must be leveled up from a previous hero with the same lineage or a shrine.',
+    aliases: [/^[a-z\s]+\slineage+/]
+  },
+  PROVOKE: {
+    id: 'provoke',
+    name: 'Provoke',
+    description:
+      'Stops nearby enemy minions and general from moving. They must attack this first.',
+    aliases: ['provoke']
+  },
+  PROVOKED: {
+    id: 'provoked',
+    name: 'Provoked',
+    description: 'Provoked - cannot move and must attack Provoker first.',
     aliases: []
   },
-  SILENCED: {
-    id: 'silenced',
-    name: 'Silenced',
-    description: 'Cannot use Ability cards. Lose 1 stack at the end of its turn.',
+  FLOATING_DESTINY: {
+    id: 'lasting-destiny',
+    name: 'Floating Destiny',
+    description: 'You can banish this card from your discard pile to gain 1 Destiny.',
     aliases: []
   },
-  DISARMED: {
-    id: 'disarmed',
-    name: 'Disarmed',
-    description: 'Cannot attack. Lose 1 stack at the end of its turn.',
+  ON_ENTER: {
+    id: 'on-enter',
+    name: 'On Enter',
+    description: 'Does something when this card enters the board when played from hand.',
+    aliases: []
+  },
+  ON_ATTACK: {
+    id: 'on-attack',
+    name: 'On Attack',
+    description: 'Does something when this card attacks another unit.',
+    aliases: []
+  },
+  RANGED: {
+    id: 'ranged',
+    name: 'Ranged(x)',
+    description:
+      'This unit can attack unit up to X tiles away, but cannot attack nearby enemies.',
+    aliases: [/ranged\([0-9]+\)/]
+  },
+  UNIQUE: {
+    id: 'unique',
+    name: 'Unique',
+    description: 'You can only have copy of this card in your deck.',
+    aliases: []
+  },
+  FLANK: {
+    id: 'flank',
+    name: 'Flank',
+    description: 'This unit can be played on spaces nearby ally units.',
+    aliases: []
+  },
+  SWIFT: {
+    id: 'swift',
+    name: 'Swift',
+    description: 'This unit can move twice during a turn.',
     aliases: []
   }
 } as const satisfies Record<string, Keyword>;

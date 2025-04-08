@@ -2,10 +2,15 @@
 import {
   CARD_KINDS,
   RARITIES,
+  UNIT_KINDS,
+  type Affinity,
   type CardKind,
-  type Rarity
+  type Rarity,
+  type UnitKind
 } from '@game/engine/src/card/card.enums';
-import { isDefined } from '@game/shared';
+import { clamp, isDefined, mapRange } from '@game/shared';
+import CardText from '@/card/components/CardText.vue';
+import { useMouse } from '@vueuse/core';
 
 const { card } = defineProps<{
   card: {
@@ -14,13 +19,20 @@ const { card } = defineProps<{
     description: string;
     image: string;
     kind: CardKind;
+    affinity: Affinity;
     manaCost?: number;
-    exp?: number;
+    destinyCost?: number;
+    unitKind?: UnitKind;
     rarity: Rarity;
-    allowedJobs?: Array<{ id: string; name: string }>;
+    level?: number;
+    job?: string;
+    atk?: number;
+    hp?: number;
+    spellpower?: number;
+    durability?: number;
+    abilities?: string[];
   };
 }>();
-const emit = defineEmits<{}>();
 
 const rarityBg = computed(() => {
   if (
@@ -34,35 +46,124 @@ const rarityBg = computed(() => {
   return `url('/assets/ui/card-rarity-${card.rarity}.png')`;
 });
 
+const kindBg = computed(() => {
+  if (!isDefined(card.unitKind)) {
+    return `url('/assets/ui/card-kind-${card.kind.toLowerCase()}.png')`;
+  } else if (card.unitKind === UNIT_KINDS.SHRINE) {
+    return `url('/assets/ui/card-kind-hero.png')`;
+  }
+  return `url('/assets/ui/card-kind-${card.unitKind.toLowerCase()}.png')`;
+});
+
 const imageBg = computed(() => {
   return `url('${card.image}')`;
+});
+
+const affinityBg = computed(() => {
+  return `url('/assets/ui/card-bg-${card.affinity.toLowerCase()}.png')`;
+});
+const affinityGemBg = computed(() => {
+  return `url('/assets/ui/gem-${card.affinity.toLowerCase()}.png')`;
+});
+
+const root = useTemplateRef('card');
+const { x, y } = useMouse();
+
+const pointerStyle = computed(() => {
+  if (!root.value) return;
+  const rect = root.value.getBoundingClientRect();
+  const pointer = {
+    x: clamp(x.value - rect.left, 0, rect.width),
+    y: clamp(y.value - rect.top, 0, rect.height)
+  };
+  const percent = {
+    x: (pointer.x / rect.width) * 100,
+    y: (pointer.y / rect.height) * 100
+  };
+  return {
+    glareX: pointer.x,
+    glareY: pointer.y,
+    foilX: Math.round(mapRange(percent.x, [0, 100], [37, 63])),
+    foilY: Math.round(mapRange(percent.y, [0, 100], [33, 67])),
+    pointerFromCenter: clamp(
+      Math.sqrt(
+        (percent.y - 50) * (percent.y - 50) +
+          (percent.x - 50) * (percent.x - 50)
+      ) / 50,
+      0,
+      1
+    )
+  };
 });
 </script>
 
 <template>
-  <div class="card" :data-flip-id="`card_${card.id}`">
+  <div
+    class="card"
+    :class="card.kind.toLocaleLowerCase()"
+    :data-flip-id="`card_${card.id}`"
+    ref="card"
+  >
     <div class="card-front">
-      <div class="name">
+      <!-- <div class="foil" /> -->
+      <div class="image" />
+      <div class="name" :data-text="card.name">
         {{ card.name }}
       </div>
-      <div class="mp-cost" v-if="card.manaCost">
-        <span class="dual-text">{{ card.manaCost }}</span>
+      <div class="affinity-gem" />
+      <div class="affinity-gem" />
+
+      <div class="level" v-if="card.level">
+        <div v-for="i in card.level" :key="i" class="level-icon" />
       </div>
-      <div class="exp" v-if="card.exp">
-        <span class="dual-text">{{ card.exp }}</span>
-      </div>
-      <div class="image" />
-      <div class="image-frame" />
+
       <div class="rarity" />
-      <div class="description">
-        <div v-if="card.allowedJobs">
-          [{{ card.allowedJobs.map(j => j.name).join(' - ') }}]
+      <div class="stats">
+        <div v-if="isDefined(card.manaCost)" class="mana-cost">
+          <div class="dual-text" :data-text="card.manaCost">
+            {{ card.manaCost }}
+          </div>
         </div>
-        <div>{{ card.description }}</div>
+        <div v-if="isDefined(card.destinyCost)" class="destiny-cost">
+          <div class="dual-text" :data-text="card.destinyCost">
+            {{ card.destinyCost }}
+          </div>
+        </div>
+        <div v-if="isDefined(card.atk)" class="atk">
+          <div class="dual-text" :data-text="card.atk">
+            {{ card.atk }}
+          </div>
+        </div>
+        <div v-if="isDefined(card.spellpower)" class="spellpower">
+          <div class="dual-text" :data-text="card.spellpower">
+            {{ card.spellpower }}
+          </div>
+        </div>
+        <div v-if="isDefined(card.hp)" class="hp">
+          <div class="dual-text" :data-text="card.hp">
+            {{ card.hp }}
+          </div>
+        </div>
+        <div v-if="isDefined(card.durability)" class="durability">
+          <div class="dual-text" :data-text="card.durability">
+            {{ card.durability }}
+          </div>
+        </div>
       </div>
       <div class="kind">
-        {{ card.kind }}
+        <div class="kind-icon" />
+        {{ card.kind === CARD_KINDS.UNIT ? card.unitKind : card.kind }}
+        {{ card.job }}
       </div>
+      <div class="description">
+        <CardText :text="card.description" />
+        <CardText
+          v-for="ability in card.abilities"
+          :key="ability"
+          :text="ability"
+        />
+      </div>
+      <div class="glare" />
     </div>
     <div class="card-back" />
   </div>
@@ -71,8 +172,13 @@ const imageBg = computed(() => {
 <style scoped lang="postcss">
 .card {
   --pixel-scale: 2;
-  width: calc(126px * var(--pixel-scale));
-  height: calc(178px * var(--pixel-scale));
+  --glare-x: calc(1px * v-bind('pointerStyle?.glareX'));
+  --glare-y: calc(1px * v-bind('pointerStyle?.glareY'));
+  --foil-x: calc(1% * v-bind('pointerStyle?.foilX'));
+  --foil-y: calc(1% * v-bind('pointerStyle?.foilY'));
+  --pointer-from-center: v-bind('pointerStyle?.pointerFromCenter');
+  width: calc(var(--card-width) * var(--pixel-scale));
+  height: calc(var(--card-height) * var(--pixel-scale));
   display: grid;
   transform-style: preserve-3d;
 
@@ -84,146 +190,281 @@ const imageBg = computed(() => {
 
 .card-front {
   backface-visibility: hidden;
-  background: url('/assets/ui/card-bg.png');
+  background: url('/assets/ui/card-bg.png'), v-bind(affinityBg);
   background-size: cover;
-  color: black;
-  font-family: 'NotJamSlab14', monospace;
-  font-size: 14px;
+  color: #fcffcb;
+  /* font-family: 'NotJamSlab14', monospace; */
+  font-size: 16px;
+  padding: 1rem;
 }
 
 .card-back {
   transform: rotateY(0.5turn);
   backface-visibility: hidden;
-  background: url('/assets/ui/card-back3.png');
+  background: url('/assets/ui/card-back4.png');
   background-size: cover;
-}
-
-.card-image {
-  background: var(--bg);
-  background-size: cover;
-  width: calc(113px * var(--pixel-scale));
-  height: calc(89px * var(--pixel-scale));
-  margin: 0 auto;
-}
-
-.name {
-  position: absolute;
-  top: calc(1px * var(--pixel-scale));
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(84px * var(--pixel-scale));
-  height: calc(20px * var(--pixel-scale));
-  background: url('/assets/ui/card-name.png');
-  background-size: cover;
-  font-size: 16px;
-  text-align: center;
-  display: grid;
-  place-content: center;
-  padding-top: calc(3px * var(--pixel-scale));
-  text-shadow:
-    0 1px 0 #efef9f,
-    0 -1px 0 #efef9f,
-    1px 0 0 #efef9f,
-    -1px 0 0 #efef9f;
 }
 
 .dual-text {
-  background: linear-gradient(#fcfcfc, #fcfcfc 50%, #e6d67b 50%);
-  background-clip: text;
   color: transparent;
-}
-
-.mp-cost {
-  position: absolute;
-  width: calc(23px * var(--pixel-scale));
-  height: calc(23px * var(--pixel-scale));
-  top: calc(2px * var(--pixel-scale));
-  left: calc(2px * var(--pixel-scale));
-  background: url('/assets/ui/card-mp.png');
-  background-size: cover;
-  color: white;
-  font-size: 22px;
-  font-family: 'NotJamSlab11', monospace;
-  display: grid;
-  place-content: center;
-  padding-right: calc(2px * var(--pixel-scale));
-}
-
-.exp {
-  position: absolute;
-  width: calc(23px * var(--pixel-scale));
-  height: calc(23px * var(--pixel-scale));
-  top: calc(2px * var(--pixel-scale));
-  right: calc(2px * var(--pixel-scale));
-  background: url('/assets/ui/card-exp.png');
-  background-size: cover;
-  color: white;
-  font-size: 22px;
-  font-family: 'NotJamSlab11', monospace;
-  display: grid;
-  place-content: center;
-  padding-left: calc(4px * var(--pixel-scale));
-}
-
-.image-frame {
-  position: absolute;
-  width: calc(116px * var(--pixel-scale));
-  height: calc(92px * var(--pixel-scale));
-  top: calc(22px * var(--pixel-scale));
-  left: 50%;
-  transform: translateX(-50%);
-  background: url('/assets/ui/card-art-frame.png');
-  background-size: cover;
+  position: relative;
+  &::before,
+  &::after {
+    position: absolute;
+    content: attr(data-text);
+    color: transparent;
+    inset: 0;
+  }
+  &:after {
+    background: linear-gradient(#fcfcfc, #fcfcfc 40%, #ffb270 40%);
+    background-clip: text;
+  }
+  &:before {
+    text-shadow:
+      0 2px black,
+      0 -2px black,
+      2px 0 black,
+      -2px 0 black;
+    z-index: -1;
+  }
 }
 
 .image {
-  position: absolute;
-  width: calc(106px * var(--pixel-scale));
-  height: calc(85px * var(--pixel-scale));
-  top: calc(27px * var(--pixel-scale));
-  left: 50%;
-  transform: translateX(-50%);
   background: v-bind(imageBg);
   background-size: cover;
+  background-position: center;
+  width: calc(96px * var(--pixel-scale));
+  height: calc(96px * var(--pixel-scale));
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+
+  .unit & {
+    background-position: center -10px;
+  }
+}
+
+.name {
+  width: calc(100px * var(--pixel-scale));
+  text-align: center;
+  text-wrap: pretty;
+  position: absolute;
+  top: calc(90px * var(--pixel-scale));
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 18px;
+  line-height: 1.1;
+  -webkit-text-stroke: 4px black;
+  font-weight: var(--font-weight-5);
+  paint-order: stroke fill;
+  height: calc(20px * var(--pixel-scale));
+  display: grid;
+  align-items: center;
+}
+
+.affinity-gem {
+  background: v-bind(affinityGemBg);
+  background-size: cover;
+  background-position: center;
+  width: calc(26px * var(--pixel-scale));
+  height: calc(28px * var(--pixel-scale));
+  position: absolute;
+  top: calc(2px * var(--pixel-scale));
+  right: calc(2px * var(--pixel-scale));
 }
 
 .rarity {
-  position: absolute;
-  width: calc(8px * var(--pixel-scale));
-  height: calc(11px * var(--pixel-scale));
-  top: calc(99px * var(--pixel-scale));
-  left: 50%;
-  transform: translateX(-50%);
   background: v-bind(rarityBg);
   background-size: cover;
-}
-
-.description {
+  background-position: center;
+  width: calc(12px * var(--pixel-scale));
+  height: calc(15px * var(--pixel-scale));
   position: absolute;
-  top: calc(116px * var(--pixel-scale));
+  top: calc(112px * var(--pixel-scale));
   left: 50%;
   transform: translateX(-50%);
-  width: calc(116px * var(--pixel-scale));
-  height: calc(56px * var(--pixel-scale));
-  background: url('/assets/ui/card-description.png');
-  background-size: cover;
-  padding-inline: calc(11px * var(--pixel-scale));
-  padding-block: calc(4px * var(--pixel-scale));
-  line-height: 1;
-  font-family: 'Jersey 10';
-  font-size: 18px;
+}
+
+.stats {
+  position: absolute;
+  top: calc(2px * var(--pixel-scale));
+  left: calc(2px * var(--pixel-scale));
+  display: flex;
+  gap: calc(2px * var(--pixel-scale));
+  flex-direction: column;
+  > * {
+    z-index: 0;
+    background-size: cover;
+    background-position: center;
+    width: calc(28px * var(--pixel-scale));
+    height: calc(30px * var(--pixel-scale));
+    display: grid;
+    place-content: center;
+    font-size: 28px;
+    padding-top: calc(4px * var(--pixel-scale));
+    font-family: 'NotJamSlab11', monospace;
+  }
+}
+
+.level {
+  position: absolute;
+  top: calc(32px * var(--pixel-scale));
+  right: calc(9px * var(--pixel-scale));
+  display: flex;
+  flex-direction: column;
+  > * {
+    background-image: url('/assets/ui/card-level-filled.png');
+    background-size: cover;
+    background-position: center;
+    width: calc(13px * var(--pixel-scale));
+    height: calc(13px * var(--pixel-scale));
+    display: grid;
+    place-content: center;
+    font-size: 28px;
+    padding-top: calc(4px * var(--pixel-scale));
+    font-family: 'NotJamSlab11', monospace;
+  }
+}
+
+.mana-cost {
+  background-image: url('/assets/ui/card-mana.png');
+}
+
+.destiny-cost {
+  background-image: url('/assets/ui/card-destiny.png');
+}
+
+.atk {
+  background-image: url('/assets/ui/card-attack.png');
+}
+
+.spellpower {
+  background-image: url('/assets/ui/card-spellpower.png');
+}
+
+.hp {
+  background-image: url('/assets/ui/card-hp.png');
+}
+
+.durability {
+  background-image: url('/assets/ui/card-durability.png');
 }
 
 .kind {
+  width: calc(96px * var(--pixel-scale));
+  height: calc(16px * var(--pixel-scale));
   position: absolute;
-  top: calc(162px * var(--pixel-scale));
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(72px * var(--pixel-scale));
-  height: calc(14px * var(--pixel-scale));
-  background: url('/assets/ui/card-type.png');
-  background-size: cover;
-  display: grid;
-  place-content: center;
+  top: calc(128px * var(--pixel-scale));
+  left: calc(20px * var(--pixel-scale));
+  display: flex;
+  align-items: center;
+  gap: calc(2px * var(--pixel-scale));
+
+  font-size: 14px;
+  .kind-icon {
+    background: v-bind(kindBg);
+    background-size: cover;
+    background-position: center;
+    width: calc(16px * var(--pixel-scale));
+    aspect-ratio: 1;
+  }
+}
+
+.description {
+  width: calc(116px * var(--pixel-scale));
+  height: calc(60px * var(--pixel-scale));
+  position: absolute;
+  top: calc(147px * var(--pixel-scale));
+  left: calc(24px * var(--pixel-scale));
+  font-size: 14px;
+}
+
+.glare {
+  position: absolute;
+  pointer-events: none;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.3s;
+  background-image: radial-gradient(
+    circle at var(--glare-x) var(--glare-y),
+    hsla(0, 0%, 100%, 0.8) 10%,
+    hsla(0, 0%, 100%, 0.65) 20%,
+    hsla(0, 0%, 0%, 0.5) 90%
+  );
+  mix-blend-mode: overlay;
+  mask-image: url('/assets/ui/card-bg.png');
+  mask-size: cover;
+
+  .card:hover & {
+    opacity: 0.8;
+  }
+}
+
+@property --foil-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes foil-spin {
+  from {
+    --foil-angle: 0deg;
+  }
+  to {
+    --foil-angle: 360deg;
+  }
+}
+.foil {
+  --space: 5%;
+  --foil-angle: 0deg;
+  --img-size: 300% 400%;
+  position: absolute;
+  inset: 0;
+  animation: foil-spin 10s infinite linear;
+  background: repeating-linear-gradient(
+    var(--foil-angle),
+    hsla(283, 49%, 60%, 0.75) calc(var(--space) * 1),
+    hsla(2, 74%, 59%, 0.75) calc(var(--space) * 2),
+    hsla(53, 67%, 53%, 0.75) calc(var(--space) * 3),
+    hsla(93, 56%, 52%, 0.75) calc(var(--space) * 4),
+    hsla(176, 38%, 50%, 0.75) calc(var(--space) * 5),
+    hsla(228, 100%, 77%, 0.75) calc(var(--space) * 6),
+    hsla(283, 49%, 61%, 0.75) calc(var(--space) * 7)
+  );
+  background-size: var(--img-size);
+  opacity: 0.7;
+  mix-blend-mode: color-dodge;
+  background-position:
+    0% calc(33% * 1),
+    63% 33%;
+  /* background-position:
+    0% calc(var(--foil-y) * 1),
+    var(--foil-x) var(--foil-y); */
+  /* opacity: 0; */
+  /* display: none; */
+  transition: opacity 0.3s;
+  filter: brightness(0.85) contrast(2.75) saturate(0.65);
+  mask-image: url('/assets/ui/card-bg.png');
+  mask-size: cover;
+
+  &::after {
+    position: absolute;
+    inset: 0;
+    content: '';
+    background-image: radial-gradient(
+      farthest-corner ellipse at calc(((var(--glare-x)) * 0.5) + 25%)
+        calc(((var(--glare-y)) * 0.5) + 25%),
+      hsl(0, 0%, 100%) 5%,
+      hsla(300, 100%, 11%, 0.6) 40%,
+      hsl(0, 0%, 22%) 120%
+    );
+    background-position: center center;
+    background-size: 400% 500%;
+    filter: brightness(calc((var(--pointer-from-center) * 0.2) + 0.4))
+      contrast(0.85) saturate(1.1);
+    mix-blend-mode: hard-light;
+  }
 }
 </style>

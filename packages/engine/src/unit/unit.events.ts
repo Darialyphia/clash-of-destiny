@@ -6,6 +6,7 @@ import type { SerializedUnit, Unit } from './entities/unit.entity';
 import type { AnyCard, SerializedCard } from '../card/entities/card.entity';
 import type { Cell, SerializedCell } from '../board/cell';
 import type { Position } from '../utils/position.component';
+import type { HeroCard, SerializedHeroCard } from '../card/entities/hero-card.entity';
 
 export class UnitCreatedEvent extends TypedSerializableEvent<
   { affectedCells: Cell[]; affectedUnits: Unit[] },
@@ -52,6 +53,23 @@ export class UnitAfterMoveEvent extends TypedSerializableEvent<
   }
 }
 
+export class UnitBeforeBounce extends TypedSerializableEvent<EmptyObject, EmptyObject> {
+  serialize() {
+    return {};
+  }
+}
+
+export class UnitAfterBounce extends TypedSerializableEvent<
+  { successful: boolean },
+  { successful: boolean }
+> {
+  serialize() {
+    return {
+      successful: this.data.successful
+    };
+  }
+}
+
 export class UnitAttackEvent extends TypedSerializableEvent<
   { target: Vec2 },
   { target: Point }
@@ -68,7 +86,7 @@ export class UnitAttackEvent extends TypedSerializableEvent<
 }
 
 export class UnitDealDamageEvent extends TypedSerializableEvent<
-  { targets: Unit[]; damage: Damage<any> },
+  { targets: Unit[]; damage: Damage<AnyCard> },
   { targets: Array<{ unit: SerializedUnit; damage: number }> }
 > {
   serialize() {
@@ -82,8 +100,8 @@ export class UnitDealDamageEvent extends TypedSerializableEvent<
 }
 
 export class UnitReceiveDamageEvent extends TypedSerializableEvent<
-  { from: Unit; target: Unit; damage: Damage<any> },
-  { from: SerializedUnit; damage: number }
+  { from: AnyCard; target: Unit; damage: Damage<AnyCard> },
+  { from: SerializedCard; damage: number }
 > {
   serialize() {
     return {
@@ -94,8 +112,8 @@ export class UnitReceiveDamageEvent extends TypedSerializableEvent<
 }
 
 export class UnitReceiveHealEvent extends TypedSerializableEvent<
-  { from: Unit; amount: number },
-  { from: SerializedUnit; amount: number }
+  { from: AnyCard; amount: number },
+  { from: SerializedCard; amount: number }
 > {
   serialize() {
     return {
@@ -106,8 +124,8 @@ export class UnitReceiveHealEvent extends TypedSerializableEvent<
 }
 
 export class UnitBeforeDestroyEvent extends TypedSerializableEvent<
-  { source: Unit },
-  { source: SerializedUnit }
+  { source: AnyCard },
+  { source: SerializedCard }
 > {
   serialize() {
     return {
@@ -117,8 +135,8 @@ export class UnitBeforeDestroyEvent extends TypedSerializableEvent<
 }
 
 export class UnitAfterDestroyEvent extends TypedSerializableEvent<
-  { source: Unit; destroyedAt: Position },
-  { source: SerializedUnit; destroyedAt: Point }
+  { source: AnyCard; destroyedAt: Position },
+  { source: SerializedCard; destroyedAt: Point }
 > {
   serialize() {
     return {
@@ -128,36 +146,46 @@ export class UnitAfterDestroyEvent extends TypedSerializableEvent<
   }
 }
 
-export class UnitPlayCardEvent extends TypedSerializableEvent<
-  { card: AnyCard },
-  { card: SerializedCard }
+export class UnitExhaustEvent extends TypedSerializableEvent<EmptyObject, EmptyObject> {
+  serialize() {
+    return {};
+  }
+}
+
+export class UnitWakeUpEvent extends TypedSerializableEvent<EmptyObject, EmptyObject> {
+  serialize() {
+    return {};
+  }
+}
+
+export class UnitUseAbilityEvent extends TypedSerializableEvent<
+  EmptyObject,
+  EmptyObject
+> {
+  serialize() {
+    return {};
+  }
+}
+
+export class HeroBeforeEvolveEvent extends TypedSerializableEvent<
+  { newCard: HeroCard },
+  { newCard: SerializedHeroCard }
 > {
   serialize() {
     return {
-      card: this.data.card.serialize()
+      newCard: this.data.newCard.serialize()
     };
   }
 }
 
-export class UnitTurnEvent extends TypedSerializableEvent<EmptyObject, EmptyObject> {
-  serialize() {
-    return {};
-  }
-}
-
-export class UnitLevelUpEvent extends TypedSerializableEvent<EmptyObject, EmptyObject> {
-  serialize() {
-    return {};
-  }
-}
-
-export class UnitDrawEvent extends TypedSerializableEvent<
-  { amount: number },
-  { amount: number }
+export class HeroAfterEvolveEvent extends TypedSerializableEvent<
+  { prevCard: HeroCard; newCard: HeroCard },
+  { prevCard: SerializedHeroCard; newCard: SerializedHeroCard }
 > {
   serialize() {
     return {
-      amount: this.data.amount
+      prevCard: this.data.prevCard.serialize(),
+      newCard: this.data.newCard.serialize()
     };
   }
 }
@@ -170,6 +198,8 @@ export type UnitEventMap = {
   [UNIT_EVENTS.AFTER_TELEPORT]: UnitAfterMoveEvent;
   [UNIT_EVENTS.BEFORE_ATTACK]: UnitAttackEvent;
   [UNIT_EVENTS.AFTER_ATTACK]: UnitAttackEvent;
+  [UNIT_EVENTS.BEFORE_COUNTERATTACK]: UnitAttackEvent;
+  [UNIT_EVENTS.AFTER_COUNTERATTACK]: UnitAttackEvent;
   [UNIT_EVENTS.BEFORE_DEAL_DAMAGE]: UnitDealDamageEvent;
   [UNIT_EVENTS.AFTER_DEAL_DAMAGE]: UnitDealDamageEvent;
   [UNIT_EVENTS.BEFORE_RECEIVE_DAMAGE]: UnitReceiveDamageEvent;
@@ -178,12 +208,14 @@ export type UnitEventMap = {
   [UNIT_EVENTS.AFTER_RECEIVE_HEAL]: UnitReceiveHealEvent;
   [UNIT_EVENTS.BEFORE_DESTROY]: UnitBeforeDestroyEvent;
   [UNIT_EVENTS.AFTER_DESTROY]: UnitAfterDestroyEvent;
-  [UNIT_EVENTS.BEFORE_PLAY_CARD]: UnitPlayCardEvent;
-  [UNIT_EVENTS.AFTER_PLAY_CARD]: UnitPlayCardEvent;
-  [UNIT_EVENTS.START_TURN]: UnitTurnEvent;
-  [UNIT_EVENTS.END_TURN]: UnitTurnEvent;
-  [UNIT_EVENTS.BEFORE_LEVEL_UP]: UnitLevelUpEvent;
-  [UNIT_EVENTS.AFTER_LEVEL_UP]: UnitLevelUpEvent;
-  [UNIT_EVENTS.BEFORE_DRAW]: UnitDrawEvent;
-  [UNIT_EVENTS.AFTER_DRAW]: UnitDrawEvent;
+  [UNIT_EVENTS.BEFORE_BOUNCE]: UnitBeforeBounce;
+  [UNIT_EVENTS.AFTER_BOUNCE]: UnitAfterBounce;
+  [UNIT_EVENTS.BEFORE_EXHAUST]: UnitExhaustEvent;
+  [UNIT_EVENTS.AFTER_EXHAUST]: UnitExhaustEvent;
+  [UNIT_EVENTS.BEFORE_WAKE_UP]: UnitWakeUpEvent;
+  [UNIT_EVENTS.AFTER_WAKE_UP]: UnitWakeUpEvent;
+  [UNIT_EVENTS.BEFORE_USE_ABILITY]: UnitUseAbilityEvent;
+  [UNIT_EVENTS.AFTER_USE_ABILITY]: UnitUseAbilityEvent;
+  [UNIT_EVENTS.BEFORE_EVOLVE_HERO]: HeroBeforeEvolveEvent;
+  [UNIT_EVENTS.AFTER_EVOLVE_HERO]: HeroAfterEvolveEvent;
 };

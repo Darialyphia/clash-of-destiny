@@ -4,7 +4,6 @@ import { useShaker } from '@/shared/composables/vfx/useShaker';
 import type { Container } from 'pixi.js';
 import { waitFor } from '@game/shared';
 import { useBattleEvent, useGameState } from '@/battle/stores/battle.store';
-import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
 import { GAME_EVENTS } from '@game/engine/src/game/game.events';
 
 const { unit } = defineProps<{ unit: UnitViewModel }>();
@@ -33,16 +32,19 @@ useBattleEvent(GAME_EVENTS.UNIT_BEFORE_RECEIVE_DAMAGE, async e => {
   await waitFor(duration);
 });
 
-// useVFXEvent('SHAKE_UNIT', async params => {
-//   if (!params.unit.equals(unit.getUnit())) return;
+useBattleEvent(GAME_EVENTS.UNIT_BEFORE_EVOLVE_HERO, async e => {
+  if (e.unit.id !== unit.id) return;
+  const duration = 1200;
 
-//   shaker.trigger({
-//     isBidirectional: params.isBidirectional,
-//     shakeAmount: params.amplitude,
-//     shakeDelay: 35,
-//     shakeCountMax: Math.round(params.duration / 35)
-//   });
-// });
+  shaker.trigger({
+    isBidirectional: false,
+    shakeAmount: 10,
+    shakeDelay: 35,
+    shakeCountMax: Math.round(duration / 25)
+  });
+
+  await waitFor(duration);
+});
 
 useBattleEvent(GAME_EVENTS.UNIT_BEFORE_DESTROY, async e => {
   if (e.unit.id !== unit.id) return;

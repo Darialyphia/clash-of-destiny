@@ -23,9 +23,11 @@ const loadParserByAssetType = {
   hitboxes: undefined,
   emotes: undefined,
   portraits: undefined,
+  backgrounds: undefined,
 };
 
 const prefixByAssetType = {
+  backgrounds: "",
   tilesets: "",
   skills: "",
   units: "",

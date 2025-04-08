@@ -4,27 +4,22 @@ export type HealthComponentOptions = {
 };
 
 export class HealthComponent {
-  private _current: number;
+  private damageTaken = 0;
   max: number;
 
   constructor(options: HealthComponentOptions) {
-    this._current = options.initialValue;
     this.max = options.max;
   }
 
   get current() {
-    return this._current;
-  }
-
-  setTo(value: number) {
-    this._current = Math.min(Math.max(value, 0), this.max);
+    return this.max - this.damageTaken;
   }
 
   add(amount: number) {
-    this._current = Math.min(this._current + amount, this.max);
+    this.damageTaken = Math.max(this.damageTaken - amount, 0);
   }
 
   remove(amount: number) {
-    this._current = Math.max(this._current - amount, 0);
+    this.damageTaken = Math.min(this.damageTaken + amount, this.max);
   }
 }

@@ -20,7 +20,7 @@ import {
 
 export type EffectTarget = {
   type: 'cell';
-  isElligible: (point: Point) => boolean;
+  isElligible: (point: Point, selectedTargets: SelectedTarget[]) => boolean;
 };
 
 export type SelectedTarget = {
@@ -195,12 +195,13 @@ export class InteractionSystem
       new InvalidInteractionStateError()
     );
     const nextTarget = this._context.ctx.getNextTarget(this._context.ctx.selectedTargets);
+    const selected = this._context.ctx.selectedTargets;
     assert(isDefined(nextTarget), new TooManyTargetsError());
     assert(nextTarget.type === target.type, new IllegalTargetError());
 
     match(target)
       .with({ type: 'cell' }, ({ cell }) => {
-        assert(nextTarget.isElligible(cell as any), new IllegalTargetError());
+        assert(nextTarget.isElligible(cell as any, selected), new IllegalTargetError());
       })
       .exhaustive();
   }
@@ -324,7 +325,11 @@ export class InteractionSystem
           playerId: ctx.player.id,
           selectedTargets: ctx.selectedTargets,
           elligibleTargets: this.game.boardSystem.cells
-            .filter(cell => ctx.getNextTarget(ctx.selectedTargets)?.isElligible(cell))
+            .filter(cell =>
+              ctx
+                .getNextTarget(ctx.selectedTargets)
+                ?.isElligible(cell, ctx.selectedTargets)
+            )
             .map(cell => ({ type: 'cell', cell: cell.position.serialize() })),
           canSkip: ctx.canCommit(ctx.selectedTargets)
         }))

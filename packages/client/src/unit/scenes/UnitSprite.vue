@@ -3,17 +3,11 @@ import { useSpritesheet } from '@/shared/composables/useSpritesheet';
 import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
 import { OutlineFilter } from '@pixi/filter-outline';
 import { AdjustmentFilter } from '@pixi/filter-adjustment';
-import { type Filter } from 'pixi.js';
 import { useIsoCamera } from '@/iso/composables/useIsoCamera';
 import { useMultiLayerTexture } from '@/shared/composables/useMultiLayerTexture';
 import { config } from '@/utils/config';
 import type { UnitViewModel } from '../unit.model';
-import {
-  useActiveUnit,
-  useGameState,
-  useUserPlayer
-} from '@/battle/stores/battle.store';
-import { GAME_PHASES } from '@game/engine/src/game/systems/game-phase.system';
+import { useGameState, useUserPlayer } from '@/battle/stores/battle.store';
 import { INTERACTION_STATES } from '@game/engine/src/game/systems/interaction.system';
 import { pointToCellId } from '@game/engine/src/board/board-utils';
 
@@ -40,7 +34,6 @@ const textures = useMultiLayerTexture({
   dimensions: config.UNIT_SPRITE_SIZE
 });
 
-const activeUnit = useActiveUnit();
 const isInAoe = computed(() => {
   if (
     state.value.interactionState.state !== INTERACTION_STATES.SELECTING_TARGETS
@@ -48,7 +41,7 @@ const isInAoe = computed(() => {
     return false;
   }
 
-  const card = activeUnit.value.getCurrentlyPlayedCard();
+  const card = player.value.getCurrentlyPlayedCard();
   if (!card) return false;
   if (!ui.hoveredCell) return false;
   const canPlay = state.value.interactionState.ctx.elligibleTargets.some(
@@ -71,17 +64,13 @@ const isInAoe = computed(() => {
       <outline-filter
         v-if="ui.highlightedUnit?.id === unit.id"
         :thickness="outlineThickness"
-        :color="0xffffff"
-      />
-      <outline-filter
-        v-else-if="
-          ui.selectedUnit?.id === unit.id && state.phase === GAME_PHASES.BATTLE
+        :color="
+          ui.highlightedUnit?.playerId === player.id ? 0x00aaff : 0xff0000
         "
-        :thickness="outlineThickness"
-        :color="ui.selectedUnit?.playerId === player.id ? 0x00aaff : 0xff0000"
       />
 
       <adjustment-filter v-if="isInAoe" :red="3" :brightness="0.8" />
+      <adjustment-filter v-if="unit.isExhausted" :saturation="0" />
     </template>
   </animated-sprite>
 </template>

@@ -23,12 +23,12 @@ useBattleEvent(GAME_EVENTS.UNIT_BEFORE_RECEIVE_DAMAGE, async e => {
 
 const offset = {
   x: 0,
-  y: -50
+  y: -10
 };
 const onEnter = (container: Container) => {
   const target = {
     x: 30 + randomInt(60),
-    y: -1 * (30 + randomInt(50))
+    y: -1 * (30 + randomInt(30))
   };
   gsap.to(container.position, {
     motionPath: [
@@ -54,7 +54,7 @@ const onEnter = (container: Container) => {
         fontFamily: 'NotJamSlab14',
         align: 'center',
         fill: '#ff0000',
-        fontSize: 120,
+        fontSize: 14 * 6,
         strokeThickness: 8
       }"
       :scale="0.25"

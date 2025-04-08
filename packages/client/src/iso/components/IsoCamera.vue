@@ -61,9 +61,8 @@ useEventListener('resize', () => {
 watchEffect(() => {
   camera.offset.value = {
     x: (rows / 2) * config.TILE_SIZE.x + WORLD_PADDING.x / 2,
-    y: boardSize.value.height / 6 + WORLD_PADDING.y / 2
+    y: WORLD_PADDING.y / 2
   };
-  console.log(camera.offset.value);
 });
 </script>
 

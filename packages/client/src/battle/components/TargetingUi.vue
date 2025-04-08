@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import UiButton from '@/ui/components/UiButton.vue';
 import {
-  useActiveUnit,
   useBattleEvent,
   useBattleStore,
   useGameState,
@@ -22,11 +21,11 @@ useBattleEvent(GAME_EVENTS.INPUT_START, async e => {
   }
 });
 const forceHide = ref(false);
-useBattleEvent(GAME_EVENTS.UNIT_BEFORE_PLAY_CARD, async e => {
+useBattleEvent(GAME_EVENTS.PLAYER_BEFORE_PLAY_CARD, async e => {
   isQuickCasting.value = false;
   forceHide.value = true;
 });
-useBattleEvent(GAME_EVENTS.UNIT_AFTER_PLAY_CARD, async e => {
+useBattleEvent(GAME_EVENTS.PLAYER_AFTER_PLAY_CARD, async e => {
   forceHide.value = false;
 });
 

@@ -1,4 +1,4 @@
-import { type Point3D } from '@game/shared';
+import { type Point } from '@game/shared';
 import type { Game } from '../game/game';
 import {
   isValidTargetingType,
@@ -17,7 +17,7 @@ export class RangedTargetingStrategy implements TargetingStrategy {
   constructor(
     private game: Game,
     private card: AnyCard,
-    private origin: Point3D,
+    private origin: Point,
     private type: TargetingType,
     public readonly options: RangedTargetingStrategyOptions
   ) {}
@@ -26,16 +26,16 @@ export class RangedTargetingStrategy implements TargetingStrategy {
     return Position.fromPoint(this.origin);
   }
 
-  isWithinRange(point: Point3D) {
+  isWithinRange(point: Point) {
     if (this.position.isWithinCells(point, this.options.minRange)) return false;
     if (!this.position.isWithinCells(point, this.options.maxRange)) return false;
 
     return true;
   }
 
-  canTargetAt(point: Point3D) {
+  canTargetAt(point: Point) {
     if (!this.isWithinRange(point)) return false;
 
-    return isValidTargetingType(this.game, point, this.card.unit.player, this.type);
+    return isValidTargetingType(this.game, point, this.card.player, this.type);
   }
 }

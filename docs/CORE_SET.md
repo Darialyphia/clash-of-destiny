@@ -1,242 +1,178 @@
 # Core Set
 
-## Level 1 Heroes:
+Legend:
+- [exhaust] : means that you have to exaust this minion to execute the effect.
+- XM: indicates that the card or ability costs X Mana
+- XD: indicates that the card or ability costs X Destiny
+- SP: spellpower
+- ATK: attack
+- HP: Health
+- LV: Level of the card's hero
+- DUR: durability
+- [x] : means the card has been implemented in the game
 
-### Mage
+## Heroes
 
-#### Magic Projectile
+## Minions
 
-Ability
+### Normal
 
-1 MP | 1 EXP
+**Bubbly Slime** (Minion - Summoner) [x]
+2M | 1Atk | 1Hp
 
-Fires a projectile that deals (1 + Ability Power) damage to the first target hit.
+On Enter: if you have at least 3 Destiny, draw a card.
 
-[x] Implemented
+Floating Destiny
 
-#### Arcane Knowledge
+---
 
-Ability
+**Stalwart Vanguard** (Minion - Guardian) [x]
 
-1 MP | 1 EXP
+2M | 0ATK | 3HP
 
-Draw 2 cards.
+Provoke, Floating Destiny
 
-[x] Implemented
+---
 
-#### Mana Shield
+**Esteemed Erudite** (Minion - Spellcaster) [x]
+3M | 1ATK | 2HP
 
-Ability
+[exhaust], 1M -> Draw a card.
 
-1 MP | 1EXP
+---
 
-The next time this takes damage, reduce the damage by (2 + Abilit Power) and lose 1 mana.
+**Garrison Marskman** (Minion - Avenger) [x]
+3M | 2ATK | 1HP
 
-[x] Implemented
+Ranged(2)
 
-#### Magic Amplification
+---
 
-Ability
+**Promising Recruit**(Minion - Guardian) [x]
+2M | 1ATK | 2HP
 
-1 MP | 1 EXP
+---
 
-Your next ability is cast with +2 Ability Power.
+**Weaponsmith** (Minion - Fighter)
+2M | 1ATK | 1HP
 
-[x] Implemented
+[exhaust], 1M -> restore 1 Durability on one of your artifacts.
 
-### Frost Nova
+--- 
 
-Ability
+**ShieldMaiden** (Minion - Guardian)
 
-3 MP | 1 EXP
+4M | 2ATK | 4HP
 
-Deal 1 damage and inflict Root(1 + Spell Power) to nearby enemies.
+Provoke, Vigilant
 
-[x] Implemented
+---
 
-### Force Wave
+**Sword Instructor** (Minion - Fighter) [x]
 
-Ability
+2M | 1ATK | 2HP
 
-2 MP | 1 EXP
+[exhaust], 1M -> Give a ally minion +1 ATK.
 
-Knockback adjacent enemies 1 tile.
+---
 
-[x] Implemented
+**King Slime** (Minion - Summoner)
 
-### Cone of Flames
+3M | 2ATK | 2HP
 
-Ability
+On Destroyed: Summon a Bubbly Slime on this space.
 
-3 MP | 1 EXP
+---
 
-Deal (2 + Ability Power) damage to enemies in a cone.
-Explanation of the Area of Effect:
+**Fleeting Dancer** (Minion - Wanderer)
 
-[x] Implemented
+3M | 2ATK | 2HP
 
-### Blink
+Swift
 
-Ability
+---
 
-2 MP | 1EXP
+**Banner Knight** (Minion - Fighter)
 
-Teleport up to 2 tiles away. Draw 1 card.
+4M | 2 ATK | 3HP
 
-[x] Implemented
+Commander
 
-### Polymorph
+Allies nearby this minion have +1 ATK.
 
-Ability
+---
 
-3 MP | 1 EXP
+**Luminescent Mystic** (Minion - Wanderer)
 
-Inflicts Hex(1) to an enemy (max range: 3).
+2M | 1ATK | 1HP
 
-[ ] Implemented
+On Enter: The next time damage would be dealt to your hero, prevent 2 of that damage.
 
-### Fireball
+Class Bonus: +1 Hp
 
-Ability
+**First Aid Recruit** (Minion - Guardian)
 
-2 MP | 1 EXP
+2M | 1 ATK | 1HP
 
-Deal 2 damage to an enemy and 1 damage to enemies around it. (max range: 3)
+On Enter: If you have at least 2 Destiny, heal an ally for 2.
 
-[x] Implemented
+---
 
-### Staff of Focus
+**Grave Robber** (Minion - Avenger)
 
-Artifact - Weapon
+3M | 2ATK | 2HP
 
-3 Durability
+[exhaust] -> Banish up to 2 cards from the opponent's discard pile.
 
-At the start of your turn, gain 1 mana
+---
 
-[x] Implemented
+**Nightshade Scout** (Minion - Avenger)
 
-### Sorcerer's Hat
+3M | 3ATK | 1HP
 
-Artifact - Armor
+Defiant(2)
 
-3 Durability
+Ambush
 
-You have +1 Ability Power
+Class Bonus: On Destroyed: Draw a card.
 
-[ ] Implemented
+---
 
-## Acolyte
+**Twiight Sorcerer** (Minion - Spellcaster)
 
-### Cure Wounds
+4M | 1 ATK | 4HP
 
-Ability
+Defiant(2)
 
-2 MP | 1 EXP
+[exhaust], 1M -> Deal 1 damage to an enemy. Class Bonus: if that destroys the unit, activate this.
 
-Heal an ally for (2 + Ability Power). (Max range: 4)
+---
 
-[X] Implemented
+**Knowledge Seeker** (Minion - Spellcaster)
 
-### Purify
+4M | 2 ATK | 3 HP
 
-Ability
+On Enter: Draw 2 cards, then discard a card.
 
-2 MP | 1 EXP
+---
 
-Remove negative status effects from an ally. (Max range: 2)
+**Zoran, The Punisher** (Minion - Avenger) [x]
 
-[x] Implemented
+6M | 3ATK | 5HP
 
-### Inspire
+Flank, Unique.
 
-Ability
+On Enter: Deal 3 damage to the unit in front of this. (In front means to the right for player 1, and to the left for player 2).
 
-1 MP | 1 Exp
+**Diligent Mentor** (Minion - Wanderer)
 
-An ally draws 1 card. (Max range: 3)
+3 M | 2 ATK | 2HP
 
-[x] Implemented
+On Enter: Your Hero gains 1 Level.
 
-### Equinox
 
-Ability
+## Spells
 
-3 MP | 1 Exp
+## Artifacts
 
-Inflict Silence(2) to units in a 2x2 zone.
-
-[x] Implemented
-
-### Safety Wall
-
-Ability
-
-3 MP | 1 EXP
-
-Summon a Safety Wall on a nearby tile. units inside the wall take 1 reduced damage. Can take (2 + Ability Power) hits.
-
-[ ] Implemented
-
-### Word of Light
-
-Ability
-
-2 MP | 1 EXP
-
-Deal (2 + Ability Power) damage to an enemy.
-
-[x] Implemented
-
-### Penance
-
-Ability
-
-2 MP | 1 EXP
-
-Give an enemy "When this attacks, take 1 damage" until the end of its next turn.
-
-[x] Implemented
-
-### Prayer
-
-Ability
-
-0 MP | 1 EXP
-
-Inflict Root(2) to yourself. Gain 2 mana.
-
-[ ] Implemented
-
-### Sky Teachings
-
-Ability
-
-3 MP | 1 EXP
-
-Give an ally "When this uses an ability, gain 1 EXP" during its next turn.
-
-### Pacify
-
-Ability
-
-2MP | 1 Exp
-
-Inflict Disarm(1 + Ability Power) to an enemy.
-
-[x] Implemented
-
-### Blessed Rosary
-
-Artifact - Relic
-
-3 Durability
-
-When you use an ability, heal nearby allies for 1 and lose 1 durability.
-
-### Pendant of Compassion
-
-Artifact - Relic
-
-2 Durability
-
-At the start of the turn, put a Cure wounds in your hand and lose 1 durability.
+## Secrets

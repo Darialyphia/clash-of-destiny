@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { assert, type JSONValue, type Serializable } from '@game/shared';
 import type { Game } from '../game/game';
-import type { GamePhase } from '../game/systems/game-phase.system';
 import { MissingPayloadError, WrongGamePhaseError } from './input-errors';
+import type { GamePhase } from '../game/game.enums';
 
 export const defaultInputSchema = z.object({
   playerId: z.string()

@@ -1,22 +1,38 @@
 <script setup lang="ts">
-import type { UnitViewModel } from '@/unit/unit.model';
 import { useResizeObserver } from '@vueuse/core';
 import { throttle } from 'lodash-es';
 import HandCard from './HandCard.vue';
 import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
+import type { PlayerViewModel } from '@/player/player.model';
+import { useBattleEvent, useGameState } from '@/battle/stores/battle.store';
+import { INTERACTION_STATES } from '@game/engine/src/game/systems/interaction.system';
+import type { Nullable } from '@game/shared';
+import { GAME_EVENTS } from '@game/engine/src/game/game.events';
 
-const { unit } = defineProps<{
-  unit: UnitViewModel;
+const { player } = defineProps<{
+  player: PlayerViewModel;
 }>();
 
-const hand = computed(() => unit.getHand());
+const playedCardId = ref<Nullable<string>>();
+useBattleEvent(GAME_EVENTS.PLAYER_BEFORE_PLAY_CARD, async event => {
+  playedCardId.value = event.card.id;
+});
+
+const hand = computed(() => {
+  return player
+    .getHand()
+    .filter(
+      card => !ui.cardPlayIntent?.equals(card) && card.id !== playedCardId.value
+    );
+});
 const ui = useBattleUiStore();
 const cardSpacing = ref(0);
 const root = useTemplateRef('root');
+const { state } = useGameState();
 
 const computeMargin = () => {
   if (!root.value) return 0;
-  if (!unit.handSize) return 0;
+  if (!player.handSize) return 0;
 
   const allowedWidth = root.value.clientWidth;
   const totalWidth = [...root.value.children].reduce((total, child) => {
@@ -25,11 +41,11 @@ const computeMargin = () => {
 
   const excess = totalWidth - allowedWidth;
 
-  return Math.min(-excess / (unit.handSize - 1), 0);
+  return Math.min(-excess / (player.handSize - 1), 0);
 };
 
 watch(
-  [root, computed(() => unit.handSize)],
+  [root, computed(() => player.handSize)],
   async () => {
     await nextTick();
     cardSpacing.value = computeMargin();
@@ -47,7 +63,19 @@ useResizeObserver(
 
 <template>
   <transition appear mode="out-in">
-    <div class="hand" ref="root" :key="unit.id">
+    <div
+      class="hand"
+      ref="root"
+      :key="player.id"
+      :class="{
+        hidden:
+          ui.isDestinyResourceActionModalOpened ||
+          ui.isReplaceResourceActionModalOpened
+      }"
+      :inert="
+        state.interactionState.state === INTERACTION_STATES.SELECTING_TARGETS
+      "
+    >
       <div
         v-for="(card, index) in hand"
         :key="card.id"
@@ -65,9 +93,12 @@ useResizeObserver(
 <style scoped lang="postcss">
 .hand {
   display: flex;
+  &.hidden {
+    opacity: 0;
+  }
   > div {
     pointer-events: auto;
-    transform: translateY(35%);
+    transform: translateY(50%);
     transition: transform 0.35s var(--ease-spring-2);
     transition-delay: calc(var(--i) * 0.03s);
     box-shadow: -10px 0 0.5rem hsl(0 0 0 / 0.2);

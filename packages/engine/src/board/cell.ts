@@ -16,7 +16,6 @@ export type SerializedCell = {
   id: string;
   position: Point;
   terrain: Terrain;
-  player: 'p1' | 'p2' | null;
   isWalkable: boolean;
   unit: string | null;
   interactable: string | null;
@@ -48,7 +47,6 @@ export class Cell
       entityType: 'cell' as const,
       position: this.position.serialize(),
       terrain: this.terrain,
-      player: this.options.player,
       isWalkable: this.isWalkable,
       unit: this.unit?.id ?? null,
       spriteId: this.options.spriteId,
@@ -86,11 +84,5 @@ export class Cell
 
   get interactable() {
     return this.game.interactableSystem.getAt(this);
-  }
-
-  get player() {
-    if (this.options.player === 'p1') return this.game.playerSystem.player1;
-    if (this.options.player === 'p2') return this.game.playerSystem.player2;
-    return null;
   }
 }

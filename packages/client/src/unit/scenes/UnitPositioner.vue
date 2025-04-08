@@ -73,20 +73,6 @@ const attackAnimation = async (e: { unit: SerializedUnit; target: Point }) => {
 useBattleEvent(GAME_EVENTS.UNIT_BEFORE_ATTACK, attackAnimation);
 
 const ui = useBattleUiStore();
-
-const yOffset = ref(0);
-watchEffect(() => {
-  let newOffset = 0;
-  if (state.value.phase === 'DEPLOY' && ui.selectedUnit?.equals(unit)) {
-    newOffset = -12;
-  }
-
-  gsap.to(yOffset, {
-    value: newOffset,
-    duration: 0.3,
-    ease: Power2.easeIn
-  });
-});
 </script>
 
 <template>
@@ -98,7 +84,7 @@ watchEffect(() => {
     <container
       :position="{
         x: config.UNIT_SPRITE_OFFSET.x,
-        y: config.UNIT_SPRITE_OFFSET.y + yOffset
+        y: config.UNIT_SPRITE_OFFSET.y
       }"
       :ref="(container: any) => ui.assignLayer(container, 'scene')"
     >

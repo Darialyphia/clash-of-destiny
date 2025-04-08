@@ -2,6 +2,7 @@
 import {
   useBattleEvent,
   useGameState,
+  useTurnPlayer,
   useUnits
 } from '@/battle/stores/battle.store';
 import { vOnClickOutside } from '@vueuse/components';
@@ -10,17 +11,11 @@ import type { UnitViewModel } from '@/unit/unit.model';
 import type { PlayerViewModel } from '../../player/player.model';
 import type { Point } from '@game/shared';
 import { GAME_EVENTS } from '@game/engine/src/game/game.events';
-import { GAME_PHASES } from '@game/engine/src/game/systems/game-phase.system';
 import { pointToCellId } from '@game/engine/src/board/board-utils';
 import { Icon } from '@iconify/vue';
-import {
-  HoverCardArrow,
-  HoverCardContent,
-  HoverCardPortal,
-  HoverCardRoot,
-  HoverCardTrigger
-} from 'reka-ui';
+import { HoverCardContent, HoverCardRoot, HoverCardTrigger } from 'reka-ui';
 import InspectableCard from '@/card/components/InspectableCard.vue';
+import { GAME_PHASES } from '@game/engine/src/game/game.enums';
 
 const { state } = useGameState();
 const units = useUnits();
@@ -43,28 +38,35 @@ type Token =
       player: PlayerViewModel;
     }
   | { kind: 'position'; point: Point }
-  | { kind: 'turn_start'; unit: UnitViewModel }
-  | { kind: 'turn_end'; unit: UnitViewModel }
+  | { kind: 'turn_start'; player: PlayerViewModel }
+  | { kind: 'turn_end'; player: PlayerViewModel }
   | { kind: 'action'; text: string };
 
 const events = shallowRef<Token[][]>([[]]);
+const turnPlayer = useTurnPlayer();
+events.value.push([
+  {
+    kind: 'turn_start',
+    player: turnPlayer.value
+  }
+]);
 
-useBattleEvent(GAME_EVENTS.UNIT_BEFORE_PLAY_CARD, async event => {
+useBattleEvent(GAME_EVENTS.PLAYER_BEFORE_PLAY_CARD, async event => {
   events.value.push([
     {
       kind: 'unit',
-      unit: state.value.entities[event.unit.id] as UnitViewModel
+      unit: state.value.entities[event.player.id] as UnitViewModel
     },
     { kind: 'text', text: 'played' },
     { kind: 'card', card: state.value.entities[event.card.id] as CardViewModel }
   ]);
 });
 
-useBattleEvent(GAME_EVENTS.UNIT_BEFORE_DRAW, async event => {
+useBattleEvent(GAME_EVENTS.PLAYER_BEFORE_DRAW, async event => {
   events.value.push([
     {
       kind: 'unit',
-      unit: state.value.entities[event.unit.id] as UnitViewModel
+      unit: state.value.entities[event.player.id] as UnitViewModel
     },
     { kind: 'text', text: `draws ${event.amount} cards` }
   ]);
@@ -79,7 +81,7 @@ useBattleEvent(GAME_EVENTS.UNIT_BEFORE_ATTACK, async event => {
     { kind: 'text', text: 'attacked' }
   ];
   const target = units.value.find(
-    u => u.getCell().id === pointToCellId(event.target)
+    u => u.getCell()?.id === pointToCellId(event.target)
   );
   if (target) {
     tokens.push({ kind: 'unit', unit: target });
@@ -125,20 +127,20 @@ useBattleEvent(GAME_EVENTS.UNIT_AFTER_MOVE, async event => {
   ]);
 });
 
-useBattleEvent(GAME_EVENTS.UNIT_START_TURN, async event => {
+useBattleEvent(GAME_EVENTS.PLAYER_START_TURN, async event => {
   events.value.push([
     {
       kind: 'turn_start',
-      unit: state.value.entities[event.unit.id] as UnitViewModel
+      player: state.value.entities[event.player.id] as PlayerViewModel
     }
   ]);
 });
 
-useBattleEvent(GAME_EVENTS.UNIT_END_TURN, async event => {
+useBattleEvent(GAME_EVENTS.PLAYER_END_TURN, async event => {
   events.value.push([
     {
       kind: 'turn_end',
-      unit: state.value.entities[event.unit.id] as UnitViewModel
+      player: state.value.entities[event.player.id] as PlayerViewModel
     },
     { kind: 'text', text: 'ended their turn' }
   ]);
@@ -151,6 +153,56 @@ useBattleEvent(GAME_EVENTS.UNIT_AFTER_DESTROY, async event => {
       unit: state.value.entities[event.unit.id] as UnitViewModel
     },
     { kind: 'text', text: `got destroyed.` }
+  ]);
+});
+
+useBattleEvent(GAME_EVENTS.PLAYER_BEFORE_RESOURCE_ACTION_DRAW, async event => {
+  events.value.push([
+    {
+      kind: 'text',
+      text: `${event.player.name} draws 1 card with their resource action.`
+    }
+  ]);
+});
+
+useBattleEvent(
+  GAME_EVENTS.PLAYER_BEFORE_RESOURCE_ACTION_REPLACE,
+  async event => {
+    events.value.push([
+      {
+        kind: 'text',
+        text: `${event.player.name} replaces a card with their resource action.`
+      }
+    ]);
+  }
+);
+useBattleEvent(
+  GAME_EVENTS.PLAYER_BEFORE_RESOURCE_ACTION_DESTINY,
+  async event => {
+    events.value.push([
+      {
+        kind: 'text',
+        text: `${event.player.name} banished ${event.amount} cards to gain destiny with their resource action.`
+      }
+    ]);
+  }
+);
+useBattleEvent(GAME_EVENTS.UNIT_AFTER_DESTROY, async event => {
+  events.value.push([
+    {
+      kind: 'text',
+      text: `${event.unit.name} was destroyed.`
+    }
+  ]);
+});
+
+useBattleEvent(GAME_EVENTS.UNIT_AFTER_USE_ABILITY, async event => {
+  events.value.push([
+    {
+      kind: 'unit',
+      unit: state.value.entities[event.unit.id] as UnitViewModel
+    },
+    { kind: 'text', text: `used an ability` }
   ]);
 });
 
@@ -191,7 +243,6 @@ const isAction = (event: Pick<Token, 'kind'>[]) =>
 
 <template>
   <div
-    v-if="state.phase === GAME_PHASES.BATTLE"
     v-on-click-outside="close"
     class="combat-log fancy-scrollbar"
     :class="isCollapsed && 'is-collapsed'"
@@ -236,10 +287,10 @@ const isAction = (event: Pick<Token, 'kind'>[]) =>
             {{ token.player.name }}
           </template>
           <template v-else-if="token.kind === 'turn_start'">
-            {{ token.unit.name }}
+            {{ token.player.name }}
           </template>
           <template v-else-if="token.kind === 'turn_end'">
-            {{ token.unit.name }}
+            {{ token.player.name }}
           </template>
         </span>
       </li>
@@ -317,7 +368,7 @@ li {
 
 .toggle {
   position: absolute;
-  top: 0;
+  bottom: 20%;
   left: 100%;
   transform: translateY(-6px);
 

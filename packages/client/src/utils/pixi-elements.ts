@@ -7,6 +7,10 @@ import {
   type AdjustmentFilterOptions
 } from '@pixi/filter-adjustment';
 
+import ProjectionRenderer from 'vue3-pixi-projection';
+
+renderer.use(ProjectionRenderer);
+
 renderer.use({
   name: 'Viewport',
   createElement: props => new Viewport(props as IViewportOptions),
@@ -53,7 +57,7 @@ interface AdjustmentFilterComponent {
 declare module '@vue/runtime-core' {
   interface GlobalComponents {
     OutlineFilter: OutlineFilterComponent;
-    PixiYellowText: AdjustmentFilterComponent;
+    AdustmentFilter: AdjustmentFilterComponent;
   }
 }
 

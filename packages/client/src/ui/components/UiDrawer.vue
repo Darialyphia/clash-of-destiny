@@ -16,10 +16,12 @@ const {
   title,
   description = '',
   style = {},
+  position = 'right',
   usePortal = true,
   hasOverlay = true
 } = defineProps<{
   title: string;
+  position?: 'left' | 'right';
   description?: string;
   style?: StyleProp<ModalStyleVariables>;
   usePortal?: boolean;
@@ -35,7 +37,7 @@ const {
       </Transition>
 
       <Transition appear>
-        <DialogContent class="drawer-content" :style="style">
+        <DialogContent class="drawer-content" :class="position" :style="style">
           <VisuallyHidden>
             <DialogTitle>
               <slot name="title" :title="title">{{ title }}</slot>
@@ -78,13 +80,27 @@ const {
   position: fixed;
   z-index: 2;
   top: 0;
-  right: 0;
   height: 100dvh;
 
   container-type: inline-size;
 
   width: var(--_ui-drawer-size);
 
+  &.right {
+    right: 0;
+    &.v-enter-from,
+    &.v-leave-to {
+      transform: translateX(100%);
+    }
+  }
+
+  &.left {
+    left: 0;
+    &.v-enter-from,
+    &.v-leave-to {
+      transform: translateX(-100%);
+    }
+  }
   &:focus,
   &:focus-visible {
     outline: none;
@@ -95,11 +111,6 @@ const {
 
   &:is(.v-enter-active, .v-leave-active) {
     transition: transform 0.3s var(--ease-5);
-  }
-
-  &.v-enter-from,
-  &.v-leave-to {
-    transform: translateX(100%);
   }
 }
 </style>

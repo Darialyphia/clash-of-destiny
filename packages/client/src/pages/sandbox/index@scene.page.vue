@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import BattleScene from '@/battle/scenes/BattleScene.vue';
+import BattleSceneProj from '@/battle/scenes/BattleSceneProj.vue';
 
 definePage({
   name: 'Sandbox'
@@ -7,5 +7,5 @@ definePage({
 </script>
 
 <template>
-  <BattleScene />
+  <BattleSceneProj />
 </template>

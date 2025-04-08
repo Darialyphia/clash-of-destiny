@@ -23,7 +23,7 @@ definePage({
         <!-- <RouterLink :to="{ name: 'Tutorial1' }">Tutorial</RouterLink> -->
       </li>
       <li>
-        <!-- <RouterLink :to="{ name: 'CardsList' }">Cards</RouterLink> -->
+        <RouterLink :to="{ name: 'Collection' }">Collection</RouterLink>
       </li>
     </ul>
   </nav>

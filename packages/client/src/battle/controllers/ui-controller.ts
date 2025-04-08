@@ -7,6 +7,7 @@ export type HighlightTag =
   | 'targeting-range'
   | 'targeting-valid'
   | 'targeting-valid-hover'
+  | 'hovered'
   | 'normal';
 
 export type UiController = {

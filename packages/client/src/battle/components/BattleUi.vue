@@ -1,54 +1,77 @@
 <script setup lang="ts">
-import { GAME_PHASES } from '@game/engine/src/game/systems/game-phase.system';
-import { useActiveUnit, useGameState } from '../stores/battle.store';
-import DeployUi from './DeployUi.vue';
+import { useTurnPlayer, useGameState } from '../stores/battle.store';
 import Hand from '@/card/components/Hand.vue';
-import ActiveUnitPanel from '@/unit/components/ActiveUnitPanel.vue';
 import TargetingUi from './TargetingUi.vue';
 import BattleLog from '@/battle/components/BattleLog.vue';
 import DraggedCard from '@/card/components/DraggedCard.vue';
 import InspectedCard from '@/card/components/InspectedCard.vue';
-import TurnOrder from './TurnOrder.vue';
 import PlayIntent from '@/card/components/PlayIntent.vue';
 import PlayedCard from '@/card/components/PlayedCard.vue';
-import UnitPanel from '@/unit/components/UnitPanel.vue';
 import { useBattleUiStore } from '../stores/battle-ui.store';
-import ActiveUnitActions from '@/unit/components/ActiveUnitActions.vue';
 import TurnIndicator from '@/player/components/TurnIndicator.vue';
-const { state } = useGameState();
+import { usePlayers } from '../stores/battle.store';
+import PlayerActions from '@/player/components/PlayerActions.vue';
+import DestinyPhaseUi from './DestinyPhaseUi.vue';
+import BattlePlayerInfos from '@/player/components/BattlePlayerInfos.vue';
+import HighlightedUnit from './HighlightedUnit.vue';
+import EquipedArtifacts from './EquipedArtifacts.vue';
+import { INTERACTION_STATES } from '@game/engine/src/game/systems/interaction.system';
 
-const activeUnit = useActiveUnit();
+const turnPlayer = useTurnPlayer();
 const ui = useBattleUiStore();
+
+const players = usePlayers();
+const { state } = useGameState();
 </script>
 
 <template>
   <TargetingUi />
 
-  <DeployUi v-if="state.phase === GAME_PHASES.DEPLOY" />
-  <div v-else class="battle-ui" :class="{ cinematic: ui.cardPlayIntent }">
+  <div
+    class="battle-ui"
+    :class="{
+      cinematic:
+        ui.cardPlayIntent ||
+        state.interactionState.state === INTERACTION_STATES.SELECTING_TARGETS
+    }"
+  >
     <BattleLog />
-    <TurnOrder />
+    <header>
+      <!-- <div class="flex gap-4 pointer-events-auto">
+        <label>
+          <input type="radio" v-model="ui.viewMode" value="top-down" />
+          Top down
+        </label>
+
+        <label>
+          <input type="radio" v-model="ui.viewMode" value="isometric" />
+          Isometric
+        </label>
+      </div> -->
+      <div class="flex justify-between">
+        <BattlePlayerInfos
+          v-for="player in players"
+          :key="player.id"
+          :player="player"
+        />
+      </div>
+    </header>
+
+    <div class="flex justify-between mx-11">
+      <EquipedArtifacts
+        v-for="player in players"
+        :key="player.id"
+        :player="player"
+      />
+    </div>
     <PlayedCard />
     <PlayIntent />
     <TurnIndicator />
+    <DestinyPhaseUi />
+    <HighlightedUnit />
     <footer>
-      <Hand :unit="activeUnit" />
-      <div class="unit-section">
-        <transition appear mode="out-in" name="slide">
-          <UnitPanel
-            v-if="ui.selectedUnit"
-            :key="ui.selectedUnit.id"
-            :unit="ui.selectedUnit"
-            class="selected-unit"
-          />
-        </transition>
-        <transition appear mode="out-in" name="slide">
-          <div :key="activeUnit.id" class="active-unit">
-            <ActiveUnitActions />
-            <UnitPanel :unit="activeUnit" />
-          </div>
-        </transition>
-      </div>
+      <Hand :player="turnPlayer" />
+      <PlayerActions class="player-actions" />
     </footer>
   </div>
 
@@ -57,26 +80,33 @@ const ui = useBattleUiStore();
 </template>
 
 <style scoped lang="postcss">
+@property --battle-ui-cinematic-color {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: 'transparent';
+}
+
 .battle-ui {
   height: 100dvh;
   user-select: none;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  transparent: background 0.3s var(--ease-2);
+  transition: --battle-ui-cinematic-color 0.3s var(--ease-2);
+  background: radial-gradient(
+    circle at center,
+    transparent,
+    transparent 20%,
+    var(--battle-ui-cinematic-color)
+  );
   &.cinematic {
-    background: radial-gradient(
-      circle at center,
-      transparent,
-      transparent 20%,
-      hsl(0 0 0 / 0.7)
-    );
+    --battle-ui-cinematic-color: hsl(0 0 0 / 0.7);
   }
 }
 
 footer {
   grid-row: 3;
   display: grid;
-  grid-template-columns: minmax(0, 0.6fr) minmax(0, 0.4fr);
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 0.3fr);
   gap: var(--size-7);
   align-items: end;
 }
@@ -93,11 +123,8 @@ footer {
   grid-column: 2;
 }
 
-.active-unit {
-  grid-row: 2;
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: subgrid;
+.player-actions {
+  justify-self: end;
 }
 
 .slide-enter-active,

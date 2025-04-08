@@ -4,9 +4,9 @@ import { shuffleArray } from '@game/shared';
 import type { Game } from '../../game/game';
 import { nanoid } from 'nanoid';
 import { Entity } from '../../entity';
-import type { AbilityCard, SerializedAbilityCard } from './ability-card.entity';
-import type { ArtifactCard, SerializedArtifactCard } from './artifact-card.entity';
-import type { QuestCard, SerializedQuestCard } from './quest-card.entity';
+import type { SerializedSpellCard } from './spell-card.entity';
+import type { SerializedArtifactCard } from './artifact-card.entity';
+import type { AnyCard, SerializedCard } from './card.entity';
 
 export const DECK_EVENTS = {
   BEFORE_DRAW: 'before_draw',
@@ -14,12 +14,6 @@ export const DECK_EVENTS = {
 } as const;
 
 export type DeckEvent = Values<typeof DECK_EVENTS>;
-
-export type DeckCard = AbilityCard | QuestCard | ArtifactCard;
-export type SerializedDeckCard =
-  | SerializedAbilityCard
-  | SerializedQuestCard
-  | SerializedArtifactCard;
 
 export class DeckBeforeDrawEvent extends TypedSerializableEvent<
   { amount: number },
@@ -31,8 +25,8 @@ export class DeckBeforeDrawEvent extends TypedSerializableEvent<
 }
 
 export class DeckAfterDrawEvent extends TypedSerializableEvent<
-  { cards: DeckCard[] },
-  { cards: SerializedDeckCard[] }
+  { cards: AnyCard[] },
+  { cards: SerializedCard[] }
 > {
   serialize() {
     return { cards: this.data.cards.map(card => card.serialize()) };
@@ -44,12 +38,12 @@ export type DeckEventMap = {
   [DECK_EVENTS.AFTER_DRAW]: DeckAfterDrawEvent;
 };
 
-export class Deck extends Entity<DeckEventMap, EmptyObject> {
+export class Deck<TCard extends AnyCard> extends Entity<DeckEventMap, EmptyObject> {
   private _size: number;
 
   constructor(
     private game: Game,
-    public cards: DeckCard[]
+    public cards: TCard[]
   ) {
     super(`deck_${nanoid(4)}`, {});
     this._size = this.cards.length;
@@ -89,34 +83,20 @@ export class Deck extends Entity<DeckEventMap, EmptyObject> {
     return cards;
   }
 
-  replace(replacedCard: DeckCard) {
-    let replacement: DeckCard;
-    let index: number;
+  replace(replacedCard: TCard) {
+    this.addToBottom(replacedCard);
 
-    const shouldForceDifferentCard = this.cards.some(
-      c => c.blueprintId !== replacedCard.blueprintId
-    );
-
-    do {
-      index = this.game.rngSystem.nextInt(this.cards.length - 1);
-      replacement = this.cards[index];
-    } while (
-      shouldForceDifferentCard &&
-      replacement.blueprintId === replacedCard.blueprintId
-    );
-
-    this.cards[index] = replacedCard;
-    return replacement;
+    return this.draw(1)[0];
   }
 
-  addToTop(card: DeckCard) {
+  addToTop(card: TCard) {
     this.cards.unshift(card);
     if (this.size < this.remaining) {
       this._size = this.remaining;
     }
   }
 
-  addToBottom(card: DeckCard) {
+  addToBottom(card: TCard) {
     this.cards.push(card);
     if (this.size < this.remaining) {
       this._size = this.remaining;
@@ -127,7 +107,7 @@ export class Deck extends Entity<DeckEventMap, EmptyObject> {
     return this.cards.slice(0, amount);
   }
 
-  pluck(card: DeckCard) {
+  pluck(card: TCard) {
     this.cards = this.cards.filter(c => c !== card);
     return card;
   }

@@ -6,9 +6,10 @@ import BoardCellHighlights from './BoardCellHighlights.vue';
 import { PTransition, type ContainerInst } from 'vue3-pixi';
 import type { CellViewModel } from '../cell.model';
 import {
-  useActiveUnit,
+  useTurnPlayer,
   useDispatcher,
-  useUserPlayer
+  useUserPlayer,
+  useGameState
 } from '@/battle/stores/battle.store';
 import HoveredCellIndicator from './HoveredCellIndicator.vue';
 import { pointToCellId } from '@game/engine/src/board/board-utils';
@@ -18,6 +19,7 @@ import UnitSprite from '@/unit/scenes/UnitSprite.vue';
 import MoveIntentPath from './MoveIntentPath.vue';
 import { useIsoCamera } from '@/iso/composables/useIsoCamera';
 import Interactable from '@/interactable/Interactable.vue';
+import { INTERACTION_STATES } from '@game/engine/src/game/systems/interaction.system';
 
 const { cell } = defineProps<{ cell: CellViewModel }>();
 
@@ -46,10 +48,10 @@ const spawnAnimation = (container: ContainerInst) => {
   });
 };
 
-const activeUnit = useActiveUnit();
+const turnPlayer = useTurnPlayer();
 const isActiveUnitMoveIntent = computed(() => {
-  return activeUnit.value.moveIntent
-    ? pointToCellId(activeUnit.value.moveIntent.point) === cell.id
+  return ui.selectedUnit?.moveIntent
+    ? pointToCellId(ui.selectedUnit.moveIntent.point) === cell.id
     : false;
 });
 
@@ -57,6 +59,7 @@ const camera = useIsoCamera();
 
 const dispatch = useDispatcher();
 const player = useUserPlayer();
+const { state } = useGameState();
 </script>
 
 <template>
@@ -64,10 +67,14 @@ const player = useUserPlayer();
     :position="cell.position"
     @pointerenter="
       () => {
-        ui.hoverAt(cell.position);
         if (!ui.cardPlayIntent) return;
 
-        const isTargetable = ui.cardPlayIntent.canPlayAt(cell);
+        const isTargetable =
+          state.interactionState.state ===
+            INTERACTION_STATES.SELECTING_TARGETS &&
+          state.interactionState.ctx.elligibleTargets.some(target => {
+            return pointToCellId(target.cell) === cell.id;
+          });
         if (!isTargetable) return;
 
         dispatch({
@@ -102,14 +109,14 @@ const player = useUserPlayer();
           :y="-24"
           :interactable="cell.getInteractable()!"
         />
-        <container
+        <!-- <container
           v-if="isActiveUnitMoveIntent"
           :position="config.UNIT_SPRITE_OFFSET"
         >
           <UnitOrientation :unit="activeUnit">
             <UnitSprite :unit="activeUnit" />
           </UnitOrientation>
-        </container>
+        </container> -->
       </container>
     </PTransition>
   </AnimatedIsoPoint>

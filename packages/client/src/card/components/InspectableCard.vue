@@ -2,37 +2,26 @@
 import type { CardViewModel } from '../card.model';
 import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
 import Card from './Card.vue';
+import BattleCard from './BattleCard.vue';
 
 const { card } = defineProps<{ card: CardViewModel }>();
 
 const ui = useBattleUiStore();
-
-const cardProps = computed(() => ({
-  id: card.id,
-  name: card.name,
-  description: card.description,
-  image: card.imagePath,
-  kind: card.kind,
-  manaCost: card.manaCost,
-  exp: card.exp,
-  rarity: card.rarity,
-  allowedJobs: card.allowedJobs
-}));
 </script>
 
 <template>
   <Teleport to="#inspected-card" v-if="ui.inspectedCard?.equals(card)" defer>
-    <Card
+    <BattleCard
+      :card="card"
       v-bind="$attrs"
       ref="cardRef"
-      :card="cardProps"
       class="inspected-card"
     />
   </Teleport>
-  <Card
+  <BattleCard
     v-else
     ref="cardRef"
-    :card="cardProps"
+    :card="card"
     @contextmenu.prevent="ui.inspectCard($event.currentTarget, card)"
   />
 </template>

@@ -1,7 +1,7 @@
 import { defaultInputSchema, Input } from '../input';
-import { GAME_PHASES } from '../../game/systems/game-phase.system';
+import { GAME_PHASES } from '../../game/game.enums';
 import { assert } from '@game/shared';
-import { InvalidInteractionStateError, NotActivePlayerError } from '../input-errors';
+import { InvalidInteractionStateError, NotTurnPlayerError } from '../input-errors';
 import { INTERACTION_STATE_TRANSITIONS } from '../../game/systems/interaction.system';
 
 const schema = defaultInputSchema;
@@ -9,14 +9,14 @@ const schema = defaultInputSchema;
 export class CancelPlayCardInput extends Input<typeof schema> {
   readonly name = 'cancelPlayCard';
 
-  readonly allowedPhases = [GAME_PHASES.BATTLE];
+  readonly allowedPhases = [GAME_PHASES.DESTINY, GAME_PHASES.MAIN];
 
   protected payloadSchema = schema;
 
   impl() {
     assert(
-      this.game.turnSystem.activeUnit.player.equals(this.player),
-      new NotActivePlayerError()
+      this.game.gamePhaseSystem.turnPlayer.equals(this.player),
+      new NotTurnPlayerError()
     );
 
     assert(
@@ -24,6 +24,6 @@ export class CancelPlayCardInput extends Input<typeof schema> {
       new InvalidInteractionStateError()
     );
 
-    this.game.turnSystem.activeUnit.cancelCardPlayed();
+    this.game.gamePhaseSystem.turnPlayer.cancelCardPlayed();
   }
 }

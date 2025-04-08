@@ -17,11 +17,15 @@ import { CommitPlayCardInput } from './inputs/commit-play-card.input';
 import { EndTurnInput } from './inputs/end-turn.input';
 import { MoveInput } from './inputs/move.input';
 import { PlayCardInput } from './inputs/play-card.input';
-import { DeployUnitInput } from './inputs/deploy-unit.input';
-import { LevelUpInput } from './inputs/level-up.input';
-import { CommitDeploymentInput } from './inputs/commit-deployment.input';
-import { ReplaceCardInput } from './inputs/replace-card.input';
+import { ResourceActionReplaceCardInput } from './inputs/resource-action-replace-card.input';
 import { AddNextTargetIntentCardInput } from './inputs/add-next-target-intent';
+import { UseUnitAbilityInput } from './inputs/use-unit-ability.input';
+import { UseArtifactAbilityInput } from './inputs/use-artifact-ability.input';
+import { SkipDestinyInput } from './inputs/skip-destiny.input';
+import { PlayDestinyCardInput } from './inputs/play-destiny-card.input';
+import { ResourceActionDrawInput } from './inputs/resource-action-draw.input';
+import { ResourceActionGainDestinyInput } from './inputs/resource-action-gain-destiny.input';
+import { UseCardAbilityInput } from './inputs/use-card-ability.input';
 
 type GenericInputMap = Record<string, Constructor<Input<DefaultSchema>>>;
 
@@ -36,19 +40,23 @@ type ValidatedInputMap<T extends GenericInputMap> = {
 const validateinputMap = <T extends GenericInputMap>(data: ValidatedInputMap<T>) => data;
 
 const inputMap = validateinputMap({
-  deployUnit: DeployUnitInput,
-  commitDeployment: CommitDeploymentInput,
-  levelUp: LevelUpInput,
+  resourceActionReplaceCard: ResourceActionReplaceCardInput,
+  resourceActionDraw: ResourceActionDrawInput,
+  resourceActionGainDestiny: ResourceActionGainDestinyInput,
   move: MoveInput,
   attack: AttackInput,
   playCard: PlayCardInput,
-  replaceCard: ReplaceCardInput,
+  playDestinyCard: PlayDestinyCardInput,
   cancelPlayCard: CancelPlayCardInput,
   addCardTarget: AddCardTargetCardInput,
   commitPlayCard: CommitPlayCardInput,
   endTurn: EndTurnInput,
   commitCardSelection: CommitCardSelectionCardInput,
-  addNextTargetIntent: AddNextTargetIntentCardInput
+  addNextTargetIntent: AddNextTargetIntentCardInput,
+  useUnitAbility: UseUnitAbilityInput,
+  useArtifactAbility: UseArtifactAbilityInput,
+  useCardAbility: UseCardAbilityInput,
+  skipDestiny: SkipDestinyInput
 });
 
 type InputMap = typeof inputMap;

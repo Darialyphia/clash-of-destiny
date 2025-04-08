@@ -14,7 +14,9 @@ export class PlayerSystem extends System<PlayerSystemOptions> {
       this.playerMap.set(p.id, player);
     });
 
-    this.players.forEach(player => player.initialize());
+    this.players.forEach(player => {
+      player.initialize();
+    });
   }
 
   shutdown() {

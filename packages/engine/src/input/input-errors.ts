@@ -24,7 +24,7 @@ export class TooManyMulliganedCardsError extends InputError {
   }
 }
 
-export class NotActivePlayerError extends InputError {
+export class NotTurnPlayerError extends InputError {
   constructor() {
     super('You are not the active player.');
   }
@@ -111,5 +111,17 @@ export class CannotLevelUpError extends InputError {
 export class IllegalCardPlayedError extends InputError {
   constructor() {
     super('Cannot play this card');
+  }
+}
+
+export class IllegalAbilityError extends InputError {
+  constructor() {
+    super('Ability cannot be used');
+  }
+}
+
+export class UnknownArtifactError extends InputError {
+  constructor(artifactId: string) {
+    super(`Unknown artifact id: ${artifactId}`);
   }
 }

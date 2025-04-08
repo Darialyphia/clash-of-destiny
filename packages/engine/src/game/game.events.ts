@@ -2,7 +2,6 @@ import type { EmptyObject, Prettify, Values } from '@game/shared';
 import { mapKeys, mapValues } from 'lodash-es';
 import type { Input } from '../input/input';
 import type { SerializedInput } from '../input/input-system';
-import { type TurnEventMap } from './systems/turn-system';
 import { TypedSerializableEvent } from '../utils/typed-emitter';
 import type { PlayerEventMap } from '../player/player.events';
 import type { Player, SerializedPlayer } from '../player/player.entity';
@@ -14,13 +13,8 @@ import type { UnitEventMap } from '../unit/unit.events';
 import { CARD_EVENTS } from '../card/card.enums';
 import { UNIT_EVENTS } from '../unit/unit-enums';
 
-import { TURN_EVENTS } from './game.enums';
 import { type Modifier, type SerializedModifier } from '../modifier/modifier.entity';
-import type {
-  AbilityCard,
-  SerializedAbilityCard
-} from '../card/entities/ability-card.entity';
-import type { QuestCard, SerializedQuestCard } from '../card/entities/quest-card.entity';
+import type { SpellCard, SerializedSpellCard } from '../card/entities/spell-card.entity';
 import type {
   ArtifactCard,
   SerializedArtifactCard
@@ -29,7 +23,19 @@ import {
   ARTIFACT_EVENTS,
   type Artifact,
   type ArtifactEventMap
-} from '../unit/entities/artifact.entity';
+} from '../player/artifact.entity';
+import type { HeroCard, SerializedHeroCard } from '../card/entities/hero-card.entity';
+import type {
+  MinionCard,
+  SerializedMinionCard
+} from '../card/entities/minion-card.entity';
+import type {
+  ShrineCard,
+  SerializedShrineCard
+} from '../card/entities/shrine-card.entity';
+import type { SecretCard } from '../card/entities/secret-card.entity';
+import { GAME_PHASE_EVENTS } from './game.enums';
+import type { GamePhaseEventMap } from './systems/game-phase.system';
 
 export class GameInputEvent extends TypedSerializableEvent<
   { input: Input<any> },
@@ -109,13 +115,19 @@ export class GameStarEvent<
   }
 }
 
-type GameCardEventSerialized<TCard extends AnyCard> = TCard extends AbilityCard
-  ? SerializedAbilityCard
-  : TCard extends QuestCard
-    ? SerializedQuestCard
-    : TCard extends ArtifactCard
-      ? SerializedArtifactCard
-      : `TCard needs to be an instance of UnitCard, SpellCard or ArtiactCard`;
+type GameCardEventSerialized<TCard extends AnyCard> = TCard extends SpellCard
+  ? SerializedSpellCard
+  : TCard extends HeroCard
+    ? SerializedHeroCard
+    : TCard extends MinionCard
+      ? SerializedMinionCard
+      : TCard extends ShrineCard
+        ? SerializedShrineCard
+        : TCard extends ArtifactCard
+          ? SerializedArtifactCard
+          : TCard extends SecretCard
+            ? SerializedSpellCard
+            : never;
 
 type GameCardSerializedResult<
   TCard extends AnyCard,
@@ -149,7 +161,7 @@ export class GameCardEvent<
 
 type GameCardEventMap = {
   [Event in keyof CardEventMap as `card.${Event}`]: GameCardEvent<
-    AbilityCard | QuestCard | ArtifactCard,
+    HeroCard | ShrineCard | MinionCard | SpellCard | ArtifactCard | SecretCard,
     CardEventMap,
     CardEventMap[Event]
   >;
@@ -227,7 +239,7 @@ type GameEventsBase = {
 
 export type GameEventMap = Prettify<
   GameEventsBase &
-    TurnEventMap &
+    GamePhaseEventMap &
     GamePlayerEventMap &
     GameCardEventMap &
     GameUnitEventMap &
@@ -268,8 +280,8 @@ export const GAME_EVENTS = {
   FLUSHED: 'game.input-queue-flushed',
   INPUT_START: 'game.input-start',
   INPUT_END: 'game.input-end',
-  TURN_START: TURN_EVENTS.TURN_START,
-  TURN_END: TURN_EVENTS.TURN_END,
+  TURN_START: GAME_PHASE_EVENTS.TURN_START,
+  TURN_END: GAME_PHASE_EVENTS.TURN_END,
   START_BATTLE: 'game.start-battle',
   END_BATTLE: 'game.end-battle',
   MODIFIER_EVENT: 'game.modifier-event',

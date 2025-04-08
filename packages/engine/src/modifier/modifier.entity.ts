@@ -77,7 +77,7 @@ export type SerializedModifier = {
   id: string;
   modifierType: string;
   entityType: 'modifier';
-  stacks: number;
+  stacks: number | null;
   name?: string;
   description?: string;
   icon?: string;
@@ -223,7 +223,7 @@ export class Modifier<
       id: this.id,
       modifierType: this.modifierType,
       entityType: 'modifier' as const,
-      stacks: this.stacks,
+      stacks: this.stackable ? this.stacks : null,
       name: this.infos.name,
       description: this.infos.description,
       icon: this.infos.icon,

@@ -7,10 +7,13 @@ import {
   TypedSerializableEvent,
   TypedSerializableEventEmitter
 } from '../utils/typed-emitter';
+import type { AnyCard, SerializedCard } from '../card/entities/card.entity';
 
 export const COMBAT_EVENTS = {
   BEFORE_ATTACK: 'before_attack',
   AFTER_ATTACK: 'after_attack',
+  BEFORE_COUNTERATTACK: 'before_counterattack',
+  AFTER_COUNTERATTACK: 'after_counterattack',
   BEFORE_DEAL_DAMAGE: 'before_deal_damage',
   AFTER_DEAL_DAMAGE: 'after_deal_damage',
   BEFORE_RECEIVE_DAMAGE: 'before_receive_damage',
@@ -31,7 +34,7 @@ export class AttackEvent extends TypedSerializableEvent<
 }
 
 export class DealDamageEvent extends TypedSerializableEvent<
-  { targets: Unit[]; damage: Damage<any> },
+  { targets: Unit[]; damage: Damage<AnyCard> },
   { targets: SerializedUnit[] }
 > {
   serialize() {
@@ -42,8 +45,8 @@ export class DealDamageEvent extends TypedSerializableEvent<
 }
 
 export class ReceiveDamageEvent extends TypedSerializableEvent<
-  { from: Unit; damage: Damage<any> },
-  { from: SerializedUnit }
+  { from: AnyCard; damage: Damage<AnyCard> },
+  { from: SerializedCard }
 > {
   serialize() {
     return {
@@ -55,6 +58,8 @@ export class ReceiveDamageEvent extends TypedSerializableEvent<
 export type CombatEventMap = {
   [COMBAT_EVENTS.BEFORE_ATTACK]: AttackEvent;
   [COMBAT_EVENTS.AFTER_ATTACK]: AttackEvent;
+  [COMBAT_EVENTS.BEFORE_COUNTERATTACK]: AttackEvent;
+  [COMBAT_EVENTS.AFTER_COUNTERATTACK]: AttackEvent;
   [COMBAT_EVENTS.BEFORE_DEAL_DAMAGE]: DealDamageEvent;
   [COMBAT_EVENTS.AFTER_DEAL_DAMAGE]: DealDamageEvent;
   [COMBAT_EVENTS.BEFORE_RECEIVE_DAMAGE]: ReceiveDamageEvent;
@@ -104,6 +109,31 @@ export class CombatComponent {
     this._counterAttacksCount = 0;
   }
 
+  counterAttack(attacker: Unit) {
+    this.emitter.emit(
+      COMBAT_EVENTS.BEFORE_COUNTERATTACK,
+      new AttackEvent({
+        target: attacker.position
+      })
+    );
+    const targets = this.unit.counterattackAOEShape.getUnits([attacker.position]);
+
+    const damage = new CombatDamage({
+      baseAmount: 0,
+      source: this.unit.card
+    });
+
+    this.dealDamage(targets, damage);
+    this._counterAttacksCount++;
+
+    this.emitter.emit(
+      COMBAT_EVENTS.AFTER_COUNTERATTACK,
+      new AttackEvent({
+        target: attacker.position
+      })
+    );
+  }
+
   attack(target: Point) {
     this.emitter.emit(
       COMBAT_EVENTS.BEFORE_ATTACK,
@@ -114,7 +144,7 @@ export class CombatComponent {
     const targets = this.unit.attackAOEShape.getUnits([target]);
     const damage = new CombatDamage({
       baseAmount: 0,
-      source: this.unit
+      source: this.unit.card
     });
 
     this.dealDamage(targets, damage);
@@ -122,6 +152,16 @@ export class CombatComponent {
 
     const unit = this.game.unitSystem.getUnitAt(target)!;
     if (!unit) return; // means unit died from attack
+    // we check counterattack before emitting AFTER_ATTACK event to enable effects that would prevent counter attack for one attack only
+    // ex: Fearsome
+    const counterAttackParticipants = this.unit
+      .getCounterattackParticipants(unit)
+      .filter(unit => {
+        return (
+          unit.canCounterAttackAt(this.unit.position) &&
+          this.unit.canBeCounterattackedBy(unit)
+        );
+      });
 
     this.emitter.emit(
       COMBAT_EVENTS.AFTER_ATTACK,
@@ -129,15 +169,19 @@ export class CombatComponent {
         target: Vec2.fromPoint(target)
       })
     );
+
+    counterAttackParticipants.forEach(unit => {
+      unit.counterAttack(this.unit);
+    });
   }
 
-  dealDamage(targets: Unit[], damage: Damage<any>) {
+  dealDamage(targets: Unit[], damage: Damage<AnyCard>) {
     this.emitter.emit(
       COMBAT_EVENTS.BEFORE_DEAL_DAMAGE,
       new DealDamageEvent({ targets, damage })
     );
     targets.forEach(target => {
-      target.takeDamage(this.unit, damage);
+      target.takeDamage(this.unit.card, damage);
     });
     this.emitter.emit(
       COMBAT_EVENTS.AFTER_DEAL_DAMAGE,
@@ -145,7 +189,7 @@ export class CombatComponent {
     );
   }
 
-  takeDamage(from: Unit, damage: Damage<any>) {
+  takeDamage(from: AnyCard, damage: Damage<AnyCard>) {
     this.emitter.emit(
       COMBAT_EVENTS.BEFORE_RECEIVE_DAMAGE,
       new ReceiveDamageEvent({

@@ -1,9 +1,8 @@
 import { type Point } from '@game/shared';
-import { Unit, type UnitOptions } from './entities/unit.entity';
+import { Unit } from './entities/unit.entity';
 import { System } from '../system';
-import { GAME_PHASES } from '../game/systems/game-phase.system';
-import type { UnitBlueprint } from '../card/card-blueprint';
-import type { Player } from '../player/player.entity';
+
+import type { AnyUnitCard } from '../card/entities/unit-card.entity';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type UnitSystemOptions = {};
@@ -22,6 +21,10 @@ export class UnitSystem extends System<UnitSystemOptions> {
 
   get units() {
     return [...this.unitMap.values()];
+  }
+
+  get unitsOnBoard() {
+    return this.units.filter(unit => !unit.isDead);
   }
 
   getUnitById(id: string) {
@@ -50,29 +53,21 @@ export class UnitSystem extends System<UnitSystemOptions> {
     ].filter
   }
 
-  addUnit(
-    player: Player,
-    blueprintChain: UnitBlueprint[],
-    deck: UnitOptions['deck'],
-    position: Point
-  ) {
+  addUnit(card: AnyUnitCard, position: Point) {
     const id = `unit_${++this.nextUnitId}`;
-    const unit = new Unit(this.game, blueprintChain, {
+    const unit = new Unit(this.game, card, {
       id,
-      player,
-      position,
-      deck
+      player: card.player,
+      position
     });
     this.unitMap.set(unit.id, unit);
 
-    if (this.game.phase === GAME_PHASES.BATTLE) {
-      // this.game.turnSystem.insertInCurrentQueue(unit);
-    }
     return unit;
   }
 
   removeUnit(unit: Unit) {
-    this.unitMap.delete(unit.id);
+    unit.position.x = -1;
+    unit.position.y = -1;
   }
 
   getEntityBehind(unit: Unit) {

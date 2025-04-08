@@ -1,6 +1,7 @@
-import type { AbilityFollowup } from './ability-followup';
+import type { AnyCard } from '../entities/card.entity';
+import type { Followup } from './ability-followup';
 
-export class NoFollowup implements AbilityFollowup {
+export class NoFollowup implements Followup<AnyCard> {
   getTargets() {
     return [];
   }

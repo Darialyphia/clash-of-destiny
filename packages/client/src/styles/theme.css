@@ -120,6 +120,9 @@
 
   --unit-icon-size: calc(38 * 3px);
   --unit-icon-size-mobile: 38px;
+
+  --card-width: 160px;
+  --card-height: 224px;
 }
 
 html.dark {

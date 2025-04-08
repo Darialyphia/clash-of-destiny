@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { useActiveUnit } from '@/battle/stores/battle.store';
 import type { CellViewModel } from '../cell.model';
 import UiAnimatedSprite from '@/ui/scenes/UiAnimatedSprite.vue';
 import { useIsoCamera } from '@/iso/composables/useIsoCamera';
 import { pointToCellId } from '@game/engine/src/board/board-utils';
 import { isDefined } from '@game/shared';
+import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
 
 const { cell } = defineProps<{ cell: CellViewModel }>();
 
-const activeUnit = useActiveUnit();
+const ui = useBattleUiStore();
 
 const path = computed(() => {
-  if (!activeUnit.value.moveIntent) return null;
-  return [activeUnit.value.position, ...activeUnit.value.moveIntent.path];
+  if (!ui.selectedUnit?.moveIntent) return null;
+  return [ui.selectedUnit.position, ...ui.selectedUnit.moveIntent.path];
 });
 
 const positionInPath = computed(() => {
