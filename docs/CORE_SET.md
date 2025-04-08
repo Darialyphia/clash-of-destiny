@@ -26,27 +26,29 @@ Floating Destiny
 
 ---
 
-**Stalwart Vanguard** (Minion - Guardian)
+**Stalwart Vanguard** (Minion - Guardian) [x]
+
 2M | 0ATK | 3HP
+
 Provoke, Floating Destiny
 
 ---
 
-**Esteemed Erudite** (Minion - Spellcaster)
+**Esteemed Erudite** (Minion - Spellcaster) [x]
 3M | 1ATK | 2HP
 
 [exhaust], 1M -> Draw a card.
 
 ---
 
-**Garrison Marskman** (Minion - Avenger)
+**Garrison Marskman** (Minion - Avenger) [x]
 3M | 2ATK | 1HP
 
 Ranged(2)
 
 ---
 
-**Promising Recruit**(Minion - Fighter)
+**Promising Recruit**(Minion - Guardian) [x]
 2M | 1ATK | 2HP
 
 ---
@@ -66,7 +68,7 @@ Provoke, Vigilant
 
 ---
 
-**Sword Instructor** (Minion - Fighter)
+**Sword Instructor** (Minion - Fighter) [x]
 
 2M | 1ATK | 2HP
 
@@ -154,7 +156,7 @@ On Enter: Draw 2 cards, then discard a card.
 
 ---
 
-**Zoran, The Punisher** (Minion - Avenger)
+**Zoran, The Punisher** (Minion - Avenger) [x]
 
 6M | 3ATK | 5HP
 
