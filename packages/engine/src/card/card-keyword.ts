@@ -56,7 +56,7 @@ export const KEYWORDS = {
   UNIQUE: {
     id: 'unique',
     name: 'Unique',
-    description: 'You can only have copy of this card in your deck.',
+    description: 'You can only have one copy of this card in your deck.',
     aliases: []
   },
   FLANK: {

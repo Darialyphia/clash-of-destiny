@@ -3,7 +3,13 @@ import BattleCard from '@/card/components/BattleCard.vue';
 import { useDispatcher, useTurnPlayer } from '../stores/battle.store';
 import { useResizeObserver } from '@vueuse/core';
 import { throttle } from 'lodash-es';
-import { VisuallyHidden } from 'reka-ui';
+import {
+  HoverCardContent,
+  HoverCardRoot,
+  HoverCardTrigger,
+  HoverCardPortal,
+  VisuallyHidden
+} from 'reka-ui';
 import FancyButton from '@/ui/components/FancyButton.vue';
 import UiModal from '@/ui/components/UiModal.vue';
 import { useBattleUiStore } from '../stores/battle-ui.store';
@@ -78,14 +84,24 @@ watch(
   >
     <div class="destiny-resource-action">
       <h2>Select up to 3 cards to banish to gain this much Destiny.</h2>
+
       <div
         class="card-list"
-        :class="{ hidden: !ui.isDestinyResourceActionModalOpened }"
         ref="root"
-        :style="{ '--card-spacing': cardSpacing }"
+        :class="{ hidden: !ui.isDestinyResourceActionModalOpened }"
       >
         <label v-for="(card, index) in player.getHand()" :key="card.id">
-          <BattleCard :card="card" />
+          <HoverCardRoot :open-delay="300" :close-delay="0">
+            <HoverCardTrigger>
+              <BattleCard :card="card" class="card-miniature" />
+            </HoverCardTrigger>
+
+            <HoverCardPortal to="#card-portal">
+              <HoverCardContent side="right" :side-offset="20">
+                <BattleCard :card="card" class="hover-card" />
+              </HoverCardContent>
+            </HoverCardPortal>
+          </HoverCardRoot>
           <VisuallyHidden>
             <input
               type="checkbox"
@@ -117,32 +133,27 @@ h2 {
   margin-bottom: var(--size-7);
   font-weight: var(--font-weight-4);
 }
+
 .card-list {
   display: flex;
-  gap: var(--size-2);
-
+  gap: var(--size-5);
+  flex-wrap: wrap;
+  overflow: auto;
   .hidden {
     opacity: 0;
   }
   > label {
     position: relative;
-    transition: transform 0.1s var(--ease-in-2);
-
-    &:hover {
-      z-index: 1;
-      transform: translateY(-10%);
-    }
-
-    &:hover ~ label {
-      transform: translateX(var(--size-5));
-    }
-
-    &:has(~ label:hover) {
-      transform: translateX(calc(-1 * var(--size-5)));
-    }
-
-    &:not(:last-child) {
-      margin-right: calc(1px * var(--card-spacing));
+    width: var(--card-width);
+    height: var(--card-height);
+    overflow: hidden;
+    .card-miniature {
+      transform: scale(0.5);
+      transform-origin: top left;
+      transition: transform 0.2s var(--ease-2);
+      &:hover {
+        transform: scale(0.5) translateY(1rem);
+      }
     }
 
     &:has(input:checked) {

@@ -6,11 +6,11 @@ import {
   useTurnPlayer
 } from '../stores/battle.store';
 import { GAME_PHASES } from '@game/engine/src/game/game.enums';
-import { VisuallyHidden } from 'reka-ui';
 import FancyButton from '@/ui/components/FancyButton.vue';
 import { isDefined } from '@game/shared';
 import { useBattleUiStore } from '../stores/battle-ui.store';
 import {
+  VisuallyHidden,
   HoverCardContent,
   HoverCardRoot,
   HoverCardTrigger,
@@ -146,6 +146,7 @@ h2 {
     position: relative;
     width: var(--card-width);
     height: var(--card-height);
+    overflow: hidden;
     .card-miniature {
       transform: scale(0.5);
       transform-origin: top left;
