@@ -196,6 +196,16 @@ useBattleEvent(GAME_EVENTS.UNIT_AFTER_DESTROY, async event => {
   ]);
 });
 
+useBattleEvent(GAME_EVENTS.UNIT_AFTER_USE_ABILITY, async event => {
+  events.value.push([
+    {
+      kind: 'unit',
+      unit: state.value.entities[event.unit.id] as UnitViewModel
+    },
+    { kind: 'text', text: `used an ability` }
+  ]);
+});
+
 const isCollapsed = ref(true);
 
 const listEl = ref<HTMLElement>();

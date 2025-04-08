@@ -16,6 +16,20 @@ const isTurnPlayer = computed(() => {
 
 <template>
   <div class="player-actions" :class="{ 'is-hidden': !isTurnPlayer }">
+    <template v-if="ui.selectedUnit">
+      <FancyButton
+        v-for="ability in ui.selectedUnit.abilities"
+        class="pointer-events-auto w-full ability"
+        :text="ability.label"
+        :disabled="!ability.canUse"
+        variant="info"
+        @click="
+          () => {
+            ui.selectedUnit?.useAbility(ability.id);
+          }
+        "
+      />
+    </template>
     <transition>
       <FancyButton
         :disabled="!player.canPerformResourceAction"
@@ -83,5 +97,9 @@ const isTurnPlayer = computed(() => {
 .v-leave-to {
   opacity: 0;
   transform: translateY(5px) scale(0.95);
+}
+
+.ability {
+  grid-column: span 2;
 }
 </style>

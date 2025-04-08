@@ -11,19 +11,19 @@ import {
 } from '../../card.enums';
 import { NoFollowup } from '../../followups/no-followup';
 
-export const testShrine: UnitBlueprint = {
-  id: 'test-shrine',
+export const windShrineOfKnowledge: UnitBlueprint = {
+  id: 'water-shrine-of-knowledge',
   kind: CARD_KINDS.UNIT,
   unitKind: UNIT_KINDS.SHRINE,
-  affinity: AFFINITIES.FIRE,
-  name: 'Test Shrine',
+  affinity: AFFINITIES.AIR,
+  name: 'Wind Shrine of Knowledge',
   getDescription: () => {
     return `On Enter: draw 4 cards.`;
   },
   staticDescription: `On Enter: draw 4 cards.`,
   setId: CARD_SETS.CORE,
-  cardIconId: 'placeholder',
-  spriteId: 'fire-shrine-of-knowledge',
+  cardIconId: 'unit-air-shrine-of-knowledge',
+  spriteId: 'wind-shrine-of-knowledge',
   spriteParts: {},
   rarity: RARITIES.COMMON,
   collectable: true,

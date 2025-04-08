@@ -113,16 +113,10 @@ const onMouseDown = (e: MouseEvent) => {
   transition: width 0.2s ease;
   cursor: url('/assets/ui/cursor-hover.png'), auto;
 
-  &.disabled::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      circle,
-      hsl(0 0% 0% / 0.15),
-      hsl(0 0% 0% / 0.5)
-    );
+  &.disabled {
     pointer-events: none;
+    cursor: url('/assets/ui/cursor-disabled.png'), auto;
+    filter: brightness(0.65);
   }
 
   &:not(:has(.hand-card__card)) {

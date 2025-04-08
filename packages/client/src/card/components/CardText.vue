@@ -22,7 +22,9 @@ const KEYWORD_DELIMITER = '@';
 type Token =
   | { type: 'text'; text: string }
   | { type: 'keyword'; text: string; keyword: Keyword }
-  | { type: 'card'; card: CardBlueprint; text: string };
+  | { type: 'card'; card: CardBlueprint; text: string }
+  | { type: 'exhaust' }
+  | { type: 'mana'; text: string };
 
 const tokens = computed<Token[]>(() => {
   if (!text.includes(KEYWORD_DELIMITER)) return [{ type: 'text', text }];
@@ -47,6 +49,9 @@ const tokens = computed<Token[]>(() => {
         card: card
       };
 
+    if (part === '[exhaust]') return { type: 'exhaust' };
+    if (part.startsWith('[mana]'))
+      return { type: 'mana', text: part.replace('[mana] ', '') };
     return { type: 'text', text: part };
   });
 });
@@ -59,7 +64,12 @@ const tokens = computed<Token[]>(() => {
       :key="index"
       :class="highlighted && `token-${token.type}`"
     >
-      <HoverCardRoot :open-delay="500" :close-delay="0">
+      <img
+        v-if="token.type === 'exhaust'"
+        src="/assets/ui/ability-exhaust.png"
+        class="inline"
+      />
+      <HoverCardRoot v-else :open-delay="500" :close-delay="0">
         <HoverCardTrigger>
           {{ token.text }}
         </HoverCardTrigger>
@@ -87,6 +97,16 @@ const tokens = computed<Token[]>(() => {
   font-weight: var(--font-weight-7);
 }
 
+.token-mana {
+  background-color: #5185ff;
+  border-radius: var(--radius-round);
+  width: var(--size-5);
+  height: var(--size-5);
+  border: solid 2px #662fe1;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
 .token-card {
   color: var(--cyan-2);
 }

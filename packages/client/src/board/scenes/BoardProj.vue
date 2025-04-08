@@ -90,7 +90,12 @@ const displayedUnits = computed(() => {
     :scale="1.25"
   />
   <container-2d :position="[0, screenHeight * 0.45]" ref="container">
-    <container-2d :scale="config.INITIAL_ZOOM" :x="offsetX + 80" :y="-200">
+    <container-2d
+      :scale="config.INITIAL_ZOOM"
+      :x="offsetX + 80"
+      :y="-200"
+      :sortable-children="true"
+    >
       <BoardCellProj
         v-for="cell in cells"
         :key="cell.id"

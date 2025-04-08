@@ -2,7 +2,7 @@ import { PointAOEShape } from '../../../aoe/point.aoe-shape';
 import { OnEnterModifier } from '../../../modifier/modifiers/on-enter.modifier';
 import { ProvokeModifier } from '../../../modifier/modifiers/provoke.modifier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
-import { lastingDestiny } from '../../abilities/lasting-destiny';
+import { floatingDestiny } from '../../abilities/floating-destiny';
 import type { UnitBlueprint } from '../../card-blueprint';
 import {
   AFFINITIES,
@@ -34,7 +34,7 @@ export const bubblySlime: UnitBlueprint = {
   collectable: true,
   manaCost: 2,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
-  abilities: [lastingDestiny],
+  abilities: [floatingDestiny],
   atk: 1,
   maxHp: 1,
   job: CARD_JOBS.FIGHTER,

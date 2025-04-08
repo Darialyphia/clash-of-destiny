@@ -27,9 +27,11 @@ const session = new GameSession({
       id: 'p1',
       name: 'Player 1',
       mainDeck: {
-        cards: Array.from({ length: 40 }, () =>
-          Math.random() > 0.5 ? 'stalwart-vanguard' : 'bubbly-slime'
-        )
+        cards: [
+          ...Array.from({ length: 10 }, () => 'stalwart-vanguard'),
+          ...Array.from({ length: 10 }, () => 'bubbly-slime'),
+          ...Array.from({ length: 10 }, () => 'esteemed-erudite')
+        ]
       },
       destinyDeck: {
         cards: [
@@ -49,9 +51,11 @@ const session = new GameSession({
       id: 'p2',
       name: 'Player 2',
       mainDeck: {
-        cards: Array.from({ length: 40 }, () =>
-          Math.random() > 0.5 ? 'stalwart-vanguard' : 'bubbly-slime'
-        )
+        cards: [
+          ...Array.from({ length: 10 }, () => 'stalwart-vanguard'),
+          ...Array.from({ length: 10 }, () => 'bubbly-slime'),
+          ...Array.from({ length: 10 }, () => 'esteemed-erudite')
+        ]
       },
       destinyDeck: {
         cards: [

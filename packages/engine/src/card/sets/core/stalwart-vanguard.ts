@@ -1,7 +1,7 @@
 import { PointAOEShape } from '../../../aoe/point.aoe-shape';
 import { ProvokeModifier } from '../../../modifier/modifiers/provoke.modifier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
-import { lastingDestiny } from '../../abilities/lasting-destiny';
+import { floatingDestiny } from '../../abilities/floating-destiny';
 import type { UnitBlueprint } from '../../card-blueprint';
 import {
   AFFINITIES,
@@ -32,9 +32,9 @@ export const stalwartVanguard: UnitBlueprint = {
   collectable: true,
   manaCost: 2,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
-  abilities: [lastingDestiny],
+  abilities: [floatingDestiny],
   atk: 0,
-  maxHp: 2,
+  maxHp: 3,
   job: CARD_JOBS.FIGHTER,
   getFollowup: () => {
     return new MinionFollowup();

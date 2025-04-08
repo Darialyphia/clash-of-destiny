@@ -2,12 +2,12 @@ import type { Ability } from '../card-blueprint';
 import type { AnyCard } from '../entities/card.entity';
 import { NoFollowup } from '../followups/no-followup';
 
-export const lastingDestiny: Ability<AnyCard> = {
-  id: 'lasting-destiny',
+export const floatingDestiny: Ability<AnyCard> = {
+  id: 'floating-destiny',
   isCardAbility: true,
-  staticDescription: '@Lasting Destiny@',
+  staticDescription: '@Floating Destiny@',
   getDescription() {
-    return `@Lasting Destiny@`;
+    return `@Floating Destiny@`;
   },
   manaCost: 0,
   shouldExhaust: false,

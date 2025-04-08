@@ -32,6 +32,10 @@
 
 > You cannot play this card unless you have at least X Destiny.
 
+### Level Bound(X)
+
+> You cannot play this card unless your hero is at least Level X.
+
 ### Essence(x)
 
 > If you can't pay this card’s full mana cost, you may instead pay X and resolve an alternate, weaker effect.
@@ -70,7 +74,7 @@ Note: Removed from play indicates that the card is removed from the game. It is 
 
 ### Swift
 
-> This unit can move 2 spaces per turn.
+> This unit can move twice per turn.
 
 ### Vigilant
 

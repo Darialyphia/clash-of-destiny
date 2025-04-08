@@ -13,9 +13,8 @@ import {
 } from '@/battle/stores/battle.store';
 import { INTERACTION_STATES } from '@game/engine/src/game/systems/interaction.system';
 import { pointToCellId } from '@game/engine/src/board/board-utils';
-import { Sprite2d, AFFINE } from 'pixi-projection';
+import { Container2d, AFFINE } from 'pixi-projection';
 import { Filter, Point } from 'pixi.js';
-import { useShockwave } from '@/ui/composables/use-shockwave';
 import { GAME_EVENTS } from '@game/engine/src/game/game.events';
 import { waitFor } from '@game/shared';
 
@@ -113,32 +112,23 @@ const filters = computed(() => {
 </script>
 
 <template>
-  <sprite-2d
-    v-if="textures.length"
-    texture="/assets/pedestals/pedestal-default.png"
+  <container-2d
+    :filters="filters"
+    event-mode="none"
     :ref="
-      (sprite: any) => {
-        if (sprite) {
-          (sprite as Sprite2d).proj.affine = AFFINE.AXIS_X;
+      (container: any) => {
+        if (container) {
+          (container as Container2d).proj.affine = AFFINE.AXIS_X;
+          ui.assignLayer(container, 'scene');
         }
       }
     "
-    event-mode="none"
-    :anchor="0.5"
-    :filters="filters"
-  />
-  <sprite-2d
-    v-if="textures.length"
-    :texture="textures[0]"
-    event-mode="none"
-    :anchor="0.5"
-    :ref="
-      (sprite: any) => {
-        if (sprite) {
-          (sprite as Sprite2d).proj.affine = AFFINE.AXIS_X;
-        }
-      }
-    "
-    :filters="filters"
-  />
+  >
+    <sprite-2d
+      v-if="textures.length"
+      texture="/assets/pedestals/pedestal-default.png"
+      :anchor="0.5"
+    />
+    <sprite-2d v-if="textures.length" :texture="textures[0]" :anchor="0.5" />
+  </container-2d>
 </template>

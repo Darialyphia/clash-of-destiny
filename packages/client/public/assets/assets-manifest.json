@@ -670,6 +670,32 @@
         },
         {
           "alias": [
+            "icon-unit-bubbly-slime"
+          ],
+          "src": [
+            "/assets/icons/unit-bubbly-slime.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-unit-esteemed-erudite"
+          ],
+          "src": [
+            "/assets/icons/unit-esteemed-erudite.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-unit-exorcist"
           ],
           "src": [
@@ -796,6 +822,19 @@
               "m": true
             }
           }
+        },
+        {
+          "alias": [
+            "pedestal-default.png"
+          ],
+          "src": [
+            "/assets/pedestals/pedestal-default.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
         }
       ]
     },
@@ -834,6 +873,19 @@
     {
       "name": "ui",
       "assets": [
+        {
+          "alias": [
+            "ability-exhaust.png"
+          ],
+          "src": [
+            "/assets/ui/ability-exhaust.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
         {
           "alias": [
             "ability-power.png"
@@ -2410,6 +2462,33 @@
           ],
           "src": [
             "/assets/units/earth-shrine-of-knowledge.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "esteemed-erudite"
+          ],
+          "src": [
+            "/assets/units/esteemed-erudite.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "esteemed-erudite.png"
+          ],
+          "src": [
+            "/assets/units/esteemed-erudite.png"
           ],
           "data": {
             "tags": {

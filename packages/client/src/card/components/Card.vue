@@ -188,7 +188,7 @@ const affinityGemBg = computed(() => {
 .image {
   background: v-bind(imageBg);
   background-size: cover;
-  background-position: center;
+  background-position: center -15px;
   width: calc(96px * var(--pixel-scale));
   height: calc(96px * var(--pixel-scale));
   position: absolute;
@@ -202,7 +202,7 @@ const affinityGemBg = computed(() => {
   text-align: center;
   text-wrap: pretty;
   position: absolute;
-  top: calc(98px * var(--pixel-scale));
+  top: calc(90px * var(--pixel-scale));
   left: 50%;
   transform: translateX(-50%);
   font-size: 18px;

@@ -171,4 +171,23 @@ export class UnitViewModel {
       }
     });
   }
+
+  canUseAbility(id: string) {
+    const ability = this.data.abilities.find(ability => ability.id === id);
+    if (!ability) return false;
+    return ability.canUse;
+  }
+
+  useAbility(id: string) {
+    const ability = this.data.abilities.find(ability => ability.id === id);
+    if (!ability) return;
+    this.dispatcher({
+      type: 'useUnitAbility',
+      payload: {
+        playerId: this.playerId,
+        unitId: this.id,
+        abilityId: id
+      }
+    });
+  }
 }

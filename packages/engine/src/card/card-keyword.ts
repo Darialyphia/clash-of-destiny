@@ -21,9 +21,9 @@ export const KEYWORDS = {
     description: 'Provoked - cannot move and must attack Provoker first.',
     aliases: []
   },
-  LASTING_DESTINY: {
+  FLOATING_DESTINY: {
     id: 'lasting-destiny',
-    name: 'Lasting Destiny',
+    name: 'Floating Destiny',
     description: 'You can banish this card from your discard pile to gain 1 Destiny.',
     aliases: []
   },
@@ -32,6 +32,13 @@ export const KEYWORDS = {
     name: 'On Enter',
     description: 'Does something when this card enters the board when played from hand..',
     aliases: []
+  },
+  RANGED: {
+    id: 'ranged',
+    name: 'Ranged(x)',
+    description:
+      'This unit can attack unit up to X tiles away, but cannot attack nearby enemies.',
+    aliases: [/Ranged\([0-9]+\)/]
   }
 } as const satisfies Record<string, Keyword>;
 

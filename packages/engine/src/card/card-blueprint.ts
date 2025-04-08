@@ -19,7 +19,7 @@ import type { Artifact } from '../player/artifact.entity';
 import type { ArtifactCard } from './entities/artifact-card.entity';
 import type { Followup } from './followups/ability-followup';
 import type { AnyCard } from './entities/card.entity';
-import type { EffectTarget, SelectedTarget } from '../game/systems/interaction.system';
+import type { SelectedTarget } from '../game/systems/interaction.system';
 import type { ShrineCard } from './entities/shrine-card.entity';
 import type { HeroCard } from './entities/hero-card.entity';
 import type { MinionCard } from './entities/minion-card.entity';

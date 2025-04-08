@@ -34,9 +34,9 @@ Destiny is a resource that is used to play cards from the Destiny Deck. Unlike m
 
 ### Affinities
 
-Affinities that a player unlocks determines which cards they are able to play. They start the game with the affinity associated with their Shrine. However, as their Hero evolves, they will be able to unlock new affinities based on the hero evolution.
+Affinities that a player unlocks determines which cards they are able to play. They start the game with the affinity associated with their Shrine (lvl 0 hero). However, as their Hero gets to max level (level 3), they will be able to unlock a affinities based on the hero.
 The 4 basic affinities are: Fire, Water, Air and Earth.
-The 5 advanced affinities are : Creation, Destruction, Order, Oblivion and Arcane.
+The 5 advanced affinities are : Genesis, Wrath, Harmony, Void and Arcane.
 There is also a Normal affinities that can be used regardless of which affinities are unlocked.
 
 ### Resource action
@@ -179,28 +179,28 @@ An artifact has the following stats:
 
 Secrets are cards that are played face down on the board and cannot be activated manually. They trigger when some specific conditions are met, such as the opponent using a spell, or attacking the enemy hero. Once triggered, the secret is destroyed.
 
-### Card Classes and Class Bonus
+  ### Card Classes and Class Bonus
 
-Each card may have a **Class**, which represents its combat or magical specialization. The available classes are:
+  Each card may have a **Class**, which represents its combat or magical specialization. The available classes are:
 
-- **Fighter** – Close-range martial combatants.
-- **Spellcaster** – Masters of destructive or utility magic.
-- **Avenger** – Agile skirmishers, assassins, and archers.
-- **Guardian** – Defensive stalwarts who protect allies.
-- **Wanderer** – Versatile adventurers and rogues.
-- **Summoner** – Masters of conjuring minions or spirits.
+  - **Fighter** – Close-range martial combatants.
+  - **Spellcaster** – Masters of destructive or utility magic.
+  - **Avenger** – Agile skirmishers, assassins, and archers.
+  - **Guardian** – Defensive stalwarts who protect allies.
+  - **Wanderer** – Versatile adventurers and rogues.
+  - **Summoner** – Masters of conjuring minions or spirits.
 
-Cards of any type (Minion, Spell, Artifact, etc.) may have a class.
+  Cards of any type (Minion, Spell, Artifact, etc.) may have a class.
 
-Your **Hero also has a class**, indicated on their card.
+  Your **Hero also has a class**, indicated on their card.
 
-Some card effects include a **Class Bonus**: this is an additional effect that is only applied if the card's class matches your Hero’s class.
+  Some card effects include a **Class Bonus**: this is an additional effect that is only applied if the card's class matches your Hero’s class.
 
-#### Example:
-> **Arcane Bolt** *(Spell – Spellcaster)*  
-> Deal 2 damage.  
-> **Class Bonus – Draw a card.**  
-> (This effect only triggers if your Hero is a Spellcaster.)
+  #### Example:
+  > **Arcane Bolt** *(Spell – Spellcaster)*  
+  > Deal 2 damage.  
+  > **Class Bonus – Draw a card.**  
+  > (This effect only triggers if your Hero is a Spellcaster.)
 
 Class Bonuses allow you to create synergies between your Hero and your deck, rewarding themed builds while still allowing off-class flexibility.
 

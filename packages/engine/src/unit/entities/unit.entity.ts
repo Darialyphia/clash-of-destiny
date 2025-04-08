@@ -672,7 +672,7 @@ export class Unit
   }
 
   canUseAbiliy(id: string) {
-    const ability = this._card.abilities.find(ability => ability.label === id) as Ability<
+    const ability = this._card.abilities.find(ability => ability.id === id) as Ability<
       this['card']
     >;
     assert(isDefined(ability), new UnitAbilityNotFoundError());
@@ -687,7 +687,6 @@ export class Unit
     this._card.useAbility(id, {
       onBeforeUse: ability => {
         this.emitter.emit(UNIT_EVENTS.BEFORE_USE_ABILITY, new UnitUseAbilityEvent({}));
-        this.player.mana.remove(ability.manaCost);
       },
       onAfterUse: ability => {
         if (ability.shouldExhaust) {

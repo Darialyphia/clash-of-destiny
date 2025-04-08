@@ -40,7 +40,7 @@ export const defaultConfig: Config = {
   MAX_DESTINY_DECK_CARD_COPIES: 1,
 
   INITIAL_MANA: 0,
-  MAX_BANKED_MANA: 10,
+  MAX_BANKED_MANA: 8,
   MANA_EARNED_PER_TURN: 4,
 
   MAX_HAND_SIZE: 999,
@@ -58,7 +58,7 @@ export const defaultConfig: Config = {
 
   MAX_RESOURCE_ACTIONS_PER_TURN: 1,
 
-  UNIT_MOVEMENT_REACH: 1,
+  UNIT_MOVEMENT_REACH: 2,
 
   DRAW_RESOURCE_ACTION_COST: 1,
 

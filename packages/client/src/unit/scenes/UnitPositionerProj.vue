@@ -81,6 +81,7 @@ const ui = useBattleUiStore();
       config.TILE_SIZE_PROJ.y * unit.position.y +
         config.UNIT_SPRITE_OFFSET_PROJ.y
     ]"
+    :z-index="unit.position.y"
   >
     <slot />
   </container-2d>

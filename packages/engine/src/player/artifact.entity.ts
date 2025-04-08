@@ -247,7 +247,7 @@ export class Artifact
   }
 
   canUseAbiliy(id: string) {
-    const ability = this.card.abilities.find(ability => ability.label === id);
+    const ability = this.card.abilities.find(ability => ability.id === id);
     assert(isDefined(ability), new ArtifactAbilityNotFoundError());
 
     return this.interceptors.canUseAbility.getValue(
@@ -258,12 +258,11 @@ export class Artifact
 
   useAbility(id: string) {
     this.card.useAbility(id, {
-      onBeforeUse: ability => {
+      onBeforeUse: () => {
         this.emitter.emit(
           ARTIFACT_EVENTS.BEFORE_USE_ABILITY,
           new ArtifactUseAbilityEvent({})
         );
-        this.player.mana.remove(ability.manaCost);
       },
       onAfterUse: ability => {
         if (ability.shouldExhaust) {

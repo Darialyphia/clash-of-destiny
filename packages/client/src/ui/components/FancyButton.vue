@@ -8,7 +8,7 @@ export type ButtonProps = {
   isInline?: boolean;
   to?: RouterLinkProps['to'];
   text: string;
-  variant?: 'primary' | 'error';
+  variant?: 'primary' | 'error' | 'info';
 };
 
 const {
@@ -84,6 +84,10 @@ const tag = computed(() => {
       border-image-source: url('/assets/ui/button-error.png');
     }
 
+    &.info {
+      border-image-source: url('/assets/ui/button-blue.png');
+    }
+
     &:disabled {
       border-image-source: url('/assets/ui/button-disabled.png');
       cursor: not-allowed;
@@ -141,6 +145,10 @@ const tag = computed(() => {
 
   .error &::after {
     background-image: linear-gradient(#fcfcfc, #fcfcfc 50%, #ff9da3 50%);
+  }
+
+  .info &::after {
+    background-image: linear-gradient(#fcfcfc, #fcfcfc 50%, #c7fffc 50%);
   }
   &:before {
     text-shadow:
