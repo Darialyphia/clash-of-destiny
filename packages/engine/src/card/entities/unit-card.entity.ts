@@ -21,7 +21,6 @@ import {
 } from './card.entity';
 import { Interceptable } from '../../utils/interceptable';
 import type { Unit } from '../../unit/entities/unit.entity';
-import { UNIT_EVENTS } from '../../unit/unit-enums';
 import { MeleeTargetingStrategy } from '../../targeting/melee-targeting.straegy';
 import { PointAOEShape } from '../../aoe/point.aoe-shape';
 

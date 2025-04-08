@@ -38,7 +38,19 @@ export const KEYWORDS = {
     name: 'Ranged(x)',
     description:
       'This unit can attack unit up to X tiles away, but cannot attack nearby enemies.',
-    aliases: [/Ranged\([0-9]+\)/]
+    aliases: [/ranged\([0-9]+\)/]
+  },
+  UNIQUE: {
+    id: 'unique',
+    name: 'Unique',
+    description: 'You can only have copy of this card in your deck.',
+    aliases: []
+  },
+  FLANK: {
+    id: 'flank',
+    name: 'Flank',
+    description: 'This unit can be played on spaces nearby ally units.',
+    aliases: []
   }
 } as const satisfies Record<string, Keyword>;
 

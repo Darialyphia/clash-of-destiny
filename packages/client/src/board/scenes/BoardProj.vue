@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import {
   useBattleEvent,
+  useBattleStore,
   useCells,
   useGameState,
   usePlayers,
@@ -16,6 +17,8 @@ import { config } from '@/utils/config';
 import { useWindowSize } from '@vueuse/core';
 import { useShockwave } from '@/ui/composables/use-shockwave';
 import { GAME_EVENTS } from '@game/engine/src/game/game.events';
+import { UnitViewModel } from '@/unit/unit.model';
+import { waitFor } from '@game/shared';
 
 const cells = useCells();
 const units = useUnits();
@@ -74,6 +77,18 @@ useBattleEvent(GAME_EVENTS.UNIT_BEFORE_EVOLVE_HERO, async e => {
       viewModel.position.y * config.TILE_SIZE_PROJ.y + 100
     )
   });
+});
+const battleStore = useBattleStore();
+useBattleEvent(GAME_EVENTS.UNIT_CREATED, async event => {
+  const state = battleStore.state!;
+  const vm = new UnitViewModel(
+    event.unit,
+    state.entities,
+    battleStore.dispatch
+  );
+  state.entities[event.unit.id] = vm;
+  state.units.push(vm.id);
+  await waitFor(1000);
 });
 
 const displayedUnits = computed(() => {

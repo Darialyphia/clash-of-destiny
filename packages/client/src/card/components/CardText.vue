@@ -74,7 +74,7 @@ const tokens = computed<Token[]>(() => {
           {{ token.text }}
         </HoverCardTrigger>
         <HoverCardPortal>
-          <HoverCardContent v-if="highlighted" class="z-10">
+          <HoverCardContent v-if="highlighted" class="z-10" side="right">
             <article>
               <div v-if="token.type === 'keyword'" class="keyword-card">
                 <div class="font-600">{{ token.keyword.name }}</div>

@@ -44,6 +44,7 @@ const startDragging = () => {
 
 const onMouseDown = (e: MouseEvent) => {
   if (e.button !== 0) return;
+  if (!card.canPlay) return;
 
   isClicking.value = true;
   clickedPosition.value = { x: e.clientX, y: e.clientY };
@@ -114,7 +115,6 @@ const onMouseDown = (e: MouseEvent) => {
   cursor: url('/assets/ui/cursor-hover.png'), auto;
 
   &.disabled {
-    pointer-events: none;
     cursor: url('/assets/ui/cursor-disabled.png'), auto;
     filter: brightness(0.65);
   }

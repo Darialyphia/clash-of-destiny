@@ -32,6 +32,8 @@ export type CardBlueprintBase = {
   rarity: Rarity;
   cardIconId: string;
   collectable: boolean;
+  unique?: boolean;
+  divine?: boolean;
   affinity: Affinity;
 };
 

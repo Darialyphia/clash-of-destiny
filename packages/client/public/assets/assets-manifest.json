@@ -657,6 +657,19 @@
         },
         {
           "alias": [
+            "icon-unit-air-shrine-of-knowledge"
+          ],
+          "src": [
+            "/assets/icons/unit-air-shrine-of-knowledge.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-unit-archmage"
           ],
           "src": [
@@ -683,6 +696,19 @@
         },
         {
           "alias": [
+            "icon-unit-earth-shrine-of-knowledge"
+          ],
+          "src": [
+            "/assets/icons/unit-earth-shrine-of-knowledge.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-unit-esteemed-erudite"
           ],
           "src": [
@@ -700,6 +726,32 @@
           ],
           "src": [
             "/assets/icons/unit-exorcist.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-unit-fire-shrine-of-knowledge"
+          ],
+          "src": [
+            "/assets/icons/unit-fire-shrine-of-knowledge.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-unit-garrison-marksman"
+          ],
+          "src": [
+            "/assets/icons/unit-garrison-marksman.png"
           ],
           "data": {
             "tags": {
@@ -739,6 +791,32 @@
           ],
           "src": [
             "/assets/icons/unit-test-minion.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-unit-water-shrine-of-knowledge"
+          ],
+          "src": [
+            "/assets/icons/unit-water-shrine-of-knowledge.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-unit-zoran-the-punisher"
+          ],
+          "src": [
+            "/assets/icons/unit-zoran-the-punisher.png"
           ],
           "data": {
             "tags": {
@@ -1050,6 +1128,19 @@
           ],
           "src": [
             "/assets/ui/banish-icon.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "button-blue.png"
+          ],
+          "src": [
+            "/assets/ui/button-blue.png"
           ],
           "data": {
             "tags": {
@@ -2525,6 +2616,33 @@
         },
         {
           "alias": [
+            "garrison-marksman"
+          ],
+          "src": [
+            "/assets/units/garrison-marksman.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "garrison-marksman.png"
+          ],
+          "src": [
+            "/assets/units/garrison-marksman.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "stalwart-vanguard"
           ],
           "src": [
@@ -2579,6 +2697,33 @@
         },
         {
           "alias": [
+            "water-shrine-of-knowledge"
+          ],
+          "src": [
+            "/assets/units/water-shrine-of-knowledge.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "water-shrine-of-knowledge.png"
+          ],
+          "src": [
+            "/assets/units/water-shrine-of-knowledge.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "wind-shrine-of-knowledge"
           ],
           "src": [
@@ -2624,6 +2769,33 @@
           ],
           "src": [
             "/assets/units/wizard.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "zoran-the-punisher"
+          ],
+          "src": [
+            "/assets/units/zoran-the-punisher.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "zoran-the-punisher.png"
+          ],
+          "src": [
+            "/assets/units/zoran-the-punisher.png"
           ],
           "data": {
             "tags": {

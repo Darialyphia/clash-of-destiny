@@ -46,6 +46,14 @@
 
 Note: Removed from play indicates that the card is removed from the game. It is not sent to a discard or banish pile.
 
+### Unique
+
+> You can only have one copy of this card in your deck.
+
+### Divine
+
+> You can only have one Divine card in your Destiny Deck.
+
 ### Class bonus
 
 > This card gains additional effects if its class matches its owner's hero class.
@@ -91,6 +99,10 @@ Note: Removed from play indicates that the card is removed from the game. It is 
 ### Commander
 
 > Minions can be summoned on spaces adjacent to this unit.
+
+### Ambush
+
+> This minion can be summoned on spaces adjacent to enemy minions.
 
 ### Ambush
 

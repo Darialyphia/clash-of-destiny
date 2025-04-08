@@ -27,9 +27,11 @@ const session = new GameSession({
       name: 'Player 1',
       mainDeck: {
         cards: [
-          ...Array.from({ length: 10 }, () => 'stalwart-vanguard'),
-          ...Array.from({ length: 10 }, () => 'bubbly-slime'),
-          ...Array.from({ length: 10 }, () => 'esteemed-erudite')
+          ...Array.from({ length: 5 }, () => 'stalwart-vanguard'),
+          ...Array.from({ length: 5 }, () => 'bubbly-slime'),
+          ...Array.from({ length: 5 }, () => 'garrison-marksman'),
+          'zoran-the-punisher',
+          ...Array.from({ length: 5 }, () => 'esteemed-erudite')
         ]
       },
       destinyDeck: {
@@ -51,9 +53,11 @@ const session = new GameSession({
       name: 'Player 2',
       mainDeck: {
         cards: [
-          ...Array.from({ length: 10 }, () => 'stalwart-vanguard'),
-          ...Array.from({ length: 10 }, () => 'bubbly-slime'),
-          ...Array.from({ length: 10 }, () => 'esteemed-erudite')
+          'zoran-the-punisher',
+          ...Array.from({ length: 5 }, () => 'stalwart-vanguard'),
+          ...Array.from({ length: 5 }, () => 'bubbly-slime'),
+          ...Array.from({ length: 5 }, () => 'garrison-marksman'),
+          ...Array.from({ length: 5 }, () => 'esteemed-erudite')
         ]
       },
       destinyDeck: {

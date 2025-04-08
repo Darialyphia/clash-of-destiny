@@ -39,7 +39,7 @@ Provoke, Floating Destiny
 ---
 
 **Garrison Marskman** (Minion - Avenger)
-3M | 2ATK | 2HP
+3M | 2ATK | 1HP
 
 Ranged(2)
 
@@ -157,8 +157,8 @@ On Enter: Draw 2 cards, then discard a card.
 
 6M | 3ATK | 5HP
 
-Ambush
-On Enter: Deal 3 damage to the unit in front of this. (In front means to the right for player 1, and to the left for player 2).
+Flank, Unique
+On Enter: Deal 2 damage to the unit in front of this. (In front means to the right for player 1, and to the left for player 2).
 
 **Diligent Mentor** (Minion - Wanderer)
 

@@ -11,6 +11,7 @@ import { testDestiySpell } from './test-destiny-spell';
 import { testHero } from './test-hero';
 import { waterShrineOfKnowledge } from './water-shrine-of-knowledge';
 import { windShrineOfKnowledge } from './wind-shrine-of-knowledge';
+import { zoranThePunisher } from './zoran-the-punisher';
 
 export const coreSet: CardSet = {
   id: CARD_SETS.CORE,
@@ -21,11 +22,12 @@ export const coreSet: CardSet = {
     earthShrineOfKnowledge,
     windShrineOfKnowledge,
     stalwartVanguard,
+    esteemedErudite,
     bubblySlime,
     garrisonMarksman,
+    zoranThePunisher,
     testDestiySpell,
     testHero,
-    testDestinyArtifact,
-    esteemedErudite
+    testDestinyArtifact
   ]
 };

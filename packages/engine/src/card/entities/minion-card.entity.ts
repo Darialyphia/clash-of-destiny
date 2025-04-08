@@ -1,3 +1,4 @@
+import type { Point } from '@game/shared';
 import type { Game } from '../../game/game';
 import type { Player } from '../../player/player.entity';
 import { Interceptable } from '../../utils/interceptable';
@@ -31,11 +32,15 @@ export class MinionCard extends UnitCard<
     super(
       game,
       player,
-      { ...makeUnitCardInterceptors(), canPlay: new Interceptable() },
+      {
+        ...makeUnitCardInterceptors(),
+        canPlay: new Interceptable()
+      },
       options
     );
     this.blueprint.onInit(this.game, this);
   }
+
   canPlay(): boolean {
     return this.interceptors.canPlay.getValue(
       this.fulfillsAffinity && this.fulfillsResourceCost,

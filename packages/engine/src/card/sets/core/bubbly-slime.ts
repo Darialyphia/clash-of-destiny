@@ -53,7 +53,5 @@ export const bubblySlime: UnitBlueprint = {
       })
     );
   },
-  onPlay(game, card) {
-    card.unit.addModifier(new ProvokeModifier(game, card));
-  }
+  onPlay() {}
 };

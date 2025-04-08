@@ -22,7 +22,7 @@ export class RangedModifier extends Modifier<Unit> {
               card.unit.position,
               card.unit.attackTargetType,
               {
-                minRange: 2,
+                minRange: 1,
                 maxRange: range
               }
             )

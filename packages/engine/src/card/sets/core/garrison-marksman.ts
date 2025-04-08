@@ -1,5 +1,4 @@
 import { PointAOEShape } from '../../../aoe/point.aoe-shape';
-import { ProvokeModifier } from '../../../modifier/modifiers/provoke.modifier';
 import { RangedModifier } from '../../../modifier/modifiers/ranged.modiier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
 import { floatingDestiny } from '../../abilities/floating-destiny';
@@ -35,7 +34,7 @@ export const garrisonMarksman: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [floatingDestiny],
   atk: 2,
-  maxHp: 2,
+  maxHp: 1,
   job: CARD_JOBS.AVENGER,
   getFollowup: () => {
     return new MinionFollowup();
