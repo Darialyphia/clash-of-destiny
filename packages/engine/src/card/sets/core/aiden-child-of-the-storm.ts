@@ -1,4 +1,5 @@
 import { PointAOEShape } from '../../../aoe/point.aoe-shape';
+import { OnEnterModifier } from '../../../modifier/modifiers/on-enter.modifier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
 import type { UnitBlueprint } from '../../card-blueprint';
 import {
@@ -10,16 +11,19 @@ import {
   RARITIES,
   UNIT_KINDS
 } from '../../card.enums';
+import { AnywhereFollowup } from '../../followups/anywhere-followup';
 import { NoFollowup } from '../../followups/no-followup';
+import { SwiftdModifier } from '../../../modifier/modifiers/swift.modifier';
+import { UntilEndOfTurnModifierMixin } from '../../../modifier/mixins/until-end-of-turn.mixin';
 
-export const testHero: UnitBlueprint = {
-  id: 'test-hero',
+export const aidenLv1: UnitBlueprint = {
+  id: 'aiden-child-of-the-storm',
   kind: CARD_KINDS.UNIT,
   unitKind: UNIT_KINDS.HERO,
   affinity: AFFINITIES.NORMAL,
-  name: 'Test Hero',
+  name: 'Aiden, Child of the Storm',
   getDescription: () => {
-    return ``;
+    return `@On Enter@: Give an ally @Swift@ this turn.`;
   },
   staticDescription: ``,
   setId: CARD_SETS.CORE,
@@ -38,11 +42,26 @@ export const testHero: UnitBlueprint = {
   job: CARD_JOBS.AVENGER,
   lineage: 'Aiden',
   getFollowup: () => {
-    return new NoFollowup();
+    return new AnywhereFollowup({
+      targetingType: TARGETING_TYPE.ALLY_MINION,
+      skippable: true
+    });
   },
   getAoe(game, card) {
     return new PointAOEShape(game, card.player, TARGETING_TYPE.UNIT);
   },
-  onInit() {},
-  onPlay(game, card) {}
+  onInit(game, card) {
+    card.addModifier(
+      new OnEnterModifier(game, card, event => {
+        const [target] = event.data.affectedUnits;
+        if (!target) return;
+        target.addModifier(
+          new SwiftdModifier(game, card, {
+            mixins: [new UntilEndOfTurnModifierMixin(game)]
+          })
+        );
+      })
+    );
+  },
+  onPlay() {}
 };

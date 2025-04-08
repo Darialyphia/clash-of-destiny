@@ -51,6 +51,12 @@ export const KEYWORDS = {
     name: 'Flank',
     description: 'This unit can be played on spaces nearby ally units.',
     aliases: []
+  },
+  SWIFT: {
+    id: 'swift',
+    name: 'Swift',
+    description: 'This unit can move twice during a turn.',
+    aliases: []
   }
 } as const satisfies Record<string, Keyword>;
 

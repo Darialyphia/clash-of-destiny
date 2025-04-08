@@ -56,6 +56,7 @@ const banish = () => {
     }
   });
   ui.isDestinyResourceActionModalOpened = false;
+  selectedIndices.value = [];
 };
 </script>
 

@@ -38,7 +38,7 @@ const session = new GameSession({
       destinyDeck: {
         cards: [
           'fire-shrine-of-knowledge',
-          'test-hero',
+          'aiden-child-of-the-storm',
           'test-destiny-artifact',
           'test-destiny-artifact',
           'test-destiny-artifact',
@@ -65,7 +65,7 @@ const session = new GameSession({
       destinyDeck: {
         cards: [
           'fire-shrine-of-knowledge',
-          'test-hero',
+          'aiden-child-of-the-storm',
           'test-destiny-artifact',
           'test-destiny-artifact',
           'test-destiny-artifact',

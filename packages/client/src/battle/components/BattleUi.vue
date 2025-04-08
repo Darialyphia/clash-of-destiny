@@ -15,6 +15,7 @@ import DestinyPhaseUi from './DestinyPhaseUi.vue';
 import BattlePlayerInfos from '@/player/components/BattlePlayerInfos.vue';
 import HighlightedUnit from './HighlightedUnit.vue';
 import EquipedArtifacts from './EquipedArtifacts.vue';
+import { INTERACTION_STATES } from '@game/engine/src/game/systems/interaction.system';
 
 const turnPlayer = useTurnPlayer();
 const ui = useBattleUiStore();
@@ -26,7 +27,14 @@ const { state } = useGameState();
 <template>
   <TargetingUi />
 
-  <div class="battle-ui" :class="{ cinematic: ui.cardPlayIntent }">
+  <div
+    class="battle-ui"
+    :class="{
+      cinematic:
+        ui.cardPlayIntent ||
+        state.interactionState.state === INTERACTION_STATES.SELECTING_TARGETS
+    }"
+  >
     <BattleLog />
     <header>
       <!-- <div class="flex gap-4 pointer-events-auto">
@@ -72,19 +80,26 @@ const { state } = useGameState();
 </template>
 
 <style scoped lang="postcss">
+@property --battle-ui-cinematic-color {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: 'transparent';
+}
+
 .battle-ui {
   height: 100dvh;
   user-select: none;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  transition: background 0.3s var(--ease-2);
+  transition: --battle-ui-cinematic-color 0.3s var(--ease-2);
+  background: radial-gradient(
+    circle at center,
+    transparent,
+    transparent 20%,
+    var(--battle-ui-cinematic-color)
+  );
   &.cinematic {
-    background: radial-gradient(
-      circle at center,
-      transparent,
-      transparent 20%,
-      hsl(0 0 0 / 0.7)
-    );
+    --battle-ui-cinematic-color: hsl(0 0 0 / 0.7);
   }
 }
 

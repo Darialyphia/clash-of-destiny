@@ -9,7 +9,7 @@ const schema = defaultInputSchema;
 export class CommitPlayCardInput extends Input<typeof schema> {
   readonly name = 'commitPlayCard';
 
-  readonly allowedPhases = [GAME_PHASES.MAIN];
+  readonly allowedPhases = [GAME_PHASES.DESTINY, GAME_PHASES.MAIN];
 
   protected payloadSchema = schema;
 
@@ -18,7 +18,6 @@ export class CommitPlayCardInput extends Input<typeof schema> {
       this.game.gamePhaseSystem.turnPlayer.equals(this.player),
       new NotTurnPlayerError()
     );
-
     assert(
       this.game.interaction.can(INTERACTION_STATE_TRANSITIONS.COMMIT_SELECTING_TARGETS),
       new InvalidInteractionStateError()

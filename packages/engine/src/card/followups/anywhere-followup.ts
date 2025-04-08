@@ -13,8 +13,11 @@ export class AnywhereFollowup implements Followup<AnyCard> {
   constructor(
     private options: {
       targetingType: TargetingType;
+      skippable?: boolean;
     }
-  ) {}
+  ) {
+    this.canCommit = this.canCommit.bind(this);
+  }
 
   getTargets(game: Game, card: AnyCard) {
     return [
@@ -37,6 +40,9 @@ export class AnywhereFollowup implements Followup<AnyCard> {
   }
 
   canCommit(targets: SelectedTarget[]) {
+    if (this.options.skippable) {
+      return true;
+    }
     return targets.length > 0;
   }
 }

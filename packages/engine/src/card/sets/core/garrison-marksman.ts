@@ -44,6 +44,6 @@ export const garrisonMarksman: UnitBlueprint = {
   },
   onInit() {},
   onPlay(game, card) {
-    card.unit.addModifier(new RangedModifier(game, card, 2));
+    card.unit.addModifier(new RangedModifier(game, card, { range: 2 }));
   }
 };

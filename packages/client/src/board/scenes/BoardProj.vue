@@ -80,6 +80,8 @@ useBattleEvent(GAME_EVENTS.UNIT_BEFORE_EVOLVE_HERO, async e => {
 });
 const battleStore = useBattleStore();
 useBattleEvent(GAME_EVENTS.UNIT_CREATED, async event => {
+  if (event.unit.isHero) return;
+
   const state = battleStore.state!;
   const vm = new UnitViewModel(
     event.unit,

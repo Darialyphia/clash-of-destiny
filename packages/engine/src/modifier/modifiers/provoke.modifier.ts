@@ -5,10 +5,11 @@ import type { Unit } from '../../unit/entities/unit.entity';
 import { AuraModifierMixin } from '../mixins/aura.mixin';
 import { UnitInterceptorModifierMixin } from '../mixins/interceptor.mixin';
 import { KeywordModifierMixin } from '../mixins/keyword.mixin';
+import type { ModifierMixin } from '../modifier-mixin';
 import { Modifier } from '../modifier.entity';
 
 export class ProvokedModifier extends Modifier<Unit> {
-  constructor(game: Game, card: AnyCard) {
+  constructor(game: Game, card: AnyCard, otherMixins: ModifierMixin<Unit>[] = []) {
     super(KEYWORDS.PROVOKED.id, game, card, {
       stackable: false,
       name: KEYWORDS.PROVOKED.name,
@@ -29,7 +30,8 @@ export class ProvokedModifier extends Modifier<Unit> {
         new UnitInterceptorModifierMixin(game, {
           key: 'canMove',
           interceptor: () => false
-        })
+        }),
+        ...otherMixins
       ]
     });
   }

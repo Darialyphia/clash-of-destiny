@@ -526,6 +526,19 @@
         },
         {
           "alias": [
+            "icon-keyword-swift"
+          ],
+          "src": [
+            "/assets/icons/keyword-swift.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-keyword-vigilant"
           ],
           "src": [
@@ -765,6 +778,19 @@
           ],
           "src": [
             "/assets/icons/unit-mage.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-unit-promising-recruit"
+          ],
+          "src": [
+            "/assets/icons/unit-promising-recruit.png"
           ],
           "data": {
             "tags": {
@@ -2647,6 +2673,33 @@
           ],
           "src": [
             "/assets/units/garrison-marksman.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "promising-recruit"
+          ],
+          "src": [
+            "/assets/units/promising-recruit.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "promising-recruit.png"
+          ],
+          "src": [
+            "/assets/units/promising-recruit.png"
           ],
           "data": {
             "tags": {

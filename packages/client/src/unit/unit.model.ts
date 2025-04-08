@@ -78,15 +78,15 @@ export class UnitViewModel {
   }
 
   get isHero() {
-    return this.getCard().unitKind === UNIT_KINDS.HERO;
+    return this.data.isHero;
   }
 
   get isShrine() {
-    return this.getCard().unitKind === UNIT_KINDS.SHRINE;
+    return this.data.isShrine;
   }
 
   get isMinion() {
-    return this.getCard().unitKind === UNIT_KINDS.MINION;
+    return this.data.isMinion;
   }
 
   get abilities() {

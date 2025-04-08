@@ -56,6 +56,9 @@ export type SerializedUnit = {
   spriteParts: Record<string, string>;
   name: string;
   description: string;
+  isHero: boolean;
+  isShrine: boolean;
+  isMinion: boolean;
   hp: number;
   maxHp: number;
   atk: number;
@@ -144,6 +147,9 @@ export class Unit
       spriteParts: this._card.blueprint.spriteParts,
       name: this._card.blueprint.name,
       description: this._card.blueprint.getDescription(this.game, this as any),
+      isHero: this.isHero,
+      isShrine: this.isShrine,
+      isMinion: this.isMinion,
       hp: this.hp.current,
       maxHp: this.hp.max,
       atk: this.atk,

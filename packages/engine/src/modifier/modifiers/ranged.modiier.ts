@@ -5,10 +5,15 @@ import { RangedTargetingStrategy } from '../../targeting/ranged-targeting.strate
 import type { Unit } from '../../unit/entities/unit.entity';
 import { UnitInterceptorModifierMixin } from '../mixins/interceptor.mixin';
 import { KeywordModifierMixin } from '../mixins/keyword.mixin';
+import type { ModifierMixin } from '../modifier-mixin';
 import { Modifier } from '../modifier.entity';
 
 export class RangedModifier extends Modifier<Unit> {
-  constructor(game: Game, card: AnyUnitCard, range: number) {
+  constructor(
+    game: Game,
+    card: AnyUnitCard,
+    options: { range: number; mixins?: ModifierMixin<Unit>[] }
+  ) {
     super(KEYWORDS.RANGED.id, game, card, {
       stackable: false,
       mixins: [
@@ -23,7 +28,7 @@ export class RangedModifier extends Modifier<Unit> {
               card.unit.attackTargetType,
               {
                 minRange: 1,
-                maxRange: range
+                maxRange: options.range
               }
             )
         }),
@@ -37,10 +42,11 @@ export class RangedModifier extends Modifier<Unit> {
               card.unit.attackTargetType,
               {
                 minRange: 2,
-                maxRange: range
+                maxRange: options.range
               }
             )
-        })
+        }),
+        ...(options.mixins ?? [])
       ]
     });
   }

@@ -88,12 +88,14 @@ export class HeroCard extends UnitCard<
   protected override playWithTargets(targets: SelectedTarget[]): void {
     const points = targets.map(t => t.cell);
 
+    this.player.hero.evolveHero(this);
+    this.unit = this.player.hero;
+
     this.emitter.emit(
       CARD_EVENTS.BEFORE_PLAY,
       new CardBeforePlayEvent({ targets: points })
     );
 
-    this.player.hero.evolveHero(this);
     this.player.unlockedAffinities.add(this.blueprint.affinity);
     this.addToBoard(points);
     this.emitter.emit(
@@ -104,7 +106,11 @@ export class HeroCard extends UnitCard<
 
   protected override addToBoard(points: Point[]) {
     const aoeShape = this.blueprint.getAoe(this.game, this as any, points);
-    this.unit = this.player.hero;
+
+    this.unit.addToBoard({
+      affectedCells: aoeShape.getCells(points),
+      affectedUnits: aoeShape.getUnits(points)
+    });
 
     this.blueprint.onPlay(
       this.game,

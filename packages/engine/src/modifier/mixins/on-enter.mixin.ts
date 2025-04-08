@@ -24,6 +24,7 @@ export class OnEnterModifierMixin<
 
   onBeforePlay() {
     const target = this.modifier.target;
+    console.log('on before play');
     if (target instanceof UnitCard) {
       target.unit.once(UNIT_EVENTS.CREATED, event => {
         if (target.player.currentlyPlayedCard?.equals(this.modifier.target)) {
