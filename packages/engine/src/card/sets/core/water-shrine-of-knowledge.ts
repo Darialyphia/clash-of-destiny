@@ -18,9 +18,9 @@ export const waterShrineOfKnowledge: UnitBlueprint = {
   affinity: AFFINITIES.WATER,
   name: 'Water Shrine of Knowledge',
   getDescription: () => {
-    return `On Enter: draw 4 cards.`;
+    return `On Enter: draw 5 cards.`;
   },
-  staticDescription: `On Enter: draw 4 cards.`,
+  staticDescription: `On Enter: draw 5 cards.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'unit-water-shrine-of-knowledge',
   spriteId: 'water-shrine-of-knowledge',

@@ -18,9 +18,9 @@ export const fireShrineOfKnowledge: UnitBlueprint = {
   affinity: AFFINITIES.FIRE,
   name: 'Fire Shrine of Knowledge',
   getDescription: () => {
-    return `On Enter: draw 4 cards.`;
+    return `On Enter: draw 5 cards.`;
   },
-  staticDescription: `On Enter: draw 4 cards.`,
+  staticDescription: `On Enter: draw 5 cards.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'unit-fire-shrine-of-knowledge',
   spriteId: 'fire-shrine-of-knowledge',
