@@ -74,13 +74,16 @@ export class HeroCard extends UnitCard<
   }
 
   get fulfillsLevel() {
-    if (this.player.hero.isShrine) return true;
-    return this.baseLevel === (this.player.hero.card as HeroCard).baseLevel - 1;
+    if (this.player.hero.isShrine) return this.baseLevel === 1;
+    return this.baseLevel === (this.player.hero.card as HeroCard).baseLevel + 1;
   }
 
   override canPlay(): boolean {
     return this.interceptors.canPlay.getValue(
-      this.fulfillsAffinity && this.fulfillsResourceCost && this.fulfillsLineage,
+      this.fulfillsAffinity &&
+        this.fulfillsResourceCost &&
+        this.fulfillsLineage &&
+        this.fulfillsLevel,
       this
     );
   }

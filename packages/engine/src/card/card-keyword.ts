@@ -8,6 +8,13 @@ export type Keyword = {
 };
 
 export const KEYWORDS = {
+  LINEAGE: {
+    id: 'lineage',
+    name: 'Lineage',
+    description:
+      'This Hero must be leveled up from a previous hero with the same lineage or a shrine.',
+    aliases: [/^[a-z\s]+\slineage+/]
+  },
   PROVOKE: {
     id: 'provoke',
     name: 'Provoke',
@@ -30,7 +37,13 @@ export const KEYWORDS = {
   ON_ENTER: {
     id: 'on-enter',
     name: 'On Enter',
-    description: 'Does something when this card enters the board when played from hand..',
+    description: 'Does something when this card enters the board when played from hand.',
+    aliases: []
+  },
+  ON_ATTACK: {
+    id: 'on-attack',
+    name: 'On Attack',
+    description: 'Does something when this card attacks another unit.',
     aliases: []
   },
   RANGED: {

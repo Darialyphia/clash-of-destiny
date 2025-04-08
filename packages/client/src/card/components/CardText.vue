@@ -11,6 +11,7 @@ import { KEYWORDS, type Keyword } from '@game/engine/src/card/card-keyword';
 import type { CardBlueprint } from '@game/engine/src/card/card-blueprint';
 import { CARDS_DICTIONARY } from '@game/engine/src/card/sets';
 import BlueprintCard from './BlueprintCard.vue';
+import UiSimpleTooltip from '@/ui/components/UiSimpleTooltip.vue';
 
 const { text, highlighted = true } = defineProps<{
   text: string;
@@ -24,7 +25,9 @@ type Token =
   | { type: 'keyword'; text: string; keyword: Keyword }
   | { type: 'card'; card: CardBlueprint; text: string }
   | { type: 'exhaust' }
-  | { type: 'mana'; text: string };
+  | { type: 'mana'; text: string }
+  | { type: 'spellpower' }
+  | { type: 'dynamic-value'; text: string };
 
 const tokens = computed<Token[]>(() => {
   if (!text.includes(KEYWORD_DELIMITER)) return [{ type: 'text', text }];
@@ -50,8 +53,15 @@ const tokens = computed<Token[]>(() => {
       };
 
     if (part === '[exhaust]') return { type: 'exhaust' };
-    if (part.startsWith('[mana]'))
+    if (part.startsWith('[mana]')) {
       return { type: 'mana', text: part.replace('[mana] ', '') };
+    }
+    if (part.startsWith('[value]')) {
+      return { type: 'dynamic-value', text: part.replace('[value] ', '') };
+    }
+    if (part.startsWith('[spellpower]')) {
+      return { type: 'spellpower' };
+    }
     return { type: 'text', text: part };
   });
 });
@@ -69,6 +79,17 @@ const tokens = computed<Token[]>(() => {
         src="/assets/ui/ability-exhaust.png"
         class="inline"
       />
+
+      <template v-else-if="token.type === 'spellpower'">
+        <!-- <UiSimpleTooltip>
+          <template #trigger>
+            <img src="/assets/ui/ability-power.png" class="inline" />
+          </template>
+          Spellpower
+        </UiSimpleTooltip> -->
+        SpellPower
+      </template>
+
       <HoverCardRoot v-else :open-delay="500" :close-delay="0">
         <HoverCardTrigger>
           {{ token.text }}
@@ -108,9 +129,21 @@ const tokens = computed<Token[]>(() => {
   align-items: center;
 }
 .token-card {
-  color: var(--cyan-2);
+  color: var(--lime-3);
 }
-
+.token-dynamic-value {
+  color: var(--blue-4);
+  font-weight: var(--font-weight-5);
+}
+.token-spellpower {
+  color: var(--blue-3);
+  font-weight: var(--font-weight-5);
+  img {
+    width: 20px;
+    aspect-ratio: 1;
+    transform: translateY(6px);
+  }
+}
 .keyword-card {
   font-size: var(--font-size-0);
   width: var(--size-14);

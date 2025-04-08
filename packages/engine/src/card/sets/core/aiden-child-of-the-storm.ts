@@ -12,7 +12,6 @@ import {
   UNIT_KINDS
 } from '../../card.enums';
 import { AnywhereFollowup } from '../../followups/anywhere-followup';
-import { NoFollowup } from '../../followups/no-followup';
 import { SwiftdModifier } from '../../../modifier/modifiers/swift.modifier';
 import { UntilEndOfTurnModifierMixin } from '../../../modifier/mixins/until-end-of-turn.mixin';
 
@@ -23,9 +22,9 @@ export const aidenLv1: UnitBlueprint = {
   affinity: AFFINITIES.NORMAL,
   name: 'Aiden, Child of the Storm',
   getDescription: () => {
-    return `@On Enter@: Give an ally @Swift@ this turn.`;
+    return `@Aiden Lineage@\n@On Enter@: Give an ally @Swift@ this turn.`;
   },
-  staticDescription: ``,
+  staticDescription: `@Aiden Lineage@\n@On Enter@: Give an ally @Swift@ this turn.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'unit-aiden-lv1',
   spriteId: 'aiden-lv1',
@@ -36,8 +35,8 @@ export const aidenLv1: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.DESTINY_DECK,
   abilities: [],
   atk: 1,
-  maxHp: 18,
-  spellpower: 0,
+  maxHp: 16,
+  spellpower: 1,
   level: 1,
   job: CARD_JOBS.AVENGER,
   lineage: 'Aiden',

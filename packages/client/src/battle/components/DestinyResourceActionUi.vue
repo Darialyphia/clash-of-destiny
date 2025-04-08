@@ -58,6 +58,13 @@ const banish = () => {
   ui.isDestinyResourceActionModalOpened = false;
   selectedIndices.value = [];
 };
+
+watch(
+  () => ui.isDestinyResourceActionModalOpened,
+  () => {
+    selectedIndices.value = [];
+  }
+);
 </script>
 
 <template>

@@ -18,7 +18,7 @@ export const earthShrineOfKnowledge: UnitBlueprint = {
   affinity: AFFINITIES.EARTH,
   name: 'Earth Shrine of Knowledge',
   getDescription: () => {
-    return `On Enter: draw 4 cards.`;
+    return `On Enter: draw 5 cards.`;
   },
   staticDescription: `On Enter: draw 4 cards.`,
   setId: CARD_SETS.CORE,
@@ -31,7 +31,7 @@ export const earthShrineOfKnowledge: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.DESTINY_DECK,
   abilities: [],
   atk: 0,
-  maxHp: 15,
+  maxHp: 12,
   level: 0,
   getFollowup: () => {
     return new NoFollowup();
@@ -41,6 +41,6 @@ export const earthShrineOfKnowledge: UnitBlueprint = {
   },
   onInit() {},
   onPlay(game, card) {
-    card.player.cards.draw(4);
+    card.player.cards.draw(5);
   }
 };

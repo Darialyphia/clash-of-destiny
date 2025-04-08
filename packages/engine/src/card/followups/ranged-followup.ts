@@ -1,4 +1,4 @@
-import type { Point } from '@game/shared';
+import { isFunction, type Point } from '@game/shared';
 import type { Game } from '../../game/game';
 import type { Followup } from './ability-followup';
 import type { SelectedTarget } from '../../game/systems/interaction.system';
@@ -11,7 +11,7 @@ import { Position } from '../../utils/position.component';
 import type { AnyCard } from '../entities/card.entity';
 
 export class RangedFollowup implements Followup<AnyCard> {
-  private position: Position;
+  private position: Point | ((targets: SelectedTarget[]) => Point);
   constructor(
     private options: {
       minRange: number;
@@ -19,10 +19,10 @@ export class RangedFollowup implements Followup<AnyCard> {
       targetsCount?: number;
       allowSelf?: boolean;
       targetingType: TargetingType;
-      position: Point;
+      position: Point | ((targets: SelectedTarget[]) => Point);
     }
   ) {
-    this.position = Position.fromPoint(this.options.position);
+    this.position = this.options.position;
     this.canCommit = this.canCommit.bind(this);
   }
 
@@ -30,17 +30,20 @@ export class RangedFollowup implements Followup<AnyCard> {
     return [
       {
         type: 'cell' as const,
-        isElligible: (point: Point) => {
+        isElligible: (point: Point, selectedTargets: SelectedTarget[]) => {
           if (
             !isValidTargetingType(game, point, card.player, this.options.targetingType)
           ) {
             return false;
           }
 
-          if (!this.options.allowSelf && this.position.equals(point)) {
+          const position = Position.fromPoint(
+            isFunction(this.position) ? this.position(selectedTargets) : this.position
+          );
+          if (!this.options.allowSelf && position.equals(point)) {
             return false;
           }
-          const distance = this.position.dist(point);
+          const distance = position.dist(point);
 
           return distance >= this.options.minRange && distance <= this.options.maxRange;
         }
@@ -48,13 +51,16 @@ export class RangedFollowup implements Followup<AnyCard> {
     ];
   }
 
-  getRange(game: Game): Cell[] {
+  getRange(game: Game, card: AnyCard, selectedTargets: SelectedTarget[]): Cell[] {
+    const position = Position.fromPoint(
+      isFunction(this.position) ? this.position(selectedTargets) : this.position
+    );
     return game.boardSystem.cells.filter(cell => {
-      if (!this.options.allowSelf && this.position.equals(cell.position)) {
+      if (!this.options.allowSelf && position.equals(cell.position)) {
         return false;
       }
 
-      const distance = this.position.dist(cell);
+      const distance = position.dist(cell);
 
       return distance >= this.options.minRange && distance <= this.options.maxRange;
     });

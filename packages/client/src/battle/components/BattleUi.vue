@@ -106,7 +106,7 @@ const { state } = useGameState();
 footer {
   grid-row: 3;
   display: grid;
-  grid-template-columns: minmax(0, 0.6fr) minmax(0, 0.4fr);
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 0.3fr);
   gap: var(--size-7);
   align-items: end;
 }

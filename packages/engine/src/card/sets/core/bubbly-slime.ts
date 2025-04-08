@@ -1,6 +1,5 @@
 import { PointAOEShape } from '../../../aoe/point.aoe-shape';
 import { OnEnterModifier } from '../../../modifier/modifiers/on-enter.modifier';
-import { ProvokeModifier } from '../../../modifier/modifiers/provoke.modifier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
 import { floatingDestiny } from '../../abilities/floating-destiny';
 import type { UnitBlueprint } from '../../card-blueprint';

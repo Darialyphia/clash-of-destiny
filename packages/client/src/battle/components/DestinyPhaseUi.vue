@@ -104,7 +104,7 @@ const play = () => {
               name="destiny-card"
               :value="index"
               v-model="selectedCardIndex"
-              :disabled="card.destinyCost! > player.destiny"
+              :disabled="!card.canPlay"
             />
           </VisuallyHidden>
         </label>

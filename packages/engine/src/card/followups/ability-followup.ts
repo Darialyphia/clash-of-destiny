@@ -5,6 +5,6 @@ import type { AnyCard } from '../entities/card.entity';
 
 export type Followup<T extends AnyCard> = {
   getTargets(game: Game, card: T): EffectTarget[];
-  getRange(game: Game, card: T): Cell[];
+  getRange(game: Game, card: T, selectedTargets: SelectedTarget[]): Cell[];
   canCommit(targets: SelectedTarget[]): boolean;
 };

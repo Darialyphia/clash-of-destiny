@@ -1,6 +1,7 @@
 import type { CardSet } from '..';
 import { CARD_SETS } from '../../card.enums';
 import { aidenLv1 } from './aiden-child-of-the-storm';
+import { aidenLv2 } from './aiden-stormrider';
 import { bubblySlime } from './bubbly-slime';
 import { earthShrineOfKnowledge } from './earth-shrine-of-knowledge';
 import { esteemedErudite } from './esteemed-erudite';
@@ -8,6 +9,7 @@ import { fireShrineOfKnowledge } from './fire-shrine-of-knowledge';
 import { garrisonMarksman } from './garrison-marksman';
 import { promisingRecruit } from './promising-recruit';
 import { stalwartVanguard } from './stalwart-vanguard';
+import { stormFlash } from './storm-flash';
 import { swordInstructor } from './sword-instructor';
 import { testDestinyArtifact } from './test-destiny-artifact';
 import { testDestiySpell } from './test-destiny-spell';
@@ -30,8 +32,10 @@ export const coreSet: CardSet = {
     swordInstructor,
     promisingRecruit,
     zoranThePunisher,
+    stormFlash,
     testDestiySpell,
     aidenLv1,
+    aidenLv2,
     testDestinyArtifact
   ]
 };

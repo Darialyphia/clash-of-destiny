@@ -155,12 +155,18 @@ export class SpellCard extends Card<
       canPlay: this.player.canPlayCard(this),
       maxTargets: this.followupTargets.length,
       aoe: this.getSerializedAoe(),
-      range: this.player.currentlyPlayedCard?.equals(this)
-        ? this.blueprint
-            .getFollowup(this.game, this)
-            .getRange(this.game, this)
-            .map(cell => cell.id)
-        : null,
+      range:
+        this.player.currentlyPlayedCard?.equals(this) &&
+        this.game.interaction.context.state === INTERACTION_STATES.SELECTING_TARGETS
+          ? this.blueprint
+              .getFollowup(this.game, this)
+              .getRange(
+                this.game,
+                this,
+                this.game.interaction.context.ctx.selectedTargets
+              )
+              .map(cell => cell.id)
+          : null,
       abilities: this.abilities.map(ability => ({
         id: ability.id,
         manaCost: ability.manaCost,
