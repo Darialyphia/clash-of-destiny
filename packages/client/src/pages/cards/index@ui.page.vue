@@ -153,8 +153,8 @@ const hasMaxCopies = (card: CardBlueprint) => {
         />
       </li>
     </ul>
-    <aside>
-      <!--<template v-if="!selectedDeck">
+    <!-- <aside>
+      <template v-if="!selectedDeck">
         <p v-if="!decks.length">You haven't created any deck yet.</p>
 
         <ul class="mb-5">
@@ -201,9 +201,9 @@ const hasMaxCopies = (card: CardBlueprint) => {
         <UiButton class="primary-button" @click="selectedDeck = null">
           Back
         </UiButton>
-      </div> -->
+      </div>
       TODO deck builder
-    </aside>
+    </aside> -->
   </div>
 </template>
 
@@ -213,7 +213,7 @@ const hasMaxCopies = (card: CardBlueprint) => {
   height: 100dvh;
   pointer-events: auto;
   display: grid;
-  grid-template-columns: 1fr var(--size-xs);
+  /* grid-template-columns: 1fr var(--size-xs); */
 
   > nav {
     grid-column: 1 / -1;
