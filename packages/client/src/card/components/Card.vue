@@ -8,8 +8,9 @@ import {
   type Rarity,
   type UnitKind
 } from '@game/engine/src/card/card.enums';
-import { isDefined } from '@game/shared';
+import { clamp, isDefined, mapRange } from '@game/shared';
 import CardText from '@/card/components/CardText.vue';
+import { useMouse } from '@vueuse/core';
 
 const { card } = defineProps<{
   card: {
@@ -64,11 +65,47 @@ const affinityBg = computed(() => {
 const affinityGemBg = computed(() => {
   return `url('/assets/ui/gem-${card.affinity.toLowerCase()}.png')`;
 });
+
+const root = useTemplateRef('card');
+const { x, y } = useMouse();
+
+const pointerStyle = computed(() => {
+  if (!root.value) return;
+  const rect = root.value.getBoundingClientRect();
+  const pointer = {
+    x: clamp(x.value - rect.left, 0, rect.width),
+    y: clamp(y.value - rect.top, 0, rect.height)
+  };
+  const percent = {
+    x: (pointer.x / rect.width) * 100,
+    y: (pointer.y / rect.height) * 100
+  };
+  return {
+    glareX: pointer.x,
+    glareY: pointer.y,
+    foilX: Math.round(mapRange(percent.x, [0, 100], [37, 63])),
+    foilY: Math.round(mapRange(percent.y, [0, 100], [33, 67])),
+    pointerFromCenter: clamp(
+      Math.sqrt(
+        (percent.y - 50) * (percent.y - 50) +
+          (percent.x - 50) * (percent.x - 50)
+      ) / 50,
+      0,
+      1
+    )
+  };
+});
 </script>
 
 <template>
-  <div class="card" :class="card.kind" :data-flip-id="`card_${card.id}`">
+  <div
+    class="card"
+    :class="card.kind"
+    :data-flip-id="`card_${card.id}`"
+    ref="card"
+  >
     <div class="card-front">
+      <!-- <div class="foil" /> -->
       <div class="image" />
       <div class="name" :data-text="card.name">
         {{ card.name }}
@@ -125,6 +162,7 @@ const affinityGemBg = computed(() => {
           :text="ability"
         />
       </div>
+      <div class="glare" />
     </div>
     <div class="card-back" />
   </div>
@@ -133,8 +171,13 @@ const affinityGemBg = computed(() => {
 <style scoped lang="postcss">
 .card {
   --pixel-scale: 2;
-  width: calc(160px * var(--pixel-scale));
-  height: calc(224px * var(--pixel-scale));
+  --glare-x: calc(1px * v-bind('pointerStyle?.glareX'));
+  --glare-y: calc(1px * v-bind('pointerStyle?.glareY'));
+  --foil-x: calc(1% * v-bind('pointerStyle?.foilX'));
+  --foil-y: calc(1% * v-bind('pointerStyle?.foilY'));
+  --pointer-from-center: v-bind('pointerStyle?.pointerFromCenter');
+  width: calc(var(--card-width) * var(--pixel-scale));
+  height: calc(var(--card-height) * var(--pixel-scale));
   display: grid;
   transform-style: preserve-3d;
 
@@ -326,5 +369,93 @@ const affinityGemBg = computed(() => {
   top: calc(147px * var(--pixel-scale));
   left: calc(24px * var(--pixel-scale));
   font-size: 14px;
+}
+
+.glare {
+  position: absolute;
+  pointer-events: none;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.3s;
+  background-image: radial-gradient(
+    circle at var(--glare-x) var(--glare-y),
+    hsla(0, 0%, 100%, 0.8) 10%,
+    hsla(0, 0%, 100%, 0.65) 20%,
+    hsla(0, 0%, 0%, 0.5) 90%
+  );
+  mix-blend-mode: overlay;
+  mask-image: url('/assets/ui/card-bg.png');
+  mask-size: cover;
+
+  .card:hover & {
+    opacity: 0.8;
+  }
+}
+
+@property --foil-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes foil-spin {
+  from {
+    --foil-angle: 0deg;
+  }
+  to {
+    --foil-angle: 360deg;
+  }
+}
+.foil {
+  --space: 5%;
+  --foil-angle: 0deg;
+  --img-size: 300% 400%;
+  position: absolute;
+  inset: 0;
+  animation: foil-spin 10s infinite linear;
+  background: repeating-linear-gradient(
+    var(--foil-angle),
+    hsla(283, 49%, 60%, 0.75) calc(var(--space) * 1),
+    hsla(2, 74%, 59%, 0.75) calc(var(--space) * 2),
+    hsla(53, 67%, 53%, 0.75) calc(var(--space) * 3),
+    hsla(93, 56%, 52%, 0.75) calc(var(--space) * 4),
+    hsla(176, 38%, 50%, 0.75) calc(var(--space) * 5),
+    hsla(228, 100%, 77%, 0.75) calc(var(--space) * 6),
+    hsla(283, 49%, 61%, 0.75) calc(var(--space) * 7)
+  );
+  background-size: var(--img-size);
+  opacity: 0.7;
+  mix-blend-mode: color-dodge;
+  background-position:
+    0% calc(33% * 1),
+    63% 33%;
+  /* background-position:
+    0% calc(var(--foil-y) * 1),
+    var(--foil-x) var(--foil-y); */
+  /* opacity: 0; */
+  /* display: none; */
+  transition: opacity 0.3s;
+  filter: brightness(0.85) contrast(2.75) saturate(0.65);
+  mask-image: url('/assets/ui/card-bg.png');
+  mask-size: cover;
+
+  &::after {
+    position: absolute;
+    inset: 0;
+    content: '';
+    background-image: radial-gradient(
+      farthest-corner ellipse at calc(((var(--glare-x)) * 0.5) + 25%)
+        calc(((var(--glare-y)) * 0.5) + 25%),
+      hsl(0, 0%, 100%) 5%,
+      hsla(300, 100%, 11%, 0.6) 40%,
+      hsl(0, 0%, 22%) 120%
+    );
+    background-position: center center;
+    background-size: 400% 500%;
+    filter: brightness(calc((var(--pointer-from-center) * 0.2) + 0.4))
+      contrast(0.85) saturate(1.1);
+    mix-blend-mode: hard-light;
+  }
 }
 </style>

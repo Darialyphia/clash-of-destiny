@@ -6,6 +6,7 @@ import { esteemedErudite } from './esteemed-erudite';
 import { fireShrineOfKnowledge } from './fire-shrine-of-knowledge';
 import { garrisonMarksman } from './garrison-marksman';
 import { stalwartVanguard } from './stalwart-vanguard';
+import { swordInstructor } from './sword-instructor';
 import { testDestinyArtifact } from './test-destiny-artifact';
 import { testDestiySpell } from './test-destiny-spell';
 import { testHero } from './test-hero';
@@ -25,6 +26,7 @@ export const coreSet: CardSet = {
     esteemedErudite,
     bubblySlime,
     garrisonMarksman,
+    swordInstructor,
     zoranThePunisher,
     testDestiySpell,
     testHero,

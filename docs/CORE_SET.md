@@ -67,9 +67,9 @@ Provoke, Vigilant
 
 **Sword Instructor** (Minion - Fighter)
 
-2M | 1ATK | 1HP
+2M | 1ATK | 2HP
 
-[exhaust], 1M -> Give a nearby minion +1 ATK.
+[exhaust], 1M -> Give a ally minion +1 ATK.
 
 ---
 
@@ -119,7 +119,7 @@ On Enter: If you have at least 2 Destiny, heal an ally for 2.
 
 3M | 2ATK | 2HP
 
-[exhaust], 2M -> Banish up to 2 cards from the opponent's discard pile.
+[exhaust] -> Banish up to 2 cards from the opponent's discard pile.
 
 ---
 
@@ -157,8 +157,9 @@ On Enter: Draw 2 cards, then discard a card.
 
 6M | 3ATK | 5HP
 
-Flank, Unique
-On Enter: Deal 2 damage to the unit in front of this. (In front means to the right for player 1, and to the left for player 2).
+Flank, Unique.
+
+On Enter: Deal 3 damage to the unit in front of this. (In front means to the right for player 1, and to the left for player 2).
 
 **Diligent Mentor** (Minion - Wanderer)
 

@@ -27,6 +27,7 @@ const session = new GameSession({
       name: 'Player 1',
       mainDeck: {
         cards: [
+          ...Array.from({ length: 5 }, () => 'sword-instructor'),
           ...Array.from({ length: 5 }, () => 'stalwart-vanguard'),
           ...Array.from({ length: 5 }, () => 'bubbly-slime'),
           ...Array.from({ length: 5 }, () => 'garrison-marksman'),
@@ -54,6 +55,7 @@ const session = new GameSession({
       mainDeck: {
         cards: [
           'zoran-the-punisher',
+          ...Array.from({ length: 5 }, () => 'sword-instructor'),
           ...Array.from({ length: 5 }, () => 'stalwart-vanguard'),
           ...Array.from({ length: 5 }, () => 'bubbly-slime'),
           ...Array.from({ length: 5 }, () => 'garrison-marksman'),

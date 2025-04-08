@@ -787,6 +787,19 @@
         },
         {
           "alias": [
+            "icon-unit-sword-instructor"
+          ],
+          "src": [
+            "/assets/icons/unit-sword-instructor.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-unit-test-minion"
           ],
           "src": [
@@ -2661,6 +2674,33 @@
           ],
           "src": [
             "/assets/units/stalwart-vanguard.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "sword-instructor"
+          ],
+          "src": [
+            "/assets/units/sword-instructor.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "sword-instructor.png"
+          ],
+          "src": [
+            "/assets/units/sword-instructor.png"
           ],
           "data": {
             "tags": {

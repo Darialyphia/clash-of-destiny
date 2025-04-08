@@ -1,6 +1,5 @@
 import type { Point } from '@game/shared';
 import type { Game } from '../../game/game';
-import type { SpellCard } from '../entities/spell-card.entity';
 import type { Followup } from './ability-followup';
 import type { SelectedTarget } from '../../game/systems/interaction.system';
 import {

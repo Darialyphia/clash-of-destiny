@@ -45,7 +45,7 @@ export const isValidTargetingType = (
       TARGETING_TYPE.ALLY_HERO,
       () => unit?.player.equals(player) && (unit?.isHero || unit?.isShrine)
     )
-    .with(TARGETING_TYPE.ALLY_MINION, () => unit?.player.equals(player) && !unit.isMinion)
+    .with(TARGETING_TYPE.ALLY_MINION, () => unit?.player.equals(player) && unit.isMinion)
     .with(TARGETING_TYPE.ENEMY_UNIT, () => !unit?.player.equals(player))
     .with(
       TARGETING_TYPE.ENEMY_HERO,
@@ -53,7 +53,7 @@ export const isValidTargetingType = (
     )
     .with(
       TARGETING_TYPE.ENEMY_MINION,
-      () => !unit?.player.equals(player) && !unit?.isMinion
+      () => !unit?.player.equals(player) && unit?.isMinion
     )
     .with(TARGETING_TYPE.GENERAL, () => unit?.isHero || unit?.isShrine)
     .with(TARGETING_TYPE.MINION, () => unit?.isMinion)
