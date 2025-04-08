@@ -55,6 +55,29 @@ const ui = useBattleUiStore();
     >
       <outline-filter v-if="isHovered" :thickness="2" :color="0xffffff" />
     </sprite-2d>
+
+    <text-2d
+      v-if="modifier.stacks"
+      :ref="
+        (container: any) => {
+          if (!container) return;
+          ui.assignLayer(container, 'ui');
+          container.proj.affine = AFFINE.AXIS_X;
+        }
+      "
+      :style="{
+        fontFamily: 'NotJamSlab14',
+        align: 'center',
+        fill: '#ffffff',
+        fontSize: 56,
+        strokeThickness: 8
+      }"
+      :scale="0.25"
+      :y="-3"
+      :x="5"
+    >
+      {{ modifier.stacks }}
+    </text-2d>
     <VirtualFloatingCard
       :position="cardPosition!"
       :timeout="500"
@@ -65,20 +88,6 @@ const ui = useBattleUiStore();
         <p class="text-0 max-inline-xs">{{ modifier.description }}</p>
       </div>
     </VirtualFloatingCard>
-    <pixi-text
-      v-if="modifier.stacks"
-      :style="{
-        fontFamily: 'NotJamSlab14',
-        align: 'center',
-        fill: '#ffffff',
-        fontSize: 56,
-        strokeThickness: 8
-      }"
-      :scale="0.25"
-      :y="-3"
-    >
-      {{ modifier.stacks }}
-    </pixi-text>
   </container-2d>
 </template>
 

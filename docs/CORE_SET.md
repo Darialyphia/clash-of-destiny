@@ -9,6 +9,7 @@ Legend:
 - HP: Health
 - LV: Level of the card's hero
 - DUR: durability
+- [x] : means the card has been implemented in the game
 
 ## Heroes
 
@@ -16,7 +17,7 @@ Legend:
 
 ### Normal
 
-**Bubbly Slime** (Minion - Summoner)
+**Bubbly Slime** (Minion - Summoner) [x]
 2M | 1Atk | 1Hp
 
 On Enter: if you have at least 3 Destiny, draw a card.

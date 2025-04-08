@@ -15,6 +15,7 @@ const { blueprint } = defineProps<{ blueprint: CardBlueprint }>();
       kind: blueprint.kind,
       affinity: blueprint.affinity,
       manaCost: (blueprint as any).manaCost,
+      destinyCost: (blueprint as any).destinyCost,
       rarity: (blueprint as any).rarity,
       job: (blueprint as any).job,
       atk: (blueprint as any).atk,
@@ -22,7 +23,8 @@ const { blueprint } = defineProps<{ blueprint: CardBlueprint }>();
       spellpower: (blueprint as any).spellpower,
       level: (blueprint as any).level,
       unitKind: (blueprint as any).unitKind,
-      durability: (blueprint as any).durability
+      durability: (blueprint as any).durability,
+      abilities: blueprint.abilities.map(a => a.staticDescription)
     }"
   />
 </template>

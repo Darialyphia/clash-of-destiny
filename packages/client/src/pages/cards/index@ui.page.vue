@@ -10,7 +10,11 @@ import {
   CARDS_DICTIONARY,
   type CardSet
 } from '@game/engine/src/card/sets';
-import { CARD_KINDS, UNIT_KINDS } from '@game/engine/src/card/card.enums';
+import {
+  CARD_DECK_SOURCES,
+  CARD_KINDS,
+  UNIT_KINDS
+} from '@game/engine/src/card/card.enums';
 import { match } from 'ts-pattern';
 import BlueprintCard from '@/card/components/BlueprintCard.vue';
 
@@ -25,26 +29,55 @@ const authorizedSets: CardSet[] = [CARD_SET_DICTIONARY.CORE];
 
 const KIND_ORDER = {
   [CARD_KINDS.UNIT]: 1,
-  [CARD_KINDS.ABILITY]: 2,
+  [CARD_KINDS.SPELL]: 2,
   [CARD_KINDS.ARTIFACT]: 3,
-  [CARD_KINDS.QUEST]: 4,
-  [CARD_KINDS.STATUS]: 5
+  [CARD_KINDS.SECRET]: 4
 };
 
+const UNIT_KIND_ORDER = {
+  [UNIT_KINDS.SHRINE]: 1,
+  [UNIT_KINDS.HERO]: 2,
+  [UNIT_KINDS.MINION]: 3
+};
 const cards = computed(() => {
   return authorizedSets
     .map(set => set.cards)
     .flat()
-    .filter(card => card.kind !== CARD_KINDS.STATUS)
     .sort((a, b) => {
+      if (
+        a.deckSource === CARD_DECK_SOURCES.DESTINY_DECK &&
+        b.deckSource !== CARD_DECK_SOURCES.DESTINY_DECK
+      ) {
+        return -1;
+      }
+      if (
+        a.deckSource !== CARD_DECK_SOURCES.MAIN_DECK &&
+        b.deckSource === CARD_DECK_SOURCES.MAIN_DECK
+      ) {
+        return 1;
+      }
+
       if (a.kind === b.kind) {
-        if (a.kind === CARD_KINDS.ABILITY && b.kind === CARD_KINDS.ABILITY) {
+        if (a.kind === CARD_KINDS.UNIT && b.kind === CARD_KINDS.UNIT) {
+          if (a.unitKind !== b.unitKind) {
+            return UNIT_KIND_ORDER[a.unitKind] - UNIT_KIND_ORDER[b.unitKind];
+          }
+        }
+
+        if (
+          a.deckSource === CARD_DECK_SOURCES.MAIN_DECK &&
+          b.deckSource === CARD_DECK_SOURCES.MAIN_DECK &&
+          a.manaCost !== b.manaCost
+        ) {
           return a.manaCost - b.manaCost;
         }
 
-        if (a.kind === CARD_KINDS.UNIT && b.kind === CARD_KINDS.UNIT) {
-          // @ts-expect-error
-          return (a.level ?? 0) - (b.level ?? 0);
+        if (
+          a.deckSource === CARD_DECK_SOURCES.DESTINY_DECK &&
+          b.deckSource === CARD_DECK_SOURCES.DESTINY_DECK &&
+          a.destinyCost !== b.destinyCost
+        ) {
+          return a.destinyCost - b.destinyCost;
         }
         return a.name
           .toLocaleLowerCase()
@@ -194,7 +227,7 @@ aside {
 .cards {
   gap: var(--size-6);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
   justify-items: center;
   overflow-y: auto;
 }

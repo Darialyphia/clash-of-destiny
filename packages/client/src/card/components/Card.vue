@@ -100,7 +100,7 @@ const pointerStyle = computed(() => {
 <template>
   <div
     class="card"
-    :class="card.kind"
+    :class="card.kind.toLocaleLowerCase()"
     :data-flip-id="`card_${card.id}`"
     ref="card"
   >
@@ -152,7 +152,8 @@ const pointerStyle = computed(() => {
       </div>
       <div class="kind">
         <div class="kind-icon" />
-        {{ card.kind }} - {{ card.job }}
+        {{ card.kind === CARD_KINDS.UNIT ? card.unitKind : card.kind }}
+        {{ card.job }}
       </div>
       <div class="description">
         <CardText :text="card.description" />
@@ -231,17 +232,21 @@ const pointerStyle = computed(() => {
 .image {
   background: v-bind(imageBg);
   background-size: cover;
-  background-position: center -15px;
+  background-position: center;
   width: calc(96px * var(--pixel-scale));
   height: calc(96px * var(--pixel-scale));
   position: absolute;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
+
+  .unit & {
+    background-position: center -10px;
+  }
 }
 
 .name {
-  width: calc(96px * var(--pixel-scale));
+  width: calc(100px * var(--pixel-scale));
   text-align: center;
   text-wrap: pretty;
   position: absolute;
@@ -251,7 +256,11 @@ const pointerStyle = computed(() => {
   font-size: 18px;
   line-height: 1.1;
   -webkit-text-stroke: 4px black;
+  font-weight: var(--font-weight-5);
   paint-order: stroke fill;
+  height: calc(20px * var(--pixel-scale));
+  display: grid;
+  align-items: center;
 }
 
 .affinity-gem {
