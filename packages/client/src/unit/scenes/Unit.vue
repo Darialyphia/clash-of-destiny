@@ -16,7 +16,7 @@ const isSpawnAnimationDone = ref(false);
 
 <template>
   <UnitPositioner :unit="unit" v-if="!unit.isDead">
-    <UnitSpawnAnimation @done="isSpawnAnimationDone = true">
+    <UnitSpawnAnimation :unit="unit" @done="isSpawnAnimationDone = true">
       <UnitOrientation :unit="unit">
         <UnitShadow :unit="unit" />
         <UnitSprite :unit="unit" />

@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import BoardCell from '@/board/scenes/BoardCell.vue';
-import { providePointLights } from '@/vfx/usePointLight';
 import { useCells, useUnits } from '@/battle/stores/battle.store';
 import { useIsoCamera } from '@/iso/composables/useIsoCamera';
 import Unit from '@/unit/scenes/Unit.vue';
@@ -9,7 +8,6 @@ const cells = useCells();
 const units = useUnits();
 const readyCells = ref(0);
 const camera = useIsoCamera();
-providePointLights(camera);
 </script>
 
 <template>
