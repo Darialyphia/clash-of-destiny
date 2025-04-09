@@ -146,7 +146,7 @@ h2 {
     position: relative;
     width: var(--card-width);
     height: var(--card-height);
-    overflow: hidden;
+    overflow: clip;
     .card-miniature {
       transform: scale(0.5);
       transform-origin: top left;

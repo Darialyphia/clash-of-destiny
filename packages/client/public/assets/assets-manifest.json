@@ -552,6 +552,19 @@
         },
         {
           "alias": [
+            "icon-modifier-bubble"
+          ],
+          "src": [
+            "/assets/icons/modifier-bubble.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-modifier-mana-shield"
           ],
           "src": [
@@ -791,6 +804,19 @@
           ],
           "src": [
             "/assets/icons/unit-garrison-marksman.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-unit-luminscent-mystic"
+          ],
+          "src": [
+            "/assets/icons/unit-luminscent-mystic.png"
           ],
           "data": {
             "tags": {
@@ -2726,6 +2752,33 @@
           ],
           "src": [
             "/assets/units/garrison-marksman.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "luminescent-mystic"
+          ],
+          "src": [
+            "/assets/units/luminescent-mystic.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "luminescent-mystic.png"
+          ],
+          "src": [
+            "/assets/units/luminescent-mystic.png"
           ],
           "data": {
             "tags": {

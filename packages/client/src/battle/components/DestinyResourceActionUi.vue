@@ -91,17 +91,7 @@ watch(
         :class="{ hidden: !ui.isDestinyResourceActionModalOpened }"
       >
         <label v-for="(card, index) in player.getHand()" :key="card.id">
-          <HoverCardRoot :open-delay="300" :close-delay="0">
-            <HoverCardTrigger>
-              <BattleCard :card="card" class="card-miniature" />
-            </HoverCardTrigger>
-
-            <HoverCardPortal to="#card-portal">
-              <HoverCardContent side="right" :side-offset="20">
-                <BattleCard :card="card" class="hover-card" />
-              </HoverCardContent>
-            </HoverCardPortal>
-          </HoverCardRoot>
+          <BattleCard :card="card" class="card-miniature" />
           <VisuallyHidden>
             <input
               type="checkbox"
@@ -146,14 +136,11 @@ h2 {
     position: relative;
     width: var(--card-width);
     height: var(--card-height);
-    overflow: hidden;
+    overflow: clip;
     .card-miniature {
       transform: scale(0.5);
       transform-origin: top left;
       transition: transform 0.2s var(--ease-2);
-      &:hover {
-        transform: scale(0.5) translateY(1rem);
-      }
     }
 
     &:has(input:checked) {

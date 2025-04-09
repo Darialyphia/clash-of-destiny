@@ -70,6 +70,12 @@ export const KEYWORDS = {
     name: 'Swift',
     description: 'This unit can move twice during a turn.',
     aliases: []
+  },
+  CLASS_BONUS: {
+    id: 'class-bonus',
+    name: 'Class Bonus',
+    description: "This card has a bonus effect if its class matches your hero's class.",
+    aliases: []
   }
 } as const satisfies Record<string, Keyword>;
 

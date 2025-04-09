@@ -140,7 +140,7 @@ Class Bonus: On Destroyed: Draw a card.
 
 **Twiight Sorcerer** (Minion - Spellcaster)
 
-4M | 1 ATK | 4HP
+4M | 2 ATK | 4HP
 
 Defiant(2)
 

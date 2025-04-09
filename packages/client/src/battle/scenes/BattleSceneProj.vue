@@ -1,13 +1,8 @@
 <script lang="ts" setup>
-import { config } from '@/utils/config';
-import IsoWorld from '@/iso/components/IsoWorld.vue';
-import IsoCamera from '@/iso/components/IsoCamera.vue';
 import { useKeyboardControl } from '@/shared/composables/useKeyboardControl';
 import { useSettingsStore } from '@/shared/composables/useSettings';
-import { until } from '@vueuse/core';
 import { useBattleStore, useGameState } from '../stores/battle.store';
 import { useBattleUiStore } from '../stores/battle-ui.store';
-import Board from '@/board/scenes/Board.vue';
 import { GameSession } from '@game/engine/src/game/game-session';
 import BoardProj from '@/board/scenes/BoardProj.vue';
 
@@ -28,6 +23,7 @@ const session = new GameSession({
       mainDeck: {
         cards: [
           ...Array.from({ length: 5 }, () => 'sword-instructor'),
+          ...Array.from({ length: 5 }, () => 'luminescent-mystic'),
           ...Array.from({ length: 5 }, () => 'stalwart-vanguard'),
           ...Array.from({ length: 5 }, () => 'bubbly-slime'),
           ...Array.from({ length: 5 }, () => 'garrison-marksman'),
@@ -56,6 +52,7 @@ const session = new GameSession({
         cards: [
           'zoran-the-punisher',
           ...Array.from({ length: 5 }, () => 'sword-instructor'),
+          ...Array.from({ length: 5 }, () => 'luminescent-mystic'),
           ...Array.from({ length: 5 }, () => 'stalwart-vanguard'),
           ...Array.from({ length: 5 }, () => 'bubbly-slime'),
           ...Array.from({ length: 5 }, () => 'garrison-marksman'),
