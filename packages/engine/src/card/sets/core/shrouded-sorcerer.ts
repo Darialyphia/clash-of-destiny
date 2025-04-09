@@ -80,6 +80,6 @@ export const shroudedSorcerer: UnitBlueprint = {
   },
   onInit() {},
   onPlay(game, card) {
-    // card.unit.addModifier(new DefiantModifier(game, card, 2));
+    card.unit.addModifier(new DefiantModifier(game, card, 2));
   }
 };
