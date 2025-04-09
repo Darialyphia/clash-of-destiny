@@ -76,11 +76,11 @@ Provoke, Vigilant
 
 ---
 
-**King Slime** (Minion - Summoner)
+**Big Slime** (Minion - Summoner)
 
-3M | 2ATK | 2HP
+3M | 1ATK | 2HP
 
-On Destroyed: Summon a Bubbly Slime on this space.
+On Destroyed: Summon a Bubbly Slime above and below this.
 
 ---
 

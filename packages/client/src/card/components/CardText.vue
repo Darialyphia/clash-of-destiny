@@ -11,7 +11,6 @@ import { KEYWORDS, type Keyword } from '@game/engine/src/card/card-keyword';
 import type { CardBlueprint } from '@game/engine/src/card/card-blueprint';
 import { CARDS_DICTIONARY } from '@game/engine/src/card/sets';
 import BlueprintCard from './BlueprintCard.vue';
-import UiSimpleTooltip from '@/ui/components/UiSimpleTooltip.vue';
 
 const { text, highlighted = true } = defineProps<{
   text: string;
@@ -92,7 +91,9 @@ const tokens = computed<Token[]>(() => {
 
       <HoverCardRoot v-else :open-delay="500" :close-delay="0">
         <HoverCardTrigger>
-          {{ token.text }}
+          <span tabindex="0">
+            {{ token.text }}
+          </span>
         </HoverCardTrigger>
         <HoverCardPortal>
           <HoverCardContent v-if="highlighted" class="z-10" side="right">

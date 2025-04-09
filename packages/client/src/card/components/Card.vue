@@ -69,16 +69,19 @@ const affinityGemBg = computed(() => {
 const root = useTemplateRef('card');
 const { x, y } = useMouse();
 
-const pointerStyle = computed(() => {
+const rect = computed(() => {
   if (!root.value) return;
-  const rect = root.value.getBoundingClientRect();
+  return root.value.getBoundingClientRect();
+});
+const pointerStyle = computed(() => {
+  if (!rect.value) return;
   const pointer = {
-    x: clamp(x.value - rect.left, 0, rect.width),
-    y: clamp(y.value - rect.top, 0, rect.height)
+    x: clamp(x.value - rect.value.left, 0, rect.value.width),
+    y: clamp(y.value - rect.value.top, 0, rect.value.height)
   };
   const percent = {
-    x: (pointer.x / rect.width) * 100,
-    y: (pointer.y / rect.height) * 100
+    x: (pointer.x / rect.value.width) * 100,
+    y: (pointer.y / rect.value.height) * 100
   };
   return {
     glareX: pointer.x,
@@ -163,7 +166,7 @@ const pointerStyle = computed(() => {
           :text="ability"
         />
       </div>
-      <div class="glare" />
+      <div class="glare lt-lg:hidden" />
     </div>
     <div class="card-back" />
   </div>

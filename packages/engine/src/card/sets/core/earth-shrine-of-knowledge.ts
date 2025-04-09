@@ -18,9 +18,9 @@ export const earthShrineOfKnowledge: UnitBlueprint = {
   affinity: AFFINITIES.EARTH,
   name: 'Earth Shrine of Knowledge',
   getDescription: () => {
-    return `On Enter: draw 5 cards.`;
+    return `@On Enter@: draw 5 cards.`;
   },
-  staticDescription: `On Enter: draw 5 cards.`,
+  staticDescription: `@On Enter@: draw 5 cards.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'unit-earth-shrine-of-knowledge',
   spriteId: 'earth-shrine-of-knowledge',
