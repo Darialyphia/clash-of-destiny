@@ -1,5 +1,5 @@
 { "frames": {
-   "test-unit__body_idle_0": {
+   "shield-maiden__body_idle_0": {
     "frame": { "x": 0, "y": 0, "w": 128, "h": 128 },
     "rotated": false,
     "trimmed": false,

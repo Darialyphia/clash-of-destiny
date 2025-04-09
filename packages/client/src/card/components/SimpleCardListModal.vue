@@ -6,11 +6,7 @@ import {
   HoverCardContent,
   HoverCardRoot,
   HoverCardTrigger,
-  HoverCardPortal,
-  PopoverRoot,
-  PopoverTrigger,
-  PopoverPortal,
-  PopoverContent
+  HoverCardPortal
 } from 'reka-ui';
 import FancyButton from '@/ui/components/FancyButton.vue';
 import {
@@ -18,11 +14,13 @@ import {
   useTurnPlayer,
   useUserPlayer
 } from '@/battle/stores/battle.store';
+import type { PlayerViewModel } from '@/player/player.model';
 
 const { cards, title, description } = defineProps<{
   cards: CardViewModel[];
   title: string;
   description: string;
+  player: PlayerViewModel;
 }>();
 
 const isOpened = defineModel<boolean>({ required: true });
@@ -64,7 +62,11 @@ const userPlayer = useUserPlayer();
                   :align-offset="-140"
                 >
                   <BattleCard :card="card" class="hover-card" />
-                  <template v-if="userPlayer.equals(turnPlayer)">
+                  <template
+                    v-if="
+                      userPlayer.equals(turnPlayer) && userPlayer.equals(player)
+                    "
+                  >
                     <FancyButton
                       v-for="ability in card.usableAbilities"
                       :key="ability.id"

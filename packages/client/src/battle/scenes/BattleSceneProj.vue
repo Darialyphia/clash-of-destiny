@@ -13,7 +13,7 @@ const { state } = useGameState();
 
 const session = new GameSession({
   mapId: '1v1',
-  rngSeed: 'test',
+  rngSeed: new Date().toDateString(),
   history: [],
   overrides: {},
   players: [
@@ -25,6 +25,7 @@ const session = new GameSession({
           ...Array.from({ length: 5 }, () => 'sword-instructor'),
           ...Array.from({ length: 5 }, () => 'shrouded-sorcerer'),
           ...Array.from({ length: 5 }, () => 'garrison-marksman'),
+          ...Array.from({ length: 5 }, () => 'shield-maiden'),
           ...Array.from({ length: 5 }, () => 'stalwart-vanguard'),
           ...Array.from({ length: 5 }, () => 'bubbly-slime'),
           ...Array.from({ length: 5 }, () => 'luminescent-mystic'),
@@ -37,6 +38,8 @@ const session = new GameSession({
           'fire-shrine-of-knowledge',
           'aiden-child-of-the-storm',
           'aiden-stormrider',
+          'slime-to-the-rescue',
+          'slime-to-the-rescue',
           'test-destiny-artifact',
           'test-destiny-artifact',
           'test-destiny-artifact',
@@ -51,13 +54,14 @@ const session = new GameSession({
       name: 'Player 2',
       mainDeck: {
         cards: [
-          'zoran-the-punisher',
           ...Array.from({ length: 5 }, () => 'sword-instructor'),
-          ...Array.from({ length: 5 }, () => 'luminescent-mystic'),
           ...Array.from({ length: 5 }, () => 'shrouded-sorcerer'),
+          ...Array.from({ length: 5 }, () => 'garrison-marksman'),
+          ...Array.from({ length: 5 }, () => 'shield-maiden'),
           ...Array.from({ length: 5 }, () => 'stalwart-vanguard'),
           ...Array.from({ length: 5 }, () => 'bubbly-slime'),
-          ...Array.from({ length: 5 }, () => 'garrison-marksman'),
+          ...Array.from({ length: 5 }, () => 'luminescent-mystic'),
+          'zoran-the-punisher',
           ...Array.from({ length: 5 }, () => 'esteemed-erudite')
         ]
       },
@@ -66,6 +70,8 @@ const session = new GameSession({
           'fire-shrine-of-knowledge',
           'aiden-child-of-the-storm',
           'aiden-stormrider',
+          'slime-to-the-rescue',
+          'slime-to-the-rescue',
           'test-destiny-artifact',
           'test-destiny-artifact',
           'test-destiny-artifact',

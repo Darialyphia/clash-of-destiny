@@ -7,22 +7,22 @@ import { KeywordModifierMixin } from '../mixins/keyword.mixin';
 import type { ModifierMixin } from '../modifier-mixin';
 import { Modifier } from '../modifier.entity';
 
-export class SwiftModifier extends Modifier<Unit> {
+export class VigilantModifier extends Modifier<Unit> {
   constructor(
     game: Game,
     card: AnyUnitCard,
     options?: { mixins?: ModifierMixin<Unit>[] }
   ) {
-    super(KEYWORDS.SWIFT.id, game, card, {
+    super(KEYWORDS.VIGILANT.id, game, card, {
       stackable: false,
-      name: KEYWORDS.SWIFT.name,
-      description: KEYWORDS.SWIFT.description,
-      icon: 'keyword-swift',
+      name: KEYWORDS.VIGILANT.name,
+      description: KEYWORDS.VIGILANT.description,
+      icon: 'keyword-vigilant',
       mixins: [
-        new KeywordModifierMixin(game, KEYWORDS.SWIFT),
+        new KeywordModifierMixin(game, KEYWORDS.VIGILANT),
         new UnitInterceptorModifierMixin(game, {
-          key: 'maxMovementsPerTurn',
-          interceptor: () => 2
+          key: 'maxCounterattacksPerTurn',
+          interceptor: () => Infinity
         }),
         ...(options?.mixins ?? [])
       ]

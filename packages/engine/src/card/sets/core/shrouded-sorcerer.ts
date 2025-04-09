@@ -2,7 +2,6 @@ import { PointAOEShape } from '../../../aoe/point.aoe-shape';
 import { AbilityDamage } from '../../../combat/damage';
 import { DefiantModifier } from '../../../modifier/modifiers/defiant.modifier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
-import { UNIT_EVENTS } from '../../../unit/unit-enums';
 import type { UnitBlueprint } from '../../card-blueprint';
 import {
   AFFINITIES,
@@ -15,7 +14,6 @@ import {
 } from '../../card.enums';
 import { AnywhereFollowup } from '../../followups/anywhere-followup';
 import { MinionFollowup } from '../../followups/minion.followup';
-import { NoFollowup } from '../../followups/no-followup';
 
 export const shroudedSorcerer: UnitBlueprint = {
   id: 'shrouded-sorcerer',
@@ -37,15 +35,15 @@ export const shroudedSorcerer: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   atk: 2,
   maxHp: 4,
-  job: CARD_JOBS.AVENGER,
+  job: CARD_JOBS.SPELLCASTER,
   abilities: [
     {
       id: 'shrouded-sorcerer',
       isCardAbility: false,
       staticDescription:
-        '@[exhaust]@ @[mana] 2@ : Deal damage to target minion equal to your Destiny. @Class Bonus@: If that destroys the unit, activate this.',
+        '@[exhaust]@ @[mana] 2@ : Deal damage to target unit equal to your Destiny. @Class Bonus@: If that destroys the unit, activate this.',
       getDescription() {
-        return '@[exhaust]@ @[mana] 2@ : Deal damage to target minion equal to your Destiny. @Class Bonus@: If that destroys the unit, activate this.';
+        return '@[exhaust]@ @[mana] 2@ : Deal damage to target unit equal to your Destiny. @Class Bonus@: If that destroys the unit, activate this.';
       },
       label: 'Deal damage',
       manaCost: 2,
@@ -54,7 +52,7 @@ export const shroudedSorcerer: UnitBlueprint = {
         return true;
       },
       getFollowup() {
-        return new AnywhereFollowup({ targetingType: TARGETING_TYPE.ENEMY_MINION });
+        return new AnywhereFollowup({ targetingType: TARGETING_TYPE.ENEMY_UNIT });
       },
       onResolve(game, card, targets) {
         const unit = game.unitSystem.getUnitAt(targets[0].cell);

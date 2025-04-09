@@ -5,6 +5,7 @@ import {
   isDefined,
   type EmptyObject,
   type Nullable,
+  type Point,
   type Serializable
 } from '@game/shared';
 import {
@@ -31,6 +32,8 @@ import { AFFINITIES, CARD_EVENTS, type Affinity } from '../card/card.enums';
 import { WrongDeckSourceError } from '../card/card-errors';
 import { ShrineCard } from '../card/entities/shrine-card.entity';
 import { MissingShrineError } from './player-errors';
+import type { MinionCard } from '../card/entities/minion-card.entity';
+import { INTERACTION_STATE_TRANSITIONS } from '../game/systems/interaction.system';
 
 export type PlayerOptions = {
   id: string;
@@ -274,6 +277,18 @@ export class Player
     });
 
     return card;
+  }
+
+  summonMinion(blueprintId: string, position: Point) {
+    const card = this.generateCard(blueprintId) as MinionCard;
+    if (!card.canPlayAt(position)) return;
+    card.play();
+    this.game.interaction.addTarget({ type: 'cell', cell: position });
+    if (
+      this.game.interaction.can(INTERACTION_STATE_TRANSITIONS.COMMIT_SELECTING_TARGETS)
+    ) {
+      this.game.interaction.commitTargets();
+    }
   }
 
   canPerformResourceAction() {

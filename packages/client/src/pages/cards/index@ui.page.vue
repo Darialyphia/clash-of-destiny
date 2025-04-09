@@ -1,22 +1,16 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
-import Card from '@/card/components/Card.vue';
 import { useLocalStorage } from '@vueuse/core';
-import UiButton from '@/ui/components/UiButton.vue';
 import type { Nullable } from '@game/shared';
 import type { CardBlueprint } from '@game/engine/src/card/card-blueprint';
-import {
-  CARD_SET_DICTIONARY,
-  CARDS_DICTIONARY,
-  type CardSet
-} from '@game/engine/src/card/sets';
+import { CARD_SET_DICTIONARY, type CardSet } from '@game/engine/src/card/sets';
 import {
   CARD_DECK_SOURCES,
   CARD_KINDS,
   UNIT_KINDS
 } from '@game/engine/src/card/card.enums';
-import { match } from 'ts-pattern';
 import BlueprintCard from '@/card/components/BlueprintCard.vue';
+import { domToPng } from 'modern-screenshot';
 
 definePage({
   name: 'Collection'
@@ -123,6 +117,19 @@ const hasMaxCopies = (card: CardBlueprint) => {
 //     }))
 //     .sort((a, b) => a.blueprint.cost.gold - b.blueprint.cost.gold);
 // });
+
+const screenshot = async (id: string, e: MouseEvent) => {
+  const card = (e.target as HTMLElement)
+    .closest('li')
+    ?.querySelector('.card-front') as HTMLElement;
+  const png = await domToPng(card, {
+    backgroundColor: 'transparent'
+  });
+  const a = document.createElement('a');
+  a.href = png;
+  a.download = `${id}.png`;
+  a.click();
+};
 </script>
 
 <template>
@@ -151,6 +158,7 @@ const hasMaxCopies = (card: CardBlueprint) => {
             }
           "
         />
+        <button @click="screenshot(card.id, $event)">Screenshot</button>
       </li>
     </ul>
     <!-- <aside>
@@ -257,6 +265,24 @@ aside {
   cursor: url('/assets/ui/cursor-hover.png'), auto;
   &:hover {
     filter: brightness(135%);
+  }
+}
+
+li {
+  position: relative;
+  > button {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--gray-6);
+    border-radius: var(--radius-2);
+    border: solid var(--border-size-1) var(--gray-9);
+    display: none;
+  }
+
+  &:hover > button {
+    display: block;
   }
 }
 </style>

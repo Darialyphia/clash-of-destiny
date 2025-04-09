@@ -93,6 +93,7 @@ const userPlayer = useUserPlayer();
         :cards="discardPile"
         :title="`Discard Pile (${discardPile.length})`"
         description=""
+        :player="player"
       />
 
       <UiSimpleTooltip>
@@ -111,6 +112,7 @@ const userPlayer = useUserPlayer();
         :cards="banishPile"
         :title="`Banish Pile (${discardPile.length})`"
         description=""
+        :player="player"
       />
 
       <UiSimpleTooltip>
@@ -131,6 +133,7 @@ const userPlayer = useUserPlayer();
         :cards="destinyDeck"
         :title="`Destiny Deck (${discardPile.length})`"
         description=""
+        :player="player"
       />
     </div>
   </div>

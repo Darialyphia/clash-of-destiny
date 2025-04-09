@@ -83,6 +83,12 @@ export const KEYWORDS = {
     description:
       "This unit cannot move, attack, or use abilities unles its owner's hero is at least level X.",
     aliases: [/defiant\([0-9]+\)/]
+  },
+  VIGILANT: {
+    id: 'vigilant',
+    name: 'Vigilant',
+    description: 'This unit does not exhaust when counterattacking.',
+    aliases: []
   }
 } as const satisfies Record<string, Keyword>;
 

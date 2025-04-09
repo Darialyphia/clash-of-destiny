@@ -6,10 +6,13 @@ import { bubblySlime } from './bubbly-slime';
 import { earthShrineOfKnowledge } from './earth-shrine-of-knowledge';
 import { esteemedErudite } from './esteemed-erudite';
 import { fireShrineOfKnowledge } from './fire-shrine-of-knowledge';
+import { fleetingDancer } from './fleeting-dancer';
 import { garrisonMarksman } from './garrison-marksman';
 import { luminescentMystic } from './luminescent-mystic';
 import { promisingRecruit } from './promising-recruit';
+import { shieldMaiden } from './shield-maiden';
 import { shroudedSorcerer } from './shrouded-sorcerer';
+import { slimesToTheRescue } from './slimes-to-the-rescue';
 import { stalwartVanguard } from './stalwart-vanguard';
 import { stormFlash } from './storm-flash';
 import { swordInstructor } from './sword-instructor';
@@ -30,14 +33,17 @@ export const coreSet: CardSet = {
     stalwartVanguard,
     esteemedErudite,
     bubblySlime,
+    fleetingDancer,
     garrisonMarksman,
     swordInstructor,
     promisingRecruit,
     luminescentMystic,
     shroudedSorcerer,
+    shieldMaiden,
     zoranThePunisher,
     stormFlash,
     testDestiySpell,
+    slimesToTheRescue,
     aidenLv1,
     aidenLv2,
     testDestinyArtifact

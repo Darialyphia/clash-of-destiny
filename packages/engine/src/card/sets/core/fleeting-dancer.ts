@@ -1,7 +1,6 @@
 import { PointAOEShape } from '../../../aoe/point.aoe-shape';
-import { ProvokeModifier } from '../../../modifier/modifiers/provoke.modifier';
+import { SwiftModifier } from '../../../modifier/modifiers/swift.modifier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
-import { floatingDestiny } from '../../abilities/floating-destiny';
 import type { UnitBlueprint } from '../../card-blueprint';
 import {
   AFFINITIES,
@@ -14,28 +13,28 @@ import {
 } from '../../card.enums';
 import { MinionFollowup } from '../../followups/minion.followup';
 
-export const stalwartVanguard: UnitBlueprint = {
-  id: 'stalwart-vanguard',
+export const fleetingDancer: UnitBlueprint = {
+  id: 'fleeting-dancer',
   kind: CARD_KINDS.UNIT,
   unitKind: UNIT_KINDS.MINION,
   affinity: AFFINITIES.NORMAL,
-  name: 'Stalwart Vanguard',
+  name: 'Fleeting Dancer',
   getDescription: () => {
-    return `@Provoke@.`;
+    return `@Swift@`;
   },
-  staticDescription: `@Provoke@.`,
+  staticDescription: ``,
   setId: CARD_SETS.CORE,
-  cardIconId: 'unit-stalwart-vanguard',
-  spriteId: 'stalwart-vanguard',
+  cardIconId: 'unit-fleeting-dancer',
+  spriteId: 'fleeting-dancer',
   spriteParts: {},
   rarity: RARITIES.COMMON,
   collectable: true,
   manaCost: 2,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
-  abilities: [floatingDestiny],
-  atk: 0,
-  maxHp: 3,
-  job: CARD_JOBS.FIGHTER,
+  abilities: [],
+  atk: 2,
+  maxHp: 2,
+  job: CARD_JOBS.GUARDIAN,
   getFollowup: () => {
     return new MinionFollowup();
   },
@@ -44,6 +43,6 @@ export const stalwartVanguard: UnitBlueprint = {
   },
   onInit() {},
   onPlay(game, card) {
-    card.unit.addModifier(new ProvokeModifier(game, card));
+    card.unit.addModifier(new SwiftModifier(game, card));
   }
 };

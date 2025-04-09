@@ -657,6 +657,19 @@
         },
         {
           "alias": [
+            "icon-spell-slime-to-the-rescue"
+          ],
+          "src": [
+            "/assets/icons/spell-slime-to-the-rescue.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-spell-spark"
           ],
           "src": [
@@ -813,6 +826,19 @@
         },
         {
           "alias": [
+            "icon-unit-fleeting-dancer"
+          ],
+          "src": [
+            "/assets/icons/unit-fleeting-dancer.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-unit-garrison-marksman"
           ],
           "src": [
@@ -869,6 +895,19 @@
           ],
           "src": [
             "/assets/icons/unit-promising-recruit.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-unit-shield-maiden"
+          ],
+          "src": [
+            "/assets/icons/unit-shield-maiden.png"
           ],
           "data": {
             "tags": {
@@ -2773,6 +2812,33 @@
         },
         {
           "alias": [
+            "fleeting-dancer"
+          ],
+          "src": [
+            "/assets/units/fleeting-dancer.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "fleeting-dancer.png"
+          ],
+          "src": [
+            "/assets/units/fleeting-dancer.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "garrison-marksman"
           ],
           "src": [
@@ -2845,6 +2911,33 @@
           ],
           "src": [
             "/assets/units/promising-recruit.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "shield-maiden"
+          ],
+          "src": [
+            "/assets/units/shield-maiden.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "shield-maiden.png"
+          ],
+          "src": [
+            "/assets/units/shield-maiden.png"
           ],
           "data": {
             "tags": {

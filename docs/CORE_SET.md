@@ -11,11 +11,11 @@ Legend:
 - DUR: durability
 - [x] : means the card has been implemented in the game
 
-## Heroes
+## Main Deck
 
-## Minions
+### Minions
 
-### Normal
+#### Normal
 
 **Bubbly Slime** (Minion - Summoner) [x]
 2M | 1Atk | 1Hp
@@ -60,7 +60,7 @@ Ranged(2)
 
 --- 
 
-**ShieldMaiden** (Minion - Guardian)
+**ShieldMaiden** (Minion - Guardian) [x]
 
 4M | 2ATK | 4HP
 
@@ -84,7 +84,7 @@ On Destroyed: Summon a Bubbly Slime above and below this.
 
 ---
 
-**Fleeting Dancer** (Minion - Wanderer)
+**Fleeting Dancer** (Minion - Wanderer) [x]
 
 3M | 2ATK | 2HP
 
@@ -138,7 +138,7 @@ Class Bonus: On Destroyed: Draw a card.
 
 ---
 
-**Shrouded Sorcerer** (Minion - Spellcaster)
+**Shrouded Sorcerer** (Minion - Spellcaster) [x]
 
 4M | 2 ATK | 4HP
 
@@ -171,8 +171,26 @@ On Enter: Deal 3 damage to the unit in front of this. (In front means to the rig
 On Enter: Your Hero gains 1 Level.
 
 
-## Spells
+### Spells
 
-## Artifacts
+### Artifacts
 
-## Secrets
+### Secrets
+
+## Destiny Deck
+
+#### Heroes
+
+#### Minions
+
+#### Spells
+
+**Slimes, to the rescue!** (Spell - Summoner)
+
+1D
+
+If your opponent controls at least 2 more minions than you, summon a Bubbly Slime above and below your Hero.
+
+#### Artifacts
+
+#### Secrets

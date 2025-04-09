@@ -12,7 +12,7 @@ import {
   UNIT_KINDS
 } from '../../card.enums';
 import { AnywhereFollowup } from '../../followups/anywhere-followup';
-import { SwiftdModifier } from '../../../modifier/modifiers/swift.modifier';
+import { SwiftModifier } from '../../../modifier/modifiers/swift.modifier';
 import { UntilEndOfTurnModifierMixin } from '../../../modifier/mixins/until-end-of-turn.mixin';
 
 export const aidenLv1: UnitBlueprint = {
@@ -55,7 +55,7 @@ export const aidenLv1: UnitBlueprint = {
         const [target] = event.data.affectedUnits;
         if (!target) return;
         target.addModifier(
-          new SwiftdModifier(game, card, {
+          new SwiftModifier(game, card, {
             mixins: [new UntilEndOfTurnModifierMixin(game)]
           })
         );
