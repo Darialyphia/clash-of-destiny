@@ -1,5 +1,5 @@
 import { assert, isDefined, Vec2, type Point, type Serializable } from '@game/shared';
-import { Entity } from '../../entity';
+import { Entity, INTERCEPTOR_EVENTS } from '../../entity';
 import { type AnyCard } from '../../card/entities/card.entity';
 import { type Game } from '../../game/game';
 import { MOVE_EVENTS, MovementComponent } from '../components/movement.component';
@@ -117,8 +117,8 @@ export class Unit
     this.modifierManager = new ModifierManager(this);
     this.keywordManager = new KeywordManagerComponent();
     this.hp = new HealthComponent({
-      initialValue: this._card.blueprint.maxHp,
-      max: this._card.blueprint.maxHp
+      initialValue: this._card.maxHp,
+      max: this._card.maxHp
     });
     this.movement = new MovementComponent({
       position: options.position,
@@ -133,6 +133,22 @@ export class Unit
       this.onTurnStart();
     });
 
+    this.on(INTERCEPTOR_EVENTS.ADD_INTERCEPTOR, e => {
+      if (e.key === 'maxHp') {
+        this.hp.max = this._card.maxHp;
+        if (this.hp.current <= 0) {
+          this.destroy(this._card);
+        }
+      }
+    });
+    this.on(INTERCEPTOR_EVENTS.REMOVE_INTERCEPTOR, e => {
+      if (e.key === 'maxHp') {
+        this.hp.max = this._card.maxHp;
+        if (this.hp.current <= 0) {
+          this.destroy(this._card);
+        }
+      }
+    });
     this.forwardEvents();
   }
 

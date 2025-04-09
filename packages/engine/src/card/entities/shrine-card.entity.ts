@@ -37,6 +37,10 @@ export class ShrineCard extends UnitCard<
     this.blueprint.onInit(this.game, this);
   }
 
+  get job() {
+    return null;
+  }
+
   get baseLevel() {
     return this.blueprint.level;
   }

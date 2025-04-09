@@ -62,6 +62,10 @@ export class ArtifactCard extends Card<
     this.emitter.emit(CARD_EVENTS.AFTER_PLAY, new CardAfterPlayEvent({ targets: [] }));
   }
 
+  get job() {
+    return this.blueprint.job;
+  }
+
   get durability() {
     return this.blueprint.durability;
   }

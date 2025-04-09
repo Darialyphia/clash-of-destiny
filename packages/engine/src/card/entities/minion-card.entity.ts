@@ -41,6 +41,10 @@ export class MinionCard extends UnitCard<
     this.blueprint.onInit(this.game, this);
   }
 
+  get job() {
+    return this.blueprint.job;
+  }
+
   canPlay(): boolean {
     return this.interceptors.canPlay.getValue(
       this.fulfillsAffinity && this.fulfillsResourceCost,

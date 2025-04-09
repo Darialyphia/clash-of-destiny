@@ -60,6 +60,10 @@ export class HeroCard extends UnitCard<
     return this.interceptors.level.getValue(this.baseLevel, {});
   }
 
+  get job() {
+    return this.blueprint.job;
+  }
+
   get spellpower() {
     return this.interceptors.spellpower.getValue(this.blueprint.spellpower, {});
   }

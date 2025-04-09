@@ -80,6 +80,8 @@ export abstract class UnitCard<
     return this.interceptors.maxHp.getValue(this.blueprint.maxHp, {});
   }
 
+  abstract get job(): string | null;
+
   abstract canPlay(): boolean;
 
   get followup(): ReturnType<TBlueprint['getFollowup']> {

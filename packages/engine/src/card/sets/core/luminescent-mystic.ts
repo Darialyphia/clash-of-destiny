@@ -1,5 +1,6 @@
 import { CompositeAOEShape } from '../../../aoe/composite.aoe-shape';
 import { PointAOEShape } from '../../../aoe/point.aoe-shape';
+import { MinionCardInterceptorModifierMixin } from '../../../modifier/mixins/interceptor.mixin';
 import { UnitSelfEventModifierMixin } from '../../../modifier/mixins/self-event.mixin';
 import { Modifier } from '../../../modifier/modifier.entity';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
@@ -37,7 +38,7 @@ export const luminescentMystic: UnitBlueprint = {
   abilities: [],
   atk: 1,
   maxHp: 1,
-  job: CARD_JOBS.WANDERER,
+  job: CARD_JOBS.AVENGER,
   getFollowup: () => {
     return new MinionFollowup();
   },
@@ -53,7 +54,22 @@ export const luminescentMystic: UnitBlueprint = {
       }
     ]);
   },
-  onInit() {},
+  onInit(game, card) {
+    card.addModifier(
+      new Modifier('luminescent-mystic-class-bonus', game, card, {
+        stackable: false,
+        mixins: [
+          new MinionCardInterceptorModifierMixin(game, {
+            key: 'maxHp',
+            interceptor(value) {
+              if (card.job !== card.player.hero.card.job) return value;
+              return value + 1;
+            }
+          })
+        ]
+      })
+    );
+  },
   onPlay(game, card) {
     card.player.hero.addModifier(
       new Modifier('luminescent-mystic-bubble', game, card, {
