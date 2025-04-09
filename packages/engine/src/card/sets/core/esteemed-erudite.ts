@@ -35,7 +35,7 @@ export const esteemedErudite: UnitBlueprint = {
     {
       id: 'esteemed-erudite-draw',
       isCardAbility: false,
-      staticDescription: '@[exhaust]@ @[mana] 1@ : @Draw 1 card',
+      staticDescription: '@[exhaust]@ @[mana] 1@ : Draw 1 card',
       getDescription() {
         return `@[exhaust]@ @[mana] 1@ : Draw 1 card`;
       },

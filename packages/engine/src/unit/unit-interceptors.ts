@@ -28,6 +28,7 @@ export type UnitInterceptors = {
   attack: Interceptable<number>;
   spellpower: Interceptable<number>;
   movementReach: Interceptable<number>;
+  level: Interceptable<number>;
 
   attackTargetingPattern: Interceptable<TargetingStrategy>;
   attackTargetType: Interceptable<TargetingType>;
@@ -71,6 +72,7 @@ export const makeUnitInterceptors = (): UnitInterceptors => {
     attack: new Interceptable<number>(),
     spellpower: new Interceptable<number>(),
     movementReach: new Interceptable<number>(),
+    level: new Interceptable<number>(),
 
     attackTargetingPattern: new Interceptable<TargetingStrategy>(),
     attackTargetType: new Interceptable<TargetingType>(),

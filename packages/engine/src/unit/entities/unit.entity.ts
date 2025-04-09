@@ -29,7 +29,7 @@ import {
   UnitWakeUpEvent,
   type UnitEventMap
 } from '../unit.events';
-import type { Damage } from '../../combat/damage';
+import { CombatDamage, type Damage } from '../../combat/damage';
 import { COMBAT_EVENTS, CombatComponent } from '../../combat/combat.component';
 import { PathfinderComponent } from '../../pathfinding/pathfinder.component';
 import { SolidBodyPathfindingStrategy } from '../../pathfinding/strategies/solid-pathfinding.strategy';
@@ -102,9 +102,9 @@ export class Unit
 
   private readonly combat: CombatComponent;
 
-  _isExhausted = false;
+  private _isExhausted = false;
 
-  _isDead = false;
+  private _isDead = false;
 
   constructor(
     game: Game,
@@ -256,6 +256,12 @@ export class Unit
 
   get position() {
     return this.movement.position;
+  }
+
+  get level() {
+    if (this.isMinion) return 0;
+    if (this.isShrine) return this.interceptors.level.getValue(0, {});
+    return this.interceptors.level.getValue((this._card as HeroCard).level, {});
   }
 
   get keywords() {
@@ -583,13 +589,19 @@ export class Unit
     return this.combat.dealDamage.bind(this.combat);
   }
 
-  takeDamage(from: AnyCard, damage: Damage<AnyCard>) {
+  takeDamage(from: AnyCard, damage: Damage<AnyCard>): { isFatal: boolean } {
     this.combat.takeDamage(from, damage);
-    if (this.hp.current <= 0) {
+    if (this.hp.current > 0) return { isFatal: false };
+    if (!this.canBeDestroyed) return { isFatal: false };
+
+    if (damage instanceof CombatDamage) {
       this.game.inputSystem.schedule(() => {
         this.destroy(from);
       });
+    } else {
+      this.destroy(from);
     }
+    return { isFatal: true };
   }
 
   heal(source: AnyCard, amount: number) {

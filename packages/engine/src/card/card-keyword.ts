@@ -76,6 +76,13 @@ export const KEYWORDS = {
     name: 'Class Bonus',
     description: "This card has a bonus effect if its class matches your hero's class.",
     aliases: []
+  },
+  DEFIANT: {
+    id: 'defiant',
+    name: 'Defiant(X)',
+    description:
+      "This unit cannot move, attack, or use abilities unles its owner's hero is at least level X.",
+    aliases: [/defiant\([0-9]+\)/]
   }
 } as const satisfies Record<string, Keyword>;
 

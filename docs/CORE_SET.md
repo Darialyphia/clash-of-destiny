@@ -102,7 +102,7 @@ Allies nearby this minion have +1 ATK.
 
 ---
 
-**Luminescent Mystic** (Minion - Wanderer)
+**Luminescent Mystic** (Minion - Wanderer) [x]
 
 2M | 1ATK | 1HP
 
@@ -138,13 +138,13 @@ Class Bonus: On Destroyed: Draw a card.
 
 ---
 
-**Twiight Sorcerer** (Minion - Spellcaster)
+**Shrouded Sorcerer** (Minion - Spellcaster)
 
 4M | 2 ATK | 4HP
 
 Defiant(2)
 
-[exhaust], 1M -> Deal 1 damage to an enemy. Class Bonus: if that destroys the unit, activate this.
+[exhaust], 2M -> Deal damage to an enemy equals to your Destiny. Class Bonus: if that destroys the unit, activate this.
 
 ---
 

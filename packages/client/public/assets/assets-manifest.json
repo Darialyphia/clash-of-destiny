@@ -266,6 +266,19 @@
         },
         {
           "alias": [
+            "icon-keyword-defiant"
+          ],
+          "src": [
+            "/assets/icons/keyword-defiant.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-keyword-disarmed"
           ],
           "src": [
@@ -826,6 +839,19 @@
         },
         {
           "alias": [
+            "icon-unit-luminscent-mystic"
+          ],
+          "src": [
+            "/assets/icons/unit-luminscent-mystic.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-unit-mage"
           ],
           "src": [
@@ -843,6 +869,19 @@
           ],
           "src": [
             "/assets/icons/unit-promising-recruit.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-unit-shrouded-sorcerer"
+          ],
+          "src": [
+            "/assets/icons/unit-shrouded-sorcerer.png"
           ],
           "data": {
             "tags": {
@@ -2806,6 +2845,33 @@
           ],
           "src": [
             "/assets/units/promising-recruit.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "shrouded-sorcerer"
+          ],
+          "src": [
+            "/assets/units/shrouded-sorcerer.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "shrouded-sorcerer.png"
+          ],
+          "src": [
+            "/assets/units/shrouded-sorcerer.png"
           ],
           "data": {
             "tags": {

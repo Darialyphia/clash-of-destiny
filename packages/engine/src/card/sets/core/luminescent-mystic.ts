@@ -38,7 +38,7 @@ export const luminescentMystic: UnitBlueprint = {
   abilities: [],
   atk: 1,
   maxHp: 1,
-  job: CARD_JOBS.AVENGER,
+  job: CARD_JOBS.WANDERER,
   getFollowup: () => {
     return new MinionFollowup();
   },

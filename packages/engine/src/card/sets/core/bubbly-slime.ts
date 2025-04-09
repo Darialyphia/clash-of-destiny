@@ -22,9 +22,9 @@ export const bubblySlime: UnitBlueprint = {
   affinity: AFFINITIES.NORMAL,
   name: 'Bubbly Slime',
   getDescription: () => {
-    return `@On Enter@: If you have 3 or more destiny, draw a card.`;
+    return `@On Enter@: If you have 2 or more destiny, draw a card.`;
   },
-  staticDescription: ``,
+  staticDescription: `@On Enter@: If you have 2 or more destiny, draw a card.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'unit-bubbly-slime',
   spriteId: 'bubbly-slime',
@@ -46,7 +46,7 @@ export const bubblySlime: UnitBlueprint = {
   onInit(game, card) {
     card.addModifier(
       new OnEnterModifier<MinionCard>(game, card, () => {
-        if (card.player.destiny.current >= 3) {
+        if (card.player.destiny.current >= 2) {
           card.player.cards.draw(1);
         }
       })

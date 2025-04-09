@@ -9,6 +9,7 @@ import { fireShrineOfKnowledge } from './fire-shrine-of-knowledge';
 import { garrisonMarksman } from './garrison-marksman';
 import { luminescentMystic } from './luminescent-mystic';
 import { promisingRecruit } from './promising-recruit';
+import { shroudedSorcerer } from './shrouded-sorcerer';
 import { stalwartVanguard } from './stalwart-vanguard';
 import { stormFlash } from './storm-flash';
 import { swordInstructor } from './sword-instructor';
@@ -33,6 +34,7 @@ export const coreSet: CardSet = {
     swordInstructor,
     promisingRecruit,
     luminescentMystic,
+    shroudedSorcerer,
     zoranThePunisher,
     stormFlash,
     testDestiySpell,
