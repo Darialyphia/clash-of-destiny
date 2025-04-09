@@ -32,7 +32,7 @@ export const garrisonMarksman: UnitBlueprint = {
   collectable: true,
   manaCost: 3,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
-  abilities: [floatingDestiny],
+  abilities: [],
   atk: 2,
   maxHp: 1,
   job: CARD_JOBS.AVENGER,

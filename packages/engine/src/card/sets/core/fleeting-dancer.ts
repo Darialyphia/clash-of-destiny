@@ -22,14 +22,14 @@ export const fleetingDancer: UnitBlueprint = {
   getDescription: () => {
     return `@Swift@`;
   },
-  staticDescription: ``,
+  staticDescription: `@Swift@`,
   setId: CARD_SETS.CORE,
   cardIconId: 'unit-fleeting-dancer',
   spriteId: 'fleeting-dancer',
   spriteParts: {},
   rarity: RARITIES.COMMON,
   collectable: true,
-  manaCost: 2,
+  manaCost: 3,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
   atk: 2,

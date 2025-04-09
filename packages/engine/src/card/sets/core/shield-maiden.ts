@@ -2,7 +2,6 @@ import { PointAOEShape } from '../../../aoe/point.aoe-shape';
 import { ProvokeModifier } from '../../../modifier/modifiers/provoke.modifier';
 import { VigilantModifier } from '../../../modifier/modifiers/vigilant.modifier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
-import { floatingDestiny } from '../../abilities/floating-destiny';
 import type { UnitBlueprint } from '../../card-blueprint';
 import {
   AFFINITIES,
@@ -33,7 +32,7 @@ export const shieldMaiden: UnitBlueprint = {
   collectable: true,
   manaCost: 4,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
-  abilities: [floatingDestiny],
+  abilities: [],
   atk: 2,
   maxHp: 4,
   job: CARD_JOBS.GUARDIAN,
