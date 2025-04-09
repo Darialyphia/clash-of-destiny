@@ -18,7 +18,7 @@ const scaleX = computed(() => {
 const container = ref<Container>();
 const shaker = useShaker(container);
 
-useBattleEvent(GAME_EVENTS.UNIT_BEFORE_RECEIVE_DAMAGE, async e => {
+useBattleEvent(GAME_EVENTS.UNIT_AFTER_RECEIVE_DAMAGE, async e => {
   if (e.unit.id !== unit.id) return;
   const duration = 200;
 

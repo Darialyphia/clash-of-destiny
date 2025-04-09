@@ -23,10 +23,10 @@ const session = new GameSession({
       mainDeck: {
         cards: [
           ...Array.from({ length: 5 }, () => 'sword-instructor'),
-          ...Array.from({ length: 5 }, () => 'luminescent-mystic'),
+          ...Array.from({ length: 5 }, () => 'garrison-marksman'),
           ...Array.from({ length: 5 }, () => 'stalwart-vanguard'),
           ...Array.from({ length: 5 }, () => 'bubbly-slime'),
-          ...Array.from({ length: 5 }, () => 'garrison-marksman'),
+          ...Array.from({ length: 5 }, () => 'luminescent-mystic'),
           'zoran-the-punisher',
           ...Array.from({ length: 5 }, () => 'esteemed-erudite')
         ]

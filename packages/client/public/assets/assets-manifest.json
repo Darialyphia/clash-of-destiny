@@ -813,10 +813,10 @@
         },
         {
           "alias": [
-            "icon-unit-luminscent-mystic"
+            "icon-unit-luminescent-mystic"
           ],
           "src": [
-            "/assets/icons/unit-luminscent-mystic.png"
+            "/assets/icons/unit-luminescent-mystic.png"
           ],
           "data": {
             "tags": {

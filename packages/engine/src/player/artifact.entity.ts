@@ -15,10 +15,8 @@ import { TypedSerializableEvent } from '../utils/typed-emitter';
 import { Interceptable } from '../utils/interceptable';
 import type { Damage } from '../combat/damage';
 import { UNIT_EVENTS } from '../unit/unit-enums';
-import { ARTIFACT_KINDS } from '../card/card.enums';
 import type { Ability } from '../card/card-blueprint';
 import { ArtifactAbilityNotFoundError } from './player-errors';
-import type { SelectedTarget } from '../game/systems/interaction.system';
 
 export const ARTIFACT_EVENTS = {
   EQUIPED: 'equiped',
@@ -117,7 +115,7 @@ export class Artifact
 
     this.cleanups.push(
       this.player.hero.on(UNIT_EVENTS.AFTER_RECEIVE_DAMAGE, event => {
-        console.log(this.shouldLosedurabilityOnDamage(event.data.damage));
+        if (event.data.damage.getFinalAmount(this.player.hero) <= 0) return;
         if (this.shouldLosedurabilityOnDamage(event.data.damage)) {
           this.loseDurability(1);
         }

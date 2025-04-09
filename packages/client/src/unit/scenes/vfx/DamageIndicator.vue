@@ -11,7 +11,7 @@ const { unit } = defineProps<{ unit: UnitViewModel }>();
 const damageAmount = ref(0);
 let direction = 1;
 
-useBattleEvent(GAME_EVENTS.UNIT_BEFORE_RECEIVE_DAMAGE, async e => {
+useBattleEvent(GAME_EVENTS.UNIT_AFTER_RECEIVE_DAMAGE, async e => {
   if (!unit.equals(e.unit)) return;
   damageAmount.value = e.damage;
 
