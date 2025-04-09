@@ -300,12 +300,13 @@ export class Player
       PLAYER_EVENTS.BEFORE_RESOURCE_ACTION_DESTINY,
       new PlayerResourceActionDestinyEvent({ amount: indices.length })
     );
-    indices.forEach(index => {
-      const card = this.cards.getCardAt(index);
-      if (!card) return;
-      this.cards.removeFromHand(card);
-      this.cards.sendToBanishPile(card);
-    });
+    indices
+      .map(index => this.cards.getCardAt(index))
+      .filter(isDefined)
+      .forEach(card => {
+        this.cards.removeFromHand(card);
+        this.cards.sendToBanishPile(card);
+      });
 
     this.destiny.add(indices.length);
     this.resourceActionsDoneThisTurn++;

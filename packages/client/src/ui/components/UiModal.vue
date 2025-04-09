@@ -57,14 +57,12 @@ const {
           "
         >
           <div class="content">
-            <VisuallyHidden>
-              <DialogTitle>
-                <slot name="title" :title="title">{{ title }}</slot>
-              </DialogTitle>
-              <DialogDescription>
-                {{ description }}
-              </DialogDescription>
-            </VisuallyHidden>
+            <DialogTitle class="hidden">
+              <slot name="title" :title="title">{{ title }}</slot>
+            </DialogTitle>
+            <DialogDescription class="hidden">
+              {{ description }}
+            </DialogDescription>
 
             <slot />
           </div>

@@ -92,16 +92,15 @@ watch(
       >
         <label v-for="(card, index) in player.getHand()" :key="card.id">
           <BattleCard :card="card" class="card-miniature" />
-          <VisuallyHidden>
-            <input
-              type="checkbox"
-              v-model="selectedIndices"
-              :value="index"
-              :disabled="
-                !selectedIndices.includes(index) && selectedIndices.length >= 3
-              "
-            />
-          </VisuallyHidden>
+          <input
+            class="hidden"
+            type="checkbox"
+            v-model="selectedIndices"
+            :value="index"
+            :disabled="
+              !selectedIndices.includes(index) && selectedIndices.length >= 3
+            "
+          />
         </label>
       </div>
 

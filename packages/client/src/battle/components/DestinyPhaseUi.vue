@@ -98,15 +98,14 @@ const play = () => {
               </HoverCardContent>
             </HoverCardPortal>
           </HoverCardRoot>
-          <VisuallyHidden>
-            <input
-              type="radio"
-              name="destiny-card"
-              :value="index"
-              v-model="selectedCardIndex"
-              :disabled="!card.canPlay"
-            />
-          </VisuallyHidden>
+          <input
+            type="radio"
+            class="hidden"
+            name="destiny-card"
+            :value="index"
+            v-model="selectedCardIndex"
+            :disabled="!card.canPlay"
+          />
         </label>
       </div>
 
