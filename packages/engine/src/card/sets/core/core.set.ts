@@ -25,6 +25,8 @@ import { spark } from './spark';
 import { equalityPendant } from './equality-pendant';
 import { ceasefire } from './ceasefire';
 import { fireball } from './fireball';
+import { flameJuggler } from './flame-juggler';
+import { pilferingBlade } from './pilfering-blade';
 
 export const coreSet: CardSet = {
   id: CARD_SETS.CORE,
@@ -39,10 +41,12 @@ export const coreSet: CardSet = {
     esteemedErudite,
     fireball,
     fireShrineOfKnowledge,
+    flameJuggler,
     fleetingDancer,
     garrisonMarksman,
     insight,
     luminescentMystic,
+    pilferingBlade,
     promisingRecruit,
     shieldMaiden,
     shroudedSorcerer,

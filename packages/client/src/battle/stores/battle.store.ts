@@ -176,7 +176,10 @@ export const useBattleStore = defineStore('battle', () => {
           isPlayingFx.value = false;
           state.value = {
             ...snapshot.state,
-            entities: buildentities(snapshot.state.entities, dispatch)
+            entities: Object.assign(
+              state.value!.entities,
+              buildentities(snapshot.state.entities, dispatch)
+            )
           };
 
           if (gameType.value === GAME_TYPES.LOCAL) {

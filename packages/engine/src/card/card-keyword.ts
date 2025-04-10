@@ -95,6 +95,12 @@ export const KEYWORDS = {
     name: 'Trinket',
     description: 'This artifact does not lose durability during your turn.',
     aliases: []
+  },
+  FLEETING: {
+    id: 'fleeting',
+    name: 'Fleeting',
+    description: 'This card is removed from your hand at the end of your turn.',
+    aliases: []
   }
 } as const satisfies Record<string, Keyword>;
 

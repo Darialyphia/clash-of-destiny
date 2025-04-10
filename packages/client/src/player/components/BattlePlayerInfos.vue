@@ -151,11 +151,11 @@ const userPlayer = useUserPlayer();
   }
 
   &:not(.inverted) {
-    margin-inline-start: var(--size-11);
+    padding-inline-start: var(--size-11);
   }
 
   &.inverted {
-    margin-inline-end: var(--size-11);
+    padding-inline-end: var(--size-11);
   }
 
   &.inverted .name {

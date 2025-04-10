@@ -33,7 +33,7 @@ const computeMargin = () => {
   const totalWidth = [...root.value.children].reduce((total, child) => {
     return total + child.clientWidth;
   }, 0);
-
+  console.log(root.value);
   const excess = totalWidth - allowedWidth;
 
   return Math.min(-excess / (player.handSize - 1), 0);
@@ -44,7 +44,6 @@ watch(
   async () => {
     await nextTick();
     cardSpacing.value = computeMargin();
-    console.log(cardSpacing.value);
   },
   { immediate: true }
 );
@@ -58,32 +57,30 @@ useResizeObserver(
 </script>
 
 <template>
-  <transition appear mode="out-in">
-    <div
-      class="hand"
-      ref="root"
-      :key="player.id"
-      :class="{
-        hidden:
-          ui.isDestinyResourceActionModalOpened ||
-          ui.isReplaceResourceActionModalOpened
-      }"
-      :inert="
-        state.interactionState.state === INTERACTION_STATES.SELECTING_TARGETS
-      "
-    >
-      <div v-for="i in handSize" :key="i" class="card" />
-    </div>
-  </transition>
+  <div
+    class="opponent-hand"
+    ref="root"
+    :key="player.id"
+    :class="{
+      hidden:
+        ui.isDestinyResourceActionModalOpened ||
+        ui.isReplaceResourceActionModalOpened
+    }"
+    :inert="
+      state.interactionState.state === INTERACTION_STATES.SELECTING_TARGETS
+    "
+  >
+    <div v-for="i in handSize" :key="i" class="card" />
+  </div>
 </template>
 
 <style scoped lang="postcss">
-.hand {
+.opponent-hand {
   display: flex;
+  justify-content: center;
   &.hidden {
     opacity: 0;
   }
-  justify-self: center;
 }
 
 .card {

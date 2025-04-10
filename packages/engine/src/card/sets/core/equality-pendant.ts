@@ -30,7 +30,7 @@ export const equalityPendant: ArtifactBlueprint = {
   collectable: true,
   destinyCost: 1,
   deckSource: CARD_DECK_SOURCES.DESTINY_DECK,
-  job: CARD_JOBS.AVENGER,
+  job: CARD_JOBS.WANDERER,
   abilities: [],
   artifactKind: ARTIFACT_KINDS.WEAPON,
   durability: 4,

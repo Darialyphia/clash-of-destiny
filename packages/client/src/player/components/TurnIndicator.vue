@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import {
-  useBattleEvent,
-  useGameState,
-  useUserPlayer
-} from '@/battle/stores/battle.store';
+import { useBattleEvent, useUserPlayer } from '@/battle/stores/battle.store';
+import { GAME_PHASES } from '@game/engine/src/game/game.enums';
 import { GAME_EVENTS } from '@game/engine/src/game/game.events';
 import { waitFor } from '@game/shared';
 
@@ -17,9 +14,8 @@ useBattleEvent(GAME_EVENTS.PLAYER_START_TURN, async e => {
       ? 'Your turn'
       : `${e.player.name}'s turn`;
 
-  setTimeout(() => {
-    text.value = '';
-  }, 1500);
+  await waitFor(1200);
+  text.value = '';
 });
 </script>
 

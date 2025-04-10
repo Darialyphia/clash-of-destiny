@@ -23,7 +23,6 @@ import { INTERACTION_STATES } from '@game/engine/src/game/systems/interaction.sy
 import OpponentHand from './OpponentHand.vue';
 import SelectCardInteractionUi from './SelectCardInteractionUi.vue';
 
-const turnPlayer = useTurnPlayer();
 const ui = useBattleUiStore();
 const userPlayer = useUserPlayer();
 const players = usePlayers();
@@ -42,7 +41,7 @@ const { state } = useGameState();
     <BattleLog />
     <header>
       <BattlePlayerInfos :player="players[0]" />
-      <OpponentHand :player="userPlayer.getOpponent()" />
+      <OpponentHand :player="userPlayer.getOpponent()" class="opponent-hand" />
       <BattlePlayerInfos :player="players[1]" />
     </header>
 
@@ -95,8 +94,7 @@ const { state } = useGameState();
 }
 
 header {
-  display: grid;
-  grid-template-columns: 0.25fr minmax(0, 0.4fr) 0.25fr;
+  display: flex;
 }
 
 footer {
@@ -105,6 +103,10 @@ footer {
   grid-template-columns: minmax(0, 0.7fr) minmax(0, 0.3fr);
   gap: var(--size-7);
   align-items: end;
+}
+
+.opponent-hand {
+  flex-grow: 1;
 }
 
 .unit-section {

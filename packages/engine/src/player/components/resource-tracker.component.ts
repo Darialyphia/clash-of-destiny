@@ -24,7 +24,7 @@ export class ResourceTrackerComponent {
   }
 
   add(amount: number) {
-    this._current += amount;
+    this._current = Math.min(this._current + amount, this._max);
   }
 
   setMax(amount: number) {

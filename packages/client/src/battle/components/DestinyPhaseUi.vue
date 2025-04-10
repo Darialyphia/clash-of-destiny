@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import UiModal from '@/ui/components/UiModal.vue';
 import {
+  useBattleEvent,
   useDispatcher,
   useGameState,
   useTurnPlayer
@@ -17,6 +18,7 @@ import {
   HoverCardPortal
 } from 'reka-ui';
 import BattleCard from '@/card/components/BattleCard.vue';
+import { GAME_EVENTS } from '@game/engine/src/game/game.events';
 
 const { state } = useGameState();
 const player = useTurnPlayer();
@@ -28,20 +30,9 @@ const deck = computed(() => {
 
 const isOpened = ref(false);
 
-watch(
-  () => state.value.phase,
-  phase => {
-    if (phase !== GAME_PHASES.DESTINY) {
-      isOpened.value = false;
-      return;
-    }
-
-    setTimeout(() => {
-      isOpened.value = true;
-    }, 1000);
-  },
-  { immediate: true }
-);
+useBattleEvent(GAME_EVENTS.AFTER_GAME_PHASE_CHANGE, async () => {
+  isOpened.value = state.value.phase === GAME_PHASES.DESTINY;
+});
 
 const selectedCardIndex = ref<number | null>(null);
 const dispatch = useDispatcher();

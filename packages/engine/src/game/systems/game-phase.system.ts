@@ -164,6 +164,16 @@ export class GamePhaseSystem extends StateMachine<
     );
   }
 
+  private checkOverdrive() {
+    if (
+      !this._turnPlayer.isPlayer1 &&
+      this.elapsedTurns === this.game.config.ELAPSED_TURNS_TO_ACTIVATE_OVERDRIVE_MODE
+    ) {
+      this._isOverdriveMode = true;
+      this.game.emit(GAME_PHASE_EVENTS.OVERDRIVE_MODE, new OverdriveModeEvent({}));
+    }
+  }
+
   private onPlayerTurnEnd() {
     this.turnPlayer.endTurn();
 
@@ -175,16 +185,11 @@ export class GamePhaseSystem extends StateMachine<
     } else {
       this._turnPlayer = nextPlayer;
     }
+    this.checkOverdrive();
 
-    if (
-      !this._turnPlayer.isPlayer1 &&
-      this.elapsedTurns === this.game.config.ELAPSED_TURNS_TO_ACTIVATE_OVERDRIVE_MODE
-    ) {
-      this._isOverdriveMode = true;
-      this.game.emit(GAME_PHASE_EVENTS.OVERDRIVE_MODE, new OverdriveModeEvent({}));
-    }
-
-    this._turnPlayer.startTurn();
+    this.game.inputSystem.schedule(() => {
+      this._turnPlayer.startTurn();
+    });
   }
 
   private onGameEnd(winner: Player) {

@@ -106,7 +106,10 @@ export class Player
       maxHandSize: this.game.config.MAX_HAND_SIZE,
       shouldShuffleDeck: this.game.config.SHUFFLE_DECK_ON_GAME_START
     });
-    this.mana = new ResourceTrackerComponent(this.game.config.INITIAL_MANA, Infinity);
+    this.mana = new ResourceTrackerComponent(
+      this.game.config.INITIAL_MANA,
+      this.game.config.MAX_MANA
+    );
     this.destiny = new ResourceTrackerComponent(
       this.game.config.INITIAL_DESTINY,
       this.game.config.MAX_DESTINY
@@ -361,6 +364,5 @@ export class Player
 
   endTurn() {
     this.emitter.emit(PLAYER_EVENTS.END_TURN, new PlayerEndTurnEvent({}));
-    this.mana.setTo(Math.min(this.mana.current, this.game.config.MAX_BANKED_MANA));
   }
 }

@@ -30,18 +30,18 @@ export const swordInstructor: UnitBlueprint = {
   spriteParts: {},
   rarity: RARITIES.RARE,
   collectable: true,
-  manaCost: 2,
+  manaCost: 3,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [
     {
       id: 'sword-instructor-ability',
       isCardAbility: false,
-      staticDescription: '@[exhaust]@ @[mana] 1@ : Give +1 Attack to an ally minion.',
+      staticDescription: '@[exhaust]@ : Give +1 Attack to an ally minion.',
       getDescription() {
-        return '@[exhaust]@ @[mana] 1@ : Give +1 Attack to an ally minion.';
+        return '@[exhaust]@ : Give +1 Attack to an ally minion.';
       },
       label: 'Ally +1 ATK',
-      manaCost: 1,
+      manaCost: 0,
       shouldExhaust: true,
       canUse() {
         return true;
@@ -63,7 +63,7 @@ export const swordInstructor: UnitBlueprint = {
     }
   ],
   atk: 1,
-  maxHp: 2,
+  maxHp: 3,
   job: CARD_JOBS.SPELLCASTER,
   getFollowup: () => {
     return new MinionFollowup();
