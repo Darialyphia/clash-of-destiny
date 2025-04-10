@@ -13,7 +13,7 @@ const { state } = useGameState();
 
 const session = new GameSession({
   mapId: '1v1',
-  rngSeed: new Date().toDateString(),
+  rngSeed: new Date().toISOString(),
   history: [],
   overrides: {},
   players: [
@@ -30,7 +30,7 @@ const session = new GameSession({
           ...Array.from({ length: 4 }, () => 'stalwart-vanguard'),
           ...Array.from({ length: 4 }, () => 'bubbly-slime'),
           ...Array.from({ length: 4 }, () => 'spark'),
-          ...Array.from({ length: 4 }, () => 'luminescent-mystic'),
+          ...Array.from({ length: 4 }, () => 'fireball'),
           ...Array.from({ length: 4 }, () => 'esteemed-erudite')
         ]
       },
@@ -64,7 +64,7 @@ const session = new GameSession({
           ...Array.from({ length: 4 }, () => 'stalwart-vanguard'),
           ...Array.from({ length: 4 }, () => 'bubbly-slime'),
           ...Array.from({ length: 4 }, () => 'spark'),
-          ...Array.from({ length: 4 }, () => 'luminescent-mystic'),
+          ...Array.from({ length: 4 }, () => 'fireball'),
           ...Array.from({ length: 4 }, () => 'esteemed-erudite')
         ]
       },

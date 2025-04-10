@@ -70,6 +70,8 @@ const play = () => {
   ui.cardPlayIntent = deck.value[selectedCardIndex.value];
   selectedCardIndex.value = null;
 };
+
+const isShowingBoard = ref(false);
 </script>
 
 <template>
@@ -82,7 +84,7 @@ const play = () => {
       '--ui-modal-size': 'var(--size-lg)'
     }"
   >
-    <div class="content">
+    <div class="content" :class="{ 'is-showing-board': isShowingBoard }">
       <h2>You may choose to play one Destiny card</h2>
 
       <div class="card-list" :class="{ hidden: deck.length === 0 }" ref="root">
@@ -110,6 +112,10 @@ const play = () => {
       </div>
 
       <footer class="flex mt-7 gap-10 justify-center">
+        <FancyButton
+          :text="isShowingBoard ? 'Hide Board' : 'Show Board'"
+          @click="isShowingBoard = !isShowingBoard"
+        />
         <FancyButton text="Skip" variant="error" @click="skip" />
         <FancyButton
           text="Play"
@@ -127,7 +133,18 @@ const play = () => {
   grid-template-rows: auto 1fr auto;
   height: 80dvh;
   overflow: hidden;
+
+  &.is-showing-board .card-list {
+    visibility: hidden;
+  }
 }
+
+:global(
+    body:has(.modal-overlay + .modal-content .is-showing-board) .modal-overlay
+  ) {
+  opacity: 0;
+}
+
 h2 {
   text-align: center;
   margin-bottom: var(--size-7);

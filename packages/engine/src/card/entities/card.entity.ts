@@ -156,6 +156,14 @@ export abstract class Card<
     );
   }
 
+  get hasClassBonus() {
+    if ('job' in this.blueprint) {
+      return this.player.hero.card.job === this.blueprint.job;
+    }
+
+    return false;
+  }
+
   get keywords() {
     return this.keywordManager.keywords;
   }

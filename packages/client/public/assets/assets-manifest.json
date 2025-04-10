@@ -175,10 +175,36 @@
       "assets": [
         {
           "alias": [
+            "icon-artifact-equality-pendant"
+          ],
+          "src": [
+            "/assets/icons/artifact-equality-pendant.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-artifact-test"
           ],
           "src": [
             "/assets/icons/artifact-test.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-equality-pendant"
+          ],
+          "src": [
+            "/assets/icons/equality-pendant.png"
           ],
           "data": {
             "tags": {
@@ -648,6 +674,32 @@
           ],
           "src": [
             "/assets/icons/player-infos-mana.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-spell-ceasefire"
+          ],
+          "src": [
+            "/assets/icons/spell-ceasefire.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-spell-insight"
+          ],
+          "src": [
+            "/assets/icons/spell-insight.png"
           ],
           "data": {
             "tags": {

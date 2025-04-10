@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { useTurnPlayer, useGameState } from '../stores/battle.store';
+import {
+  useTurnPlayer,
+  useGameState,
+  useUserPlayer
+} from '../stores/battle.store';
 import Hand from '@/card/components/Hand.vue';
 import TargetingUi from './TargetingUi.vue';
 import BattleLog from '@/battle/components/BattleLog.vue';
@@ -16,17 +20,17 @@ import BattlePlayerInfos from '@/player/components/BattlePlayerInfos.vue';
 import HighlightedUnit from './HighlightedUnit.vue';
 import EquipedArtifacts from './EquipedArtifacts.vue';
 import { INTERACTION_STATES } from '@game/engine/src/game/systems/interaction.system';
+import OpponentHand from './OpponentHand.vue';
+import SelectCardInteractionUi from './SelectCardInteractionUi.vue';
 
 const turnPlayer = useTurnPlayer();
 const ui = useBattleUiStore();
-
+const userPlayer = useUserPlayer();
 const players = usePlayers();
 const { state } = useGameState();
 </script>
 
 <template>
-  <TargetingUi />
-
   <div
     class="battle-ui"
     :class="{
@@ -37,24 +41,9 @@ const { state } = useGameState();
   >
     <BattleLog />
     <header>
-      <!-- <div class="flex gap-4 pointer-events-auto">
-        <label>
-          <input type="radio" v-model="ui.viewMode" value="top-down" />
-          Top down
-        </label>
-
-        <label>
-          <input type="radio" v-model="ui.viewMode" value="isometric" />
-          Isometric
-        </label>
-      </div> -->
-      <div class="flex justify-between">
-        <BattlePlayerInfos
-          v-for="player in players"
-          :key="player.id"
-          :player="player"
-        />
-      </div>
+      <BattlePlayerInfos :player="players[0]" />
+      <OpponentHand :player="userPlayer.getOpponent()" />
+      <BattlePlayerInfos :player="players[1]" />
     </header>
 
     <div class="flex justify-between mx-11">
@@ -68,9 +57,11 @@ const { state } = useGameState();
     <PlayIntent />
     <TurnIndicator />
     <DestinyPhaseUi />
+    <TargetingUi />
+    <SelectCardInteractionUi />
     <HighlightedUnit />
     <footer>
-      <Hand :player="turnPlayer" />
+      <Hand :player="userPlayer" />
       <PlayerActions class="player-actions" />
     </footer>
   </div>
@@ -101,6 +92,11 @@ const { state } = useGameState();
   &.cinematic {
     --battle-ui-cinematic-color: hsl(0 0 0 / 0.7);
   }
+}
+
+header {
+  display: grid;
+  grid-template-columns: 0.25fr minmax(0, 0.4fr) 0.25fr;
 }
 
 footer {

@@ -347,9 +347,9 @@ export class InteractionSystem
   getEntities() {
     return match(this._context)
       .with({ state: 'selecting_targets' }, { state: 'idle' }, () => [])
-      .with({ state: 'selecting_cards' }, ({ ctx }) =>
-        ctx.choices.map(card => card.serialize())
-      )
+      .with({ state: 'selecting_cards' }, ({ ctx }) => {
+        return ctx.choices;
+      })
       .exhaustive();
   }
 }

@@ -21,9 +21,9 @@ export const garrisonMarksman: UnitBlueprint = {
   affinity: AFFINITIES.NORMAL,
   name: 'Garrison Marksman',
   getDescription: () => {
-    return `@Ranged(3)@.`;
+    return `@Ranged(2)@.`;
   },
-  staticDescription: `@Ranged(3)@.`,
+  staticDescription: `@Ranged(2)@.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'unit-garrison-marksman',
   spriteId: 'garrison-marksman',
@@ -44,6 +44,6 @@ export const garrisonMarksman: UnitBlueprint = {
   },
   onInit() {},
   onPlay(game, card) {
-    card.unit.addModifier(new RangedModifier(game, card, { range: 3 }));
+    card.unit.addModifier(new RangedModifier(game, card, { range: 2 }));
   }
 };

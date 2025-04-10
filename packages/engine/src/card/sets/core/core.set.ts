@@ -24,6 +24,7 @@ import { zoranThePunisher } from './zoran-the-punisher';
 import { spark } from './spark';
 import { equalityPendant } from './equality-pendant';
 import { ceasefire } from './ceasefire';
+import { fireball } from './fireball';
 
 export const coreSet: CardSet = {
   id: CARD_SETS.CORE,
@@ -36,6 +37,7 @@ export const coreSet: CardSet = {
     earthShrineOfKnowledge,
     equalityPendant,
     esteemedErudite,
+    fireball,
     fireShrineOfKnowledge,
     fleetingDancer,
     garrisonMarksman,

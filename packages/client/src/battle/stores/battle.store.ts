@@ -187,6 +187,10 @@ export const useBattleStore = defineStore('battle', () => {
         }
       });
 
+      fxEmitter.on(GAME_EVENTS.AFTER_GAME_PHASE_CHANGE, async e => {
+        state.value!.phase = e.to;
+      });
+
       isReady.value = true;
     },
     dispatch<T extends SerializedInput['type']>(input: {

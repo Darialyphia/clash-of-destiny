@@ -74,7 +74,7 @@ const userPlayer = useUserPlayer();
 
     <div
       class="flex pointer-events-auto"
-      :class="!player.equals(turnPlayer) && 'flex-row-reverse'"
+      :class="!player.isPlayer1 && 'flex-row-reverse'"
     >
       <UiSimpleTooltip>
         <template #trigger>
@@ -144,11 +144,26 @@ const userPlayer = useUserPlayer();
   display: flex;
   gap: var(--size-6);
   flex-direction: column;
-  margin-inline: var(--size-11);
   --pixel-scale: 2;
 
   &.is-active .name {
     color: var(--yellow-4);
+  }
+
+  &:not(.inverted) {
+    margin-inline-start: var(--size-11);
+  }
+
+  &.inverted {
+    margin-inline-end: var(--size-11);
+  }
+
+  &.inverted .name {
+    text-align: right;
+  }
+
+  &.inverted .indicators {
+    flex-direction: row-reverse;
   }
 }
 
