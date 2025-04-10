@@ -38,17 +38,8 @@ const cards = computed(() => {
     .map(set => set.cards)
     .flat()
     .sort((a, b) => {
-      if (
-        a.deckSource === CARD_DECK_SOURCES.DESTINY_DECK &&
-        b.deckSource !== CARD_DECK_SOURCES.DESTINY_DECK
-      ) {
-        return -1;
-      }
-      if (
-        a.deckSource !== CARD_DECK_SOURCES.MAIN_DECK &&
-        b.deckSource === CARD_DECK_SOURCES.MAIN_DECK
-      ) {
-        return 1;
+      if (a.deckSource !== b.deckSource) {
+        return a.deckSource === CARD_DECK_SOURCES.MAIN_DECK ? 1 : -1;
       }
 
       if (a.kind === b.kind) {
