@@ -3,10 +3,8 @@ import { PointAOEShape } from '../../../aoe/point.aoe-shape';
 import { AbilityDamage } from '../../../combat/damage';
 import { FlankModifier } from '../../../modifier/modifiers/flank.modifier';
 import { OnEnterModifier } from '../../../modifier/modifiers/on-enter.modifier';
-import { RangedModifier } from '../../../modifier/modifiers/ranged.modiier';
 import { UniqueModifier } from '../../../modifier/modifiers/unique.modifier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
-import { floatingDestiny } from '../../abilities/floating-destiny';
 import type { UnitBlueprint } from '../../card-blueprint';
 import {
   AFFINITIES,
@@ -39,7 +37,7 @@ export const zoranThePunisher: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
   atk: 3,
-  maxHp: 5,
+  maxHp: 7,
   job: CARD_JOBS.AVENGER,
   getFollowup: () => {
     return new MinionFollowup();

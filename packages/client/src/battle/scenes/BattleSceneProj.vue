@@ -22,15 +22,16 @@ const session = new GameSession({
       name: 'Player 1',
       mainDeck: {
         cards: [
-          ...Array.from({ length: 5 }, () => 'sword-instructor'),
-          ...Array.from({ length: 5 }, () => 'shrouded-sorcerer'),
-          ...Array.from({ length: 5 }, () => 'garrison-marksman'),
-          ...Array.from({ length: 5 }, () => 'shield-maiden'),
-          ...Array.from({ length: 5 }, () => 'stalwart-vanguard'),
-          ...Array.from({ length: 5 }, () => 'bubbly-slime'),
-          ...Array.from({ length: 5 }, () => 'luminescent-mystic'),
           'zoran-the-punisher',
-          ...Array.from({ length: 5 }, () => 'esteemed-erudite')
+          ...Array.from({ length: 4 }, () => 'sword-instructor'),
+          ...Array.from({ length: 4 }, () => 'shrouded-sorcerer'),
+          ...Array.from({ length: 4 }, () => 'garrison-marksman'),
+          ...Array.from({ length: 4 }, () => 'shield-maiden'),
+          ...Array.from({ length: 4 }, () => 'stalwart-vanguard'),
+          ...Array.from({ length: 4 }, () => 'bubbly-slime'),
+          ...Array.from({ length: 4 }, () => 'spark'),
+          ...Array.from({ length: 4 }, () => 'luminescent-mystic'),
+          ...Array.from({ length: 4 }, () => 'esteemed-erudite')
         ]
       },
       destinyDeck: {
@@ -38,14 +39,15 @@ const session = new GameSession({
           'fire-shrine-of-knowledge',
           'aiden-child-of-the-storm',
           'aiden-stormrider',
+          'equality-pendant',
+          'insight',
           'slimes-to-the-rescue',
+          'ceasefire',
           'slimes-to-the-rescue',
           'test-destiny-artifact',
           'test-destiny-artifact',
-          'test-destiny-artifact',
-          'test-destiny-spell',
-          'test-destiny-spell',
-          'test-destiny-spell'
+          'insight',
+          'insight'
         ]
       }
     },
@@ -54,15 +56,16 @@ const session = new GameSession({
       name: 'Player 2',
       mainDeck: {
         cards: [
-          ...Array.from({ length: 5 }, () => 'sword-instructor'),
-          ...Array.from({ length: 5 }, () => 'shrouded-sorcerer'),
-          ...Array.from({ length: 5 }, () => 'garrison-marksman'),
-          ...Array.from({ length: 5 }, () => 'shield-maiden'),
-          ...Array.from({ length: 5 }, () => 'stalwart-vanguard'),
-          ...Array.from({ length: 5 }, () => 'bubbly-slime'),
-          ...Array.from({ length: 5 }, () => 'luminescent-mystic'),
           'zoran-the-punisher',
-          ...Array.from({ length: 5 }, () => 'esteemed-erudite')
+          ...Array.from({ length: 4 }, () => 'sword-instructor'),
+          ...Array.from({ length: 4 }, () => 'shrouded-sorcerer'),
+          ...Array.from({ length: 4 }, () => 'garrison-marksman'),
+          ...Array.from({ length: 4 }, () => 'shield-maiden'),
+          ...Array.from({ length: 4 }, () => 'stalwart-vanguard'),
+          ...Array.from({ length: 4 }, () => 'bubbly-slime'),
+          ...Array.from({ length: 4 }, () => 'spark'),
+          ...Array.from({ length: 4 }, () => 'luminescent-mystic'),
+          ...Array.from({ length: 4 }, () => 'esteemed-erudite')
         ]
       },
       destinyDeck: {
@@ -70,15 +73,15 @@ const session = new GameSession({
           'fire-shrine-of-knowledge',
           'aiden-child-of-the-storm',
           'aiden-stormrider',
+          'equality-pendant',
+          'insight',
           'slimes-to-the-rescue',
+          'ceasefire',
           'slimes-to-the-rescue',
           'test-destiny-artifact',
           'test-destiny-artifact',
-          'test-destiny-artifact',
-          'test-destiny-artifact',
-          'test-destiny-spell',
-          'test-destiny-spell',
-          'test-destiny-spell'
+          'insight',
+          'insight'
         ]
       }
     }

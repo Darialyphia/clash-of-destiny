@@ -95,12 +95,12 @@ export class Player
     this.cards = new CardManagerComponent(this.game, this, {
       mainDeck: options.mainDeck.cards.map(blueprintId => ({
         id: this.game.cardIdFactory(blueprintId, this.id),
-        blueprint: this.game.cardPool[blueprintId] as CardBlueprint &
+        blueprint: this.game.getBlueprint(blueprintId) as CardBlueprint &
           MainDeckCardBlueprint
       })),
       destinyDeck: options.destinyDeck.cards.map(blueprintId => ({
         id: this.game.cardIdFactory(blueprintId, this.id),
-        blueprint: this.game.cardPool[blueprintId] as CardBlueprint &
+        blueprint: this.game.getBlueprint(blueprintId) as CardBlueprint &
           DestinyDeckCardBlueprint
       })),
       maxHandSize: this.game.config.MAX_HAND_SIZE,
@@ -348,7 +348,11 @@ export class Player
   startTurn() {
     this.emitter.emit(PLAYER_EVENTS.START_TURN, new PlayerStartTurnEvent({}));
 
-    this.mana.add(this.game.config.MANA_EARNED_PER_TURN);
+    this.mana.add(
+      this.game.gamePhaseSystem.isOverdriveMode
+        ? this.game.config.OVERDRIVE_MODE_MANA_EARNED_PER_TURN
+        : this.game.config.MANA_EARNED_PER_TURN
+    );
     this.destiny.add(this.game.config.DESTINY_EARNED_PER_TURN);
     this.resourceActionsDoneThisTurn = 0;
 

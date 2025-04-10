@@ -1,6 +1,5 @@
 import { PointAOEShape } from '../../../aoe/point.aoe-shape';
 import { OnAttackModifier } from '../../../modifier/modifiers/on-attack.modifier';
-import { OnEnterModifier } from '../../../modifier/modifiers/on-enter.modifier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
 import type { UnitBlueprint } from '../../card-blueprint';
 import {
@@ -12,7 +11,6 @@ import {
   RARITIES,
   UNIT_KINDS
 } from '../../card.enums';
-import { AnywhereFollowup } from '../../followups/anywhere-followup';
 import { NoFollowup } from '../../followups/no-followup';
 import { stormFlash } from './storm-flash';
 
@@ -36,7 +34,7 @@ export const aidenLv2: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.DESTINY_DECK,
   abilities: [],
   atk: 2,
-  maxHp: 20,
+  maxHp: 22,
   spellpower: 1,
   level: 2,
   job: CARD_JOBS.AVENGER,

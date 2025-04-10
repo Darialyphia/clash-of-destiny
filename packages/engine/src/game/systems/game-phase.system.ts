@@ -1,4 +1,10 @@
-import { assert, StateMachine, stateTransition, type Values } from '@game/shared';
+import {
+  assert,
+  StateMachine,
+  stateTransition,
+  type EmptyObject,
+  type Values
+} from '@game/shared';
 import { GAME_EVENTS } from '../game.events';
 import type { Player } from '../../player/player.entity';
 import type { Game } from '../game';
@@ -28,9 +34,30 @@ export class GameTurnEvent extends TypedSerializableEvent<
   }
 }
 
+export class OverdriveModeEvent extends TypedSerializableEvent<EmptyObject, EmptyObject> {
+  serialize(): EmptyObject {
+    return {};
+  }
+}
+
+export class GamePhaseChangeEvent extends TypedSerializableEvent<
+  { from: GamePhase; to: GamePhase },
+  { from: GamePhase; to: GamePhase }
+> {
+  serialize() {
+    return {
+      from: this.data.from,
+      to: this.data.to
+    };
+  }
+}
+
 export type GamePhaseEventMap = {
   [GAME_PHASE_EVENTS.TURN_START]: GameTurnEvent;
   [GAME_PHASE_EVENTS.TURN_END]: GameTurnEvent;
+  [GAME_PHASE_EVENTS.OVERDRIVE_MODE]: OverdriveModeEvent;
+  [GAME_PHASE_EVENTS.BEFORE_CHANGE_PHASE]: GamePhaseChangeEvent;
+  [GAME_PHASE_EVENTS.AFTER_CHANGE_PHASE]: GamePhaseChangeEvent;
 };
 
 export class WrongGamePhaseError extends Error {
@@ -61,6 +88,8 @@ export class GamePhaseSystem extends StateMachine<
   private firstPlayer!: Player;
 
   private emitter = new TypedSerializableEventEmitter<GamePhaseEventMap>();
+
+  private _isOverdriveMode = false;
 
   constructor(private game: Game) {
     super(GAME_PHASES.DRAW);
@@ -116,6 +145,10 @@ export class GamePhaseSystem extends StateMachine<
     return this._turnPlayer;
   }
 
+  get isOverdriveMode() {
+    return this._isOverdriveMode;
+  }
+
   private startGameTurn() {
     this.emitter.emit(
       GAME_PHASE_EVENTS.TURN_START,
@@ -143,6 +176,14 @@ export class GamePhaseSystem extends StateMachine<
       this._turnPlayer = nextPlayer;
     }
 
+    if (
+      !this._turnPlayer.isPlayer1 &&
+      this.elapsedTurns === this.game.config.ELAPSED_TURNS_TO_ACTIVATE_OVERDRIVE_MODE
+    ) {
+      this._isOverdriveMode = true;
+      this.game.emit(GAME_PHASE_EVENTS.OVERDRIVE_MODE, new OverdriveModeEvent({}));
+    }
+
     this._turnPlayer.startTurn();
   }
 
@@ -161,6 +202,15 @@ export class GamePhaseSystem extends StateMachine<
     this.on(GAME_PHASE_EVENTS.TURN_END, e => {
       this.game.emit(GAME_EVENTS.TURN_END, e);
     });
+    this.on(GAME_PHASE_EVENTS.OVERDRIVE_MODE, e => {
+      this.game.emit(GAME_EVENTS.OVERDRIVE_MODE, e);
+    });
+    this.on(GAME_PHASE_EVENTS.BEFORE_CHANGE_PHASE, e => {
+      this.game.emit(GAME_EVENTS.BEFORE_GAME_PHASE_CHANGE, e);
+    });
+    this.on(GAME_PHASE_EVENTS.AFTER_CHANGE_PHASE, e => {
+      this.game.emit(GAME_EVENTS.AFTER_GAME_PHASE_CHANGE, e);
+    });
   }
 
   get on() {
@@ -175,9 +225,29 @@ export class GamePhaseSystem extends StateMachine<
     return this.emitter.off.bind(this.emitter);
   }
 
+  private sendTransition(...args: Parameters<typeof this.dispatch>) {
+    const previousPhase = this.getState();
+    const nextPhase = this.getNextState(args[0]);
+    this.game.emit(
+      GAME_PHASE_EVENTS.BEFORE_CHANGE_PHASE,
+      new GamePhaseChangeEvent({
+        from: previousPhase,
+        to: nextPhase!
+      })
+    );
+    this.dispatch(...args);
+    this.game.emit(
+      GAME_PHASE_EVENTS.AFTER_CHANGE_PHASE,
+      new GamePhaseChangeEvent({
+        from: previousPhase,
+        to: nextPhase!
+      })
+    );
+  }
+
   endTurn() {
     assert(this.can(GAME_PHASE_TRANSITIONS.END_TURN), new WrongGamePhaseError());
-    this.dispatch(GAME_PHASE_TRANSITIONS.END_TURN);
+    this.sendTransition(GAME_PHASE_TRANSITIONS.END_TURN);
   }
 
   draw() {
@@ -188,7 +258,7 @@ export class GamePhaseSystem extends StateMachine<
         ? this.game.config.PLAYER_2_CARDS_DRAWN_ON_FIRST_TURN
         : this.game.config.CARDS_DRAWN_PER_TURN;
     this.turnPlayer.draw(drawCount);
-    this.dispatch(GAME_PHASE_TRANSITIONS.DRAW);
+    this.sendTransition(GAME_PHASE_TRANSITIONS.DRAW);
     if (this.elapsedTurns === 0) {
       this.skipDestiny();
     }
@@ -196,23 +266,23 @@ export class GamePhaseSystem extends StateMachine<
 
   skipDestiny() {
     assert(this.can(GAME_PHASE_TRANSITIONS.SKIP_DESTINY), new WrongGamePhaseError());
-    this.dispatch(GAME_PHASE_TRANSITIONS.SKIP_DESTINY);
+    this.sendTransition(GAME_PHASE_TRANSITIONS.SKIP_DESTINY);
   }
 
   playDestinyCard(index: number) {
     assert(this.can(GAME_PHASE_TRANSITIONS.PLAY_DESTINY_CARD), new WrongGamePhaseError());
 
     this.turnPlayer.playDestinyDeckCardAtIndex(index, () => {
-      this.dispatch(GAME_PHASE_TRANSITIONS.PLAY_DESTINY_CARD);
+      this.sendTransition(GAME_PHASE_TRANSITIONS.PLAY_DESTINY_CARD);
     });
   }
 
   declareWinner(player: Player) {
     assert(this.can(GAME_PHASE_TRANSITIONS.PLAYER_WON), new WrongGamePhaseError());
-    this.dispatch(GAME_PHASE_TRANSITIONS.PLAYER_WON, player);
+    // @ts-expect-error
+    this.sendTransition(GAME_PHASE_TRANSITIONS.PLAYER_WON, player);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   shutdown() {}
 
   get phase() {

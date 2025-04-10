@@ -3,6 +3,7 @@ import { PointAOEShape } from '../../../aoe/point.aoe-shape';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
 import type { SpellBlueprint } from '../../card-blueprint';
 import {
+  AFFINITIES,
   CARD_DECK_SOURCES,
   CARD_JOBS,
   CARD_KINDS,
@@ -16,7 +17,7 @@ import { RangedFollowup } from '../../followups/ranged-followup';
 export const stormFlash: SpellBlueprint = {
   id: 'storm-flash',
   kind: CARD_KINDS.SPELL,
-  affinity: 'NORMAL',
+  affinity: AFFINITIES.NORMAL,
   name: 'Storm Flash',
   getDescription: (game, card) => {
     return `Teleport a minion up to @[value] ${1 + card.player.hero.spellpower}@ spaces away.`;
@@ -28,7 +29,7 @@ export const stormFlash: SpellBlueprint = {
   collectable: true,
   manaCost: 1,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
-  job: CARD_JOBS.SPELLCASTER,
+  job: CARD_JOBS.AVENGER,
   abilities: [],
   getFollowup: (game, card) => {
     return new MultiTargetFollowup(game, card, [
@@ -54,7 +55,6 @@ export const stormFlash: SpellBlueprint = {
   },
   onInit() {},
   onPlay(game, card, affectedCells, affectedUnits) {
-    console.log(affectedCells, affectedUnits);
     const [target] = affectedUnits;
     if (!target) return;
     const [, targetCell] = affectedCells;

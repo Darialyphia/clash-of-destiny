@@ -26,7 +26,9 @@ The game uses 3 types or resources used to play cards and activate abilities: Ma
 
 ### Mana
 
-Mana is a resource that is used to play cards from the Main Deck. It is earned at a rate of a flat 4 mana per turn, but can be banked for use in the following turn, up to a maximum of 10 mana.
+Mana is a resource that is used to play cards from the Main Deck. It is earned at a rate of a flat 4 mana per turn, but can be banked for use in the following turn, up to a maximum of 4 mana. This means a player can have up to 8 mana in a turn.
+
+After player 1's fifth turn, the game enters an "Overflow" state and, from this point onw, players gain 6 mana per turn.
 
 ### Destiny
 

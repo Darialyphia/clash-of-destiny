@@ -1,6 +1,7 @@
 import { NoAOEShape } from '../../../aoe/no-aoe.aoe-shape';
 import type { SpellBlueprint } from '../../card-blueprint';
 import {
+  AFFINITIES,
   CARD_DECK_SOURCES,
   CARD_JOBS,
   CARD_KINDS,
@@ -13,7 +14,7 @@ import { bubblySlime } from './bubbly-slime';
 export const slimesToTheRescue: SpellBlueprint = {
   id: 'slimes-to-the-rescue',
   kind: CARD_KINDS.SPELL,
-  affinity: 'NORMAL',
+  affinity: AFFINITIES.NORMAL,
   name: 'Slimes, to the Rescue!',
   getDescription: () => {
     return `If your opponent controls at least 2 more minions than you, summon a @Bubbly Slime@ above and below your Hero.`;

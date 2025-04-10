@@ -50,7 +50,7 @@ export class InterceptorModifierMixin<
       interceptor: (
         value: inferInterceptorValue<TInterceptorMap[TKey]>,
         ctx: inferInterceptorCtx<TInterceptorMap[TKey]>,
-        modifier: Modifier<Unit>
+        modifier: Modifier<TTarget>
       ) => inferInterceptorValue<TInterceptorMap[TKey]>;
     }
   ) {
@@ -62,7 +62,6 @@ export class InterceptorModifierMixin<
     value: inferInterceptorValue<TInterceptorMap[TKey]>,
     ctx: inferInterceptorCtx<TInterceptorMap[TKey]>
   ) {
-    //@ts-expect-error
     return this.options.interceptor(value, ctx, this.modifier);
   }
 

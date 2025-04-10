@@ -54,7 +54,7 @@ export const esteemedErudite: UnitBlueprint = {
     }
   ],
   atk: 1,
-  maxHp: 2,
+  maxHp: 4,
   job: CARD_JOBS.SPELLCASTER,
   getFollowup: () => {
     return new MinionFollowup();

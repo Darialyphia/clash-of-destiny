@@ -33,8 +33,8 @@ export const shieldMaiden: UnitBlueprint = {
   manaCost: 4,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
-  atk: 2,
-  maxHp: 4,
+  atk: 3,
+  maxHp: 5,
   job: CARD_JOBS.GUARDIAN,
   getFollowup: () => {
     return new MinionFollowup();

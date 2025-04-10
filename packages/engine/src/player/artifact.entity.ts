@@ -17,6 +17,7 @@ import type { Damage } from '../combat/damage';
 import { UNIT_EVENTS } from '../unit/unit-enums';
 import type { Ability } from '../card/card-blueprint';
 import { ArtifactAbilityNotFoundError } from './player-errors';
+import type { Unit } from '../unit/entities/unit.entity';
 
 export const ARTIFACT_EVENTS = {
   EQUIPED: 'equiped',
@@ -60,7 +61,7 @@ export type ArtifactOptions = {
 };
 
 export type ArtifactInterceptor = {
-  shouldLosedurabilityOnAttack: Interceptable<boolean>;
+  shouldLosedurabilityOnAttack: Interceptable<boolean, Unit>;
   shouldLosedurabilityOnDamage: Interceptable<boolean, Damage<any>>;
   maxDurability: Interceptable<number>;
   canLoseDurability: Interceptable<boolean>;
@@ -119,6 +120,13 @@ export class Artifact
         if (this.shouldLosedurabilityOnDamage(event.data.damage)) {
           this.loseDurability(1);
         }
+      }),
+      this.player.hero.on(UNIT_EVENTS.AFTER_ATTACK, event => {
+        const target = this.game.unitSystem.getUnitAt(event.data.target);
+        if (!target) return;
+        if (this.shouldLoseDurabilityOnAttack(target)) {
+          this.loseDurability(1);
+        }
       })
     );
   }
@@ -152,10 +160,13 @@ export class Artifact
   }
 
   shouldLosedurabilityOnDamage(damage: Damage<any>) {
-    return this.interceptors.shouldLosedurabilityOnDamage.getValue(
-      this.canLoseDurability,
-      damage
-    );
+    if (!this.canLoseDurability) return false;
+    return this.interceptors.shouldLosedurabilityOnDamage.getValue(true, damage);
+  }
+
+  shouldLoseDurabilityOnAttack(target: Unit) {
+    if (!this.canLoseDurability) return false;
+    return this.interceptors.shouldLosedurabilityOnAttack.getValue(false, target);
   }
 
   get removeModifier() {

@@ -21,16 +21,16 @@ export const garrisonMarksman: UnitBlueprint = {
   affinity: AFFINITIES.NORMAL,
   name: 'Garrison Marksman',
   getDescription: () => {
-    return `@Ranged(2)@.`;
+    return `@Ranged(3)@.`;
   },
-  staticDescription: `@Ranged(2)@.`,
+  staticDescription: `@Ranged(3)@.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'unit-garrison-marksman',
   spriteId: 'garrison-marksman',
   spriteParts: {},
   rarity: RARITIES.COMMON,
   collectable: true,
-  manaCost: 3,
+  manaCost: 2,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
   atk: 2,
@@ -44,6 +44,6 @@ export const garrisonMarksman: UnitBlueprint = {
   },
   onInit() {},
   onPlay(game, card) {
-    card.unit.addModifier(new RangedModifier(game, card, { range: 2 }));
+    card.unit.addModifier(new RangedModifier(game, card, { range: 3 }));
   }
 };

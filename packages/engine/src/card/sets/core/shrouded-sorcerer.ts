@@ -34,19 +34,19 @@ export const shroudedSorcerer: UnitBlueprint = {
   manaCost: 4,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   atk: 2,
-  maxHp: 4,
+  maxHp: 5,
   job: CARD_JOBS.SPELLCASTER,
   abilities: [
     {
       id: 'shrouded-sorcerer',
       isCardAbility: false,
       staticDescription:
-        '@[exhaust]@ @[mana] 2@ : Deal damage to target unit equal to your Destiny. @Class Bonus@: If that destroys the unit, activate this.',
+        '@[exhaust]@ @[mana] 1@ : Deal damage to target unit equal to your Destiny. @Class Bonus@: If that destroys the unit, activate this.',
       getDescription() {
-        return '@[exhaust]@ @[mana] 2@ : Deal damage to target unit equal to your Destiny. @Class Bonus@: If that destroys the unit, activate this.';
+        return '@[exhaust]@ @[mana] 1@ : Deal damage to target unit equal to your Destiny. @Class Bonus@: If that destroys the unit, activate this.';
       },
       label: 'Deal damage',
-      manaCost: 2,
+      manaCost: 1,
       shouldExhaust: true,
       canUse() {
         return true;

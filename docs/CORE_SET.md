@@ -144,7 +144,7 @@ Class Bonus: On Destroyed: Draw a card.
 
 Defiant(2)
 
-[exhaust], 2M -> Deal damage to an enemy equals to your Destiny. Class Bonus: if that destroys the unit, activate this.
+[exhaust], 1M -> Deal damage to an enemy equals to your Destiny. Class Bonus: if that destroys the unit, activate this.
 
 ---
 
@@ -170,27 +170,238 @@ On Enter: Deal 3 damage to the unit in front of this. (In front means to the rig
 
 On Enter: Your Hero gains 1 Level.
 
+#### Fire
+
+#### Water
+
+#### Air
+
+#### Earth
+
+#### Harmony
+
+#### Void
+
+#### Genesis
+
+#### Wrath
+
+#### Arcane
+
+
 
 ### Spells
 
+#### Normal
+
+**Storm Flash** (Spell - Avenger) [x]
+
+1M 
+
+Teleport a unit up to (spellpower + 1) spaces away.
+
+#### Fire
+
+**Spark** (Spell - Spellcaster) [x]
+
+1M
+
+Deal 1 damage to a unit.
+
+Floating Destiny
+
+#### Water
+
+#### Air
+
+#### Earth
+
+#### Harmony
+
+#### Void
+
+#### Genesis
+
+#### Wrath
+
+#### Arcane
+
+
+
 ### Artifacts
 
+#### Normal
+
+#### Fire
+
+#### Water
+
+#### Air
+
+#### Earth
+
+#### Harmony
+
+#### Void
+
+#### Genesis
+
+#### Wrath
+
+#### Arcane
+
+
+
 ### Secrets
+
+#### Normal
+
+#### Fire
+
+#### Water
+
+#### Air
+
+#### Earth
+
+#### Harmony
+
+#### Void
+
+#### Genesis
+
+#### Wrath
+
+#### Arcane
+
+
+
+
 
 ## Destiny Deck
 
 #### Heroes
 
+**Aiden, Child of the Storm** (Hero - Avenger) [x]
+
+LV 1 | 1D | 1 ATK | 1 SP | 16 HP
+
+Aiden Lineage
+
+On Enter: Give an ally minion Swift this turn.
+
+**Aiden, Stormrider** (Hero - Avenger) [x]
+
+LV 2 | 2D | 2 ATK | 1 SP | 20 HP
+
+Aiden Lineage
+
+On Attack: Put a Storm Flash in your hand.
+
+
 #### Minions
+
+#### Normal
+
+#### Fire
+
+#### Water
+
+#### Air
+
+#### Earth
+
+#### Harmony
+
+#### Void
+
+#### Genesis
+
+#### Wrath
+
+#### Arcane
+
+
 
 #### Spells
 
-**Slimes, to the rescue!** (Spell - Summoner)
+#### Normal
+
+**Insight** (Spell - Spellcaster) [x]
+
+0D
+
+Draw 1 card.
+
+**Slimes, to the rescue!** (Spell - Summoner) [x]
 
 1D
 
 If your opponent controls at least 2 more minions than you, summon a Bubbly Slime above and below your Hero.
 
+#### Fire
+
+#### Water
+
+#### Air
+
+#### Earth
+
+#### Harmony
+
+#### Void
+
+#### Genesis
+
+#### Wrath
+
+#### Arcane
+
+
+
 #### Artifacts
 
+#### Normal 
+
+#### Fire
+
+#### Water
+
+#### Air
+
+#### Earth
+
+#### Harmony
+
+#### Void
+
+#### Genesis
+
+#### Wrath
+
+#### Arcane
+
+
+
 #### Secrets
+
+#### Normal 
+
+#### Fire
+
+#### Water
+
+#### Air
+
+#### Earth
+
+#### Harmony
+
+#### Void
+
+#### Genesis
+
+#### Wrath
+
+#### Arcane
+

@@ -89,6 +89,12 @@ export const KEYWORDS = {
     name: 'Vigilant',
     description: 'This unit does not exhaust when counterattacking.',
     aliases: []
+  },
+  TRINKET: {
+    id: 'trinket',
+    name: 'Trinket',
+    description: 'This artifact does not lose durability during your turn.',
+    aliases: []
   }
 } as const satisfies Record<string, Keyword>;
 

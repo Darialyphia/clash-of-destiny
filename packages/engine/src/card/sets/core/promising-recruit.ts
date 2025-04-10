@@ -31,8 +31,8 @@ export const promisingRecruit: UnitBlueprint = {
   manaCost: 2,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
-  atk: 1,
-  maxHp: 2,
+  atk: 2,
+  maxHp: 3,
   job: CARD_JOBS.GUARDIAN,
   getFollowup: () => {
     return new MinionFollowup();

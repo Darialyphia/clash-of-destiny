@@ -39,6 +39,7 @@ export type SerializedOmniscientState = {
   turnCount: number;
   interactionState: SerializedInteractionContext;
   phase: GamePhase;
+  isOverdriveMode: boolean;
 };
 
 export type SerializedOpponentUnit = SerializedUnit;
@@ -156,7 +157,11 @@ export class GameSnaphotSystem extends System<EmptyObject> {
       board: this.game.boardSystem.serialize(),
       units: this.game.unitSystem.units.map(unit => unit.id),
       interactables: this.game.interactableSystem.interactables.map(unit => unit.id),
-      players: this.game.playerSystem.players.map(player => player.id) as [string, string]
+      players: this.game.playerSystem.players.map(player => player.id) as [
+        string,
+        string
+      ],
+      isOverdriveMode: this.game.gamePhaseSystem.isOverdriveMode
     };
   }
 

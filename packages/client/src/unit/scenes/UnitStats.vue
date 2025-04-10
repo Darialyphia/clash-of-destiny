@@ -11,7 +11,7 @@ const ui = useBattleUiStore();
 <template>
   <container-2d
     :x="-28"
-    :y="30"
+    :y="20"
     :ref="
       (container: any) => {
         if (!container) return;
@@ -42,7 +42,7 @@ const ui = useBattleUiStore();
     </sprite-2d>
     <sprite-2d
       texture="/assets/ui/unit-stats-spellpower.png"
-      :x="20"
+      :y="-18"
       v-if="unit.isHero"
     >
       <pixi-text

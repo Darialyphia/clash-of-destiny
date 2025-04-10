@@ -12,7 +12,7 @@ import {
   type GameEventMap
 } from './game.events';
 import { createCard, cardIdFactory } from '../card/card.factory';
-import type { IndexedRecord } from '@game/shared';
+import { assert, type IndexedRecord } from '@game/shared';
 import type { CardBlueprint } from '../card/card-blueprint';
 import { BoardSystem } from '../board/board-system';
 import { UnitSystem } from '../unit/unit-system';
@@ -118,7 +118,7 @@ export class Game {
     this.gamePhaseSystem.initialize();
     this.interaction.initialize();
     this.snapshotSystem.initialize();
-    const stop = this.on('*', e => {
+    const stop = this.on('*', () => {
       if (this.gamePhaseSystem.phase === GAME_PHASES.GAME_END) return;
       for (const player of this.playerSystem.players) {
         if (this.winCondition(this, player)) {
@@ -131,6 +131,12 @@ export class Game {
     this.gamePhaseSystem.turnPlayer.startTurn();
     this.snapshotSystem.takeSnapshot();
     this.emit(GAME_EVENTS.READY, new GameReadyEvent({}));
+  }
+
+  getBlueprint(id: string) {
+    const card = this.cardPool[id];
+    assert(card, `Card with id ${id} not found in card pool`);
+    return card;
   }
 
   get on() {

@@ -17,35 +17,41 @@ import { stalwartVanguard } from './stalwart-vanguard';
 import { stormFlash } from './storm-flash';
 import { swordInstructor } from './sword-instructor';
 import { testDestinyArtifact } from './test-destiny-artifact';
-import { testDestiySpell } from './test-destiny-spell';
+import { insight } from './insight';
 import { waterShrineOfKnowledge } from './water-shrine-of-knowledge';
 import { windShrineOfKnowledge } from './wind-shrine-of-knowledge';
 import { zoranThePunisher } from './zoran-the-punisher';
+import { spark } from './spark';
+import { equalityPendant } from './equality-pendant';
+import { ceasefire } from './ceasefire';
 
 export const coreSet: CardSet = {
   id: CARD_SETS.CORE,
   name: 'Core Set',
   cards: [
-    fireShrineOfKnowledge,
-    waterShrineOfKnowledge,
-    earthShrineOfKnowledge,
-    windShrineOfKnowledge,
-    stalwartVanguard,
-    esteemedErudite,
-    bubblySlime,
-    fleetingDancer,
-    garrisonMarksman,
-    swordInstructor,
-    promisingRecruit,
-    luminescentMystic,
-    shroudedSorcerer,
-    shieldMaiden,
-    zoranThePunisher,
-    stormFlash,
-    testDestiySpell,
-    slimesToTheRescue,
     aidenLv1,
     aidenLv2,
-    testDestinyArtifact
+    bubblySlime,
+    ceasefire,
+    earthShrineOfKnowledge,
+    equalityPendant,
+    esteemedErudite,
+    fireShrineOfKnowledge,
+    fleetingDancer,
+    garrisonMarksman,
+    insight,
+    luminescentMystic,
+    promisingRecruit,
+    shieldMaiden,
+    shroudedSorcerer,
+    slimesToTheRescue,
+    spark,
+    stalwartVanguard,
+    stormFlash,
+    swordInstructor,
+    testDestinyArtifact,
+    waterShrineOfKnowledge,
+    windShrineOfKnowledge,
+    zoranThePunisher
   ]
 };
