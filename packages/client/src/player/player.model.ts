@@ -6,13 +6,14 @@ import type { SerializedPlayer } from '@game/engine/src/player/player.entity';
 import { objectEntries } from '@game/shared';
 
 export class PlayerViewModel {
+  private getEntities: () => GameStateEntities;
+
   constructor(
     private data: SerializedPlayer,
-    private entityDictionary: GameStateEntities,
+    entityDictionary: GameStateEntities,
     private dispatcher: InputDispatcher
-  ) {}
-  update(data: SerializedPlayer) {
-    this.data = data;
+  ) {
+    this.getEntities = () => entityDictionary;
   }
 
   equals(unit: PlayerViewModel | SerializedPlayer) {
@@ -65,31 +66,29 @@ export class PlayerViewModel {
 
   getHand() {
     return this.data.hand.map(cardId => {
-      return this.entityDictionary[cardId] as CardViewModel;
+      return this.getEntities()[cardId] as CardViewModel;
     });
   }
 
   getDiscardPile() {
     return this.data.discardPile.map(cardId => {
-      return this.entityDictionary[cardId] as CardViewModel;
+      return this.getEntities()[cardId] as CardViewModel;
     });
   }
 
   getBanishPile() {
     return this.data.banishPile.map(cardId => {
-      return this.entityDictionary[cardId] as CardViewModel;
+      return this.getEntities()[cardId] as CardViewModel;
     });
   }
 
   getCurrentlyPlayedCard() {
     if (!this.data.currentlyPlayedCard) return null;
-    return this.entityDictionary[
-      this.data.currentlyPlayedCard
-    ] as CardViewModel;
+    return this.getEntities()[this.data.currentlyPlayedCard] as CardViewModel;
   }
 
   getOpponent() {
-    const entity = Object.values(this.entityDictionary).find(
+    const entity = Object.values(this.getEntities()).find(
       entity => entity instanceof PlayerViewModel && entity.id !== this.id
     );
     return entity as PlayerViewModel;
@@ -97,13 +96,13 @@ export class PlayerViewModel {
 
   getDestinyDeck() {
     return this.data.destinyDeck.map(cardId => {
-      return this.entityDictionary[cardId] as CardViewModel;
+      return this.getEntities()[cardId] as CardViewModel;
     });
   }
 
   getArtifacts() {
     return this.data.artifacts.map(cardId => {
-      return this.entityDictionary[cardId] as ArtifactViewModel;
+      return this.getEntities()[cardId] as ArtifactViewModel;
     });
   }
 

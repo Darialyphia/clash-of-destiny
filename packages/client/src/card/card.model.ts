@@ -11,7 +11,6 @@ import type { SerializedSecretCard } from '@game/engine/src/card/entities/secret
 import type { SerializedShrineCard } from '@game/engine/src/card/entities/shrine-card.entity';
 import type { SerializedSpellCard } from '@game/engine/src/card/entities/spell-card.entity';
 import type { InputDispatcher } from '@game/engine/src/input/input-system';
-import { objectEntries } from '@game/shared';
 import { match } from 'ts-pattern';
 
 type CardData =
@@ -23,13 +22,14 @@ type CardData =
   | SerializedSecretCard;
 
 export class CardViewModel {
+  private getEntities: () => GameStateEntities;
+
   constructor(
     private data: SerializedCard,
-    private entityDictionary: GameStateEntities,
+    entityDictionary: GameStateEntities,
     private dispatcher: InputDispatcher
-  ) {}
-  update(data: SerializedCard) {
-    this.data = data;
+  ) {
+    this.getEntities = () => entityDictionary;
   }
 
   equals(unit: CardViewModel | SerializedCard) {
@@ -131,7 +131,7 @@ export class CardViewModel {
   }
 
   getPlayer() {
-    return this.entityDictionary[this.data.player] as PlayerViewModel;
+    return this.getEntities()[this.data.player] as PlayerViewModel;
   }
 
   get needsTargets() {
@@ -168,11 +168,11 @@ export class CardViewModel {
           return {
             cells:
               data.aoe?.cells.map(
-                id => this.entityDictionary[id] as CellViewModel
+                id => this.getEntities()[id] as CellViewModel
               ) ?? [],
             units:
               data.aoe?.units.map(
-                id => this.entityDictionary[id] as UnitViewModel
+                id => this.getEntities()[id] as UnitViewModel
               ) ?? []
           };
         }
@@ -192,8 +192,7 @@ export class CardViewModel {
         { kind: CARD_KINDS.SECRET },
         data => {
           return (
-            data.range?.map(id => this.entityDictionary[id] as CellViewModel) ??
-            []
+            data.range?.map(id => this.getEntities()[id] as CellViewModel) ?? []
           );
         }
       )

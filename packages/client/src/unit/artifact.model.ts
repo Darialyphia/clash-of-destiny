@@ -5,14 +5,14 @@ import type { SerializedArtifact } from '@game/engine/src/player/artifact.entity
 import { objectEntries } from '@game/shared';
 
 export class ArtifactViewModel {
+  private getEntities: () => GameStateEntities;
+
   constructor(
     private data: SerializedArtifact,
-    private entityDictionary: GameStateEntities,
+    entityDictionary: GameStateEntities,
     private dispatcher: InputDispatcher
-  ) {}
-
-  update(data: SerializedArtifact) {
-    this.data = data;
+  ) {
+    this.getEntities = () => entityDictionary;
   }
 
   equals(unit: ArtifactViewModel | SerializedArtifact) {
@@ -32,6 +32,6 @@ export class ArtifactViewModel {
   }
 
   getCard() {
-    return this.entityDictionary[this.data.card] as CardViewModel;
+    return this.getEntities()[this.data.card] as CardViewModel;
   }
 }

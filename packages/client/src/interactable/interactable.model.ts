@@ -4,14 +4,14 @@ import type { SerializedInteractable } from '@game/engine/src/interactable/inter
 import { objectEntries } from '@game/shared';
 
 export class InteractableViewModel {
+  private getEntities: () => GameStateEntities;
+
   constructor(
     private data: SerializedInteractable,
-    private entityDictionary: GameStateEntities,
+    entityDictionary: GameStateEntities,
     private dispatcher: InputDispatcher
-  ) {}
-
-  update(data: SerializedInteractable) {
-    this.data = data;
+  ) {
+    this.getEntities = () => entityDictionary;
   }
 
   equals(unit: InteractableViewModel | SerializedInteractable) {

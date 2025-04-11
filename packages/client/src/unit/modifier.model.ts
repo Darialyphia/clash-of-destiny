@@ -7,13 +7,14 @@ import type { ArtifactViewModel } from './artifact.model';
 import { objectEntries } from '@game/shared';
 
 export class ModifierViewModel {
+  private getEntities: () => GameStateEntities;
+
   constructor(
     private data: SerializedModifier,
-    private entityDictionary: GameStateEntities,
+    entityDictionary: GameStateEntities,
     private dispatcher: InputDispatcher
-  ) {}
-  update(data: SerializedModifier) {
-    this.data = data;
+  ) {
+    this.getEntities = () => entityDictionary;
   }
 
   equals(unit: ModifierViewModel | SerializedModifier) {
@@ -41,14 +42,14 @@ export class ModifierViewModel {
   }
 
   get targetAsUnit() {
-    return this.entityDictionary[this.data.target] as UnitViewModel;
+    return this.getEntities()[this.data.target] as UnitViewModel;
   }
 
   get targetAsCard() {
-    return this.entityDictionary[this.data.target] as CardViewModel;
+    return this.getEntities()[this.data.target] as CardViewModel;
   }
 
   get targetAsArtifact() {
-    return this.entityDictionary[this.data.target] as ArtifactViewModel;
+    return this.getEntities()[this.data.target] as ArtifactViewModel;
   }
 }

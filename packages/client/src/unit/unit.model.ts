@@ -5,7 +5,7 @@ import type { PlayerViewModel } from '@/player/player.model';
 import { pointToCellId } from '@game/engine/src/board/board-utils';
 import type { InputDispatcher } from '@game/engine/src/input/input-system';
 import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
-import { objectEntries, type Nullable, type Point } from '@game/shared';
+import { type Nullable, type Point } from '@game/shared';
 import type { ModifierViewModel } from './modifier.model';
 
 export class UnitViewModel {
@@ -13,13 +13,14 @@ export class UnitViewModel {
 
   moveIntent: Nullable<{ point: Point; path: Point[] }> = null;
 
+  private getEntities: () => GameStateEntities;
+
   constructor(
     private data: SerializedUnit,
-    private entityDictionary: GameStateEntities,
+    entityDictionary: GameStateEntities,
     private dispatcher: InputDispatcher
-  ) {}
-  update(data: SerializedUnit) {
-    this.data = data;
+  ) {
+    this.getEntities = () => entityDictionary;
   }
 
   equals(unit: UnitViewModel | SerializedUnit) {
@@ -99,29 +100,29 @@ export class UnitViewModel {
   }
 
   getPlayer() {
-    return this.entityDictionary[this.data.playerId] as PlayerViewModel;
+    return this.getEntities()[this.data.playerId] as PlayerViewModel;
   }
 
   getMoveZone() {
     return this.data.moveZone.map(point => {
-      return this.entityDictionary[pointToCellId(point.point)] as CellViewModel;
+      return this.getEntities()[pointToCellId(point.point)] as CellViewModel;
     });
   }
 
   getModifiers() {
     return this.data.modifiers.map(modifierId => {
-      return this.entityDictionary[modifierId] as ModifierViewModel;
+      return this.getEntities()[modifierId] as ModifierViewModel;
     });
   }
 
   getCard() {
-    return this.entityDictionary[this.data.card] as CardViewModel;
+    return this.getEntities()[this.data.card] as CardViewModel;
   }
 
   getCell() {
     if (this.isDead) return null;
     const id = pointToCellId(this.data.position);
-    return this.entityDictionary[id] as CellViewModel;
+    return this.getEntities()[id] as CellViewModel;
   }
 
   canMoveTo(cell: CellViewModel) {

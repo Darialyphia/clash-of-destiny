@@ -6,14 +6,14 @@ import type { InputDispatcher } from '@game/engine/src/input/input-system';
 import { objectEntries } from '@game/shared';
 
 export class CellViewModel {
+  private getEntities: () => GameStateEntities;
+
   constructor(
     private data: SerializedCell,
-    private entityDictionary: GameStateEntities,
-
+    entityDictionary: GameStateEntities,
     private dispatcher: InputDispatcher
-  ) {}
-  update(data: SerializedCell) {
-    this.data = data;
+  ) {
+    this.getEntities = () => entityDictionary;
   }
 
   equals(cell: CellViewModel | SerializedCell) {
@@ -37,16 +37,14 @@ export class CellViewModel {
       return null;
     }
 
-    return this.entityDictionary[this.data.unit] as UnitViewModel;
+    return this.getEntities()[this.data.unit] as UnitViewModel;
   }
 
   getInteractable() {
     if (!this.data.interactable) {
       return null;
     }
-    return this.entityDictionary[
-      this.data.interactable
-    ] as InteractableViewModel;
+    return this.getEntities()[this.data.interactable] as InteractableViewModel;
   }
 
   removeUnit() {
