@@ -117,7 +117,7 @@ const buildentities = (
       )
       .exhaustive();
   }
-  console.log(`buildentities took ${performance.now() - now}ms`);
+  console.log(`Entities updated in ${Math.round(performance.now() - now)}ms`);
   return existing;
 };
 
@@ -174,18 +174,30 @@ export const useBattleStore = defineStore('battle', () => {
             await fxEmitter.emitAsync(event.eventName, event.event as any);
           }
           isPlayingFx.value = false;
-          state.value = {
-            ...snapshot.state,
-            entities: buildentities(
-              snapshot.state.entities,
-              // perf optimisation
-              { ...toRaw(state.value!.entities) },
-              dispatch
-            )
-          };
+          const now = performance.now();
+
+          if (!state.value) throw new Error('State not initialized');
+          state.value.entities = buildentities(
+            snapshot.state.entities,
+            { ...toRaw(state.value!.entities) },
+            dispatch
+          );
+          console.log(
+            `State entities updated in ${Math.round(performance.now() - now)}ms`
+          );
+          state.value.board = snapshot.state.board;
+          state.value.players = snapshot.state.players;
+          state.value.turnPlayer = snapshot.state.turnPlayer;
+          state.value.phase = snapshot.state.phase;
+          state.value.interactables = snapshot.state.interactables;
+          state.value.units = snapshot.state.units;
+          state.value.isOverdriveMode = snapshot.state.isOverdriveMode;
+          state.value.interactionState = snapshot.state.interactionState;
+          state.value.turnCount = snapshot.state.turnCount;
+          state.value.turnPlayer = snapshot.state.turnPlayer;
 
           if (gameType.value === GAME_TYPES.LOCAL) {
-            playerId.value = state.value.turnPlayer;
+            playerId.value = state.value!.turnPlayer;
           }
         } catch (err) {
           console.error(err);

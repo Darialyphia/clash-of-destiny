@@ -3,6 +3,7 @@ import type { InteractableViewModel } from '@/interactable/interactable.model';
 import { UnitViewModel } from '@/unit/unit.model';
 import type { SerializedCell } from '@game/engine/src/board/cell';
 import type { InputDispatcher } from '@game/engine/src/input/input-system';
+import { objectEntries } from '@game/shared';
 
 export class CellViewModel {
   constructor(

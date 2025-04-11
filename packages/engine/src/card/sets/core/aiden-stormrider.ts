@@ -19,7 +19,7 @@ export const aidenLv2: UnitBlueprint = {
   kind: CARD_KINDS.UNIT,
   unitKind: UNIT_KINDS.HERO,
   affinity: AFFINITIES.NORMAL,
-  name: 'Aiden,Stormrider',
+  name: 'Aiden, Stormrider',
   getDescription: () => {
     return `@Aiden Lineage@\n@On Attack@: Put a @Storm Flash@ in your hand.`;
   },

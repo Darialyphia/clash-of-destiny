@@ -27,7 +27,7 @@ export const fireball: SpellBlueprint = {
   collectable: true,
   manaCost: 3,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
-  job: CARD_JOBS.AVENGER,
+  job: CARD_JOBS.SPELLCASTER,
   abilities: [],
   getFollowup: () => {
     return new AnywhereFollowup({ targetingType: TARGETING_TYPE.UNIT });

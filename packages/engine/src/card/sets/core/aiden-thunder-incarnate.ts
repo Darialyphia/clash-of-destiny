@@ -24,7 +24,7 @@ export const aidenLv3: UnitBlueprint = {
   affinity: AFFINITIES.GENESIS,
   name: 'Aiden, Thunder Incarnate',
   getDescription: () => {
-    return `@Aiden Lineage@\n\nYour allies can move one more space.@On Enter@: Equip a @Wrath of the Skies@`;
+    return `@Aiden Lineage@\nYour allies can move one more space.\n @On Enter@: Equip a @Wrath of the Skies@`;
   },
   staticDescription: `@Aiden Lineage@\n@Your allies can move one more space.\nOn Enter@: Equip a @Wrath of the Skies@`,
   setId: CARD_SETS.CORE,
@@ -36,9 +36,9 @@ export const aidenLv3: UnitBlueprint = {
   destinyCost: 3,
   deckSource: CARD_DECK_SOURCES.DESTINY_DECK,
   abilities: [],
-  atk: 2,
+  atk: 3,
   maxHp: 26,
-  spellpower: 2,
+  spellpower: 1,
   level: 3,
   job: CARD_JOBS.AVENGER,
   lineage: 'Aiden',

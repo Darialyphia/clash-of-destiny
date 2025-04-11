@@ -11,7 +11,7 @@ import type { SerializedSecretCard } from '@game/engine/src/card/entities/secret
 import type { SerializedShrineCard } from '@game/engine/src/card/entities/shrine-card.entity';
 import type { SerializedSpellCard } from '@game/engine/src/card/entities/spell-card.entity';
 import type { InputDispatcher } from '@game/engine/src/input/input-system';
-import type { SerializedInteractable } from '@game/engine/src/interactable/interactable.entity';
+import { objectEntries } from '@game/shared';
 import { match } from 'ts-pattern';
 
 type CardData =

@@ -50,7 +50,9 @@ const userPlayer = useUserPlayer();
             :close-delay="0"
           >
             <HoverCardTrigger>
-              <BattleCard :card="card" class="card-miniature" @click.stop />
+              <div class="card-miniature">
+                <BattleCard :card="card" @click.stop />
+              </div>
             </HoverCardTrigger>
 
             <HoverCardPortal to="#hover-card">
@@ -112,31 +114,25 @@ h2 {
   gap: var(--size-5);
   flex-wrap: wrap;
   overflow: auto;
+  align-self: start;
   .hidden {
     opacity: 0;
   }
+}
+
+.card-miniature {
+  width: var(--card-width);
+  height: var(--card-height);
+  overflow: hidden;
   > * {
-    position: relative;
-    width: var(--card-width);
-    height: var(--card-height);
-    .card-miniature {
-      transform: scale(0.5);
-      transform-origin: top left;
-      transition: transform 0.2s var(--ease-2);
-    }
-
-    &:has(input:checked) {
-      filter: drop-shadow(0 0 0.5rem yellow);
-    }
-
-    &:has(input:disabled) {
-      filter: grayscale(1);
-    }
+    transform: scale(0.5);
+    transform-origin: top left;
+    transition: transform 0.2s var(--ease-2);
   }
 }
 
 .v-enter-active .hover-card {
-  transition: scale 0.3s var(--ease-2);
+  transition: scale 0.1s var(--ease-2);
 }
 .v-enter-from .hover-card {
   scale: 0.5;

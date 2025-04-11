@@ -5,7 +5,7 @@ import type { PlayerViewModel } from '@/player/player.model';
 import { pointToCellId } from '@game/engine/src/board/board-utils';
 import type { InputDispatcher } from '@game/engine/src/input/input-system';
 import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
-import { type Nullable, type Point } from '@game/shared';
+import { objectEntries, type Nullable, type Point } from '@game/shared';
 import type { ModifierViewModel } from './modifier.model';
 
 export class UnitViewModel {

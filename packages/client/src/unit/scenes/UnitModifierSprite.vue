@@ -12,7 +12,7 @@ const { modifier, index } = defineProps<{
 
 const isHovered = ref(false);
 
-const container = ref<Container2d>();
+const container = shallowRef<Container2d>();
 const cardPosition = ref({ x: 0, y: 0 });
 onTick(() => {
   if (isHovered.value) {
@@ -36,8 +36,8 @@ const ui = useBattleUiStore();
     v-if="modifier.icon"
     ref="container"
     :scale="0.5"
-    :y="-16"
-    :x="-20 + index * 10"
+    :y="-14 + index * 10"
+    :x="20"
     event-mode="static"
     @pointerenter="isHovered = true"
     @pointerleave="isHovered = false"

@@ -3,6 +3,7 @@ import type { CardViewModel } from '@/card/card.model';
 import type { ArtifactViewModel } from '@/unit/artifact.model';
 import type { InputDispatcher } from '@game/engine/src/input/input-system';
 import type { SerializedPlayer } from '@game/engine/src/player/player.entity';
+import { objectEntries } from '@game/shared';
 
 export class PlayerViewModel {
   constructor(

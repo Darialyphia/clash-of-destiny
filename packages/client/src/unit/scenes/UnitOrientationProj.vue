@@ -15,7 +15,7 @@ const scaleX = computed(() => {
   return value;
 });
 
-const container = ref<Container2d>();
+const container = shallowRef<Container2d>();
 const shaker = useShaker(container);
 
 useBattleEvent(GAME_EVENTS.UNIT_BEFORE_RECEIVE_DAMAGE, async e => {

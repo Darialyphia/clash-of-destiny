@@ -31,8 +31,8 @@ bigWhiteTexture.orig.height = 30;
 
 const app = useApplication();
 
-const container = ref<Container2d>();
-const squareFar = ref<Sprite>();
+const container = shallowRef<Container2d>();
+const squareFar = shallowRef<Sprite>();
 onTick(() => {
   const pos = container.value!.toLocal(
     squareFar.value!.position,
@@ -46,8 +46,6 @@ onTick(() => {
   pos.x = -pos.x;
   container.value!.proj.setAxisY(pos, -1);
 });
-
-const players = usePlayers();
 
 const screenHeight = ref(app.value.screen.height);
 const screenWidth = ref(app.value.screen.width);

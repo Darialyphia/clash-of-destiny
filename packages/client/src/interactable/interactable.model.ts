@@ -1,6 +1,7 @@
 import type { GameStateEntities } from '@/battle/stores/battle.store';
 import type { InputDispatcher } from '@game/engine/src/input/input-system';
 import type { SerializedInteractable } from '@game/engine/src/interactable/interactable.entity';
+import { objectEntries } from '@game/shared';
 
 export class InteractableViewModel {
   constructor(

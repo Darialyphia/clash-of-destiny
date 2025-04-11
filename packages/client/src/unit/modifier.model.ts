@@ -4,6 +4,7 @@ import type { SerializedModifier } from '@game/engine/src/modifier/modifier.enti
 import type { UnitViewModel } from './unit.model';
 import type { CardViewModel } from '@/card/card.model';
 import type { ArtifactViewModel } from './artifact.model';
+import { objectEntries } from '@game/shared';
 
 export class ModifierViewModel {
   constructor(

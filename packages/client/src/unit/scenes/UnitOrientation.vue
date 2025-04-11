@@ -15,7 +15,7 @@ const scaleX = computed(() => {
   return value;
 });
 
-const container = ref<Container>();
+const container = shallowRef<Container>();
 const shaker = useShaker(container);
 
 useBattleEvent(GAME_EVENTS.UNIT_AFTER_RECEIVE_DAMAGE, async e => {
