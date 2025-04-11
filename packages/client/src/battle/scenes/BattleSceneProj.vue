@@ -23,6 +23,7 @@ const session = new GameSession({
       mainDeck: {
         cards: [
           'zoran-the-punisher',
+          'enji-one-man-army',
           ...Array.from({ length: 4 }, () => 'flame-juggler'),
           ...Array.from({ length: 4 }, () => 'shrouded-sorcerer'),
           ...Array.from({ length: 4 }, () => 'garrison-marksman'),
@@ -55,6 +56,7 @@ const session = new GameSession({
       mainDeck: {
         cards: [
           'zoran-the-punisher',
+          'enji-one-man-army',
           ...Array.from({ length: 4 }, () => 'flame-juggler'),
           ...Array.from({ length: 4 }, () => 'shrouded-sorcerer'),
           ...Array.from({ length: 4 }, () => 'garrison-marksman'),

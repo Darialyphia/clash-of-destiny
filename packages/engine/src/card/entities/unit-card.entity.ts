@@ -207,7 +207,6 @@ export abstract class UnitCard<
 
   protected serializeBase(): SerializedUnitCard {
     const targets = this.followup.getTargets(this.game, this as any);
-
     return {
       id: this.id,
       entityType: 'card' as const,

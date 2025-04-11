@@ -22,31 +22,31 @@ export const shroudedSorcerer: UnitBlueprint = {
   affinity: AFFINITIES.NORMAL,
   name: 'Shrouded Sorcerer',
   getDescription: () => {
-    return `@Defiant(2)@.`;
+    return `@Defiant(1)@.`;
   },
-  staticDescription: `@Defiant(2)@.`,
+  staticDescription: `@Defiant(1)@.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'unit-shrouded-sorcerer',
   spriteId: 'shrouded-sorcerer',
   spriteParts: {},
   rarity: RARITIES.RARE,
   collectable: true,
-  manaCost: 4,
+  manaCost: 3,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   atk: 2,
-  maxHp: 5,
+  maxHp: 3,
   job: CARD_JOBS.SPELLCASTER,
   abilities: [
     {
       id: 'shrouded-sorcerer',
       isCardAbility: false,
       staticDescription:
-        '@[exhaust]@ @[mana] 1@ : Deal damage to target unit equal to your Destiny. @Class Bonus@: If that destroys the unit, activate this.',
+        '@[exhaust]@ @[mana] 2@ : Deal damage to target unit equal to your Destiny. @Class Bonus@: If that destroys the unit, activate this.',
       getDescription() {
-        return '@[exhaust]@ @[mana] 1@ : Deal damage to target unit equal to your Destiny. @Class Bonus@: If that destroys the unit, activate this.';
+        return '@[exhaust]@ @[mana] 2@ : Deal damage to target unit equal to your Destiny. @Class Bonus@: If that destroys the unit, activate this.';
       },
       label: 'Deal damage',
-      manaCost: 1,
+      manaCost: 2,
       shouldExhaust: true,
       canUse() {
         return true;
@@ -78,6 +78,6 @@ export const shroudedSorcerer: UnitBlueprint = {
   },
   onInit() {},
   onPlay(game, card) {
-    card.unit.addModifier(new DefiantModifier(game, card, 2));
+    card.unit.addModifier(new DefiantModifier(game, card, 1));
   }
 };

@@ -29,6 +29,7 @@ import { flameJuggler } from './flame-juggler';
 import { pilferingBlade } from './pilfering-blade';
 import { aidenLv3 } from './aiden-thunder-incarnate';
 import { wrathOfTheSkies } from './wrath-of-the-skies';
+import { enjiOneManArmy } from './enji-one-man-army';
 
 export const coreSet: CardSet = {
   id: CARD_SETS.CORE,
@@ -40,6 +41,7 @@ export const coreSet: CardSet = {
     bubblySlime,
     ceasefire,
     earthShrineOfKnowledge,
+    enjiOneManArmy,
     equalityPendant,
     esteemedErudite,
     fireball,

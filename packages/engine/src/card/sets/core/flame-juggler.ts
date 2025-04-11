@@ -31,10 +31,10 @@ export const flameJuggler: UnitBlueprint = {
   spriteParts: {},
   rarity: RARITIES.RARE,
   collectable: true,
-  manaCost: 4,
+  manaCost: 3,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
-  atk: 3,
+  atk: 2,
   maxHp: 3,
   job: CARD_JOBS.WANDERER,
   getFollowup: () => {

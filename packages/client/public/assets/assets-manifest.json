@@ -891,6 +891,19 @@
         },
         {
           "alias": [
+            "icon-unit-enji-one-man-army"
+          ],
+          "src": [
+            "/assets/icons/unit-enji-one-man-army.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-unit-esteemed-erudite"
           ],
           "src": [
@@ -2893,6 +2906,33 @@
           ],
           "src": [
             "/assets/units/earth-shrine-of-knowledge.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "enji-one-man-army"
+          ],
+          "src": [
+            "/assets/units/enji-one-man-army.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "enji-one-man-army.png"
+          ],
+          "src": [
+            "/assets/units/enji-one-man-army.png"
           ],
           "data": {
             "tags": {

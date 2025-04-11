@@ -104,9 +104,9 @@ Note: Removed from play indicates that the card is removed from the game. It is 
 
 > This minion can be summoned on spaces adjacent to enemy minions.
 
-### Ambush
+### Flank
 
-> This minion can be summoned on spaces adjacent to enemy minions.
+> This minion can be summoned on spaces adjacent to ally minions.
 
 ### Magic Ward
 

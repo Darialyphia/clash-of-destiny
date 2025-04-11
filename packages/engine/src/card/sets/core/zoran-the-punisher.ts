@@ -73,12 +73,12 @@ export const zoranThePunisher: UnitBlueprint = {
         targetUnit.takeDamage(
           card,
           new AbilityDamage({
-            baseAmount: 2,
+            baseAmount: 3,
             source: card
           })
         );
       })
     );
   },
-  onPlay(game, card) {}
+  onPlay() {}
 };

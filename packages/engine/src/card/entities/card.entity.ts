@@ -103,7 +103,7 @@ export abstract class Card<
   }
 
   get destinyCost() {
-    return this.interceptors.manaCost.getValue(
+    return this.interceptors.destinyCost.getValue(
       this.blueprint.deckSource === CARD_DECK_SOURCES.DESTINY_DECK
         ? this.blueprint.destinyCost
         : null,
