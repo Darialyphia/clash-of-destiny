@@ -81,44 +81,44 @@ type SerializedGameEventMap = {
 
 const buildentities = (
   entities: EntityDictionary,
+  existing: GameStateEntities,
   dispatcher: InputDispatcher
 ): GameState['entities'] => {
-  const result = {} as GameStateEntities;
-
+  const now = performance.now();
   for (const [id, entity] of Object.entries(entities)) {
-    result[id] = match(entity)
+    existing[id] = match(entity)
       .with(
         { entityType: 'unit' },
-        entity => new UnitViewModel(entity, result, dispatcher)
+        entity => new UnitViewModel(entity, existing, dispatcher)
       )
       .with(
         { entityType: 'cell' },
-        entity => new CellViewModel(entity, result, dispatcher)
+        entity => new CellViewModel(entity, existing, dispatcher)
       )
       .with(
         { entityType: 'player' },
-        entity => new PlayerViewModel(entity, result, dispatcher)
+        entity => new PlayerViewModel(entity, existing, dispatcher)
       )
       .with(
         { entityType: 'card' },
-        entity => new CardViewModel(entity, result, dispatcher)
+        entity => new CardViewModel(entity, existing, dispatcher)
       )
       .with(
         { entityType: 'modifier' },
-        entity => new ModifierViewModel(entity, result, dispatcher)
+        entity => new ModifierViewModel(entity, existing, dispatcher)
       )
       .with(
         { entityType: 'artifact' },
-        entity => new ArtifactViewModel(entity, result, dispatcher)
+        entity => new ArtifactViewModel(entity, existing, dispatcher)
       )
       .with(
         { entityType: 'interactable' },
-        entity => new InteractableViewModel(entity, result, dispatcher)
+        entity => new InteractableViewModel(entity, existing, dispatcher)
       )
       .exhaustive();
   }
-
-  return result;
+  console.log(`buildentities took ${performance.now() - now}ms`);
+  return existing;
 };
 
 export const useBattleStore = defineStore('battle', () => {
@@ -159,7 +159,7 @@ export const useBattleStore = defineStore('battle', () => {
       gameType.value = type;
       state.value = {
         ...initialState,
-        entities: buildentities(initialState.entities, dispatch)
+        entities: buildentities(initialState.entities, {}, dispatch)
       };
 
       subscriber(async snapshot => {
@@ -176,9 +176,11 @@ export const useBattleStore = defineStore('battle', () => {
           isPlayingFx.value = false;
           state.value = {
             ...snapshot.state,
-            entities: Object.assign(
-              state.value!.entities,
-              buildentities(snapshot.state.entities, dispatch)
+            entities: buildentities(
+              snapshot.state.entities,
+              // perf optimisation
+              { ...toRaw(state.value!.entities) },
+              dispatch
             )
           };
 

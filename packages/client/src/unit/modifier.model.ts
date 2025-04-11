@@ -11,6 +11,9 @@ export class ModifierViewModel {
     private entityDictionary: GameStateEntities,
     private dispatcher: InputDispatcher
   ) {}
+  update(data: SerializedModifier) {
+    this.data = data;
+  }
 
   equals(unit: ModifierViewModel | SerializedModifier) {
     return this.id === unit.id;

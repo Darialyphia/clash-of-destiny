@@ -7,8 +7,6 @@ import type { InputDispatcher } from '@game/engine/src/input/input-system';
 import type { SerializedUnit } from '@game/engine/src/unit/entities/unit.entity';
 import { type Nullable, type Point } from '@game/shared';
 import type { ModifierViewModel } from './modifier.model';
-import type { ArtifactViewModel } from './artifact.model';
-import { UNIT_KINDS } from '@game/engine/src/card/card.enums';
 
 export class UnitViewModel {
   isAnimating = false;
@@ -20,6 +18,9 @@ export class UnitViewModel {
     private entityDictionary: GameStateEntities,
     private dispatcher: InputDispatcher
   ) {}
+  update(data: SerializedUnit) {
+    this.data = data;
+  }
 
   equals(unit: UnitViewModel | SerializedUnit) {
     return this.id === unit.id;

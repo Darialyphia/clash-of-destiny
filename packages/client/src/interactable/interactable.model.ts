@@ -9,6 +9,10 @@ export class InteractableViewModel {
     private dispatcher: InputDispatcher
   ) {}
 
+  update(data: SerializedInteractable) {
+    this.data = data;
+  }
+
   equals(unit: InteractableViewModel | SerializedInteractable) {
     return this.id === unit.id;
   }

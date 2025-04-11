@@ -28,7 +28,7 @@ export const aidenLv2: UnitBlueprint = {
   cardIconId: 'unit-aiden-lv2',
   spriteId: 'aiden-lv2',
   spriteParts: {},
-  rarity: RARITIES.RARE,
+  rarity: RARITIES.EPIC,
   collectable: true,
   destinyCost: 2,
   deckSource: CARD_DECK_SOURCES.DESTINY_DECK,

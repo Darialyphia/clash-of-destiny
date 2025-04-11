@@ -44,10 +44,11 @@ export const pilferingBlade: ArtifactBlueprint = {
           new GameEventModifierMixin(game, {
             eventName: GAME_EVENTS.UNIT_AFTER_ATTACK,
             handler(event) {
-              if (!event.data.unit.equals(card.player)) return;
+              if (!event.data.unit.equals(card.player.hero)) return;
               const enemy = game.unitSystem.getUnitAt(event.data.event.target);
               if (!enemy) return;
-              if (enemy.player.equals(card.player.opponent.hero)) {
+
+              if (enemy.equals(card.player.opponent.hero)) {
                 card.player.mana.add(1);
               }
             }

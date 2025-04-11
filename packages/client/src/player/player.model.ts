@@ -10,6 +10,9 @@ export class PlayerViewModel {
     private entityDictionary: GameStateEntities,
     private dispatcher: InputDispatcher
   ) {}
+  update(data: SerializedPlayer) {
+    this.data = data;
+  }
 
   equals(unit: PlayerViewModel | SerializedPlayer) {
     return this.id === unit.id;

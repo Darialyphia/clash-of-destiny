@@ -33,7 +33,6 @@ const computeMargin = () => {
   const totalWidth = [...root.value.children].reduce((total, child) => {
     return total + child.clientWidth;
   }, 0);
-  console.log(root.value);
   const excess = totalWidth - allowedWidth;
 
   return Math.min(-excess / (player.handSize - 1), 0);

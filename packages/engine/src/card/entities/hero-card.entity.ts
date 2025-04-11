@@ -2,7 +2,6 @@ import type { Point } from '@game/shared';
 import type { Game } from '../../game/game';
 import type { SelectedTarget } from '../../game/systems/interaction.system';
 import type { Player } from '../../player/player.entity';
-import { UNIT_EVENTS } from '../../unit/unit-enums';
 import { Interceptable } from '../../utils/interceptable';
 import type { HeroBlueprint, SpellBlueprint, UnitBlueprint } from '../card-blueprint';
 import { CARD_EVENTS } from '../card.enums';
@@ -84,10 +83,7 @@ export class HeroCard extends UnitCard<
 
   override canPlay(): boolean {
     return this.interceptors.canPlay.getValue(
-      this.fulfillsAffinity &&
-        this.fulfillsResourceCost &&
-        this.fulfillsLineage &&
-        this.fulfillsLevel,
+      this.fulfillsResourceCost && this.fulfillsLineage && this.fulfillsLevel,
       this
     );
   }

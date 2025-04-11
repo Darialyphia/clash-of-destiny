@@ -11,6 +11,9 @@ export class CellViewModel {
 
     private dispatcher: InputDispatcher
   ) {}
+  update(data: SerializedCell) {
+    this.data = data;
+  }
 
   equals(cell: CellViewModel | SerializedCell) {
     return this.id === cell.id;

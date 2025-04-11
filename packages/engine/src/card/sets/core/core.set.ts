@@ -27,6 +27,8 @@ import { ceasefire } from './ceasefire';
 import { fireball } from './fireball';
 import { flameJuggler } from './flame-juggler';
 import { pilferingBlade } from './pilfering-blade';
+import { aidenLv3 } from './aiden-thunder-incarnate';
+import { wrathOfTheSkies } from './wrath-of-the-skies';
 
 export const coreSet: CardSet = {
   id: CARD_SETS.CORE,
@@ -34,6 +36,7 @@ export const coreSet: CardSet = {
   cards: [
     aidenLv1,
     aidenLv2,
+    aidenLv3,
     bubblySlime,
     ceasefire,
     earthShrineOfKnowledge,
@@ -58,6 +61,7 @@ export const coreSet: CardSet = {
     testDestinyArtifact,
     waterShrineOfKnowledge,
     windShrineOfKnowledge,
+    wrathOfTheSkies,
     zoranThePunisher
   ]
 };

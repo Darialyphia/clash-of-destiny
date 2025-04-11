@@ -23,7 +23,7 @@ const session = new GameSession({
       mainDeck: {
         cards: [
           'zoran-the-punisher',
-          ...Array.from({ length: 4 }, () => 'sword-instructor'),
+          ...Array.from({ length: 4 }, () => 'flame-juggler'),
           ...Array.from({ length: 4 }, () => 'shrouded-sorcerer'),
           ...Array.from({ length: 4 }, () => 'garrison-marksman'),
           ...Array.from({ length: 4 }, () => 'shield-maiden'),
@@ -39,15 +39,13 @@ const session = new GameSession({
           'fire-shrine-of-knowledge',
           'aiden-child-of-the-storm',
           'aiden-stormrider',
+          'aiden-thunder-incarnate',
           'equality-pendant',
           'insight',
           'slimes-to-the-rescue',
           'ceasefire',
-          'slimes-to-the-rescue',
-          'test-destiny-artifact',
-          'test-destiny-artifact',
-          'insight',
-          'insight'
+          'pilfering-blade',
+          'test-destiny-artifact'
         ]
       }
     },
@@ -57,7 +55,7 @@ const session = new GameSession({
       mainDeck: {
         cards: [
           'zoran-the-punisher',
-          ...Array.from({ length: 4 }, () => 'sword-instructor'),
+          ...Array.from({ length: 4 }, () => 'flame-juggler'),
           ...Array.from({ length: 4 }, () => 'shrouded-sorcerer'),
           ...Array.from({ length: 4 }, () => 'garrison-marksman'),
           ...Array.from({ length: 4 }, () => 'shield-maiden'),
@@ -73,15 +71,13 @@ const session = new GameSession({
           'fire-shrine-of-knowledge',
           'aiden-child-of-the-storm',
           'aiden-stormrider',
+          'aiden-thunder-incarnate',
           'equality-pendant',
           'insight',
           'slimes-to-the-rescue',
           'ceasefire',
-          'slimes-to-the-rescue',
-          'test-destiny-artifact',
-          'test-destiny-artifact',
-          'insight',
-          'insight'
+          'pilfering-blade',
+          'test-destiny-artifact'
         ]
       }
     }

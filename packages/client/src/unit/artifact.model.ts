@@ -10,6 +10,10 @@ export class ArtifactViewModel {
     private dispatcher: InputDispatcher
   ) {}
 
+  update(data: SerializedArtifact) {
+    this.data = data;
+  }
+
   equals(unit: ArtifactViewModel | SerializedArtifact) {
     return this.id === unit.id;
   }

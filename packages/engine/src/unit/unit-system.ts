@@ -1,4 +1,4 @@
-import { type Point } from '@game/shared';
+import { isDefined, type Point } from '@game/shared';
 import { Unit } from './entities/unit.entity';
 import { System } from '../system';
 
@@ -50,7 +50,22 @@ export class UnitSystem extends System<UnitSystemOptions> {
       this.getUnitAt({ x: x - 1, y: y + 1 }), // bottom left
       this.getUnitAt({ x: x    , y: y + 1 }), // bottom
       this.getUnitAt({ x: x + 1, y: y + 1 }), // bottom right,
-    ].filter
+    ].filter(isDefined)
+  }
+
+  getJoinedUnits(start: Unit, predicate: (unit: Unit) => boolean) {
+    let queue = [start, ...this.getNearbyUnits(start.position).filter(predicate)];
+    let visited = new Set<string>(queue.map(unit => unit.id));
+    let index = 0;
+    while (index < queue.length) {
+      const unit = queue[index++];
+      const nearby = this.getNearbyUnits(unit.position).filter(
+        unit => !visited.has(unit.id) && predicate(unit)
+      );
+      visited = new Set([...visited, ...nearby.map(unit => unit.id)]);
+      queue = [...queue, ...nearby];
+    }
+    return queue;
   }
 
   addUnit(card: AnyUnitCard, position: Point) {
