@@ -101,6 +101,13 @@ export const KEYWORDS = {
     name: 'Fleeting',
     description: 'This card is removed from your hand at the end of your turn.',
     aliases: []
+  },
+  OVERHEAT: {
+    id: 'overheat',
+    name: 'Overheat(X)',
+    description:
+      'The next time this unit takes non-combat damage, remove all Overheat stacks and deal that much damage to it and all adjacent units.',
+    aliases: [/overheat\([0-9]+\)/]
   }
 } as const satisfies Record<string, Keyword>;
 

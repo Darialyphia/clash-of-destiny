@@ -10,7 +10,7 @@ import {
 } from '@game/engine/src/card/card.enums';
 import { clamp, isDefined, mapRange } from '@game/shared';
 import CardText from '@/card/components/CardText.vue';
-import { useMouse } from '@vueuse/core';
+import { useElementBounding, useMouse } from '@vueuse/core';
 
 const { card } = defineProps<{
   card: {
@@ -69,19 +69,15 @@ const affinityGemBg = computed(() => {
 const root = useTemplateRef('card');
 const { x, y } = useMouse();
 
-const rect = computed(() => {
-  if (!root.value) return;
-  return root.value.getBoundingClientRect();
-});
+const rect = useElementBounding(root);
 const pointerStyle = computed(() => {
-  if (!rect.value) return;
   const pointer = {
-    x: clamp(x.value - rect.value.left, 0, rect.value.width),
-    y: clamp(y.value - rect.value.top, 0, rect.value.height)
+    x: clamp(x.value - rect.left.value, 0, rect.width.value),
+    y: clamp(y.value - rect.top.value, 0, rect.height.value)
   };
   const percent = {
-    x: (pointer.x / rect.value.width) * 100,
-    y: (pointer.y / rect.value.height) * 100
+    x: (pointer.x / rect.width.value) * 100,
+    y: (pointer.y / rect.height.value) * 100
   };
   return {
     glareX: pointer.x,

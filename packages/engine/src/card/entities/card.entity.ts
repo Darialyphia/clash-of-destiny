@@ -113,10 +113,10 @@ export abstract class Card<
 
   get fulfillsResourceCost() {
     if (this.blueprint.deckSource === CARD_DECK_SOURCES.MAIN_DECK) {
-      return this.player.mana.canSpend(this.blueprint.manaCost);
+      return this.player.mana.canSpend(this.manaCost ?? 0);
     }
     if (this.blueprint.deckSource === CARD_DECK_SOURCES.DESTINY_DECK) {
-      return this.player.destiny.canSpend(this.blueprint.destinyCost);
+      return this.player.destiny.canSpend(this.destinyCost ?? 0);
     }
     return false;
   }

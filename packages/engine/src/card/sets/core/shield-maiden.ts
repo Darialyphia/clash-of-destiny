@@ -33,7 +33,7 @@ export const shieldMaiden: UnitBlueprint = {
   manaCost: 4,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
-  atk: 3,
+  atk: 2,
   maxHp: 5,
   job: CARD_JOBS.GUARDIAN,
   getFollowup: () => {

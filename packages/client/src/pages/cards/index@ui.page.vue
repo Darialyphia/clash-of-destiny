@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
 import { useLocalStorage } from '@vueuse/core';
-import type { Nullable } from '@game/shared';
-import type { CardBlueprint } from '@game/engine/src/card/card-blueprint';
 import { CARD_SET_DICTIONARY, type CardSet } from '@game/engine/src/card/sets';
 import {
   CARD_DECK_SOURCES,
@@ -11,13 +9,18 @@ import {
 } from '@game/engine/src/card/card.enums';
 import BlueprintCard from '@/card/components/BlueprintCard.vue';
 import { domToPng } from 'modern-screenshot';
+import {
+  StandardDeckValidator,
+  type ValidatableDeck
+} from '@game/engine/src/card/validators/deck.validator';
+import { DeckBuildervModel } from '@/card/deck-builder.model';
+import { keyBy } from 'lodash-es';
+import FancyButton from '@/ui/components/FancyButton.vue';
+import { Icon } from '@iconify/vue';
 
 definePage({
   name: 'Collection'
 });
-
-const DECK_SIZE = 30;
-const MAX_CARD_COPIES = 3;
 
 const authorizedSets: CardSet[] = [CARD_SET_DICTIONARY.CORE];
 
@@ -72,42 +75,30 @@ const cards = computed(() => {
     });
 });
 
-type Deck = {
-  name: string;
-  cards: string[];
-};
-const decks = useLocalStorage<Deck[]>('decks', []);
+const decks = useLocalStorage<ValidatableDeck[]>('clash-of-destiny-decks', []);
+const collection = computed(() =>
+  authorizedSets
+    .map(set => set.cards.map(card => ({ blueprint: card, copiesOwned: 4 })))
+    .flat()
+);
 
+const deckBuilder = ref(
+  new DeckBuildervModel(
+    collection.value,
+    new StandardDeckValidator(keyBy(cards.value, 'id'))
+  )
+);
+
+const isEditing = ref(false);
 const createDeck = () => {
-  decks.value.push({ name: `New Deck(${decks.value.length + 1})`, cards: [] });
-  selectedDeck.value = decks.value.at(-1)!;
-};
-const selectedDeck = ref<Nullable<Deck>>(null);
-
-const hasMaxCopies = (card: CardBlueprint) => {
-  if (!selectedDeck.value) return false;
-  return (
-    selectedDeck.value.cards.filter(id => id === card.id).length >=
-    MAX_CARD_COPIES
-  );
+  deckBuilder.value.reset();
+  isEditing.value = true;
 };
 
-// const selectedDeckContent = computed(() => {
-//   if (!selectedDeck.value) return [];
-//   const deckCards = selectedDeck.value.cards.map(
-//     id => cards.value.find(card => card.id === id)!
-//   );
-//   console.log(selectedDeck.value.cards);
-//   const grouped = Object.groupBy(deckCards, card => card.id);
-//   return Object.entries(grouped)
-//     .map(([id, copies]) => ({
-//       id,
-//       name: copies![0].name,
-//       copies: copies!.length,
-//       blueprint: copies![0]
-//     }))
-//     .sort((a, b) => a.blueprint.cost.gold - b.blueprint.cost.gold);
-// });
+const editDeck = (deck: ValidatableDeck) => {
+  deckBuilder.value.loadDeck(deck);
+  isEditing.value = true;
+};
 
 const screenshot = async (id: string, e: MouseEvent) => {
   const card = (e.target as HTMLElement)
@@ -120,6 +111,21 @@ const screenshot = async (id: string, e: MouseEvent) => {
   a.href = png;
   a.download = `${id}.png`;
   a.click();
+};
+
+const saveDeck = () => {
+  const existingDeck = decks.value.find(
+    deck => deck.id === deckBuilder.value.deck.id
+  );
+  if (existingDeck) {
+    existingDeck.name = deckBuilder.value.deck.name;
+    existingDeck.MAIN_DECK = deckBuilder.value.deck.MAIN_DECK;
+    existingDeck.DESTINY_DECK = deckBuilder.value.deck.DESTINY_DECK;
+  } else {
+    decks.value.push(deckBuilder.value.deck);
+  }
+  isEditing.value = false;
+  deckBuilder.value.reset();
 };
 </script>
 
@@ -139,23 +145,24 @@ const screenshot = async (id: string, e: MouseEvent) => {
       <li v-for="card in cards" :key="card.id">
         <BlueprintCard
           :blueprint="card"
-          :class="hasMaxCopies(card) && 'disabled'"
+          :class="{ disabled: !deckBuilder.canAdd(card.id) }"
           @click="
             () => {
-              if (!selectedDeck) return;
-              const canAdd = !hasMaxCopies(card);
-              if (!canAdd) return;
-              selectedDeck.cards.push(card.id);
+              if (!isEditing) return;
+              if (deckBuilder.canAdd(card.id)) {
+                deckBuilder.addCard(card.id);
+              }
             }
           "
         />
-        <button @click="screenshot(card.id, $event)">Screenshot</button>
+        <button v-if="!isEditing" @click="screenshot(card.id, $event)">
+          Screenshot
+        </button>
       </li>
     </ul>
-    <!-- <aside>
-      <template v-if="!selectedDeck">
+    <aside>
+      <template v-if="!isEditing">
         <p v-if="!decks.length">You haven't created any deck yet.</p>
-
         <ul class="mb-5">
           <li
             v-for="(deck, index) in decks"
@@ -163,46 +170,77 @@ const screenshot = async (id: string, e: MouseEvent) => {
             class="flex gap-2 items-center"
           >
             {{ deck.name }}
-            <UiButton class="primary-button" @click="selectedDeck = deck">
-              Edit
-            </UiButton>
-            <UiButton
-              class="error-button"
+            <FancyButton
+              class="primary-button"
+              text="Edit"
+              @click="editDeck(deck)"
+            />
+
+            <FancyButton
+              variant="error"
+              text="Delete"
               @click="decks.splice(decks.indexOf(deck), 1)"
-            >
-              Delete
-            </UiButton>
+            />
           </li>
         </ul>
-        <UiButton class="primary-button" @click="createDeck">New deck</UiButton>
+        <FancyButton
+          class="primary-button"
+          text="New Deck"
+          @click="createDeck"
+        />
       </template>
       <div class="deck" v-else>
-        <div class="flex justiy-between">
-          <input v-model="selectedDeck.name" />
-          {{ selectedDeck.cards.length }} / {{ DECK_SIZE }}
+        <div class="flex gap-2">
+          <Icon icon="material-symbols:edit-outline" />
+          <input v-model="deckBuilder.deck.name" type="text" />
         </div>
-        <ul>
-          <li
-            v-for="card in selectedDeckContent"
-            :key="card.id"
-            class="deck-item"
-            @click="
-              () => {
-                const idx = selectedDeck?.cards.findIndex(c => c === card.id)!;
-                selectedDeck?.cards.splice(idx, 1);
-              }
-            "
-          >
-            <CardIcon :card="card.blueprint" />
-            {{ card.name }} X {{ card.copies }}
-          </li>
-        </ul>
-        <UiButton class="primary-button" @click="selectedDeck = null">
-          Back
-        </UiButton>
+        <div class="overflow-y-auto">
+          <div class="text-3 my-5 font-500">
+            Main deck ({{ deckBuilder.mainDeckSize }} /
+            {{ deckBuilder.validator.mainDeckSize }})
+          </div>
+          <ul>
+            <li
+              v-for="(card, index) in deckBuilder.mainDeckCards"
+              :key="index"
+              :style="{
+                '--bg': `url(/assets/icons/${card.blueprint.cardIconId}.png)`
+              }"
+              :class="card.blueprint.kind.toLocaleLowerCase()"
+              class="deck-item"
+              @click="deckBuilder.removeCard(card.blueprintId)"
+            >
+              <div class="mana-cost">{{ card.blueprint.manaCost }}</div>
+              {{ card.blueprint.name }} X {{ card.copies }}
+            </li>
+          </ul>
+
+          <div class="text-3 my-5 font-500">
+            Destiny Deck ({{ deckBuilder.destinyDeckSize }} /
+            {{ deckBuilder.validator.destinyDeckSize }})
+          </div>
+          <ul>
+            <li
+              v-for="(card, index) in deckBuilder.destinyDeckCards"
+              :key="index"
+              :style="{
+                '--bg': `url(/assets/icons/${card.blueprint.cardIconId}.png)`
+              }"
+              :class="card.blueprint.kind.toLocaleLowerCase()"
+              class="deck-item"
+              @click="deckBuilder.removeCard(card.blueprintId)"
+            >
+              <div class="destiny-cost">{{ card.blueprint.destinyCost }}</div>
+              {{ card.blueprint.name }} X {{ card.copies }}
+            </li>
+          </ul>
+        </div>
+        <div class="flex gap-2">
+          <FancyButton text="Back" variat="error" @click="isEditing = false" />
+          <FancyButton text="Save" @click="saveDeck" />
+        </div>
       </div>
-      TODO deck builder
-    </aside> -->
+    </aside>
   </div>
 </template>
 
@@ -212,7 +250,7 @@ const screenshot = async (id: string, e: MouseEvent) => {
   height: 100dvh;
   pointer-events: auto;
   display: grid;
-  /* grid-template-columns: 1fr var(--size-xs); */
+  grid-template-columns: 1fr var(--size-xs);
 
   > nav {
     grid-column: 1 / -1;
@@ -243,37 +281,77 @@ aside {
   display: grid;
   grid-template-rows: auto 1fr auto;
   height: 100%;
-  > ul {
-    overflow-y: auto;
-  }
 }
+
 .deck-item {
   display: flex;
   gap: var(--size-3);
   align-items: center;
   border: solid var(--border-size-1) #d7ad42;
   margin-block: var(--size-2);
+  padding: var(--size-3);
   cursor: url('/assets/ui/cursor-hover.png'), auto;
+  background-image: linear-gradient(
+      hsl(0deg 0% 0% / 0.5),
+      hsl(0deg 0% 0% / 0.5)
+    ),
+    var(--bg);
+  background-repeat: no-repeat;
+  background-position:
+    center center,
+    calc(100% + 40px) -70px;
+  background-size: 200%, calc(2px * 96);
+  text-shadow: 0 0 1rem 1rem black;
+  transition: all 0.3s var(--ease-2);
+  &.spell,
+  &.artifact {
+    background-position:
+      center center,
+      calc(100% + 40px);
+  }
+
   &:hover {
-    filter: brightness(135%);
+    background-image: linear-gradient(
+        hsl(0deg 0% 0% / 0.25),
+        hsl(0deg 0% 0% / 0.25)
+      ),
+      var(--bg);
+    background-size: 200%, calc(2.25 * 96px);
+    background-position:
+      center center,
+      calc(100% + 50px) -85px;
   }
 }
 
 li {
   position: relative;
-  > button {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: var(--gray-6);
-    border-radius: var(--radius-2);
-    border: solid var(--border-size-1) var(--gray-9);
-    display: none;
-  }
+}
 
-  &:hover > button {
-    display: block;
-  }
+.mana-cost {
+  background-color: #5185ff;
+  font-size: var(--size-3);
+  font-weight: var(--weight-500);
+  font-weight: var(--font-weight-7);
+  border-radius: var(--radius-round);
+  width: var(--size-5);
+  height: var(--size-5);
+  display: grid;
+  place-content: center;
+  -webkit-text-stroke: 4px black;
+  paint-order: stroke fill;
+}
+
+.destiny-cost {
+  background-color: #feb500;
+  font-size: var(--size-3);
+  font-weight: var(--weight-500);
+  font-weight: var(--font-weight-7);
+  border-radius: var(--radius-round);
+  width: var(--size-5);
+  height: var(--size-5);
+  display: grid;
+  place-content: center;
+  -webkit-text-stroke: 4px black;
+  paint-order: stroke fill;
 }
 </style>

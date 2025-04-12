@@ -115,3 +115,7 @@ Note: Removed from play indicates that the card is removed from the game. It is 
 ### Hero Ward
 
 > This card cannot be targeted or damaged by Heroes.
+
+### Overheat
+
+> The next time this unit takes non-combat damage, remove all Overheat stacks and deal that much damage to it and all adjacent units.

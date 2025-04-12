@@ -20,11 +20,11 @@ export const map1v1: MapBlueprint = {
   },
   // prettier-ignore
   cells: [
-    grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(),   
-    grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(), 
-    grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(), 
-    grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(), 
-    grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(), 
+    grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(),
+    grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(),
+    grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(),
+    grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(),
+    grass(), grass(), grass(), grass(), grass(), grass(), grass(), grass(),
   ],
   shrinePositions: [new Vec2(0, 2), new Vec2(7, 2)]
 };

@@ -37,7 +37,7 @@ export const enjiOneManArmy: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
   atk: 4,
-  maxHp: 9,
+  maxHp: 8,
   job: CARD_JOBS.FIGHTER,
   getFollowup: () => {
     return new MinionFollowup();

@@ -22,9 +22,9 @@ export const shroudedSorcerer: UnitBlueprint = {
   affinity: AFFINITIES.NORMAL,
   name: 'Shrouded Sorcerer',
   getDescription: () => {
-    return `@Defiant(1)@.`;
+    return ``;
   },
-  staticDescription: `@Defiant(1)@.`,
+  staticDescription: ``,
   setId: CARD_SETS.CORE,
   cardIconId: 'unit-shrouded-sorcerer',
   spriteId: 'shrouded-sorcerer',
@@ -77,7 +77,5 @@ export const shroudedSorcerer: UnitBlueprint = {
     return new PointAOEShape(game, card.player, TARGETING_TYPE.UNIT);
   },
   onInit() {},
-  onPlay(game, card) {
-    card.unit.addModifier(new DefiantModifier(game, card, 1));
-  }
+  onPlay() {}
 };
