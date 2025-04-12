@@ -227,6 +227,7 @@ export const useBattleStore = defineStore('battle', () => {
       });
     },
     gameType,
+    isReady,
     isPlayingFx: readonly(isPlayingFx),
     playerId,
     state,

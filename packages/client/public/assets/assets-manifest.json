@@ -956,6 +956,19 @@
         },
         {
           "alias": [
+            "icon-unit-fire-salamander"
+          ],
+          "src": [
+            "/assets/icons/unit-fire-salamander.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-unit-fire-shrine-of-knowledge"
           ],
           "src": [
@@ -3012,6 +3025,19 @@
           ],
           "src": [
             "/assets/units/esteemed-erudite.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "fire-salamander.png"
+          ],
+          "src": [
+            "/assets/units/fire-salamander.png"
           ],
           "data": {
             "tags": {
