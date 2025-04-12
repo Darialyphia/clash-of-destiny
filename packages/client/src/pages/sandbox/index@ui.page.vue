@@ -54,7 +54,6 @@ const decks = ref<
     Nullable<GameOptions['players'][number]>
   ]
 >([null, null]);
-const isStarted = ref(false);
 
 let session: GameSession;
 
@@ -64,7 +63,20 @@ const start = () => {
     rngSeed: new Date().toISOString(),
     history: [],
     overrides: {},
-    players: [decks.value[0]!, decks.value[1]!]
+    players: [
+      {
+        id: 'p1',
+        name: 'Player 1',
+        mainDeck: decks.value[0]!.mainDeck,
+        destinyDeck: decks.value[0]!.destinyDeck
+      },
+      {
+        id: 'p2',
+        name: 'Player 2',
+        mainDeck: decks.value[1]!.mainDeck,
+        destinyDeck: decks.value[1]!.destinyDeck
+      }
+    ]
   });
   // @ts-expect-error
   window._debugSession = () => {
@@ -87,13 +99,11 @@ const start = () => {
       session.dispatch(input);
     }
   });
-
-  isStarted.value = true;
 };
 </script>
 
 <template>
-  <section v-if="!isStarted" class="pointer-events-auto">
+  <section v-if="!battleStore.isReady" class="pointer-events-auto">
     <div>
       <fieldset>
         <legend>Player 1 deck</legend>

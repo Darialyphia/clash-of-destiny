@@ -654,9 +654,6 @@ export class Unit
   }
 
   removeFromBoard() {
-    for (const modifier of this.modifiers) {
-      this.removeModifier(modifier);
-    }
     this.player.cards.sendToDiscardPile(this._card);
     this.game.unitSystem.removeUnit(this);
   }
@@ -671,6 +668,9 @@ export class Unit
       UNIT_EVENTS.AFTER_DESTROY,
       new UnitAfterDestroyEvent({ source, destroyedAt: position })
     );
+    for (const modifier of this.modifiers) {
+      this.removeModifier(modifier);
+    }
   }
 
   onTurnStart() {

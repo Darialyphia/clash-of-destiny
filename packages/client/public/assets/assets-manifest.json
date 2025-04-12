@@ -3034,6 +3034,20 @@
         },
         {
           "alias": [
+            "fire-salamander"
+          ],
+          "src": [
+            "/assets/units/fire-salamander.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "fire-salamander.png"
           ],
           "src": [

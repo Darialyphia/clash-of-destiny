@@ -24,9 +24,9 @@ export const flameExorcist: UnitBlueprint = {
   affinity: AFFINITIES.FIRE,
   name: 'Flame Exorcist',
   getDescription: () => {
-    return `@On Enter@: Give @Overheat(1)@ to an enemy. If it already has @Overheat@, deal 2 damage to it instead.`;
+    return `@On Enter@: Deal 1 damage to an enemy. If it had @Overheat@, draw a card.`;
   },
-  staticDescription: `@On Enter@: Give @Overheat(1)@ to an enemy. If it already has @Overheat@, deal 2 damage to it instead.`,
+  staticDescription: `@On Enter@: Deal 1 damage to an enemy. If it had @Overheat@, draw a card.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'unit-flame-exorcist',
   spriteId: 'flame-exorcist',
@@ -66,16 +66,15 @@ export const flameExorcist: UnitBlueprint = {
     const [, target] = affectedUnits;
     if (!target) return;
 
+    target.takeDamage(
+      card,
+      new AbilityDamage({
+        source: card,
+        baseAmount: 1
+      })
+    );
     if (target.hasModifier(OverheatModifier)) {
-      target.takeDamage(
-        card,
-        new AbilityDamage({
-          source: card,
-          baseAmount: 2
-        })
-      );
-    } else {
-      target.addModifier(new OverheatModifier(game, card));
+      card.player.cards.draw(1);
     }
   }
 };

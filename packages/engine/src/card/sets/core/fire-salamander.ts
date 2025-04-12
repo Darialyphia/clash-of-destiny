@@ -80,15 +80,15 @@ export const fireSalamander: UnitBlueprint = {
     return new MultiTargetFollowup(game, card, [
       new MinionFollowup(),
       new AnywhereFollowup({
-        targetingType: TARGETING_TYPE.ENEMY_MINION,
+        targetingType: TARGETING_TYPE.MINION,
         skippable: true
       }),
       new AnywhereFollowup({
-        targetingType: TARGETING_TYPE.ENEMY_MINION,
+        targetingType: TARGETING_TYPE.MINION,
         skippable: true
       }),
       new AnywhereFollowup({
-        targetingType: TARGETING_TYPE.ENEMY_MINION,
+        targetingType: TARGETING_TYPE.MINION,
         skippable: true
       })
     ]);

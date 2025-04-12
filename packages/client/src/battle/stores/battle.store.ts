@@ -117,7 +117,6 @@ const buildentities = (
       )
       .exhaustive();
   }
-  console.log(`Entities updated in ${Math.round(performance.now() - now)}ms`);
   return existing;
 };
 
@@ -182,9 +181,7 @@ export const useBattleStore = defineStore('battle', () => {
             { ...toRaw(state.value!.entities) },
             dispatch
           );
-          console.log(
-            `State entities updated in ${Math.round(performance.now() - now)}ms`
-          );
+
           state.value.board = snapshot.state.board;
           state.value.players = snapshot.state.players;
           state.value.turnPlayer = snapshot.state.turnPlayer;
@@ -343,11 +340,20 @@ export const useUserPlayer = () => {
   const players = usePlayers();
   const turnPlayer = useTurnPlayer();
 
-  return computed(() =>
-    store.playerId
-      ? players.value.find(p => p.id === store.playerId)!
-      : players.value.find(p => p.id === turnPlayer.value.id)!
-  );
+  return computed(() => {
+    return match(store.gameType)
+      .with(GAME_TYPES.LOCAL, () => {
+        return turnPlayer.value;
+      })
+      .with(GAME_TYPES.ONLINE, () => {
+        return store.playerId
+          ? players.value.find(p => p.id === store.playerId)!
+          : players.value.find(p => p.id === turnPlayer.value.id)!;
+      })
+      .otherwise(() => {
+        throw new Error('Invalid game type');
+      });
+  });
 };
 
 export const useOpponentPlayer = () => {

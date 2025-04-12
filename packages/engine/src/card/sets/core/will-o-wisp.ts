@@ -52,7 +52,7 @@ export const willOWisp: UnitBlueprint = {
           const nearbyEnemies = game.unitSystem
             .getNearbyUnits(card.unit.position)
             .filter(u => u.isEnemy(card.unit));
-
+          console.log(nearbyEnemies);
           nearbyEnemies.forEach(enemy => {
             enemy.addModifier(new OverheatModifier(game, card));
           });

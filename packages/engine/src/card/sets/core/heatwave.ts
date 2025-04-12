@@ -12,6 +12,7 @@ import {
 import { AnywhereFollowup } from '../../followups/anywhere-followup';
 import { OverheatModifier } from '../../../modifier/modifiers/overheat.modifier';
 import { EverywhereAOEShape } from '../../../aoe/everywhere.aoe-shape';
+import { floatingDestiny } from '../../abilities/floating-destiny';
 
 export const heatWave: SpellBlueprint = {
   id: 'heat wave',
@@ -29,7 +30,7 @@ export const heatWave: SpellBlueprint = {
   manaCost: 2,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   job: CARD_JOBS.SPELLCASTER,
-  abilities: [],
+  abilities: [floatingDestiny],
   getFollowup: () => {
     return new AnywhereFollowup({ targetingType: TARGETING_TYPE.ANYWHERE });
   },

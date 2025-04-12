@@ -119,11 +119,8 @@ export class BattleController implements UiController {
     const isElligible = interactionState.ctx.elligibleTargets.some(
       c => pointToCellId(c.cell) === cell.id
     );
-    const isAlreadySelected = interactionState.ctx.selectedTargets.some(
-      c => pointToCellId(c.cell) === cell.id
-    );
 
-    if (isElligible && !isAlreadySelected) {
+    if (isElligible) {
       this.options.dispatcher({
         type: 'addCardTarget',
         payload: {
