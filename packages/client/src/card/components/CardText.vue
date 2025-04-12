@@ -132,6 +132,9 @@ const tokens = computed<Token[]>(() => {
 .token-card {
   color: var(--lime-3);
 }
+.token-exhaust > img {
+  transform: translateY(4px);
+}
 .token-dynamic-value {
   color: var(--blue-4);
   font-weight: var(--font-weight-5);

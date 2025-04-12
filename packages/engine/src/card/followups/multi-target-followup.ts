@@ -45,9 +45,14 @@ export class MultiTargetFollowup<T extends AnyCard> implements Followup<T> {
 
     for (const followup of this.followups) {
       const targets = followup.getTargets(this.game, this.card);
+      const startIndex = count;
       count += targets.length;
-      if (count < selectedTargets.length) {
-        return followup.canCommit(selectedTargets);
+
+      if (count > selectedTargets.length) {
+        const targetsForFollowup = selectedTargets.slice(startIndex, count);
+        if (!followup.canCommit(targetsForFollowup)) {
+          return false;
+        }
       }
     }
 

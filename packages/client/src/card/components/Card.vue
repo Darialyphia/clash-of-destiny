@@ -10,7 +10,8 @@ import {
 } from '@game/engine/src/card/card.enums';
 import { clamp, isDefined, mapRange } from '@game/shared';
 import CardText from '@/card/components/CardText.vue';
-import { useElementBounding, useMouse } from '@vueuse/core';
+import { until, useElementBounding, useMouse } from '@vueuse/core';
+import { autoTextSize } from 'auto-text-size';
 
 const { card } = defineProps<{
   card: {
@@ -94,6 +95,29 @@ const pointerStyle = computed(() => {
     )
   };
 });
+
+const descriptionBox = useTemplateRef('description-box');
+
+const MIN_TEXT_SIZE = 10;
+const MAX_TEXT_SIZE = 14;
+const textSize = ref(MAX_TEXT_SIZE);
+until(descriptionBox)
+  .toBeTruthy()
+  .then(box => {
+    const inner = box.firstChild as HTMLElement;
+    let outerHeight = box.clientHeight;
+    let innerHeight = inner.clientHeight;
+
+    while (innerHeight > outerHeight) {
+      textSize.value--;
+      box.style.fontSize = `${textSize.value}px`;
+
+      innerHeight = inner.clientHeight;
+      if (textSize.value <= MIN_TEXT_SIZE) {
+        break;
+      }
+    }
+  });
 </script>
 
 <template>
@@ -154,13 +178,15 @@ const pointerStyle = computed(() => {
         {{ card.kind === CARD_KINDS.UNIT ? card.unitKind : card.kind }}
         {{ card.job }}
       </div>
-      <div class="description">
-        <CardText :text="card.description" />
-        <CardText
-          v-for="ability in card.abilities"
-          :key="ability"
-          :text="ability"
-        />
+      <div class="description" ref="description-box">
+        <div>
+          <CardText :text="card.description" />
+          <CardText
+            v-for="ability in card.abilities"
+            :key="ability"
+            :text="ability"
+          />
+        </div>
       </div>
       <div class="glare lt-lg:hidden" />
     </div>
@@ -372,11 +398,12 @@ const pointerStyle = computed(() => {
 
 .description {
   width: calc(116px * var(--pixel-scale));
-  height: calc(60px * var(--pixel-scale));
+  height: calc(58px * var(--pixel-scale));
   position: absolute;
   top: calc(147px * var(--pixel-scale));
   left: calc(24px * var(--pixel-scale));
-  font-size: 14px;
+  font-size: calc(1px * v-bind(textSize));
+  overflow: hidden;
 }
 
 .glare {

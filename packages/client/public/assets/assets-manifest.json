@@ -735,10 +735,36 @@
         },
         {
           "alias": [
+            "icon-spell-heatwave"
+          ],
+          "src": [
+            "/assets/icons/spell-heatwave.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-spell-insight"
           ],
           "src": [
             "/assets/icons/spell-insight.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-spell-novice-pyromancy"
+          ],
+          "src": [
+            "/assets/icons/spell-novice-pyromancy.png"
           ],
           "data": {
             "tags": {
@@ -943,6 +969,19 @@
         },
         {
           "alias": [
+            "icon-unit-flame-exorcist"
+          ],
+          "src": [
+            "/assets/icons/unit-flame-exorcist.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-unit-flame-juggler"
           ],
           "src": [
@@ -1103,6 +1142,19 @@
           ],
           "src": [
             "/assets/icons/unit-water-shrine-of-knowledge.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-unit-will-o-wisp"
+          ],
+          "src": [
+            "/assets/icons/unit-will-o-wisp.png"
           ],
           "data": {
             "tags": {
@@ -2996,6 +3048,33 @@
         },
         {
           "alias": [
+            "flame-exorcist"
+          ],
+          "src": [
+            "/assets/units/flame-exorcist.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "flame-exorcist.png"
+          ],
+          "src": [
+            "/assets/units/flame-exorcist.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "flame-juggler"
           ],
           "src": [
@@ -3284,6 +3363,33 @@
           ],
           "src": [
             "/assets/units/water-shrine-of-knowledge.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "will-o-wisp"
+          ],
+          "src": [
+            "/assets/units/will-o-wisp.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "will-o-wisp.png"
+          ],
+          "src": [
+            "/assets/units/will-o-wisp.png"
           ],
           "data": {
             "tags": {

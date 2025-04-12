@@ -30,6 +30,11 @@ import { pilferingBlade } from './pilfering-blade';
 import { aidenLv3 } from './aiden-thunder-incarnate';
 import { wrathOfTheSkies } from './wrath-of-the-skies';
 import { enjiOneManArmy } from './enji-one-man-army';
+import { novicePyromancy } from './novice-pyromancy';
+import { willOWisp } from './will-o-wisp';
+import { heatWave } from './heatwave';
+import { flameExorcist } from './flame-exorcist';
+import { fireSalamander } from './fire-salamander';
 
 export const coreSet: CardSet = {
   id: CARD_SETS.CORE,
@@ -46,11 +51,15 @@ export const coreSet: CardSet = {
     esteemedErudite,
     fireball,
     fireShrineOfKnowledge,
+    fireSalamander,
     flameJuggler,
+    flameExorcist,
     fleetingDancer,
     garrisonMarksman,
+    heatWave,
     insight,
     luminescentMystic,
+    novicePyromancy,
     pilferingBlade,
     promisingRecruit,
     shieldMaiden,
@@ -62,6 +71,7 @@ export const coreSet: CardSet = {
     swordInstructor,
     testDestinyArtifact,
     waterShrineOfKnowledge,
+    willOWisp,
     windShrineOfKnowledge,
     wrathOfTheSkies,
     zoranThePunisher

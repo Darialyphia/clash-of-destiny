@@ -40,6 +40,12 @@ export const KEYWORDS = {
     description: 'Does something when this card enters the board when played from hand.',
     aliases: []
   },
+  ON_DEATH: {
+    id: 'on-death',
+    name: 'On Death',
+    description: 'Does something when this card is destroyed.',
+    aliases: []
+  },
   ON_ATTACK: {
     id: 'on-attack',
     name: 'On Attack',
