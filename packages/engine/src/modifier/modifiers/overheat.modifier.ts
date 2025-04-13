@@ -41,7 +41,9 @@ export class OverheatModifier extends Modifier<Unit> {
     this.target.removeModifier(this, true);
     const targets = [
       this.target,
-      ...this.game.unitSystem.getNearbyUnits(this.target.position)
+      ...this.game.unitSystem
+        .getNearbyUnits(this.target.position)
+        .filter(unit => unit.isEnemy(this.target))
     ];
 
     targets.forEach(unit => {

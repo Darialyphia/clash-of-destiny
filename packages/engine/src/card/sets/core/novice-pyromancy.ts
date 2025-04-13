@@ -1,4 +1,3 @@
-import { CompositeAOEShape } from '../../../aoe/composite.aoe-shape';
 import { PointAOEShape } from '../../../aoe/point.aoe-shape';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
 import type { SpellBlueprint } from '../../card-blueprint';

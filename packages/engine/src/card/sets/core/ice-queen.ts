@@ -1,6 +1,8 @@
 import { PointAOEShape } from '../../../aoe/point.aoe-shape';
+import { FrozenModifier } from '../../../modifier/modifiers/frozen-modifier';
 import { RangedModifier } from '../../../modifier/modifiers/ranged.modiier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
+import { floatingDestiny } from '../../abilities/floating-destiny';
 import type { UnitBlueprint } from '../../card-blueprint';
 import {
   AFFINITIES,
@@ -13,28 +15,28 @@ import {
 } from '../../card.enums';
 import { MinionFollowup } from '../../followups/minion.followup';
 
-export const garrisonMarksman: UnitBlueprint = {
-  id: 'garrison-marksman',
+export const iceQueen: UnitBlueprint = {
+  id: 'ice-queen',
   kind: CARD_KINDS.UNIT,
   unitKind: UNIT_KINDS.MINION,
-  affinity: AFFINITIES.NORMAL,
-  name: 'Garrison Marksman',
+  affinity: AFFINITIES.WATER,
+  name: 'Ice Queen',
   getDescription: () => {
-    return `@Ranged(2)@.`;
+    return `@On Enter@ : @Freeze@ nearby enemy minions.`;
   },
-  staticDescription: `@Ranged(2)@.`,
+  staticDescription: `@On Enter@ : @Freeze@ nearby enemy minions.`,
   setId: CARD_SETS.CORE,
-  cardIconId: 'unit-garrison-marksman',
-  spriteId: 'garrison-marksman',
+  cardIconId: 'unit-ice-queen',
+  spriteId: 'ice-queen',
   spriteParts: {},
-  rarity: RARITIES.COMMON,
+  rarity: RARITIES.EPIC,
   collectable: true,
   manaCost: 2,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
-  abilities: [],
+  abilities: [floatingDestiny],
   atk: 1,
-  maxHp: 1,
-  job: CARD_JOBS.AVENGER,
+  maxHp: 2,
+  job: CARD_JOBS.SPELLCASTER,
   getFollowup: () => {
     return new MinionFollowup();
   },
@@ -43,6 +45,12 @@ export const garrisonMarksman: UnitBlueprint = {
   },
   onInit() {},
   onPlay(game, card) {
-    card.unit.addModifier(new RangedModifier(game, card, { range: 2 }));
+    const nearbyEnemies = game.unitSystem
+      .getNearbyUnits(card.unit.position)
+      .filter(u => u.isEnemy(card.unit) && u.isMinion);
+
+    nearbyEnemies.forEach(enemy => {
+      enemy.addModifier(new FrozenModifier(game, card));
+    });
   }
 };

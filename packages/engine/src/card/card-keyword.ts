@@ -121,6 +121,12 @@ export const KEYWORDS = {
       'The next time this unit takes non-combat damage, remove all Overheat stacks and deal that much damage to it and all adjacent units.',
     aliases: [/overheat\([0-9]+\)/, 'Overheat', 'Overheated']
   },
+  FROZEN: {
+    id: 'frozen',
+    name: 'Frozen',
+    description: 'This unit is exhausted and will not wake up on the next turn.',
+    aliases: ['Freeze']
+  },
   SECRET: {
     id: 'secret',
     name: 'Secret',

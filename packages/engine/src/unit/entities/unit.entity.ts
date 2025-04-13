@@ -673,10 +673,17 @@ export class Unit
     }
   }
 
+  get shouldWakeUpAtStartOfTurn() {
+    return this.interceptors.shouldWakeUpAtStartOfTurn.getValue(true, {});
+  }
+
   onTurnStart() {
     this.combat.resetAttackCount();
     this.movement.resetMovementsCount();
-    this.wakeUp();
+
+    if (this.shouldWakeUpAtStartOfTurn) {
+      this.wakeUp();
+    }
   }
 
   get removeModifier() {

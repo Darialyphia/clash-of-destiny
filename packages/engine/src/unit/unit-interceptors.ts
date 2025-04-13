@@ -22,7 +22,9 @@ export type UnitInterceptors = {
   canBeDestroyed: Interceptable<boolean>;
   canReceiveModifier: Interceptable<boolean, { modifier: Modifier<Unit> }>;
   canUseAbility: Interceptable<boolean, { ability: Ability<AnyUnitCard> }>;
+
   shouldExhaustWhenSummoned: Interceptable<boolean>;
+  shouldWakeUpAtStartOfTurn: Interceptable<boolean>;
 
   maxHp: Interceptable<number>;
   attack: Interceptable<number>;
@@ -67,6 +69,7 @@ export const makeUnitInterceptors = (): UnitInterceptors => {
     canUseAbility: new Interceptable<boolean, { ability: Ability<AnyUnitCard> }>(),
 
     shouldExhaustWhenSummoned: new Interceptable<boolean>(),
+    shouldWakeUpAtStartOfTurn: new Interceptable<boolean>(),
 
     maxHp: new Interceptable<number>(),
     attack: new Interceptable<number>(),

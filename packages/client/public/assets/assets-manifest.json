@@ -722,6 +722,19 @@
         },
         {
           "alias": [
+            "icon-secret-flashfire"
+          ],
+          "src": [
+            "/assets/icons/secret-flashfire.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-spell-ceasefire"
           ],
           "src": [
@@ -1038,6 +1051,19 @@
           ],
           "src": [
             "/assets/icons/unit-garrison-marksman.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-unit-ice-queen"
+          ],
+          "src": [
+            "/assets/icons/unit-ice-queen.png"
           ],
           "data": {
             "tags": {
@@ -1839,6 +1865,19 @@
         },
         {
           "alias": [
+            "card-kind-artifact.png"
+          ],
+          "src": [
+            "/assets/ui/card-kind-artifact.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "card-kind-hero.png"
           ],
           "src": [
@@ -2628,6 +2667,19 @@
         },
         {
           "alias": [
+            "secret-triggered.png"
+          ],
+          "src": [
+            "/assets/ui/secret-triggered.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "shield.png"
           ],
           "src": [
@@ -3200,6 +3252,33 @@
           ],
           "src": [
             "/assets/units/garrison-marksman.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "ice-queen"
+          ],
+          "src": [
+            "/assets/units/ice-queen.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "ice-queen.png"
+          ],
+          "src": [
+            "/assets/units/ice-queen.png"
           ],
           "data": {
             "tags": {
