@@ -166,6 +166,7 @@ export const useBattleStore = defineStore('battle', () => {
           isPlayingFx.value = true;
 
           for (const event of snapshot.events) {
+            console.log(event.eventName);
             await fxEmitter.emitAsync(
               `pre_${event.eventName}`,
               event.event as any

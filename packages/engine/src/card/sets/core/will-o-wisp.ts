@@ -1,8 +1,6 @@
 import { PointAOEShape } from '../../../aoe/point.aoe-shape';
-import { FleetingModifier } from '../../../modifier/modifiers/fleeting.modifier';
 import { OnDeathModifier } from '../../../modifier/modifiers/on-death.modifier';
 import { OverheatModifier } from '../../../modifier/modifiers/overheat.modifier';
-import { SwiftModifier } from '../../../modifier/modifiers/swift.modifier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
 import type { UnitBlueprint } from '../../card-blueprint';
 import {
@@ -52,7 +50,6 @@ export const willOWisp: UnitBlueprint = {
           const nearbyEnemies = game.unitSystem
             .getNearbyUnits(event.data.destroyedAt)
             .filter(u => u.isEnemy(card.unit));
-          console.log(event.data.destroyedAt, nearbyEnemies);
           nearbyEnemies.forEach(enemy => {
             enemy.addModifier(new OverheatModifier(game, card));
           });

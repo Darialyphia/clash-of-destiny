@@ -661,7 +661,7 @@ export class Unit
   destroy(source: AnyCard) {
     this.emitter.emit(UNIT_EVENTS.BEFORE_DESTROY, new UnitBeforeDestroyEvent({ source }));
     if (!this.canBeDestroyed) return;
-    const position = this.position;
+    const position = this.position.clone();
     this._isDead = true;
     this.removeFromBoard();
     this.emitter.emit(
