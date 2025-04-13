@@ -161,12 +161,6 @@ export type SecretBlueprint = (MainDeckCardBlueprint | DestinyDeckCardBlueprint)
     card: SecretCard,
     affectedCells: Cell[],
     affectedUnits: Unit[]
-  ): () => void;
-  onTrigger(
-    game: Game,
-    card: SecretCard,
-    affectedCells: Cell[],
-    affectedUnits: Unit[]
   ): void;
 };
 

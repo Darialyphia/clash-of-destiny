@@ -175,8 +175,13 @@ until(descriptionBox)
       </div>
       <div class="kind">
         <div class="kind-icon" />
-        {{ card.kind === CARD_KINDS.UNIT ? card.unitKind : card.kind }}
-        {{ card.job }}
+        {{
+          card.kind === CARD_KINDS.UNIT
+            ? card.unitKind?.toLocaleLowerCase()
+            : card.kind.toLocaleLowerCase()
+        }}
+        <template v-if="card.job">-</template>
+        {{ card.job?.toLocaleLowerCase() }}
       </div>
       <div class="description" ref="description-box">
         <div>
@@ -385,8 +390,9 @@ until(descriptionBox)
   display: flex;
   align-items: center;
   gap: calc(2px * var(--pixel-scale));
-
+  text-transform: capitalize;
   font-size: 14px;
+
   .kind-icon {
     background: v-bind(kindBg);
     background-size: cover;

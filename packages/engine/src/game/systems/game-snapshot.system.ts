@@ -11,6 +11,7 @@ import type { SerializedModifier } from '../../modifier/modifier.entity';
 import type { SerializedArtifact } from '../../player/artifact.entity';
 import type { SerializedInteractable } from '../../interactable/interactable.entity';
 import type { GamePhase } from '../game.enums';
+import type { Config } from '../../config';
 
 export type GameStateSnapshot<T> = {
   id: number;
@@ -40,6 +41,7 @@ export type SerializedOmniscientState = {
   interactionState: SerializedInteractionContext;
   phase: GamePhase;
   isOverdriveMode: boolean;
+  config: Config;
 };
 
 export type SerializedOpponentUnit = SerializedUnit;
@@ -157,6 +159,12 @@ export class GameSnaphotSystem extends System<EmptyObject> {
           entities[modifier.id] = modifier.serialize();
         });
       });
+      player.secrets.getAll().forEach(secret => {
+        entities[secret.card.id] = secret.card.serialize();
+        secret.card.modifiers.forEach(modifier => {
+          entities[modifier.id] = modifier.serialize();
+        });
+      });
     });
 
     this.game.interaction.getEntities().forEach(entity => {
@@ -167,6 +175,7 @@ export class GameSnaphotSystem extends System<EmptyObject> {
 
   serializeOmniscientState(): SerializedOmniscientState {
     return {
+      config: this.game.config,
       entities: this.buildEntityDictionary(),
       turnPlayer: this.game.gamePhaseSystem.turnPlayer.id,
       turnCount: this.game.gamePhaseSystem.elapsedTurns,

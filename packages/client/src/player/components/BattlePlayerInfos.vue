@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { useTurnPlayer, useUserPlayer } from '@/battle/stores/battle.store';
 import type { PlayerViewModel } from '../player.model';
-import FancyButton from '@/ui/components/FancyButton.vue';
-import UiDrawer from '@/ui/components/UiDrawer.vue';
-import CardMiniature from '@/card/components/CardMiniature.vue';
 import UiSimpleTooltip from '@/ui/components/UiSimpleTooltip.vue';
 import SimpleCardListModal from '@/card/components/SimpleCardListModal.vue';
+import { TooltipContent, TooltipRoot, TooltipTrigger } from 'reka-ui';
+import BattleCard from '@/card/components/BattleCard.vue';
 
 const { player } = defineProps<{
   player: PlayerViewModel;
@@ -28,6 +27,10 @@ const destinyDeck = computed(() => {
 });
 
 const userPlayer = useUserPlayer();
+
+const secrets = computed(() => {
+  return player.getSecrets();
+});
 </script>
 
 <template>
@@ -39,7 +42,15 @@ const userPlayer = useUserPlayer();
     }"
   >
     <div>
-      <div class="name">{{ player.name }}</div>
+      <div class="name">
+        {{ player.name }}
+        <img
+          v-for="affinity in player.unlockedAffinities"
+          :key="affinity"
+          :src="`/assets/ui/gem-${affinity.toLocaleLowerCase()}.png`"
+          class="affinity-icon"
+        />
+      </div>
       <div class="indicators">
         <UiSimpleTooltip>
           <template #trigger>
@@ -135,6 +146,16 @@ const userPlayer = useUserPlayer();
         description=""
         :player="player"
       />
+
+      <TooltipRoot v-for="secret in secrets" :key="secret.id">
+        <TooltipTrigger>
+          <div class="secret-icon" />
+        </TooltipTrigger>
+
+        <TooltipContent side="right" :side-offset="10" align="start">
+          <BattleCard :card="secret" />
+        </TooltipContent>
+      </TooltipRoot>
     </div>
   </div>
 </template>
@@ -172,6 +193,14 @@ const userPlayer = useUserPlayer();
   font-weight: var(--font-weight-5);
   -webkit-text-stroke: 4px black;
   paint-order: stroke fill;
+  display: flex;
+  gap: var(--size-3);
+  align-items: center;
+  padding-block: var(--size-2);
+  img {
+    width: calc(26px * var(--pixel-scale));
+    height: calc(28px * var(--pixel-scale));
+  }
 }
 
 .discard-pile-toggle {
@@ -242,5 +271,13 @@ const userPlayer = useUserPlayer();
       background-size: cover;
     }
   }
+}
+
+.secret-icon {
+  background: url('/assets/ui/card-kind-secret.png') no-repeat center;
+  background-size: cover;
+  width: calc(16px * var(--pixel-scale));
+  height: calc(16px * var(--pixel-scale));
+  border: none;
 }
 </style>

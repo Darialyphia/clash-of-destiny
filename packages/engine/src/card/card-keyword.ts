@@ -52,6 +52,12 @@ export const KEYWORDS = {
     description: 'Does something when this card attacks another unit.',
     aliases: []
   },
+  ON_KILL: {
+    id: 'on-kill',
+    name: 'On Kill',
+    description: 'Does something when this card kills another unit via combat.',
+    aliases: []
+  },
   RANGED: {
     id: 'ranged',
     name: 'Ranged(x)',
@@ -114,6 +120,13 @@ export const KEYWORDS = {
     description:
       'The next time this unit takes non-combat damage, remove all Overheat stacks and deal that much damage to it and all adjacent units.',
     aliases: [/overheat\([0-9]+\)/, 'Overheat', 'Overheated']
+  },
+  SECRET: {
+    id: 'secret',
+    name: 'Secret',
+    description:
+      'This card is played face down and is revealed when its conditions are met.',
+    aliases: []
   }
 } as const satisfies Record<string, Keyword>;
 

@@ -368,7 +368,7 @@ li {
 
 .toggle {
   position: absolute;
-  bottom: 20%;
+  bottom: 60%;
   left: 100%;
   transform: translateY(-6px);
 

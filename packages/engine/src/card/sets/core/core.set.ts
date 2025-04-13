@@ -36,6 +36,7 @@ import { heatWave } from './heatwave';
 import { flameExorcist } from './flame-exorcist';
 import { fireSalamander } from './fire-salamander';
 import { philosopherStone } from './philosopher-stone';
+import { flashfire } from './flash-fire';
 
 export const coreSet: CardSet = {
   id: CARD_SETS.CORE,
@@ -55,6 +56,7 @@ export const coreSet: CardSet = {
     fireSalamander,
     flameJuggler,
     flameExorcist,
+    flashfire,
     fleetingDancer,
     garrisonMarksman,
     heatWave,

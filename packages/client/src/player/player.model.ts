@@ -86,6 +86,12 @@ export class PlayerViewModel {
     });
   }
 
+  getSecrets() {
+    return this.data.secrets.map(cardId => {
+      return this.getEntities()[cardId] as CardViewModel;
+    });
+  }
+
   getCurrentlyPlayedCard() {
     if (!this.data.currentlyPlayedCard) return null;
     return this.getEntities()[this.data.currentlyPlayedCard] as CardViewModel;

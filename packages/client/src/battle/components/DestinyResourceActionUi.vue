@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import BattleCard from '@/card/components/BattleCard.vue';
-import { useDispatcher, useTurnPlayer } from '../stores/battle.store';
+import {
+  useDispatcher,
+  useGameState,
+  useTurnPlayer
+} from '../stores/battle.store';
 import { useResizeObserver } from '@vueuse/core';
 import { throttle } from 'lodash-es';
 import {
@@ -19,7 +23,7 @@ const ui = useBattleUiStore();
 
 const cardSpacing = ref(0);
 const root = useTemplateRef('root');
-
+const { state } = useGameState();
 const computeMargin = () => {
   if (!root.value) return 0;
   if (!player.value.handSize) return 0;
@@ -98,7 +102,9 @@ watch(
             v-model="selectedIndices"
             :value="index"
             :disabled="
-              !selectedIndices.includes(index) && selectedIndices.length >= 3
+              !selectedIndices.includes(index) &&
+              selectedIndices.length >=
+                state.config.DESTINY_RESOURCE_ACTION_MAX_BANISHED_CARDS
             "
           />
         </label>

@@ -65,6 +65,7 @@ export type SerializedPlayer = {
   isPlayer1: boolean;
   unlockedAffinities: Affinity[];
   turnsUntilOverdriveMode: number;
+  secrets: string[];
 };
 
 type PlayerInterceptors = {
@@ -161,7 +162,8 @@ export class Player
       turnsUntilOverdriveMode:
         this.game.config.ELAPSED_TURNS_TO_ACTIVATE_OVERDRIVE_MODE -
         this.game.gamePhaseSystem.elapsedTurns +
-        (this.isPlayer1 ? 1 : 0)
+        (this.isPlayer1 ? 1 : 0),
+      secrets: this.secrets.serialize()
     };
   }
 
