@@ -98,18 +98,22 @@ export class SecretCard extends Card<
     );
 
     const aoeShape = this.blueprint.getAoe(this.game, this, points);
-    this.blueprint.onPlay(
+    const cleanup = this.blueprint.onPlay(
       this.game,
       this,
       aoeShape.getCells(points),
       aoeShape.getUnits(points)
     );
+    this.player.secrets.add(this.id, { card: this, targets: points, cleanup });
 
-    this.player.cards.sendToDiscardPile(this);
     this.emitter.emit(
       CARD_EVENTS.AFTER_PLAY,
       new CardAfterPlayEvent({ targets: points })
     );
+  }
+
+  trigger() {
+    this.player.secrets.trigger(this.id);
   }
 
   private getSerializedAoe(): SerializedSecretCard['aoe'] {

@@ -34,6 +34,7 @@ import { ShrineCard } from '../card/entities/shrine-card.entity';
 import { MissingShrineError } from './player-errors';
 import type { MinionCard } from '../card/entities/minion-card.entity';
 import { INTERACTION_STATE_TRANSITIONS } from '../game/systems/interaction.system';
+import { SecretManagerComponent } from './components/secret-manager.component';
 
 export type PlayerOptions = {
   id: string;
@@ -73,6 +74,8 @@ export class Player
   readonly cards: CardManagerComponent;
 
   readonly artifacts: ArtifactManagerComponent;
+
+  readonly secrets: SecretManagerComponent;
 
   readonly mana: ResourceTrackerComponent;
 
@@ -115,6 +118,7 @@ export class Player
       this.game.config.MAX_DESTINY
     );
     this.artifacts = new ArtifactManagerComponent(this.game, this);
+    this.secrets = new SecretManagerComponent(this.game, this);
     this.forwardListeners();
   }
 
