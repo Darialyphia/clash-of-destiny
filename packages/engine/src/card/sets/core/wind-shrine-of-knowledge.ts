@@ -12,7 +12,7 @@ import {
 import { NoFollowup } from '../../followups/no-followup';
 
 export const windShrineOfKnowledge: UnitBlueprint = {
-  id: 'water-shrine-of-knowledge',
+  id: 'wind-shrine-of-knowledge',
   kind: CARD_KINDS.UNIT,
   unitKind: UNIT_KINDS.SHRINE,
   affinity: AFFINITIES.AIR,

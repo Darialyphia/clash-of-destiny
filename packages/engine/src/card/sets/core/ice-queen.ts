@@ -31,7 +31,7 @@ export const iceQueen: UnitBlueprint = {
   spriteParts: {},
   rarity: RARITIES.EPIC,
   collectable: true,
-  manaCost: 2,
+  manaCost: 4,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [floatingDestiny],
   atk: 1,
