@@ -188,6 +188,19 @@
         },
         {
           "alias": [
+            "icon-artifact-philosopher-stone"
+          ],
+          "src": [
+            "/assets/icons/artifact-philosopher-stone.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-artifact-pilfering-blade"
           ],
           "src": [

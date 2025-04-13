@@ -54,7 +54,9 @@ export const enjiOneManArmy: UnitBlueprint = {
           new MinionCardInterceptorModifierMixin(game, {
             key: 'manaCost',
             interceptor(value, ctx, modifier) {
-              const allyMinions = modifier.target.player.units.filter(u => u.isMinion);
+              const allyMinions = modifier.target.player.units.filter(
+                u => u.isMinion && !card.unit?.equals(u)
+              );
               const enemyMinions = modifier.target.player.opponent.units.filter(
                 u => u.isMinion
               );

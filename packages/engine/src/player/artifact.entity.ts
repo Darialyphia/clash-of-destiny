@@ -237,6 +237,9 @@ export class Artifact
     this.player.cards.sendToDiscardPile(this.card);
 
     this.emitter.emit(ARTIFACT_EVENTS.AFTER_DESTROY, new ArtifactDestroyEvent({}));
+    for (const modifier of this.modifiers) {
+      this.removeModifier(modifier);
+    }
   }
 
   get isExhausted() {
