@@ -206,6 +206,15 @@ useBattleEvent(GAME_EVENTS.UNIT_AFTER_USE_ABILITY, async event => {
   ]);
 });
 
+useBattleEvent(GAME_EVENTS.PLAYER_AFTER_TRIGGER_SECRET, async event => {
+  events.value.push([
+    {
+      kind: 'card',
+      card: state.value.entities[event.card.id] as CardViewModel
+    },
+    { kind: 'text', text: `secret was triggered.` }
+  ]);
+});
 const isCollapsed = ref(true);
 
 const listEl = ref<HTMLElement>();

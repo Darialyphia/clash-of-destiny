@@ -113,7 +113,7 @@ export class SecretCard extends Card<
   }
 
   trigger(cb: () => void) {
-    this.player.secrets.trigger(this.id, cb);
+    this.player.triggerSecret(this.id, cb);
   }
 
   private getSerializedAoe(): SerializedSecretCard['aoe'] {

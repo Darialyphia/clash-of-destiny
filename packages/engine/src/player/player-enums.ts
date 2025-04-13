@@ -12,7 +12,9 @@ export const PLAYER_EVENTS = {
   BEFORE_RESOURCE_ACTION_REPLACE: 'before_resource_action_replace',
   AFTER_RESOURCE_ACTION_REPLACE: 'after_resource_action_replace',
   BEFORE_RESOURCE_ACTION_DESTINY: 'before_resource_action_gain_destiny',
-  AFTER_RESOURCE_ACTION_DESTINY: 'after_resource_action_gain_destiny'
+  AFTER_RESOURCE_ACTION_DESTINY: 'after_resource_action_gain_destiny',
+  BEFORE_TRIGGER_SECRET: 'before_trigger_secret',
+  AFTER_TRIGGER_SECRET: 'after_trigger_secret'
 } as const;
 
 export type PlayerEvent = Values<typeof PLAYER_EVENTS>;

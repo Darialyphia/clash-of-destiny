@@ -2,6 +2,7 @@
 import type { UnitViewModel } from '@/unit/unit.model';
 import DamageIndicator from './DamageIndicator.vue';
 import ReplaceVFX from './ReplaceVFX.vue';
+import SecretTriggeredVfx from './SecretTriggeredVfx.vue';
 // import LightVFX from './LightVFX.vue';
 
 const { unit } = defineProps<{ unit: UnitViewModel }>();
@@ -11,6 +12,7 @@ const { unit } = defineProps<{ unit: UnitViewModel }>();
   <container>
     <DamageIndicator :unit="unit" />
     <ReplaceVFX :unit="unit" />
+    <SecretTriggeredVfx :unit="unit" />
     <!-- <LightVFX :unit="unit" /> -->
   </container>
 </template>

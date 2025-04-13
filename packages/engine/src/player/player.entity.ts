@@ -14,6 +14,7 @@ import {
   PlayerPlayCardEvent,
   PlayerResourceActionDestinyEvent,
   PlayerResourceActionEvent,
+  PlayerSecretEvent,
   PlayerStartTurnEvent,
   type PlayerEventMap
 } from './player.events';
@@ -29,7 +30,7 @@ import type {
 import { ResourceTrackerComponent } from './components/resource-tracker.component';
 import type { AnyCard } from '../card/entities/card.entity';
 import { AFFINITIES, CARD_EVENTS, type Affinity } from '../card/card.enums';
-import { WrongDeckSourceError } from '../card/card-errors';
+import { CardNotFoundError, WrongDeckSourceError } from '../card/card-errors';
 import { ShrineCard } from '../card/entities/shrine-card.entity';
 import { MissingShrineError } from './player-errors';
 import type { MinionCard } from '../card/entities/minion-card.entity';
@@ -385,6 +386,20 @@ export class Player
     this.emitter.emit(
       PLAYER_EVENTS.AFTER_RESOURCE_ACTION_DRAW,
       new PlayerResourceActionEvent({})
+    );
+  }
+
+  triggerSecret(id: string, cb: () => void) {
+    const secret = this.secrets.get(id);
+    assert(isDefined(secret), new CardNotFoundError());
+    this.emitter.emit(
+      PLAYER_EVENTS.BEFORE_TRIGGER_SECRET,
+      new PlayerSecretEvent({ card: secret.card })
+    );
+    this.secrets.trigger(id, cb);
+    this.emitter.emit(
+      PLAYER_EVENTS.AFTER_TRIGGER_SECRET,
+      new PlayerSecretEvent({ card: secret.card })
     );
   }
 

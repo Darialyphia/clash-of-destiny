@@ -60,6 +60,17 @@ export class PlayerResourceActionDestinyEvent extends TypedSerializableEvent<
   }
 }
 
+export class PlayerSecretEvent extends TypedSerializableEvent<
+  { card: AnyCard },
+  { card: SerializedCard }
+> {
+  serialize() {
+    return {
+      card: this.data.card.serialize()
+    };
+  }
+}
+
 export type PlayerEventMap = {
   [PLAYER_EVENTS.START_TURN]: PlayerStartTurnEvent;
   [PLAYER_EVENTS.END_TURN]: PlayerEndTurnEvent;
@@ -73,4 +84,6 @@ export type PlayerEventMap = {
   [PLAYER_EVENTS.AFTER_RESOURCE_ACTION_REPLACE]: PlayerResourceActionEvent;
   [PLAYER_EVENTS.BEFORE_RESOURCE_ACTION_DESTINY]: PlayerResourceActionDestinyEvent;
   [PLAYER_EVENTS.AFTER_RESOURCE_ACTION_DESTINY]: PlayerResourceActionDestinyEvent;
+  [PLAYER_EVENTS.BEFORE_TRIGGER_SECRET]: PlayerSecretEvent;
+  [PLAYER_EVENTS.AFTER_TRIGGER_SECRET]: PlayerSecretEvent;
 };
