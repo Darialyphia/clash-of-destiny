@@ -10,6 +10,12 @@ export class PlayerAlreadyPerformedResourceActionError extends Error {
   }
 }
 
+export class TooManyReplacesError extends Error {
+  constructor() {
+    super('Player has already performed the maximum number of replaces this turn');
+  }
+}
+
 export class ArtifactAbilityNotFoundError extends Error {
   constructor() {
     super('Artifact ability not found');

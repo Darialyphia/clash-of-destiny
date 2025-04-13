@@ -48,11 +48,11 @@ export const willOWisp: UnitBlueprint = {
   onPlay(game, card) {
     card.unit.addModifier(
       new OnDeathModifier(game, card, {
-        handler() {
+        handler(event) {
           const nearbyEnemies = game.unitSystem
-            .getNearbyUnits(card.unit.position)
+            .getNearbyUnits(event.data.destroyedAt)
             .filter(u => u.isEnemy(card.unit));
-          console.log(nearbyEnemies);
+          console.log(event.data.destroyedAt, nearbyEnemies);
           nearbyEnemies.forEach(enemy => {
             enemy.addModifier(new OverheatModifier(game, card));
           });

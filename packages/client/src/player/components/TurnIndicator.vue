@@ -7,12 +7,17 @@ import { waitFor } from '@game/shared';
 const userPlayer = useUserPlayer();
 
 const text = ref('');
+const overdriveReminder = ref('');
 
 useBattleEvent(GAME_EVENTS.PLAYER_START_TURN, async e => {
   text.value =
     userPlayer.value.id === e.player.id
       ? 'Your turn'
       : `${e.player.name}'s turn`;
+
+  overdriveReminder.value = e.player.turnsUntilOverdriveMode
+    ? `${e.player.turnsUntilOverdriveMode} turns until overrive!`
+    : 'Overdrive activated !';
 
   await waitFor(1200);
   text.value = '';
@@ -23,6 +28,7 @@ useBattleEvent(GAME_EVENTS.PLAYER_START_TURN, async e => {
   <Transition>
     <div class="wrapper" v-if="text">
       <div :data-text="text">{{ text }}</div>
+      <div :data-text="overdriveReminder">{{ overdriveReminder }}</div>
     </div>
   </Transition>
 </template>

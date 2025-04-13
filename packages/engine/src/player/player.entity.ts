@@ -35,6 +35,7 @@ import { MissingShrineError } from './player-errors';
 import type { MinionCard } from '../card/entities/minion-card.entity';
 import { INTERACTION_STATE_TRANSITIONS } from '../game/systems/interaction.system';
 import { SecretManagerComponent } from './components/secret-manager.component';
+import { Interceptable } from '../utils/interceptable';
 
 export type PlayerOptions = {
   id: string;
@@ -55,6 +56,7 @@ export type SerializedPlayer = {
   mana: number;
   destiny: number;
   canPerformResourceAction: boolean;
+  canReplace: boolean;
   remainingCardsInDeck: number;
   destinyDeck: string[];
   currentlyPlayedCard?: string;
@@ -62,9 +64,20 @@ export type SerializedPlayer = {
   currentHp: number;
   isPlayer1: boolean;
   unlockedAffinities: Affinity[];
+  turnsUntilOverdriveMode: number;
 };
 
-type PlayerInterceptors = EmptyObject;
+type PlayerInterceptors = {
+  maxReplacesPerTurn: Interceptable<number>;
+  canReplace: Interceptable<boolean>;
+};
+const makeInterceptors = (): PlayerInterceptors => {
+  return {
+    maxReplacesPerTurn: new Interceptable(),
+    canReplace: new Interceptable()
+  };
+};
+
 export class Player
   extends Entity<PlayerEventMap, PlayerInterceptors>
   implements Serializable<SerializedPlayer>
@@ -87,13 +100,15 @@ export class Player
 
   private resourceActionsDoneThisTurn = 0;
 
+  private replacesDoneThisTurn = 0;
+
   readonly unlockedAffinities = new Set<Affinity>([AFFINITIES.NORMAL]);
 
   constructor(
     game: Game,
     private options: PlayerOptions
   ) {
-    super(options.id, {});
+    super(options.id, makeInterceptors());
     this.game = game;
     this.cards = new CardManagerComponent(this.game, this, {
       mainDeck: options.mainDeck.cards.map(blueprintId => ({
@@ -135,13 +150,18 @@ export class Player
       mana: this.mana.current,
       destiny: this.destiny.current,
       canPerformResourceAction: this.canPerformResourceAction(),
+      canReplace: this.canReplace,
       remainingCardsInDeck: this.cards.mainDeck.remaining,
       destinyDeck: this.cards.destinyDeck.cards.map(card => card.id),
       currentlyPlayedCard: this.currentlyPlayedCard?.id,
       maxHp: this.hero?.hp.max ?? 0,
       currentHp: this.hero?.hp.current ?? 0,
       isPlayer1: this.isPlayer1,
-      unlockedAffinities: Array.from(this.unlockedAffinities)
+      unlockedAffinities: Array.from(this.unlockedAffinities),
+      turnsUntilOverdriveMode:
+        this.game.config.ELAPSED_TURNS_TO_ACTIVATE_OVERDRIVE_MODE -
+        this.game.gamePhaseSystem.elapsedTurns +
+        (this.isPlayer1 ? 1 : 0)
     };
   }
 
@@ -304,13 +324,27 @@ export class Player
     );
   }
 
+  get maxReplacesPerTurn() {
+    return this.interceptors.maxReplacesPerTurn.getValue(
+      this.game.config.MAX_REPLACES_PER_TURN,
+      {}
+    );
+  }
+
+  get canReplace() {
+    return this.interceptors.canReplace.getValue(
+      this.replacesDoneThisTurn < this.maxReplacesPerTurn,
+      {}
+    );
+  }
+
   resourceActionReplaceCardAtIndex(index: number) {
     this.emitter.emit(
       PLAYER_EVENTS.BEFORE_RESOURCE_ACTION_REPLACE,
       new PlayerResourceActionEvent({})
     );
     this.cards.replaceCardAt(index);
-    this.resourceActionsDoneThisTurn++;
+    this.replacesDoneThisTurn++;
     this.emitter.emit(
       PLAYER_EVENTS.AFTER_RESOURCE_ACTION_REPLACE,
       new PlayerResourceActionEvent({})
@@ -362,6 +396,7 @@ export class Player
     );
     this.destiny.add(this.game.config.DESTINY_EARNED_PER_TURN);
     this.resourceActionsDoneThisTurn = 0;
+    this.replacesDoneThisTurn = 0;
 
     this.game.gamePhaseSystem.draw();
   }

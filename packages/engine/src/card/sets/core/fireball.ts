@@ -17,10 +17,10 @@ export const fireball: SpellBlueprint = {
   kind: CARD_KINDS.SPELL,
   affinity: AFFINITIES.FIRE,
   name: 'Fireball',
-  getDescription: (game, card) => {
-    return `Deal 2 damage to a unit.\n@Class Bonus@: You may discard a fire card. If you do, deal ${3 + card.player.hero.spellpower} instead.`;
+  getDescription: () => {
+    return `Deal 2 damage to a unit.\n@Class Bonus@: You may discard a fire card. If you do, deal @[spellpower]@ + 2 instead.`;
   },
-  staticDescription: `Deal 2 damage to a unit.\n@Class Bonus@: You may discard a fire card. If you do, deal  @[spellpower]@ + 3 instead.`,
+  staticDescription: `Deal 2 damage to a unit.\n@Class Bonus@: You may discard a fire card. If you do, deal  @[spellpower]@ + 2 instead.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'spell-fireball',
   rarity: RARITIES.RARE,
@@ -41,7 +41,7 @@ export const fireball: SpellBlueprint = {
     if (!target) return;
 
     const regularDamage = () => {
-      target.takeDamage(card, new SpellDamage({ source: card, baseAmount: 3 }));
+      target.takeDamage(card, new SpellDamage({ source: card, baseAmount: 2 }));
     };
 
     if (!card.hasClassBonus) {
@@ -71,7 +71,7 @@ export const fireball: SpellBlueprint = {
             card,
             new SpellDamage({
               source: card,
-              baseAmount: 3 + card.player.hero.spellpower
+              baseAmount: 2 + card.player.hero.spellpower
             })
           );
         } else {

@@ -2,7 +2,11 @@ import { z } from 'zod';
 import { defaultInputSchema, Input } from '../input';
 import { GAME_PHASES } from '../../game/game.enums';
 import { assert } from '@game/shared';
-import { InvalidCardIndexError, NotTurnPlayerError } from '../input-errors';
+import {
+  InvalidCardIndexError,
+  NotTurnPlayerError,
+  TooManyReplacesError
+} from '../input-errors';
 import { PlayerAlreadyPerformedResourceActionError } from '../../player/player-errors';
 
 const schema = defaultInputSchema.extend({
@@ -27,10 +31,7 @@ export class ResourceActionReplaceCardInput extends Input<typeof schema> {
       new InvalidCardIndexError()
     );
 
-    assert(
-      this.player.canPerformResourceAction,
-      new PlayerAlreadyPerformedResourceActionError()
-    );
+    assert(this.player.canReplace, new TooManyReplacesError());
 
     this.player.resourceActionReplaceCardAtIndex(this.payload.index);
   }

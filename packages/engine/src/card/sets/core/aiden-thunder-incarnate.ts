@@ -36,7 +36,7 @@ export const aidenLv3: UnitBlueprint = {
   destinyCost: 3,
   deckSource: CARD_DECK_SOURCES.DESTINY_DECK,
   abilities: [],
-  atk: 2,
+  atk: 3,
   maxHp: 26,
   spellpower: 1,
   level: 3,

@@ -1,5 +1,4 @@
 import { PureDamage } from '../../../combat/damage';
-import { UnitInterceptorModifierMixin } from '../../../modifier/mixins/interceptor.mixin';
 import { WhileEquipedModifierMixin } from '../../../modifier/mixins/while-equiped.mixin';
 import { Modifier } from '../../../modifier/modifier.entity';
 import { TrinketModifier } from '../../../modifier/modifiers/trinket.modifier';
@@ -29,7 +28,7 @@ export const philosopherStone: ArtifactBlueprint = {
   cardIconId: 'artifact-philosopher-stone',
   rarity: RARITIES.EPIC,
   collectable: true,
-  destinyCost: 2,
+  destinyCost: 1,
   deckSource: CARD_DECK_SOURCES.DESTINY_DECK,
   job: CARD_JOBS.SUMMONER,
   abilities: [],

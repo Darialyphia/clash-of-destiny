@@ -27,7 +27,7 @@ export const heatWave: SpellBlueprint = {
   cardIconId: 'spell-heatwave',
   rarity: RARITIES.RARE,
   collectable: true,
-  manaCost: 2,
+  manaCost: 1,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   job: CARD_JOBS.SPELLCASTER,
   abilities: [floatingDestiny],
