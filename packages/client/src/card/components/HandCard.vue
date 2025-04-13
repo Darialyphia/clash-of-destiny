@@ -101,7 +101,7 @@ const modifiers = computed(() =>
     "
   >
     <component :is="isSelected ? Teleport : 'div'" to="#dragged-card">
-      <TooltipRoot>
+      <TooltipRoot :delay-duration="500">
         <TooltipTrigger>
           <InspectableCard
             :card="card"

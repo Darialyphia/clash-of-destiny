@@ -25,6 +25,10 @@ export class ModifierViewModel {
     return this.data.id;
   }
 
+  get modifierType() {
+    return this.data.modifierType;
+  }
+
   get name() {
     return this.data.name;
   }
