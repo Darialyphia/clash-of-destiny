@@ -56,6 +56,10 @@ export class PlayerViewModel {
     return this.data.remainingCardsInDeck;
   }
 
+  get canReplace() {
+    return this.data.canReplace;
+  }
+
   get canPerformResourceAction() {
     return this.data.canPerformResourceAction;
   }

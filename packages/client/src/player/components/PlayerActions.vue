@@ -39,14 +39,14 @@ const isTurnPlayer = computed(() => {
       />
     </transition> -->
 
-    <!-- <transition>
+    <transition>
       <FancyButton
-        :disabled="!player.canPerformResourceAction"
+        :disabled="!player.canReplace"
         class="pointer-events-auto w-full"
         text="Replace"
         @click="ui.isReplaceResourceActionModalOpened = true"
       />
-    </transition> -->
+    </transition>
 
     <transition>
       <FancyButton
@@ -59,7 +59,7 @@ const isTurnPlayer = computed(() => {
 
     <transition>
       <FancyButton
-        class="pointer-events-auto w-full"
+        class="pointer-events-auto w-full end-turn"
         text="End Turn"
         variant="error"
         @click="
@@ -99,7 +99,8 @@ const isTurnPlayer = computed(() => {
   transform: translateY(5px) scale(0.95);
 }
 
-.ability {
+.ability,
+.end-turn {
   grid-column: span 2;
 }
 </style>

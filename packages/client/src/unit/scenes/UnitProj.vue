@@ -17,7 +17,9 @@ import { isDefined } from '@game/shared';
 const { unit } = defineProps<{ unit: UnitViewModel }>();
 
 const isSpawnAnimationDone = ref(false);
-const modifiers = computed(() => unit.getModifiers().filter(isDefined));
+const modifiers = computed(() =>
+  unit.getModifiers().filter(modifier => isDefined(modifier) && modifier.icon)
+);
 </script>
 
 <template>

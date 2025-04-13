@@ -162,6 +162,7 @@ export class SecretCard extends Card<
       player: this.player.id,
       canPlay: this.player.canPlayCard(this),
       maxTargets: this.followupTargets.length,
+      modifiers: this.modifiers.map(modifier => modifier.id),
       aoe: this.getSerializedAoe(),
       range:
         this.player.currentlyPlayedCard?.equals(this) &&

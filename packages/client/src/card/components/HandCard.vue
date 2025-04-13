@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { Teleport } from 'vue';
-import Card from './Card.vue';
 import { usePageLeave } from '@vueuse/core';
 import type { CardViewModel } from '../card.model';
 import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
 import InspectableCard from './InspectableCard.vue';
+import {
+  TooltipRoot,
+  TooltipTrigger,
+  TooltipPortal,
+  TooltipContent
+} from 'reka-ui';
+import { isDefined } from '@game/shared';
 
 const { card } = defineProps<{ card: CardViewModel }>();
 
@@ -71,6 +77,10 @@ const onMouseDown = (e: MouseEvent) => {
   };
   document.body.addEventListener('mouseup', onMouseup);
 };
+
+const modifiers = computed(() =>
+  card.getModifiers().filter(modifier => isDefined(modifier) && modifier.name)
+);
 </script>
 
 <template>
@@ -91,13 +101,33 @@ const onMouseDown = (e: MouseEvent) => {
     "
   >
     <component :is="isSelected ? Teleport : 'div'" to="#dragged-card">
-      <InspectableCard
-        :card="card"
-        class="hand-card__card"
-        :class="{
-          'is-dragging': isSelected
-        }"
-      />
+      <TooltipRoot>
+        <TooltipTrigger>
+          <InspectableCard
+            :card="card"
+            class="hand-card__card"
+            :class="{
+              'is-dragging': isSelected
+            }"
+          />
+        </TooltipTrigger>
+        <TooltipPortal>
+          <TooltipContent :side-offset="40">
+            <div class="flex flex-col gap-2 max-w-14">
+              <div
+                class="bg-black text-white p-2 rounded"
+                v-for="modifier in modifiers"
+                :key="modifier.id"
+              >
+                <div class="font-bold">
+                  {{ modifier.name }}
+                </div>
+                {{ modifier.description }}
+              </div>
+            </div>
+          </TooltipContent>
+        </TooltipPortal>
+      </TooltipRoot>
     </component>
   </div>
 </template>

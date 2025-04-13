@@ -10,6 +10,8 @@ export class FleetingModifier extends Modifier<AnyCard> {
   constructor(game: Game, source: AnyCard) {
     super(KEYWORDS.FLEETING.id, game, source, {
       stackable: false,
+      name: KEYWORDS.FLEETING.name,
+      description: KEYWORDS.FLEETING.description,
       mixins: [
         new KeywordModifierMixin(game, KEYWORDS.FLEETING),
         new GameEventModifierMixin(game, {

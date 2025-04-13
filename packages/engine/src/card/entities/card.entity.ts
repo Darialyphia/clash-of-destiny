@@ -53,6 +53,7 @@ export type SerializedCard = {
   manaCost: number | null;
   destinyCost: number | null;
   affinity: Affinity;
+  modifiers: string[];
   abilities: Array<{
     id: string;
     manaCost: number;

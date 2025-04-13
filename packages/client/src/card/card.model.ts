@@ -1,6 +1,7 @@
 import type { GameStateEntities } from '@/battle/stores/battle.store';
 import type { CellViewModel } from '@/board/cell.model';
 import type { PlayerViewModel } from '@/player/player.model';
+import type { ModifierViewModel } from '@/unit/modifier.model';
 import type { UnitViewModel } from '@/unit/unit.model';
 import { CARD_KINDS, type UnitKind } from '@game/engine/src/card/card.enums';
 import type { SerializedArtifactCard } from '@game/engine/src/card/entities/artifact-card.entity';
@@ -154,6 +155,12 @@ export class CardViewModel {
         return 0;
       })
       .exhaustive();
+  }
+
+  getModifiers() {
+    return this.data.modifiers.map(modifierId => {
+      return this.getEntities()[modifierId] as ModifierViewModel;
+    });
   }
 
   getAoe() {

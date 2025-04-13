@@ -122,6 +122,12 @@ export class GameSnaphotSystem extends System<EmptyObject> {
       player.artifacts.artifacts.forEach(artifact => {
         entities[artifact.id] = artifact.serialize();
         entities[artifact.card.id] = artifact.card.serialize();
+        artifact.modifiers.forEach(modifier => {
+          entities[modifier.id] = modifier.serialize();
+        });
+        artifact.card.modifiers.forEach(modifier => {
+          entities[modifier.id] = modifier.serialize();
+        });
       });
 
       if (player.currentlyPlayedCard) {
@@ -129,15 +135,27 @@ export class GameSnaphotSystem extends System<EmptyObject> {
       }
       player.cards.hand.forEach(card => {
         entities[card.id] = card.serialize();
+        card.modifiers.forEach(modifier => {
+          entities[modifier.id] = modifier.serialize();
+        });
       });
       player.cards.discardPile.forEach(card => {
         entities[card.id] = card.serialize();
+        card.modifiers.forEach(modifier => {
+          entities[modifier.id] = modifier.serialize();
+        });
       });
       player.cards.banishPile.forEach(card => {
         entities[card.id] = card.serialize();
+        card.modifiers.forEach(modifier => {
+          entities[modifier.id] = modifier.serialize();
+        });
       });
       player.cards.destinyDeck.cards.forEach(card => {
         entities[card.id] = card.serialize();
+        card.modifiers.forEach(modifier => {
+          entities[modifier.id] = modifier.serialize();
+        });
       });
     });
 

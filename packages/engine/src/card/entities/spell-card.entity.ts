@@ -158,6 +158,7 @@ export class SpellCard extends Card<
       job: this.blueprint.job,
       canPlay: this.player.canPlayCard(this),
       maxTargets: this.followupTargets.length,
+      modifiers: this.modifiers.map(modifier => modifier.id),
       aoe: this.getSerializedAoe(),
       range:
         this.player.currentlyPlayedCard?.equals(this) &&

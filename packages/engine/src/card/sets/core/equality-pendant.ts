@@ -28,7 +28,7 @@ export const equalityPendant: ArtifactBlueprint = {
   cardIconId: 'artifact-equality-pendant',
   rarity: RARITIES.COMMON,
   collectable: true,
-  destinyCost: 1,
+  destinyCost: 0,
   deckSource: CARD_DECK_SOURCES.DESTINY_DECK,
   job: CARD_JOBS.WANDERER,
   abilities: [],

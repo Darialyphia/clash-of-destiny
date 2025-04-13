@@ -226,6 +226,7 @@ export abstract class UnitCard<
       deckSource: this.deckSource,
       canPlay: this.player.canPlayCard(this),
       maxTargets: targets.length,
+      modifiers: this.modifiers.map(modifier => modifier.id),
       aoe: this.getSerializedAoe(),
       range:
         this.player.currentlyPlayedCard?.equals(this) &&
