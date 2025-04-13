@@ -37,7 +37,7 @@ export const fireSalamander: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   manaCost: 5,
   atk: 3,
-  maxHp: 5,
+  maxHp: 3,
   job: CARD_JOBS.SUMMONER,
   abilities: [
     {

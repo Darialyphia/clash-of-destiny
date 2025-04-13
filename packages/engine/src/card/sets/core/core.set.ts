@@ -16,7 +16,7 @@ import { slimesToTheRescue } from './slimes-to-the-rescue';
 import { stalwartVanguard } from './stalwart-vanguard';
 import { stormFlash } from './storm-flash';
 import { swordInstructor } from './sword-instructor';
-import { testDestinyArtifact } from './test-destiny-artifact';
+import { searingBlade } from './searing-blade';
 import { insight } from './insight';
 import { waterShrineOfKnowledge } from './water-shrine-of-knowledge';
 import { windShrineOfKnowledge } from './wind-shrine-of-knowledge';
@@ -35,6 +35,7 @@ import { willOWisp } from './will-o-wisp';
 import { heatWave } from './heatwave';
 import { flameExorcist } from './flame-exorcist';
 import { fireSalamander } from './fire-salamander';
+import { philosopherStone } from './philosopher-stone';
 
 export const coreSet: CardSet = {
   id: CARD_SETS.CORE,
@@ -60,6 +61,7 @@ export const coreSet: CardSet = {
     insight,
     luminescentMystic,
     novicePyromancy,
+    philosopherStone,
     pilferingBlade,
     promisingRecruit,
     shieldMaiden,
@@ -69,7 +71,7 @@ export const coreSet: CardSet = {
     stalwartVanguard,
     stormFlash,
     swordInstructor,
-    testDestinyArtifact,
+    searingBlade,
     waterShrineOfKnowledge,
     willOWisp,
     windShrineOfKnowledge,

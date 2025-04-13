@@ -32,7 +32,7 @@ export const equalityPendant: ArtifactBlueprint = {
   deckSource: CARD_DECK_SOURCES.DESTINY_DECK,
   job: CARD_JOBS.WANDERER,
   abilities: [],
-  artifactKind: ARTIFACT_KINDS.WEAPON,
+  artifactKind: ARTIFACT_KINDS.RELIC,
   durability: 4,
   getFollowup: () => {
     return new NoFollowup();

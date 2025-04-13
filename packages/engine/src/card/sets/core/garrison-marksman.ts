@@ -33,7 +33,7 @@ export const garrisonMarksman: UnitBlueprint = {
   manaCost: 2,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
-  atk: 2,
+  atk: 1,
   maxHp: 1,
   job: CARD_JOBS.AVENGER,
   getFollowup: () => {

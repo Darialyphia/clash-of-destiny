@@ -23,9 +23,9 @@ export const wrathOfTheSkies: ArtifactBlueprint = {
   affinity: AFFINITIES.GENESIS,
   name: 'Wrath of the Skies',
   getDescription: () => {
-    return `Your Hero has +1 Attack.\nWhen your hero deals combat damage to a unit, deal 2 damage to all joined units.`;
+    return `When your hero deals combat damage to a unit, deal 2 damage to all joined units.`;
   },
-  staticDescription: `Your Hero has +1 Attack.\nWhen your hero deals combat damage to a unit, deal 2 damage to all joined units.`,
+  staticDescription: `When your hero deals combat damage to a unit, deal 2 damage to all joined units.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'artifact-wrath-of-the-skies',
   rarity: RARITIES.EPIC,
@@ -41,31 +41,10 @@ export const wrathOfTheSkies: ArtifactBlueprint = {
   },
   onInit() {},
   onPlay(game, card, artifact) {
-    const buff = new Modifier('wrath-of-the-skies-buff', game, card, {
-      stackable: true,
-      initialStacks: 1,
-      mixins: [
-        new UnitInterceptorModifierMixin(game, {
-          key: 'attack',
-          interceptor: (value, ctx, modifier) => {
-            return value + modifier.stacks;
-          }
-        })
-      ]
-    });
-
     artifact.addModifier(
-      new Modifier('wrath-of--the-skies', game, card, {
+      new Modifier('wrath-of-the-skies', game, card, {
         stackable: false,
         mixins: [
-          new WhileEquipedModifierMixin(game, {
-            onApplied() {
-              card.player.hero.addModifier(buff);
-            },
-            onRemoved() {
-              card.player.hero.removeModifier(buff);
-            }
-          }),
           new GameEventModifierMixin(game, {
             eventName: GAME_EVENTS.UNIT_AFTER_DEAL_DAMAGE,
             handler(event) {

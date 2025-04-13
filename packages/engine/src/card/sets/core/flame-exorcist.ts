@@ -33,11 +33,11 @@ export const flameExorcist: UnitBlueprint = {
   spriteParts: {},
   rarity: RARITIES.EPIC,
   collectable: true,
-  manaCost: 3,
+  manaCost: 2,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
   atk: 1,
-  maxHp: 3,
+  maxHp: 2,
   job: CARD_JOBS.WANDERER,
   getFollowup: (game, card) => {
     return new MultiTargetFollowup(game, card, [

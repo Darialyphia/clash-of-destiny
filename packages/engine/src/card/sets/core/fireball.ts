@@ -18,14 +18,14 @@ export const fireball: SpellBlueprint = {
   affinity: AFFINITIES.FIRE,
   name: 'Fireball',
   getDescription: (game, card) => {
-    return `Deal 3 damage to a unit.\n@Class Bonus@: You may discard a fire card. If you do, deal ${3 + card.player.hero.spellpower} instead.`;
+    return `Deal 2 damage to a unit.\n@Class Bonus@: You may discard a fire card. If you do, deal ${3 + card.player.hero.spellpower} instead.`;
   },
-  staticDescription: `Deal 3 damage to a unit.\n@Class Bonus@: You may discard a fire card. If you do, deal  @[spellpower]@ + 3 instead.`,
+  staticDescription: `Deal 2 damage to a unit.\n@Class Bonus@: You may discard a fire card. If you do, deal  @[spellpower]@ + 3 instead.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'spell-fireball',
   rarity: RARITIES.RARE,
   collectable: true,
-  manaCost: 3,
+  manaCost: 2,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   job: CARD_JOBS.SPELLCASTER,
   abilities: [],

@@ -31,11 +31,11 @@ export const flameJuggler: UnitBlueprint = {
   spriteParts: {},
   rarity: RARITIES.RARE,
   collectable: true,
-  manaCost: 3,
+  manaCost: 2,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
   atk: 2,
-  maxHp: 3,
+  maxHp: 1,
   job: CARD_JOBS.WANDERER,
   getFollowup: () => {
     return new MinionFollowup();

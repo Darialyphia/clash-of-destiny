@@ -34,7 +34,7 @@ export const stalwartVanguard: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [floatingDestiny],
   atk: 0,
-  maxHp: 4,
+  maxHp: 3,
   job: CARD_JOBS.FIGHTER,
   getFollowup: () => {
     return new MinionFollowup();

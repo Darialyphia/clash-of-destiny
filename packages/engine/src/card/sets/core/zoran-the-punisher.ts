@@ -37,7 +37,7 @@ export const zoranThePunisher: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
   atk: 3,
-  maxHp: 6,
+  maxHp: 5,
   job: CARD_JOBS.AVENGER,
   getFollowup: () => {
     return new MinionFollowup();

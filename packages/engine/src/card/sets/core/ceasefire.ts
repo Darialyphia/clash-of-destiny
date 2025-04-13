@@ -25,7 +25,7 @@ export const ceasefire: SpellBlueprint = {
   cardIconId: 'spell-ceasefire',
   rarity: RARITIES.COMMON,
   collectable: true,
-  destinyCost: 2,
+  destinyCost: 1,
   deckSource: CARD_DECK_SOURCES.DESTINY_DECK,
   job: CARD_JOBS.SPELLCASTER,
   abilities: [],

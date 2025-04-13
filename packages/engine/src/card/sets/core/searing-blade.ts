@@ -13,11 +13,11 @@ import {
 } from '../../card.enums';
 import { NoFollowup } from '../../followups/no-followup';
 
-export const testDestinyArtifact: ArtifactBlueprint = {
+export const searingBlade: ArtifactBlueprint = {
   id: 'test-destiny-artifact',
   kind: CARD_KINDS.ARTIFACT,
   affinity: AFFINITIES.FIRE,
-  name: 'Test Destiny Artifact',
+  name: 'Searing Blade',
   getDescription: () => {
     return `Your Hero has +1 Attack.`;
   },

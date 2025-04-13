@@ -28,9 +28,11 @@ export const esteemedErudite: UnitBlueprint = {
   spriteId: 'esteemed-erudite',
   spriteParts: {},
   rarity: RARITIES.COMMON,
-  collectable: true,
-  manaCost: 3,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
+  collectable: true,
+  manaCost: 2,
+  atk: 0,
+  maxHp: 3,
   abilities: [
     {
       id: 'esteemed-erudite-draw',
@@ -53,8 +55,6 @@ export const esteemedErudite: UnitBlueprint = {
       }
     }
   ],
-  atk: 1,
-  maxHp: 4,
   job: CARD_JOBS.SPELLCASTER,
   getFollowup: () => {
     return new MinionFollowup();

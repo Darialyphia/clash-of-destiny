@@ -32,10 +32,10 @@ export const willOWisp: UnitBlueprint = {
   spriteParts: {},
   rarity: RARITIES.COMMON,
   collectable: true,
-  manaCost: 2,
+  manaCost: 1,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
-  atk: 2,
+  atk: 1,
   maxHp: 1,
   job: CARD_JOBS.SUMMONER,
   getFollowup: () => {

@@ -30,23 +30,23 @@ const isTurnPlayer = computed(() => {
         "
       />
     </template>
-    <transition>
+    <!-- <transition>
       <FancyButton
         :disabled="!player.canPerformResourceAction"
         class="pointer-events-auto w-full"
         text="Draw"
         @click="player.drawResourceAction()"
       />
-    </transition>
+    </transition> -->
 
-    <transition>
+    <!-- <transition>
       <FancyButton
         :disabled="!player.canPerformResourceAction"
         class="pointer-events-auto w-full"
         text="Replace"
         @click="ui.isReplaceResourceActionModalOpened = true"
       />
-    </transition>
+    </transition> -->
 
     <transition>
       <FancyButton

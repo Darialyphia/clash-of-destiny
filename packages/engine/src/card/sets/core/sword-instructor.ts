@@ -30,8 +30,11 @@ export const swordInstructor: UnitBlueprint = {
   spriteParts: {},
   rarity: RARITIES.RARE,
   collectable: true,
-  manaCost: 3,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
+  manaCost: 2,
+  atk: 1,
+  maxHp: 2,
+  job: CARD_JOBS.SPELLCASTER,
   abilities: [
     {
       id: 'sword-instructor-ability',
@@ -62,9 +65,6 @@ export const swordInstructor: UnitBlueprint = {
       }
     }
   ],
-  atk: 1,
-  maxHp: 3,
-  job: CARD_JOBS.SPELLCASTER,
   getFollowup: () => {
     return new MinionFollowup();
   },

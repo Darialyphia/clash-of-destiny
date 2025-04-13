@@ -3,11 +3,13 @@ import type { Unit } from '../unit/entities/unit.entity';
 import type { AnyUnitCard } from '../card/entities/unit-card.entity';
 import type { ArtifactCard } from '../card/entities/artifact-card.entity';
 import type { SpellCard } from '../card/entities/spell-card.entity';
+import type { AnyCard } from '../card/entities/card.entity';
 
 export const DAMAGE_TYPES = {
   COMBAT: 'COMBAT',
   SPELL: 'SPELL',
-  ABILITY: 'ABILITY'
+  ABILITY: 'ABILITY',
+  PURE: 'PURE'
 } as const;
 
 export type DamageType = Values<typeof DAMAGE_TYPES>;
@@ -68,6 +70,16 @@ export class SpellDamage extends Damage<SpellCard> {
 export class AbilityDamage extends Damage<AnyUnitCard | ArtifactCard> {
   constructor(options: BetterOmit<DamageOptions<AnyUnitCard | ArtifactCard>, 'type'>) {
     super({ ...options, type: DAMAGE_TYPES.ABILITY });
+  }
+
+  getFinalAmount(target: Unit) {
+    return Math.max(0, target.getReceivedDamage(this.baseAmount, this, this._source));
+  }
+}
+
+export class PureDamage extends Damage<AnyCard> {
+  constructor(options: BetterOmit<DamageOptions<AnyCard>, 'type'>) {
+    super({ ...options, type: DAMAGE_TYPES.PURE });
   }
 
   getFinalAmount(target: Unit) {

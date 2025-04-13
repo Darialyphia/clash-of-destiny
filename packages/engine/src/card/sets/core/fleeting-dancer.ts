@@ -33,7 +33,7 @@ export const fleetingDancer: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
   atk: 2,
-  maxHp: 4,
+  maxHp: 2,
   job: CARD_JOBS.GUARDIAN,
   getFollowup: () => {
     return new MinionFollowup();
