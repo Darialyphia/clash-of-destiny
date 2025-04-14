@@ -1,5 +1,5 @@
 import { assert, isDefined, Vec2, type Point, type Serializable } from '@game/shared';
-import { Entity, INTERCEPTOR_EVENTS } from '../../entity';
+import { Entity, InterceptableEvent, INTERCEPTOR_EVENTS } from '../../entity';
 import { type AnyCard } from '../../card/entities/card.entity';
 import { type Game } from '../../game/game';
 import { MOVE_EVENTS, MovementComponent } from '../components/movement.component';
@@ -129,26 +129,10 @@ export class Unit
     });
     this.combat = new CombatComponent(this.game, this);
 
-    this.game.on(GAME_EVENTS.PLAYER_START_TURN, () => {
-      this.onTurnStart();
-    });
+    this.game.on(GAME_EVENTS.PLAYER_START_TURN, this.onTurnStart.bind(this));
 
-    this.on(INTERCEPTOR_EVENTS.ADD_INTERCEPTOR, e => {
-      if (e.key === 'maxHp') {
-        this.hp.max = this._card.maxHp;
-        if (this.hp.current <= 0) {
-          this.destroy(this._card);
-        }
-      }
-    });
-    this.on(INTERCEPTOR_EVENTS.REMOVE_INTERCEPTOR, e => {
-      if (e.key === 'maxHp') {
-        this.hp.max = this._card.maxHp;
-        if (this.hp.current <= 0) {
-          this.destroy(this._card);
-        }
-      }
-    });
+    this.on(INTERCEPTOR_EVENTS.ADD_INTERCEPTOR, this.onInterceptorChange.bind(this));
+    this.on(INTERCEPTOR_EVENTS.REMOVE_INTERCEPTOR, this.onInterceptorChange.bind(this));
     this.forwardEvents();
   }
 
@@ -193,6 +177,15 @@ export class Unit
         })),
       isExhausted: this.isExhausted
     };
+  }
+
+  private onInterceptorChange(e: InterceptableEvent) {
+    if (e.key === 'maxHp') {
+      this.hp.max = this._card.maxHp;
+      if (this.hp.current <= 0) {
+        this.destroy(this._card);
+      }
+    }
   }
 
   private forwardEvents() {
@@ -678,6 +671,7 @@ export class Unit
   }
 
   onTurnStart() {
+    if (this.isDead) return;
     this.combat.resetAttackCount();
     this.movement.resetMovementsCount();
 
