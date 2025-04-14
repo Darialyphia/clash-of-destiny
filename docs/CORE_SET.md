@@ -1,6 +1,7 @@
-# Core Set
+npm i vite-plugin-md -D# Core Set
 
 Legend:
+
 - [exhaust] : means that you have to exaust this minion to execute the effect.
 - XM: indicates that the card or ability costs X Mana
 - XD: indicates that the card or ability costs X Destiny
@@ -58,7 +59,7 @@ Ranged(2)
 
 [exhaust], 1M -> restore 1 Durability on one of your artifacts.
 
---- 
+---
 
 **ShieldMaiden** (Minion - Guardian) [x]
 
@@ -188,15 +189,13 @@ On Enter: Your Hero gains 1 Level.
 
 #### Arcane
 
-
-
 ### Spells
 
 #### Normal
 
 **Storm Flash** (Spell - Avenger) [x]
 
-1M 
+1M
 
 Teleport a unit up to (spellpower + 1) spaces away.
 
@@ -226,8 +225,6 @@ Floating Destiny
 
 #### Arcane
 
-
-
 ### Artifacts
 
 #### Normal
@@ -249,8 +246,6 @@ Floating Destiny
 #### Wrath
 
 #### Arcane
-
-
 
 ### Secrets
 
@@ -274,10 +269,6 @@ Floating Destiny
 
 #### Arcane
 
-
-
-
-
 ## Destiny Deck
 
 #### Heroes
@@ -297,7 +288,6 @@ LV 2 | 2D | 2 ATK | 1 SP | 20 HP
 Aiden Lineage
 
 On Attack: Put a Storm Flash in your hand.
-
 
 #### Minions
 
@@ -320,8 +310,6 @@ On Attack: Put a Storm Flash in your hand.
 #### Wrath
 
 #### Arcane
-
-
 
 #### Spells
 
@@ -357,11 +345,9 @@ If your opponent controls at least 2 more minions than you, summon a Bubbly Slim
 
 #### Arcane
 
-
-
 #### Artifacts
 
-#### Normal 
+#### Normal
 
 #### Fire
 
@@ -380,12 +366,10 @@ If your opponent controls at least 2 more minions than you, summon a Bubbly Slim
 #### Wrath
 
 #### Arcane
-
-
 
 #### Secrets
 
-#### Normal 
+#### Normal
 
 #### Fire
 
@@ -404,4 +388,3 @@ If your opponent controls at least 2 more minions than you, summon a Bubbly Slim
 #### Wrath
 
 #### Arcane
-

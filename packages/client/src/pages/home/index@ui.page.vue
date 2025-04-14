@@ -14,7 +14,7 @@ definePage({
         <!-- <RouterLink :to="{ name: 'Settings' }">Settings</RouterLink> -->
       </li>
       <li>
-        <!-- <RouterLink :to="{ name: 'SinglePlayer' }">Vs AI</RouterLink> -->
+        <RouterLink :to="{ name: 'HowToPlay' }">How to play</RouterLink>
       </li>
       <li>
         <RouterLink :to="{ name: 'Sandbox' }">Sandbox</RouterLink>

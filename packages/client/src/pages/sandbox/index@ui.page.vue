@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import Fps from '@/shared/components/Fps.vue';
-import { useBattleEvent, useBattleStore } from '@/battle/stores/battle.store';
+import { useBattleStore } from '@/battle/stores/battle.store';
 import BattleUi from '@/battle/components/BattleUi.vue';
-import { premadeDecks } from '@/utils/premade-decks';
-import UiButton from '@/ui/components/UiButton.vue';
 import { useLocalStorage } from '@vueuse/core';
 import {
   StandardDeckValidator,
@@ -14,6 +12,9 @@ import { keyBy } from 'lodash-es';
 import { GameSession } from '@game/engine/src/game/game-session';
 import type { GameOptions } from '@game/engine/src/game/game';
 import type { Nullable } from '@game/shared';
+import FancyButton from '@/ui/components/FancyButton.vue';
+import { RouterLink } from 'vue-router';
+import { useRouteQuery } from '@vueuse/router';
 
 definePage({
   name: 'Sandbox'
@@ -23,6 +24,9 @@ const savedDecks = useLocalStorage<ValidatableDeck[]>(
   'clash-of-destiny-decks',
   []
 );
+
+const player1DeckId = useRouteQuery('p1');
+const player2DeckId = useRouteQuery('p2');
 
 const authorizedSets: CardSet[] = [CARD_SET_DICTIONARY.CORE];
 const cardPool = keyBy(authorizedSets.map(set => set.cards).flat(), 'id');
@@ -48,16 +52,19 @@ const availableDecks = computed(() =>
 );
 const battleStore = useBattleStore();
 
-const decks = ref<
-  [
-    Nullable<GameOptions['players'][number]>,
-    Nullable<GameOptions['players'][number]>
-  ]
->([null, null]);
-
 let session: GameSession;
 
 const start = () => {
+  const p1Deck = availableDecks.value.find(
+    deck => deck.id === player1DeckId.value
+  );
+  const p2Deck = availableDecks.value.find(
+    deck => deck.id === player2DeckId.value
+  );
+  if (!p1Deck || !p2Deck) {
+    return;
+  }
+
   session = new GameSession({
     mapId: '1v1',
     rngSeed: new Date().toISOString(),
@@ -65,16 +72,14 @@ const start = () => {
     overrides: {},
     players: [
       {
+        ...p1Deck,
         id: 'p1',
-        name: 'Player 1',
-        mainDeck: decks.value[0]!.mainDeck,
-        destinyDeck: decks.value[0]!.destinyDeck
+        name: 'Player 1'
       },
       {
+        ...p2Deck,
         id: 'p2',
-        name: 'Player 2',
-        mainDeck: decks.value[1]!.mainDeck,
-        destinyDeck: decks.value[1]!.destinyDeck
+        name: 'Player 2'
       }
     ]
   });
@@ -105,40 +110,42 @@ const start = () => {
 <template>
   <section v-if="!battleStore.isReady" class="pointer-events-auto">
     <div>
-      <fieldset>
-        <legend>Player 1 deck</legend>
-        <label v-for="deck in availableDecks" :key="deck.id">
-          <input
-            type="radio"
-            v-model="decks[0]"
-            :value="deck"
-            class="sr-only"
-          />
-          {{ deck.name }}
-        </label>
-      </fieldset>
-      <fieldset>
-        <legend>Player 2 deck</legend>
-        <label v-for="deck in availableDecks" :key="deck.id">
-          <input
-            type="radio"
-            v-model="decks[1]"
-            :value="deck"
-            class="sr-only"
-          />
-          {{ deck.name }}
-        </label>
-      </fieldset>
+      <div v-if="!availableDecks.length">You haven't built any decks.</div>
+      <router-link :to="{ name: 'Collection' }">Collection</router-link>
+      <div class="deck-selector">
+        <fieldset>
+          <legend>Player 1 deck</legend>
+          <label v-for="deck in availableDecks" :key="deck.id">
+            <input
+              type="radio"
+              v-model="player1DeckId"
+              :value="deck.id"
+              class="sr-only"
+            />
+            {{ deck.name }}
+          </label>
+        </fieldset>
+        <fieldset>
+          <legend>Player 2 deck</legend>
+          <label v-for="deck in availableDecks" :key="deck.id">
+            <input
+              type="radio"
+              v-model="player2DeckId"
+              :value="deck.id"
+              class="sr-only"
+            />
+            {{ deck.name }}
+          </label>
+        </fieldset>
+      </div>
     </div>
 
-    <UiButton
-      :disabled="!decks[0] || !decks[1]"
-      class="primary-button"
-      is-cta
+    <FancyButton
+      :disabled="!player1DeckId || !player2DeckId"
+      class="start-battle-button"
+      text="Start"
       @click="start"
-    >
-      Start
-    </UiButton>
+    />
   </section>
 
   <template v-else>
@@ -153,26 +160,26 @@ section {
   height: 100dvh;
   display: grid;
   place-content: center;
+}
 
-  > div {
-    padding: var(--size-8);
-    background: var(--fancy-bg);
-    border: var(--fancy-border);
+.deck-selector {
+  padding: var(--size-8);
+  background: var(--fancy-bg);
+  border: var(--fancy-border);
 
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--size-9);
-  }
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--size-9);
+}
 
-  > button {
-    justify-self: center;
-    margin-top: var(--size-3);
-    transition: all 0.3s var(--ease-out-3);
+.start-battle-button {
+  justify-self: center;
+  margin-top: var(--size-3);
+  transition: all 0.3s var(--ease-out-3);
 
-    &:disabled {
-      opacity: 0;
-      transform: translateY(var(--size-5));
-    }
+  &:disabled {
+    opacity: 0;
+    transform: translateY(var(--size-5));
   }
 }
 

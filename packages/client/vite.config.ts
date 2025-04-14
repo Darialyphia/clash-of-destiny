@@ -9,7 +9,7 @@ import vueRouter from 'unplugin-vue-router/vite';
 import { VueRouterAutoImports } from 'unplugin-vue-router';
 import unoCSS from 'unocss/vite';
 import icons from 'unplugin-icons/vite';
-
+import markdown, { Mode } from 'vite-plugin-markdown';
 import { isCustomElement, transformAssetUrls } from 'vue3-pixi/compiler';
 //@ts-expect-error no types for this package
 import assetpackConfig from '@game/assetpack';
@@ -107,7 +107,11 @@ export default defineConfig({
     }),
     unoCSS(),
     icons({}),
-    assetpackPlugin()
+    assetpackPlugin(),
+    // @ts-expect-error
+    markdown.default({
+      mode: [Mode.VUE]
+    })
   ],
   resolve: {
     alias: {

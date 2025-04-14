@@ -101,6 +101,13 @@ export class InputSystem extends System<SerializedInput[]> {
     return Object.keys(inputMap).includes(type);
   }
 
+  private addToHistory(input: Input<any>) {
+    const ignored: Constructor<Input<any>>[] = [AddNextTargetIntentCardInput];
+    if (ignored.includes(input.constructor as Constructor<Input<any>>)) return;
+
+    this.history.push(input);
+  }
+
   schedule(fn: AnyFunction) {
     this.queue.push(fn);
     if (!this.isRunning) {
@@ -149,7 +156,7 @@ export class InputSystem extends System<SerializedInput[]> {
     input.execute();
 
     this.game.emit(GAME_EVENTS.INPUT_END, new GameInputEvent({ input }));
-    this.history.push(input);
+    this.addToHistory(input);
     this._currentAction = null;
   }
 
