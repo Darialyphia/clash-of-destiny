@@ -1,6 +1,7 @@
 import type { Point } from '@game/shared';
+import { GameError } from '../game/game-error';
 
-export class InputError extends Error {
+export class InputError extends GameError {
   constructor(message: string) {
     super(`Input error: ${message}`);
   }
@@ -66,6 +67,12 @@ export class UnknownUnitError extends InputError {
   }
 }
 
+export class UnknownCardError extends Error {
+  constructor(cardId: string) {
+    super(`Unknown card id: ${cardId}`);
+  }
+}
+
 export class UnitNotOwnedError extends InputError {
   constructor() {
     super('You do not own this unit.');
@@ -123,5 +130,11 @@ export class IllegalAbilityError extends InputError {
 export class UnknownArtifactError extends InputError {
   constructor(artifactId: string) {
     super(`Unknown artifact id: ${artifactId}`);
+  }
+}
+
+export class TooManyResourceActionError extends InputError {
+  constructor() {
+    super('Player already performed their resource action.');
   }
 }

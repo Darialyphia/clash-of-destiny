@@ -36,6 +36,8 @@ import type {
 import type { SecretCard } from '../card/entities/secret-card.entity';
 import { GAME_PHASE_EVENTS } from './game.enums';
 import type { GamePhaseEventMap } from './systems/game-phase.system';
+import { InputError } from '../input/input-errors';
+import type { SerializedGame } from './game';
 
 export class GameInputEvent extends TypedSerializableEvent<
   { input: Input<any> },
@@ -56,11 +58,15 @@ export class GameInputQueueFlushedEvent extends TypedSerializableEvent<
 }
 
 export class GameErrorEvent extends TypedSerializableEvent<
-  { error: Error },
-  { error: string }
+  { error: Error; debugDump: SerializedGame },
+  { error: string; isFatal: boolean; debugDump: SerializedGame }
 > {
   serialize() {
-    return { error: this.data.error.message };
+    return {
+      error: this.data.error.message,
+      isFatal: !(this.data.error instanceof InputError),
+      debugDump: this.data.debugDump
+    };
   }
 }
 

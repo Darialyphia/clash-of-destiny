@@ -10,7 +10,7 @@ import {
 import { CARD_SET_DICTIONARY, type CardSet } from '@game/engine/src/card/sets';
 import { keyBy } from 'lodash-es';
 import { GameSession } from '@game/engine/src/game/game-session';
-import type { GameOptions } from '@game/engine/src/game/game';
+import type { GameOptions, SerializedGame } from '@game/engine/src/game/game';
 import type { Nullable } from '@game/shared';
 import FancyButton from '@/ui/components/FancyButton.vue';
 import { RouterLink } from 'vue-router';
@@ -54,6 +54,25 @@ const battleStore = useBattleStore();
 
 let session: GameSession;
 
+const savedGame = useLocalStorage<SerializedGame | null>(
+  'clash-of-destin-current-sandbox',
+  null,
+  {
+    serializer: {
+      read: (value: string) => {
+        try {
+          return JSON.parse(value);
+        } catch (e) {
+          return null;
+        }
+      },
+      write: (value: Nullable<SerializedGame>) => {
+        if (!value) return '';
+        return JSON.stringify(value);
+      }
+    }
+  }
+);
 const start = () => {
   const p1Deck = availableDecks.value.find(
     deck => deck.id === player1DeckId.value
@@ -83,6 +102,10 @@ const start = () => {
       }
     ]
   });
+  savedGame.value = session.game.serialize();
+  // session.subscribe(null, () => {
+  //   savedGame.value = session.game.serialize();
+  // });
   // @ts-expect-error
   window._debugSession = () => {
     console.log(session.game);
@@ -92,6 +115,37 @@ const start = () => {
     console.log(battleStore.state);
   };
   session.initialize();
+  battleStore.init({
+    id: 'p1',
+    type: 'local',
+    subscriber(onSnapshot) {
+      session.subscribe(null, onSnapshot);
+    },
+    initialState:
+      session.game.snapshotSystem.getLatestOmniscientSnapshot().state,
+    dispatcher: input => {
+      session.dispatch(input);
+    }
+  });
+};
+
+const continueGame = () => {
+  if (!savedGame.value) return;
+  session = GameSession.fromSerializedGame(savedGame.value, {});
+
+  session.subscribe(null, () => {
+    savedGame.value = session.game.serialize();
+  });
+  // @ts-expect-error
+  window._debugSession = () => {
+    console.log(session.game);
+  };
+  // @ts-expect-error
+  window._debugClient = () => {
+    console.log(battleStore.state);
+  };
+  session.initialize();
+
   battleStore.init({
     id: 'p1',
     type: 'local',
@@ -140,12 +194,20 @@ const start = () => {
       </div>
     </div>
 
-    <FancyButton
-      :disabled="!player1DeckId || !player2DeckId"
-      class="start-battle-button"
-      text="Start"
-      @click="start"
-    />
+    <div class="flex gap-4 mt-3 justify-evenly">
+      <FancyButton
+        :disabled="!savedGame"
+        variant="info"
+        text="Continue"
+        @click="continueGame"
+      />
+      <FancyButton
+        :disabled="!player1DeckId || !player2DeckId"
+        class="start-battle-button"
+        text="Start"
+        @click="start"
+      />
+    </div>
   </section>
 
   <template v-else>
@@ -170,17 +232,6 @@ section {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--size-9);
-}
-
-.start-battle-button {
-  justify-self: center;
-  margin-top: var(--size-3);
-  transition: all 0.3s var(--ease-out-3);
-
-  &:disabled {
-    opacity: 0;
-    transform: translateY(var(--size-5));
-  }
 }
 
 fieldset {

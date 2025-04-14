@@ -12,7 +12,12 @@ import {
   type GameEventMap
 } from './game.events';
 import { createCard, cardIdFactory } from '../card/card.factory';
-import { assert, type IndexedRecord } from '@game/shared';
+import {
+  assert,
+  type BetterOmit,
+  type IndexedRecord,
+  type Serializable
+} from '@game/shared';
 import type { CardBlueprint } from '../card/card-blueprint';
 import { BoardSystem } from '../board/board-system';
 import { UnitSystem } from '../unit/unit-system';
@@ -40,7 +45,12 @@ export type GameOptions = {
   players: [PlayerOptions, PlayerOptions];
 };
 
-export class Game {
+export type SerializedGame = {
+  initialState: BetterOmit<GameOptions, 'overrides'>;
+  history: SerializedInput[];
+};
+
+export class Game implements Serializable<SerializedGame> {
   readonly id: string;
 
   private readonly emitter = new TypedSerializableEventEmitter<GameEventMap>();
@@ -106,7 +116,6 @@ export class Game {
 
   initialize() {
     this.rngSystem.initialize({ seed: this.options.rngSeed });
-    this.inputSystem.initialize(this.options.history ?? []);
     this.boardSystem.initialize({
       map: this.mapPool[this.options.mapId]
     });
@@ -129,8 +138,18 @@ export class Game {
       }
     });
     this.gamePhaseSystem.turnPlayer.startTurn();
+    this.inputSystem.initialize(this.options.history ?? []);
     this.snapshotSystem.takeSnapshot();
     this.emit(GAME_EVENTS.READY, new GameReadyEvent({}));
+  }
+
+  serialize() {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { overrides, ...options } = this.options;
+    return {
+      initialState: options,
+      history: this.inputSystem.serialize()
+    };
   }
 
   getBlueprint(id: string) {

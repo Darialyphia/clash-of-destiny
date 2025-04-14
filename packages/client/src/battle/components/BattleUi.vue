@@ -1,9 +1,5 @@
 <script setup lang="ts">
-import {
-  useTurnPlayer,
-  useGameState,
-  useUserPlayer
-} from '../stores/battle.store';
+import { useGameState, useUserPlayer } from '../stores/battle.store';
 import Hand from '@/card/components/Hand.vue';
 import TargetingUi from './TargetingUi.vue';
 import BattleLog from '@/battle/components/BattleLog.vue';
@@ -22,6 +18,7 @@ import EquipedArtifacts from './EquipedArtifacts.vue';
 import { INTERACTION_STATES } from '@game/engine/src/game/systems/interaction.system';
 import OpponentHand from './OpponentHand.vue';
 import SelectCardInteractionUi from './SelectCardInteractionUi.vue';
+import ErrorUi from './ErrorUi.vue';
 
 const ui = useBattleUiStore();
 const userPlayer = useUserPlayer();
@@ -56,6 +53,7 @@ const { state } = useGameState();
     <PlayIntent />
     <TurnIndicator />
     <DestinyPhaseUi />
+    <ErrorUi />
     <TargetingUi />
     <SelectCardInteractionUi />
     <HighlightedUnit />

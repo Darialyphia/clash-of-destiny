@@ -120,6 +120,15 @@ until(descriptionBox)
       }
     }
   });
+const multiLineChecker = useTemplateRef('multi-line-checker');
+
+const isMultiLine = computed(() => {
+  if (!multiLineChecker.value) return;
+  if (!descriptionBox.value) return;
+  const boxRect = descriptionBox.value.getBoundingClientRect();
+  const checkerRect = multiLineChecker.value.getBoundingClientRect();
+  return checkerRect.top > boxRect.top;
+});
 </script>
 
 <template>
@@ -185,7 +194,11 @@ until(descriptionBox)
         <template v-if="card.job">-</template>
         {{ card.job?.toLocaleLowerCase() }}
       </div>
-      <div class="description" ref="description-box">
+      <div
+        class="description"
+        ref="description-box"
+        :class="{ 'is-multi-line': isMultiLine || card.abilities?.length }"
+      >
         <div>
           <CardText :text="card.description" />
           <CardText
@@ -194,7 +207,9 @@ until(descriptionBox)
             :text="ability"
           />
         </div>
+        <span ref="multi-line-checker" />
       </div>
+
       <div class="glare lt-lg:hidden" />
     </div>
     <div class="card-back" />
@@ -412,6 +427,19 @@ until(descriptionBox)
   left: calc(24px * var(--pixel-scale));
   font-size: calc(1px * v-bind(textSize));
   overflow: hidden;
+  text-align: center;
+  &.is-multi-line {
+    text-align: left;
+  }
+  > * {
+    display: inline-block;
+  }
+  > span {
+    width: 1px;
+    height: 1px;
+    align-self: start;
+    vertical-align: top;
+  }
 }
 
 .glare {

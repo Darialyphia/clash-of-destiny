@@ -166,7 +166,6 @@ export const useBattleStore = defineStore('battle', () => {
           isPlayingFx.value = true;
 
           for (const event of snapshot.events) {
-            console.log(event.eventName);
             await fxEmitter.emitAsync(
               `pre_${event.eventName}`,
               event.event as any
@@ -174,7 +173,6 @@ export const useBattleStore = defineStore('battle', () => {
             await fxEmitter.emitAsync(event.eventName, event.event as any);
           }
           isPlayingFx.value = false;
-          const now = performance.now();
 
           if (!state.value) throw new Error('State not initialized');
           state.value.entities = buildentities(

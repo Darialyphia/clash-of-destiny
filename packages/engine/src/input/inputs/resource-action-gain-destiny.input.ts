@@ -2,7 +2,11 @@ import { z } from 'zod';
 import { defaultInputSchema, Input } from '../input';
 import { GAME_PHASES } from '../../game/game.enums';
 import { assert } from '@game/shared';
-import { InvalidCardIndexError, NotTurnPlayerError } from '../input-errors';
+import {
+  InvalidCardIndexError,
+  NotTurnPlayerError,
+  TooManyResourceActionError
+} from '../input-errors';
 import { PlayerAlreadyPerformedResourceActionError } from '../../player/player-errors';
 import { defaultConfig } from '../../config';
 
@@ -32,10 +36,7 @@ export class ResourceActionGainDestinyInput extends Input<typeof schema> {
       new InvalidCardIndexError()
     );
 
-    assert(
-      this.player.canPerformResourceAction,
-      new PlayerAlreadyPerformedResourceActionError()
-    );
+    assert(this.player.canPerformResourceAction(), new TooManyResourceActionError());
 
     this.player.resourceActionGainDestiny(this.payload.indices);
   }

@@ -116,7 +116,11 @@ watch(
           variant="error"
           @click="ui.isDestinyResourceActionModalOpened = false"
         />
-        <FancyButton text="Banish" @click="banish" />
+        <FancyButton
+          text="Banish"
+          :disabled="!selectedIndices.length"
+          @click="banish"
+        />
       </footer>
     </div>
   </UiModal>

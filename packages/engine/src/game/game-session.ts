@@ -1,5 +1,5 @@
 import { type BetterOmit } from '@game/shared';
-import { Game, type GameOptions } from './game';
+import { Game, type GameOptions, type SerializedGame } from './game';
 import type { SerializedInput } from '../input/input-system';
 import type {
   GameStateSnapshot,
@@ -13,6 +13,19 @@ export type GameSessionOptions = BetterOmit<GameOptions, 'id'> & {
 };
 
 export class GameSession {
+  static fromSerializedGame(
+    serializedGame: SerializedGame,
+    overrides: GameOptions['overrides']
+  ) {
+    const session = new GameSession({
+      ...serializedGame.initialState,
+      history: serializedGame.history,
+      overrides
+    });
+
+    return session;
+  }
+
   readonly game: Game;
 
   constructor(options: GameSessionOptions) {
@@ -39,15 +52,14 @@ export class GameSession {
   >(playerId: TPlayerId, cb: (snapshot: GameStateSnapshot<TSnapshot>) => void) {
     this.game.on(GAME_EVENTS.FLUSHED, () => {
       if (playerId) {
-        cb(
-          this.game.snapshotSystem.getLatestSnapshotForPlayer(
-            playerId
-          ) as GameStateSnapshot<TSnapshot>
-        );
+        const snapshot = this.game.snapshotSystem.getLatestSnapshotForPlayer(
+          playerId
+        ) as GameStateSnapshot<TSnapshot>;
+        cb(snapshot);
       } else {
-        cb(
-          this.game.snapshotSystem.getLatestOmniscientSnapshot() as GameStateSnapshot<TSnapshot>
-        );
+        const snapshot =
+          this.game.snapshotSystem.getLatestOmniscientSnapshot() as GameStateSnapshot<TSnapshot>;
+        cb(snapshot);
       }
     });
   }

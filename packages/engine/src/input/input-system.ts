@@ -26,6 +26,7 @@ import { PlayDestinyCardInput } from './inputs/play-destiny-card.input';
 import { ResourceActionDrawInput } from './inputs/resource-action-draw.input';
 import { ResourceActionGainDestinyInput } from './inputs/resource-action-gain-destiny.input';
 import { UseCardAbilityInput } from './inputs/use-card-ability.input';
+import { InputError } from './input-errors';
 
 type GenericInputMap = Record<string, Constructor<Input<DefaultSchema>>>;
 
@@ -133,7 +134,24 @@ export class InputSystem extends System<SerializedInput[]> {
       console.groupCollapsed('%c[INPUT SYSTEM]: ERROR', 'color: #ff0000');
       console.error(err);
       console.groupEnd();
-      this.game.emit('game.error', new GameErrorEvent({ error: err as Error }));
+
+      const serialized = this.game.serialize();
+      if (this._currentAction) {
+        serialized.history.push(this._currentAction.serialize() as SerializedInput);
+      }
+      this.game.emit(
+        'game.error',
+        new GameErrorEvent({ error: err as Error, debugDump: serialized })
+      );
+
+      // this means the erorr got caught during player input validation, the game state is not corrupted but clients might need to resync
+      if (err instanceof InputError) {
+        this.isRunning = false;
+        this.queue = [];
+        this._currentAction = null;
+        this.game.snapshotSystem.takeSnapshot();
+        this.game.emit('game.input-queue-flushed', new GameInputQueueFlushedEvent({}));
+      }
     }
   }
 

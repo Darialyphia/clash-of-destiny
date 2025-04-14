@@ -7,7 +7,6 @@ import {
   NotTurnPlayerError,
   TooManyReplacesError
 } from '../input-errors';
-import { PlayerAlreadyPerformedResourceActionError } from '../../player/player-errors';
 
 const schema = defaultInputSchema.extend({
   index: z.number()

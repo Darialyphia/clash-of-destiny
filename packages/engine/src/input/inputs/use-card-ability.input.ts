@@ -5,8 +5,7 @@ import { GAME_PHASES } from '../../game/game.enums';
 import {
   IllegalAbilityError,
   NotTurnPlayerError,
-  UnitNotOwnedError,
-  UnknownUnitError
+  UnknownCardError
 } from '../input-errors';
 import { CardNotFoundError } from '../../card/card-errors';
 
@@ -32,7 +31,7 @@ export class UseCardAbilityInput extends Input<typeof schema> {
       new NotTurnPlayerError()
     );
 
-    assert(isDefined(this.card), new CardNotFoundError());
+    assert(isDefined(this.card), new UnknownCardError(this.payload.cardId));
 
     assert(this.card.canUseAbiliy(this.payload.abilityId), new IllegalAbilityError());
     this.card.useAbility(this.payload.abilityId);
