@@ -1,4 +1,5 @@
 import { PointAOEShape } from '../../../aoe/point.aoe-shape';
+import { OnEnterModifier } from '../../../modifier/modifiers/on-enter.modifier';
 import { OnKillModifier } from '../../../modifier/modifiers/on-kill.modifier';
 import { SimpleHealthBuffModifier } from '../../../modifier/modifiers/simple-health-buff.modifier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
@@ -12,6 +13,7 @@ import {
   RARITIES,
   UNIT_KINDS
 } from '../../card.enums';
+import type { MinionCard } from '../../entities/minion-card.entity';
 import { MinionFollowup } from '../../followups/minion.followup';
 
 export const primordialHerald: UnitBlueprint = {
@@ -21,7 +23,7 @@ export const primordialHerald: UnitBlueprint = {
   affinity: AFFINITIES.GENESIS,
   name: 'Primordial Herald',
   getDescription: () => {
-    return `@On Enter@: You may discard a Genesis card to summon a minion from your discard pile whose cost is less than or equal to the discarded card's cost.`;
+    return `@On Enter@: You may discard a Genesis card to summon a minion from your discard pile whose cost is less than or equal to the discarded card's cost, nearby this unit.`;
   },
   staticDescription: `@On Enter@: You may discard a Genesis card to summon a minion from your discard pile whose cost is less than or equal to the discarded card's cost.`,
   setId: CARD_SETS.CORE,
@@ -42,6 +44,69 @@ export const primordialHerald: UnitBlueprint = {
   getAoe(game, card) {
     return new PointAOEShape(game, card.player, TARGETING_TYPE.UNIT);
   },
-  onInit() {},
-  onPlay(game, card) {}
+  onInit(game, card) {
+    card.addModifier(
+      new OnEnterModifier(game, card, event => {
+        const genesisCardsInHand = card.player.cards.hand.filter(
+          c => c.affinity === AFFINITIES.GENESIS
+        );
+        if (!genesisCardsInHand.length) {
+          return;
+        }
+
+        game.interaction.startSelectingCards({
+          choices: genesisCardsInHand,
+          minChoices: 0,
+          maxChoices: 1,
+          player: card.player,
+          onComplete(selectedCards) {
+            if (!selectedCards.length) return;
+            const [discardedCard] = selectedCards;
+            const minionsInDiscardPile = Array.from(
+              card.player.cards.discardPile.values()
+            ).filter(card => card.kind === CARD_KINDS.UNIT);
+            if (!minionsInDiscardPile.length) return;
+
+            game.interaction.startSelectingCards({
+              choices: minionsInDiscardPile,
+              minChoices: 1,
+              maxChoices: 1,
+              player: card.player,
+              onComplete(selectedCards) {
+                const [cardToSummon] = selectedCards;
+                game.interaction.startSelectingTargets({
+                  player: card.player,
+                  getNextTarget(targets) {
+                    const nearby = game.boardSystem
+                      .getNeighbors(event.data.affectedCells[0])
+                      .filter(cell => cell.isWalkable && !cell.unit);
+
+                    return {
+                      type: 'cell',
+                      isElligible(point) {
+                        if (targets.length) return false;
+                        if (!nearby.length) return false;
+                        return nearby.some(cell => cell.position.equals(point));
+                      }
+                    };
+                  },
+                  canCommit(targets) {
+                    return targets.length > 0;
+                  },
+                  onComplete(targets) {
+                    card.player.summonMinionFromCard(
+                      cardToSummon as MinionCard,
+                      targets[0].cell
+                    );
+                    card.player.cards.discard(discardedCard);
+                  }
+                });
+              }
+            });
+          }
+        });
+      })
+    );
+  },
+  onPlay() {}
 };

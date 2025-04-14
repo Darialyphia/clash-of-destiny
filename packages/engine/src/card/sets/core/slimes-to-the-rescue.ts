@@ -46,10 +46,10 @@ export const slimesToTheRescue: SpellBlueprint = {
       const belowCell = game.boardSystem.getCellAt({ x: heroCell.x, y: heroCell.y + 1 });
 
       if (aboveCell) {
-        card.player.summonMinion(bubblySlime.id, aboveCell);
+        card.player.summonMinionFromBlueprint(bubblySlime.id, aboveCell);
       }
       if (belowCell) {
-        card.player.summonMinion(bubblySlime.id, belowCell);
+        card.player.summonMinionFromBlueprint(bubblySlime.id, belowCell);
       }
     }
   }

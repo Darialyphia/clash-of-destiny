@@ -309,8 +309,19 @@ export class Player
     return card;
   }
 
-  summonMinion(blueprintId: string, position: Point) {
+  summonMinionFromBlueprint(blueprintId: string, position: Point) {
     const card = this.generateCard(blueprintId) as MinionCard;
+    if (!card.canPlayAt(position)) return;
+    card.play();
+    this.game.interaction.addTarget({ type: 'cell', cell: position });
+    if (
+      this.game.interaction.can(INTERACTION_STATE_TRANSITIONS.COMMIT_SELECTING_TARGETS)
+    ) {
+      this.game.interaction.commitTargets();
+    }
+  }
+
+  summonMinionFromCard(card: MinionCard, position: Point) {
     if (!card.canPlayAt(position)) return;
     card.play();
     this.game.interaction.addTarget({ type: 'cell', cell: position });
