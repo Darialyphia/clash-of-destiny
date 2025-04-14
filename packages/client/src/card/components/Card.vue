@@ -125,6 +125,8 @@ const multiLineChecker = useTemplateRef('multi-line-checker');
 const isMultiLine = computed(() => {
   if (!multiLineChecker.value) return;
   if (!descriptionBox.value) return;
+  if (card.description.includes('\n')) return true;
+  if (card.abilities?.length) return true;
   const boxRect = descriptionBox.value.getBoundingClientRect();
   const checkerRect = multiLineChecker.value.getBoundingClientRect();
   return checkerRect.top > boxRect.top;
@@ -197,7 +199,7 @@ const isMultiLine = computed(() => {
       <div
         class="description"
         ref="description-box"
-        :class="{ 'is-multi-line': isMultiLine || card.abilities?.length }"
+        :class="{ 'is-multi-line': isMultiLine }"
       >
         <div>
           <CardText :text="card.description" />

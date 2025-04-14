@@ -15,6 +15,8 @@ import {
 } from '../../card.enums';
 import { MinionFollowup } from '../../followups/minion.followup';
 import { RingAOEShape } from '../../../aoe/ring.aoe-shape';
+import { OnKillModifier } from '../../../modifier/modifiers/on-kill.modifier';
+import { AbilityDamage } from '../../../combat/damage';
 
 export const fireSalamander: UnitBlueprint = {
   id: 'fire-salamander',
@@ -61,12 +63,29 @@ export const fireSalamander: UnitBlueprint = {
   },
   onInit() {},
   onPlay(game, card, affectedCells, affectedUnits) {
-    const [, target1, target2, target3] = affectedUnits;
-
-    const targets = [target1, target2, target3].filter(isDefined);
+    const [, ...targets] = affectedUnits;
 
     targets.forEach(target => {
       target.addModifier(new OverheatModifier(game, card));
     });
+
+    card.unit.addModifier(
+      new OnKillModifier(game, card, {
+        handler(event) {
+          const killedUnit = event.data.unit;
+
+          if (!killedUnit.hasModifier(OverheatModifier)) return;
+          const overheatStacks = killedUnit.getModifier(OverheatModifier)!.stacks;
+          const damage = Math.max(overheatStacks, 0);
+          card.player.opponent.hero.takeDamage(
+            card,
+            new AbilityDamage({
+              source: card,
+              baseAmount: damage
+            })
+          );
+        }
+      })
+    );
   }
 };

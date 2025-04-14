@@ -38,6 +38,8 @@ import { fireSalamander } from './fire-salamander';
 import { philosopherStone } from './philosopher-stone';
 import { flashfire } from './flash-fire';
 import { iceQueen } from './ice-queen';
+import { crusaderOfCreation } from './crusader-of-creation';
+import { primordialHerald } from './primordial-herald';
 
 export const coreSet: CardSet = {
   id: CARD_SETS.CORE,
@@ -48,6 +50,7 @@ export const coreSet: CardSet = {
     aidenLv3,
     bubblySlime,
     ceasefire,
+    crusaderOfCreation,
     earthShrineOfKnowledge,
     enjiOneManArmy,
     equalityPendant,
@@ -67,6 +70,7 @@ export const coreSet: CardSet = {
     novicePyromancy,
     philosopherStone,
     pilferingBlade,
+    primordialHerald,
     promisingRecruit,
     shieldMaiden,
     shroudedSorcerer,

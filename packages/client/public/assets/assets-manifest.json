@@ -930,6 +930,19 @@
         },
         {
           "alias": [
+            "icon-unit-crusader-of-creation"
+          ],
+          "src": [
+            "/assets/icons/unit-crusader-of-creation.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-unit-earth-shrine-of-knowledge"
           ],
           "src": [
