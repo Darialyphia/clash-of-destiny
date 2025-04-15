@@ -1,5 +1,6 @@
 import { PointAOEShape } from '../../../aoe/point.aoe-shape';
 import { OnEnterModifier } from '../../../modifier/modifiers/on-enter.modifier';
+import { ProvokeModifier } from '../../../modifier/modifiers/provoke.modifier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
 import type { UnitBlueprint } from '../../card-blueprint';
 import {
@@ -21,9 +22,9 @@ export const primordialHerald: UnitBlueprint = {
   affinity: AFFINITIES.GENESIS,
   name: 'Primordial Herald',
   getDescription: () => {
-    return `@On Enter@: You may discard a card to summon a minion from your discard pile whose cost is less than or equal to the discarded card's cost, nearby this unit.`;
+    return `@Provoke@.\n@On Enter@: You may discard a card to summon a minion from your discard pile whose cost is less than or equal to the discarded card's cost, nearby this unit.`;
   },
-  staticDescription: `@On Enter@: You may discard a card to summon a minion from your discard pile whose cost is less than or equal to the discarded card's cost.`,
+  staticDescription: `@PRovoke@\n@On Enter@: You may discard a card to summon a minion from your discard pile whose cost is less than or equal to the discarded card's cost.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'unit-primordial-herald',
   spriteId: 'primordial-herald',
@@ -45,16 +46,10 @@ export const primordialHerald: UnitBlueprint = {
   onInit(game, card) {
     card.addModifier(
       new OnEnterModifier(game, card, event => {
-        const genesisCardsInHand = card.player.cards.hand.filter(
-          // c => c.affinity === AFFINITIES.GENESIS
-          () => true
-        );
-        if (!genesisCardsInHand.length) {
-          return;
-        }
+        if (!card.player.cards.hand.length) return;
 
         game.interaction.startSelectingCards({
-          choices: genesisCardsInHand,
+          choices: card.player.cards.hand,
           minChoices: 0,
           maxChoices: 1,
           player: card.player,
@@ -112,5 +107,7 @@ export const primordialHerald: UnitBlueprint = {
       })
     );
   },
-  onPlay() {}
+  onPlay(game, card) {
+    card.unit.addModifier(new ProvokeModifier(game, card));
+  }
 };

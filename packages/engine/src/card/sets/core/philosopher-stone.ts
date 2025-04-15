@@ -21,9 +21,9 @@ export const philosopherStone: ArtifactBlueprint = {
   affinity: AFFINITIES.FIRE,
   name: "Philosopher's Stone",
   getDescription: () => {
-    return `@Trinket@.\nAt the end of your turn, Your hero takes 1 damage and you gain 1 mana.`;
+    return `@Trinket@.\nAt the end of your turn, Your hero takes 2 damage and you gain 1 mana.`;
   },
-  staticDescription: `@Trinket@.\nAt the end of your turn, Your hero takes 1 damage and you gain 1 mana.`,
+  staticDescription: `@Trinket@.\nAt the end of your turn, Your hero takes 2 damage and you gain 1 mana.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'artifact-philosopher-stone',
   rarity: RARITIES.EPIC,
@@ -49,7 +49,7 @@ export const philosopherStone: ArtifactBlueprint = {
               card.player.on(PLAYER_EVENTS.START_TURN, () => {
                 card.player.hero.takeDamage(
                   card,
-                  new PureDamage({ source: card, baseAmount: 1 })
+                  new PureDamage({ source: card, baseAmount: 2 })
                 );
                 card.player.mana.add(1);
               });

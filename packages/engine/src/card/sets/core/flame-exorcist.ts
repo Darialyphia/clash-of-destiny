@@ -66,6 +66,7 @@ export const flameExorcist: UnitBlueprint = {
     const [, target] = affectedUnits;
     if (!target) return;
 
+    const hasOverheat = target.hasModifier(OverheatModifier);
     target.takeDamage(
       card,
       new AbilityDamage({
@@ -73,7 +74,8 @@ export const flameExorcist: UnitBlueprint = {
         baseAmount: 1
       })
     );
-    if (target.hasModifier(OverheatModifier)) {
+
+    if (hasOverheat) {
       card.player.cards.draw(1);
     }
   }

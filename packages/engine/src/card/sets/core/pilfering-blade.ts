@@ -19,9 +19,9 @@ export const pilferingBlade: ArtifactBlueprint = {
   affinity: AFFINITIES.NORMAL,
   name: 'Pilfering Blade',
   getDescription: () => {
-    return `When your hero attacks the enemy hero, grain one mana.`;
+    return `When your hero attacks the enemy hero, gain one mana.`;
   },
-  staticDescription: `When your hero attacks the enemy hero, grain one mana.`,
+  staticDescription: `When your hero attacks the enemy hero, gain one mana.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'artifact-pilfering-blade',
   rarity: RARITIES.RARE,

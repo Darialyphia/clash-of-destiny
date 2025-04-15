@@ -88,7 +88,7 @@ export class HeroCard extends UnitCard<
     );
   }
 
-  protected override playWithTargets(targets: SelectedTarget[]): void {
+  override playWithTargets(targets: SelectedTarget[]): void {
     const points = targets.map(t => t.cell);
 
     this.player.hero.evolveHero(this);

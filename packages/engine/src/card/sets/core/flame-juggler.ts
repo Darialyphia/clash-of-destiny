@@ -22,9 +22,9 @@ export const flameJuggler: UnitBlueprint = {
   affinity: AFFINITIES.FIRE,
   name: 'Flame Juggler',
   getDescription: () => {
-    return `@On Enter@: Put a @Fleeting@ @Sparks@ in your hand.\n@Class Bonus@: Put two.`;
+    return `@On Enter@: Put a @Fleeting@ @Sparks@ in your hand.`;
   },
-  staticDescription: `@On Enter@: Put a @Fleeting@ @Spark@ in your hand.\n@Class Bonus@: Put two.`,
+  staticDescription: `@On Enter@: Put a @Fleeting@ @Spark@ in your hand.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'unit-flame-juggler',
   spriteId: 'flame-juggler',
