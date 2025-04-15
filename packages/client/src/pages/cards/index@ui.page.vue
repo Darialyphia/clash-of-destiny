@@ -139,6 +139,9 @@ const saveDeck = () => {
         <li>
           <RouterLink :to="{ name: 'Sandbox' }">Sandbox</RouterLink>
         </li>
+        <li>
+          <RouterLink :to="{ name: 'HowToPlay' }">How to play</RouterLink>
+        </li>
       </ul>
     </nav>
     <ul class="cards">
