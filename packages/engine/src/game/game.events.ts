@@ -48,6 +48,15 @@ export class GameInputEvent extends TypedSerializableEvent<
   }
 }
 
+export class GameInputRequiredEvent extends TypedSerializableEvent<
+  EmptyObject,
+  EmptyObject
+> {
+  serialize() {
+    return {};
+  }
+}
+
 export class GameInputQueueFlushedEvent extends TypedSerializableEvent<
   EmptyObject,
   EmptyObject
@@ -235,6 +244,7 @@ type GameEventsBase = {
   'game.input-start': GameInputEvent;
   'game.input-end': GameInputEvent;
   'game.input-queue-flushed': GameInputQueueFlushedEvent;
+  'game.input-required': GameInputRequiredEvent;
   'game.error': GameErrorEvent;
   'game.ready': GameReadyEvent;
   'game.start-battle': GamePhaseChangeEvent;
@@ -286,6 +296,7 @@ export const GAME_EVENTS = {
   FLUSHED: 'game.input-queue-flushed',
   INPUT_START: 'game.input-start',
   INPUT_END: 'game.input-end',
+  INPUT_REQUIRED: 'game.input-required',
   TURN_START: GAME_PHASE_EVENTS.TURN_START,
   TURN_END: GAME_PHASE_EVENTS.TURN_END,
   BEFORE_GAME_PHASE_CHANGE: GAME_PHASE_EVENTS.BEFORE_CHANGE_PHASE,

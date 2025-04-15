@@ -50,17 +50,15 @@ export class GameSession {
       ? SerializedPlayerState
       : SerializedOmniscientState
   >(playerId: TPlayerId, cb: (snapshot: GameStateSnapshot<TSnapshot>) => void) {
-    this.game.on(GAME_EVENTS.FLUSHED, () => {
-      if (playerId) {
-        const snapshot = this.game.snapshotSystem.getLatestSnapshotForPlayer(
-          playerId
-        ) as GameStateSnapshot<TSnapshot>;
+    [GAME_EVENTS.INPUT_REQUIRED, GAME_EVENTS.FLUSHED].forEach(event => {
+      this.game.on(event, () => {
+        const snapshot = playerId
+          ? (this.game.snapshotSystem.getLatestSnapshotForPlayer(
+              playerId
+            ) as GameStateSnapshot<TSnapshot>)
+          : (this.game.snapshotSystem.getLatestOmniscientSnapshot() as GameStateSnapshot<TSnapshot>);
         cb(snapshot);
-      } else {
-        const snapshot =
-          this.game.snapshotSystem.getLatestOmniscientSnapshot() as GameStateSnapshot<TSnapshot>;
-        cb(snapshot);
-      }
+      });
     });
   }
 

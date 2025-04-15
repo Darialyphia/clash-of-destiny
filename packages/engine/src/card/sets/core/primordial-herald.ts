@@ -1,7 +1,5 @@
 import { PointAOEShape } from '../../../aoe/point.aoe-shape';
 import { OnEnterModifier } from '../../../modifier/modifiers/on-enter.modifier';
-import { OnKillModifier } from '../../../modifier/modifiers/on-kill.modifier';
-import { SimpleHealthBuffModifier } from '../../../modifier/modifiers/simple-health-buff.modifier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
 import type { UnitBlueprint } from '../../card-blueprint';
 import {
@@ -23,9 +21,9 @@ export const primordialHerald: UnitBlueprint = {
   affinity: AFFINITIES.GENESIS,
   name: 'Primordial Herald',
   getDescription: () => {
-    return `@On Enter@: You may discard a Genesis card to summon a minion from your discard pile whose cost is less than or equal to the discarded card's cost, nearby this unit.`;
+    return `@On Enter@: You may discard a card to summon a minion from your discard pile whose cost is less than or equal to the discarded card's cost, nearby this unit.`;
   },
-  staticDescription: `@On Enter@: You may discard a Genesis card to summon a minion from your discard pile whose cost is less than or equal to the discarded card's cost.`,
+  staticDescription: `@On Enter@: You may discard a card to summon a minion from your discard pile whose cost is less than or equal to the discarded card's cost.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'unit-primordial-herald',
   spriteId: 'primordial-herald',
@@ -48,7 +46,8 @@ export const primordialHerald: UnitBlueprint = {
     card.addModifier(
       new OnEnterModifier(game, card, event => {
         const genesisCardsInHand = card.player.cards.hand.filter(
-          c => c.affinity === AFFINITIES.GENESIS
+          // c => c.affinity === AFFINITIES.GENESIS
+          () => true
         );
         if (!genesisCardsInHand.length) {
           return;
@@ -64,7 +63,11 @@ export const primordialHerald: UnitBlueprint = {
             const [discardedCard] = selectedCards;
             const minionsInDiscardPile = Array.from(
               card.player.cards.discardPile.values()
-            ).filter(card => card.kind === CARD_KINDS.UNIT);
+            ).filter(
+              card =>
+                card.kind === CARD_KINDS.UNIT &&
+                (card.manaCost ?? 0) <= (discardedCard.manaCost ?? 0)
+            );
             if (!minionsInDiscardPile.length) return;
 
             game.interaction.startSelectingCards({
@@ -77,15 +80,16 @@ export const primordialHerald: UnitBlueprint = {
                 game.interaction.startSelectingTargets({
                   player: card.player,
                   getNextTarget(targets) {
+                    if (targets.length) return null;
                     const nearby = game.boardSystem
                       .getNeighbors(event.data.affectedCells[0])
                       .filter(cell => cell.isWalkable && !cell.unit);
 
+                    if (!nearby.length) return null;
+
                     return {
                       type: 'cell',
                       isElligible(point) {
-                        if (targets.length) return false;
-                        if (!nearby.length) return false;
                         return nearby.some(cell => cell.position.equals(point));
                       }
                     };

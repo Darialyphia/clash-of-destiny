@@ -21,9 +21,9 @@ export const philosopherStone: ArtifactBlueprint = {
   affinity: AFFINITIES.FIRE,
   name: "Philosopher's Stone",
   getDescription: () => {
-    return `@Trinket@.\nAt the start of your turn, You hero takes 1 damage and you gain 1 mana.`;
+    return `@Trinket@.\nAt the end of your turn, Your hero takes 1 damage and you gain 1 mana.`;
   },
-  staticDescription: `@Trinket@.\nAt the start of your turn, You hero takes 1 damage and you gain 1 mana.`,
+  staticDescription: `@Trinket@.\nAt the end of your turn, Your hero takes 1 damage and you gain 1 mana.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'artifact-philosopher-stone',
   rarity: RARITIES.EPIC,

@@ -1125,6 +1125,19 @@
         },
         {
           "alias": [
+            "icon-unit-primordial-herald"
+          ],
+          "src": [
+            "/assets/icons/unit-primordial-herald.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-unit-promising-recruit"
           ],
           "src": [
@@ -3319,6 +3332,33 @@
           ],
           "src": [
             "/assets/units/luminescent-mystic.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "primordial-herald"
+          ],
+          "src": [
+            "/assets/units/primordial-herald.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "primordial-herald.png"
+          ],
+          "src": [
+            "/assets/units/primordial-herald.png"
           ],
           "data": {
             "tags": {

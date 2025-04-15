@@ -17,6 +17,11 @@ import {
   InvalidInteractionStateError,
   TooManyTargetsError
 } from '../../input/input-errors';
+import {
+  TypedSerializableEvent,
+  TypedSerializableEventEmitter
+} from '../../utils/typed-emitter';
+import { GAME_EVENTS, GameInputRequiredEvent } from '../game.events';
 
 export type EffectTarget = {
   type: 'cell';
@@ -95,6 +100,23 @@ export type SerializedInteractionContext =
       };
     };
 
+export class RequirePlayerInputEvent extends TypedSerializableEvent<
+  EmptyObject,
+  EmptyObject
+> {
+  serialize(): EmptyObject {
+    return {};
+  }
+}
+export const INTERACTION_EVENTS = {
+  REQUIRE_PLAYER_INPUT: 'require_player_input'
+} as const;
+export type InteractionEvent = Values<typeof INTERACTION_EVENTS>;
+
+export type InteractionEventMap = {
+  [INTERACTION_EVENTS.REQUIRE_PLAYER_INPUT]: RequirePlayerInputEvent;
+};
+
 export class InteractionSystem
   extends System<never>
   implements Serializable<SerializedInteractionContext>
@@ -135,7 +157,25 @@ export class InteractionSystem
     ctx: {}
   };
 
-  initialize(): void {}
+  private emitter = new TypedSerializableEventEmitter<InteractionEventMap>();
+
+  get on() {
+    return this.emitter.on.bind(this.emitter);
+  }
+
+  get once() {
+    return this.emitter.once.bind(this.emitter);
+  }
+
+  get off() {
+    return this.emitter.off.bind(this.emitter);
+  }
+
+  initialize(): void {
+    this.on(INTERACTION_EVENTS.REQUIRE_PLAYER_INPUT, () => {
+      this.game.emit(GAME_EVENTS.INPUT_REQUIRED, new GameInputRequiredEvent({}));
+    });
+  }
 
   shutdown(): void {}
 
@@ -148,6 +188,16 @@ export class InteractionSystem
     const nextTarget = this._context.ctx.getNextTarget(this._context.ctx.selectedTargets);
     if (!isDefined(nextTarget)) {
       this.commitTargets();
+    }
+  }
+
+  private requireInputIfNeeded() {
+    if (this.stateMachine.getState() !== INTERACTION_STATES.IDLE) {
+      this.game.snapshotSystem.takeSnapshot();
+      this.emitter.emit(
+        INTERACTION_EVENTS.REQUIRE_PLAYER_INPUT,
+        new RequirePlayerInputEvent({})
+      );
     }
   }
 
@@ -187,6 +237,7 @@ export class InteractionSystem
     };
     this.stateMachine.dispatch(INTERACTION_STATE_TRANSITIONS.START_SELECTING_TARGETS);
     this.commitTargetsIfAble();
+    this.requireInputIfNeeded();
   }
 
   private validateTarget(target: SelectedTarget) {
@@ -215,6 +266,7 @@ export class InteractionSystem
     this._context.ctx.selectedTargets.push(target);
     this._context.ctx.nextTargetIntent = null;
     this.commitTargetsIfAble();
+    this.requireInputIfNeeded();
   }
 
   addNextTargetIntent(target: SelectedTarget) {
@@ -232,7 +284,7 @@ export class InteractionSystem
       'Cannot cancel playing card'
     );
     this._context = {
-      state: 'idle',
+      state: INTERACTION_STATES.IDLE,
       ctx: {}
     };
     this.stateMachine.dispatch(INTERACTION_STATE_TRANSITIONS.CANCEL_SELECTING_TARGETS);
@@ -255,7 +307,7 @@ export class InteractionSystem
     const { selectedTargets, onComplete } = this._context.ctx;
     this.stateMachine.dispatch(INTERACTION_STATE_TRANSITIONS.COMMIT_SELECTING_TARGETS);
     this._context = {
-      state: 'idle',
+      state: INTERACTION_STATES.IDLE,
       ctx: {}
     };
     onComplete(selectedTargets);
@@ -283,6 +335,7 @@ export class InteractionSystem
       ctx: { choices, player, onComplete, minChoices, maxChoices }
     };
     this.stateMachine.dispatch(INTERACTION_STATE_TRANSITIONS.START_SELECTING_CARD);
+    this.requireInputIfNeeded();
   }
 
   commitCardSelection(selectedCardIds: string[]) {
@@ -309,11 +362,12 @@ export class InteractionSystem
       selectedCardIds.includes(card.id)
     );
     this.stateMachine.dispatch(INTERACTION_STATE_TRANSITIONS.COMMIT_CARD_SELECTION);
-    this._context.ctx.onComplete(selectedCards);
+    const onComplete = this._context.ctx.onComplete;
     this._context = {
-      state: 'idle',
+      state: INTERACTION_STATES.IDLE,
       ctx: {}
     };
+    onComplete(selectedCards);
   }
 
   serialize() {

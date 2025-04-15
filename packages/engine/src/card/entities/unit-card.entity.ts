@@ -158,7 +158,7 @@ export abstract class UnitCard<
     this.selectTargets(this.playWithTargets.bind(this));
   }
 
-  protected playWithTargets(targets: SelectedTarget[]) {
+  playWithTargets(targets: SelectedTarget[]) {
     const points = targets.map(t => t.cell);
 
     this.addToBoard(points);
@@ -194,6 +194,13 @@ export abstract class UnitCard<
       cells: aoeShape.getCells(points).map(cell => cell.id),
       units: aoeShape.getUnits(points).map(unit => unit.id)
     };
+  }
+
+  canSummonAt(point: Point) {
+    return (
+      !this.game.unitSystem.getUnitAt(point) &&
+      !!this.game.boardSystem.getCellAt(point)?.isWalkable
+    );
   }
 
   canPlayAt(point: Point) {
