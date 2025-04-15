@@ -160,8 +160,16 @@ export const useBattleStore = defineStore('battle', () => {
         ...initialState,
         entities: buildentities(initialState.entities, {}, dispatch)
       };
-
+      let lastSnapshotId = -1;
       subscriber(async snapshot => {
+        if (snapshot.id <= lastSnapshotId) {
+          console.log(
+            `Stale snapshot, latest is ${lastSnapshotId}, received is ${snapshot.id}`
+          );
+          return;
+        }
+        lastSnapshotId = snapshot.id;
+
         try {
           isPlayingFx.value = true;
 
@@ -175,22 +183,25 @@ export const useBattleStore = defineStore('battle', () => {
           isPlayingFx.value = false;
 
           if (!state.value) throw new Error('State not initialized');
-          state.value.entities = buildentities(
-            snapshot.state.entities,
-            { ...toRaw(state.value!.entities) },
-            dispatch
-          );
 
-          state.value.board = snapshot.state.board;
-          state.value.players = snapshot.state.players;
-          state.value.turnPlayer = snapshot.state.turnPlayer;
-          state.value.phase = snapshot.state.phase;
-          state.value.interactables = snapshot.state.interactables;
-          state.value.units = snapshot.state.units;
-          state.value.isOverdriveMode = snapshot.state.isOverdriveMode;
-          state.value.interactionState = snapshot.state.interactionState;
-          state.value.turnCount = snapshot.state.turnCount;
-          state.value.turnPlayer = snapshot.state.turnPlayer;
+          if (snapshot.id >= lastSnapshotId) {
+            state.value.entities = buildentities(
+              snapshot.state.entities,
+              { ...toRaw(state.value!.entities) },
+              dispatch
+            );
+
+            state.value.board = snapshot.state.board;
+            state.value.players = snapshot.state.players;
+            state.value.turnPlayer = snapshot.state.turnPlayer;
+            state.value.phase = snapshot.state.phase;
+            state.value.interactables = snapshot.state.interactables;
+            state.value.units = snapshot.state.units;
+            state.value.isOverdriveMode = snapshot.state.isOverdriveMode;
+            state.value.interactionState = snapshot.state.interactionState;
+            state.value.turnCount = snapshot.state.turnCount;
+            state.value.turnPlayer = snapshot.state.turnPlayer;
+          }
 
           if (gameType.value === GAME_TYPES.LOCAL) {
             playerId.value = state.value!.turnPlayer;
