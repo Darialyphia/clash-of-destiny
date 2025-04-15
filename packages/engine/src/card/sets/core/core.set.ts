@@ -40,6 +40,8 @@ import { flashfire } from './flash-fire';
 import { iceQueen } from './ice-queen';
 import { crusaderOfCreation } from './crusader-of-creation';
 import { primordialHerald } from './primordial-herald';
+import { waterSpringLily } from './water-spring-lily';
+import { icyBreath } from './icy-breath';
 
 export const coreSet: CardSet = {
   id: CARD_SETS.CORE,
@@ -65,6 +67,7 @@ export const coreSet: CardSet = {
     garrisonMarksman,
     heatWave,
     iceQueen,
+    icyBreath,
     insight,
     luminescentMystic,
     novicePyromancy,
@@ -81,6 +84,7 @@ export const coreSet: CardSet = {
     swordInstructor,
     searingBlade,
     waterShrineOfKnowledge,
+    waterSpringLily,
     willOWisp,
     windShrineOfKnowledge,
     wrathOfTheSkies,

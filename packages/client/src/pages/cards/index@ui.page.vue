@@ -169,12 +169,9 @@ const saveDeck = () => {
             :key="index"
             class="flex gap-2 items-center"
           >
-            {{ deck.name }}
-            <FancyButton
-              class="primary-button"
-              text="Edit"
-              @click="editDeck(deck)"
-            />
+            <button class="flex-1 text-left" @click="editDeck(deck)">
+              {{ deck.name }}
+            </button>
 
             <FancyButton
               variant="error"
