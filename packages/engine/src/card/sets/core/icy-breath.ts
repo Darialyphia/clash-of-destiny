@@ -41,6 +41,7 @@ export const icyBreath: SecretBlueprint = {
   onInit() {},
   onPlay(game, card) {
     const stop = game.on(GAME_EVENTS.UNIT_CREATED, event => {
+      if (event.data.unit.player.equals(card.player)) return;
       if ((event.data.unit.card.manaCost ?? 0) < 3) return;
       card.trigger(() => {
         event.data.unit.addModifier(new FrozenModifier(game, card));

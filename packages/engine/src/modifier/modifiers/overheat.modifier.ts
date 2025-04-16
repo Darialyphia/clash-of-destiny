@@ -43,7 +43,7 @@ export class OverheatModifier extends Modifier<Unit> {
       this.target,
       ...this.game.unitSystem
         .getNearbyUnits(this.target.position)
-        .filter(unit => unit.isAbove(this.target))
+        .filter(unit => unit.isAlly(this.target))
     ];
 
     targets.forEach(unit => {

@@ -30,6 +30,7 @@ export const zoranThePunisher: UnitBlueprint = {
   setId: CARD_SETS.CORE,
   cardIconId: 'unit-zoran-the-punisher',
   spriteId: 'zoran-the-punisher',
+  unique: true,
   spriteParts: {},
   rarity: RARITIES.LEGENDARY,
   collectable: true,
@@ -37,7 +38,7 @@ export const zoranThePunisher: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
   atk: 3,
-  maxHp: 5,
+  maxHp: 6,
   job: CARD_JOBS.AVENGER,
   getFollowup: () => {
     return new MinionFollowup();

@@ -28,6 +28,7 @@ export const enjiOneManArmy: UnitBlueprint = {
   },
   staticDescription: `@Unique@, @Defiant(2)@, @Vigilant@.\nThis costs one less for each minion your opponent controls and one more for each minion you control.`,
   setId: CARD_SETS.CORE,
+  unique: true,
   cardIconId: 'unit-enji-one-man-army',
   spriteId: 'enji-one-man-army',
   spriteParts: {},
@@ -37,7 +38,7 @@ export const enjiOneManArmy: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
   atk: 4,
-  maxHp: 5,
+  maxHp: 6,
   job: CARD_JOBS.FIGHTER,
   getFollowup: () => {
     return new MinionFollowup();

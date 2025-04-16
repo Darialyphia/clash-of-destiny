@@ -32,7 +32,7 @@ export const swordInstructor: UnitBlueprint = {
   collectable: true,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   manaCost: 2,
-  atk: 1,
+  atk: 2,
   maxHp: 2,
   job: CARD_JOBS.SPELLCASTER,
   abilities: [

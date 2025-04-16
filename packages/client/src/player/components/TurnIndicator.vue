@@ -15,9 +15,10 @@ useBattleEvent(GAME_EVENTS.PLAYER_START_TURN, async e => {
       ? 'Your turn'
       : `${e.player.name}'s turn`;
 
-  overdriveReminder.value = e.player.turnsUntilOverdriveMode
-    ? `${e.player.turnsUntilOverdriveMode} turns until overrive!`
-    : 'Overdrive activated !';
+  overdriveReminder.value =
+    e.player.turnsUntilOverdriveMode > 0
+      ? `${e.player.turnsUntilOverdriveMode} turns until overrive!`
+      : 'Overdrive activated !';
 
   await waitFor(1200);
   text.value = '';

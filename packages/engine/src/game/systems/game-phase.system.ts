@@ -259,8 +259,10 @@ export class GamePhaseSystem extends StateMachine<
     assert(this.can(GAME_PHASE_TRANSITIONS.DRAW), new WrongGamePhaseError());
 
     const drawCount =
-      this.game.gamePhaseSystem.elapsedTurns === 0 && !this.turnPlayer.isPlayer1
-        ? this.game.config.PLAYER_2_CARDS_DRAWN_ON_FIRST_TURN
+      this.game.gamePhaseSystem.elapsedTurns === 0
+        ? this.turnPlayer.isPlayer1
+          ? this.game.config.PLAYER_1_CARDS_DRAWN_ON_FIRST_TURN
+          : this.game.config.PLAYER_2_CARDS_DRAWN_ON_FIRST_TURN
         : this.game.config.CARDS_DRAWN_PER_TURN;
     this.turnPlayer.draw(drawCount);
     this.sendTransition(GAME_PHASE_TRANSITIONS.DRAW);

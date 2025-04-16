@@ -18,7 +18,7 @@ import { NoFollowup } from '../../followups/no-followup';
 export const philosopherStone: ArtifactBlueprint = {
   id: 'philosopher-stone',
   kind: CARD_KINDS.ARTIFACT,
-  affinity: AFFINITIES.FIRE,
+  affinity: AFFINITIES.NORMAL,
   name: "Philosopher's Stone",
   getDescription: () => {
     return `@Trinket@.\nAt the end of your turn, Your hero takes 2 damage and you gain 1 mana.`;

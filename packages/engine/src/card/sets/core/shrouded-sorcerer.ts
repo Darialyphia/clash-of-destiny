@@ -34,7 +34,7 @@ export const shroudedSorcerer: UnitBlueprint = {
   manaCost: 3,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   atk: 2,
-  maxHp: 2,
+  maxHp: 3,
   job: CARD_JOBS.SPELLCASTER,
   abilities: [
     {

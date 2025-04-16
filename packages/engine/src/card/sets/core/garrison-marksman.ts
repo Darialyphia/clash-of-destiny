@@ -33,7 +33,7 @@ export const garrisonMarksman: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
   atk: 1,
-  maxHp: 1,
+  maxHp: 2,
   job: CARD_JOBS.AVENGER,
   getFollowup: () => {
     return new MinionFollowup();

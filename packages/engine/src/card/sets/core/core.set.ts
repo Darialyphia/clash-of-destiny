@@ -42,6 +42,12 @@ import { crusaderOfCreation } from './crusader-of-creation';
 import { primordialHerald } from './primordial-herald';
 import { waterSpringLily } from './water-spring-lily';
 import { icyBreath } from './icy-breath';
+import { nagaSkirmisher } from './naga-skirmisher';
+import { frostNova } from './frost-nova';
+import { waterfallFoxPriestess } from './waterfall-fox-priestess';
+import { ceruleanWaveDisciple } from './cerulean-wave-disciple';
+import { playfulEels } from './playful-eels';
+import { shoalOfEels } from './shoal-of-eels';
 
 export const coreSet: CardSet = {
   id: CARD_SETS.CORE,
@@ -52,6 +58,7 @@ export const coreSet: CardSet = {
     aidenLv3,
     bubblySlime,
     ceasefire,
+    ceruleanWaveDisciple,
     crusaderOfCreation,
     earthShrineOfKnowledge,
     enjiOneManArmy,
@@ -64,18 +71,22 @@ export const coreSet: CardSet = {
     flameExorcist,
     flashfire,
     fleetingDancer,
+    frostNova,
     garrisonMarksman,
     heatWave,
     iceQueen,
     icyBreath,
     insight,
     luminescentMystic,
+    nagaSkirmisher,
     novicePyromancy,
     philosopherStone,
     pilferingBlade,
+    playfulEels,
     primordialHerald,
     promisingRecruit,
     shieldMaiden,
+    shoalOfEels,
     shroudedSorcerer,
     slimesToTheRescue,
     spark,
@@ -84,6 +95,7 @@ export const coreSet: CardSet = {
     swordInstructor,
     searingBlade,
     waterShrineOfKnowledge,
+    waterfallFoxPriestess,
     waterSpringLily,
     willOWisp,
     windShrineOfKnowledge,

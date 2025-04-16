@@ -8,11 +8,13 @@ import { GAME_EVENTS } from '../../game/game.events';
 export class DurationModifierMixin extends ModifierMixin<Unit | AnyCard> {
   private modifier!: Modifier<Unit | AnyCard>;
 
+  private initialDuration: number;
   constructor(
     game: Game,
     private duration = 1
   ) {
     super(game);
+    this.initialDuration = duration;
     this.onTurnEnd = this.onTurnEnd.bind(this);
   }
 
@@ -32,5 +34,7 @@ export class DurationModifierMixin extends ModifierMixin<Unit | AnyCard> {
     this.game.off(GAME_EVENTS.TURN_END, this.onTurnEnd);
   }
 
-  onReapplied(): void {}
+  onReapplied(): void {
+    this.duration = this.initialDuration;
+  }
 }

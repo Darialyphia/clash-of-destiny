@@ -1,5 +1,4 @@
 import { PointAOEShape } from '../../../aoe/point.aoe-shape';
-import { OnEnterModifier } from '../../../modifier/modifiers/on-enter.modifier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
 import { floatingDestiny } from '../../abilities/floating-destiny';
 import type { UnitBlueprint } from '../../card-blueprint';
@@ -12,7 +11,6 @@ import {
   RARITIES,
   UNIT_KINDS
 } from '../../card.enums';
-import type { MinionCard } from '../../entities/minion-card.entity';
 import { MinionFollowup } from '../../followups/minion.followup';
 
 export const bubblySlime: UnitBlueprint = {

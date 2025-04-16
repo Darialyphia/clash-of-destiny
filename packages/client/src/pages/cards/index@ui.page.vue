@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
 import { useLocalStorage } from '@vueuse/core';
-import { CARD_SET_DICTIONARY, type CardSet } from '@game/engine/src/card/sets';
-import {
-  CARD_DECK_SOURCES,
-  CARD_KINDS,
-  UNIT_KINDS
-} from '@game/engine/src/card/card.enums';
+import { type Affinity } from '@game/engine/src/card/card.enums';
 import BlueprintCard from '@/card/components/BlueprintCard.vue';
 import { domToPng } from 'modern-screenshot';
 import {
@@ -17,69 +12,19 @@ import { DeckBuildervModel } from '@/card/deck-builder.model';
 import { keyBy } from 'lodash-es';
 import FancyButton from '@/ui/components/FancyButton.vue';
 import { Icon } from '@iconify/vue';
+import { useCardList } from '@/card/composables/useCardList';
+import { AFFINITIES } from '@game/engine/src/card/card.enums';
+import { vIntersectionObserver } from '@vueuse/components';
 
 definePage({
   name: 'Collection'
 });
 
-const authorizedSets: CardSet[] = [CARD_SET_DICTIONARY.CORE];
-
-const KIND_ORDER = {
-  [CARD_KINDS.UNIT]: 1,
-  [CARD_KINDS.SPELL]: 2,
-  [CARD_KINDS.ARTIFACT]: 3,
-  [CARD_KINDS.SECRET]: 4
-};
-
-const UNIT_KIND_ORDER = {
-  [UNIT_KINDS.SHRINE]: 1,
-  [UNIT_KINDS.HERO]: 2,
-  [UNIT_KINDS.MINION]: 3
-};
-const cards = computed(() => {
-  return authorizedSets
-    .map(set => set.cards)
-    .flat()
-    .sort((a, b) => {
-      if (a.deckSource !== b.deckSource) {
-        return a.deckSource === CARD_DECK_SOURCES.MAIN_DECK ? 1 : -1;
-      }
-
-      if (a.kind === b.kind) {
-        if (a.kind === CARD_KINDS.UNIT && b.kind === CARD_KINDS.UNIT) {
-          if (a.unitKind !== b.unitKind) {
-            return UNIT_KIND_ORDER[a.unitKind] - UNIT_KIND_ORDER[b.unitKind];
-          }
-        }
-
-        if (
-          a.deckSource === CARD_DECK_SOURCES.MAIN_DECK &&
-          b.deckSource === CARD_DECK_SOURCES.MAIN_DECK &&
-          a.manaCost !== b.manaCost
-        ) {
-          return a.manaCost - b.manaCost;
-        }
-
-        if (
-          a.deckSource === CARD_DECK_SOURCES.DESTINY_DECK &&
-          b.deckSource === CARD_DECK_SOURCES.DESTINY_DECK &&
-          a.destinyCost !== b.destinyCost
-        ) {
-          return a.destinyCost - b.destinyCost;
-        }
-        return a.name
-          .toLocaleLowerCase()
-          .localeCompare(b.name.toLocaleLowerCase());
-      }
-      return KIND_ORDER[a.kind] - KIND_ORDER[b.kind];
-    });
-});
+const { cards, hasAffinityFilter, toggleAffinityFilter } = useCardList();
 
 const decks = useLocalStorage<ValidatableDeck[]>('clash-of-destiny-decks', []);
 const collection = computed(() =>
-  authorizedSets
-    .map(set => set.cards.map(card => ({ blueprint: card, copiesOwned: 4 })))
-    .flat()
+  cards.value.map(card => ({ blueprint: card, copiesOwned: 4 }))
 );
 
 const deckBuilder = ref(
@@ -127,38 +72,177 @@ const saveDeck = () => {
   isEditing.value = false;
   deckBuilder.value.reset();
 };
+
+const affinities: Array<{
+  id: Affinity;
+  img: string;
+  label: string;
+  color: string;
+}> = [
+  {
+    id: AFFINITIES.NORMAL,
+    img: `/assets/ui/gem-${AFFINITIES.NORMAL.toLocaleLowerCase()}.png`,
+    label: uppercaseFirstLetter(AFFINITIES.NORMAL),
+    color: '#7a7a7a'
+  },
+  {
+    id: AFFINITIES.FIRE,
+    img: `/assets/ui/gem-${AFFINITIES.FIRE.toLocaleLowerCase()}.png`,
+    label: uppercaseFirstLetter(AFFINITIES.FIRE),
+    color: '#f87d35'
+  },
+  {
+    id: AFFINITIES.WATER,
+    img: `/assets/ui/gem-${AFFINITIES.WATER.toLocaleLowerCase()}.png`,
+    label: uppercaseFirstLetter(AFFINITIES.WATER),
+    color: '#409fe2'
+  },
+  {
+    id: AFFINITIES.EARTH,
+    img: `/assets/ui/gem-${AFFINITIES.EARTH.toLocaleLowerCase()}.png`,
+    label: uppercaseFirstLetter(AFFINITIES.EARTH),
+    color: '#c85149'
+  },
+  {
+    id: AFFINITIES.AIR,
+    img: `/assets/ui/gem-${AFFINITIES.AIR.toLocaleLowerCase()}.png`,
+    label: uppercaseFirstLetter(AFFINITIES.AIR),
+    color: '#00fdaa'
+  },
+  {
+    id: AFFINITIES.GENESIS,
+    img: `/assets/ui/gem-${AFFINITIES.GENESIS.toLocaleLowerCase()}.png`,
+    label: uppercaseFirstLetter(AFFINITIES.GENESIS),
+    color: '#d2b72d'
+  },
+  {
+    id: AFFINITIES.VOID,
+    img: `/assets/ui/gem-${AFFINITIES.VOID.toLocaleLowerCase()}.png`,
+    label: uppercaseFirstLetter(AFFINITIES.VOID),
+    color: '#d100b9'
+  },
+  {
+    id: AFFINITIES.HARMONY,
+    img: `/assets/ui/gem-${AFFINITIES.HARMONY.toLocaleLowerCase()}.png`,
+    label: uppercaseFirstLetter(AFFINITIES.HARMONY),
+    color: '#00bf00'
+  },
+  {
+    id: AFFINITIES.WRATH,
+    img: `/assets/ui/gem-${AFFINITIES.WRATH.toLocaleLowerCase()}.png`,
+    label: uppercaseFirstLetter(AFFINITIES.WRATH),
+    color: '#d10038'
+  },
+  {
+    id: AFFINITIES.ARCANE,
+    img: `/assets/ui/gem-${AFFINITIES.ARCANE.toLocaleLowerCase()}.png`,
+    label: uppercaseFirstLetter(AFFINITIES.ARCANE),
+    color: '#9067e9'
+  }
+];
+
+function uppercaseFirstLetter(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+const visibleCards = ref(new Set<string>());
+const onIntersectionObserver =
+  (cardId: string) => (entries: IntersectionObserverEntry[]) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        visibleCards.value.add(cardId);
+      } else {
+        visibleCards.value.delete(cardId);
+      }
+    });
+  };
+
+const listRoot = useTemplateRef('card-list');
+
+const viewMode = ref<'normal' | 'small'>('normal');
 </script>
 
 <template>
   <div class="page">
-    <nav class="pointer-events-auto">
-      <ul class="flex gap-4">
-        <li>
-          <RouterLink :to="{ name: 'Home' }">Home</RouterLink>
-        </li>
-        <li>
-          <RouterLink :to="{ name: 'Sandbox' }">Sandbox</RouterLink>
-        </li>
-        <li>
-          <RouterLink :to="{ name: 'HowToPlay' }">How to play</RouterLink>
-        </li>
-      </ul>
-    </nav>
-    <ul class="cards">
-      <li v-for="card in cards" :key="card.id">
-        <BlueprintCard
-          :blueprint="card"
-          :class="{ disabled: !deckBuilder.canAdd(card.id) }"
-          @click="
-            () => {
-              if (!isEditing) return;
-              if (deckBuilder.canAdd(card.id)) {
-                deckBuilder.addCard(card.id);
+    <header>
+      <nav>
+        <ul class="flex gap-4">
+          <li>
+            <RouterLink :to="{ name: 'Home' }">Home</RouterLink>
+          </li>
+          <li>
+            <RouterLink :to="{ name: 'Sandbox' }">Sandbox</RouterLink>
+          </li>
+          <li>
+            <RouterLink :to="{ name: 'HowToPlay' }">How to play</RouterLink>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="flex gap-3">
+        <label>
+          <Icon icon="material-symbols-light:view-column-2" width="1.5rem" />
+          <input
+            v-model="viewMode"
+            type="radio"
+            value="normal"
+            class="sr-only"
+          />
+        </label>
+        <label>
+          <Icon icon="heroicons:squares-2x2-16-solid" width="1.5rem" />
+          <input
+            v-model="viewMode"
+            type="radio"
+            value="small"
+            class="sr-only"
+          />
+        </label>
+      </div>
+      <div class="affinity-filter">
+        <button
+          v-for="affinity in affinities"
+          :key="affinity.label"
+          class=""
+          :class="hasAffinityFilter(affinity.id) && 'active'"
+          :style="{ '--color': affinity.color }"
+          @click="toggleAffinityFilter(affinity.id)"
+        >
+          <img :src="affinity.img" :alt="affinity.label" />
+          {{ affinity.label }}
+        </button>
+      </div>
+    </header>
+    <ul ref="card-list" class="cards fancy-scrollbar" :class="viewMode">
+      <li
+        v-for="card in cards"
+        :key="card.id"
+        v-intersection-observer="[
+          onIntersectionObserver(card.id),
+          { root: listRoot }
+        ]"
+      >
+        <Transition>
+          <BlueprintCard
+            v-if="visibleCards.has(card.id)"
+            :blueprint="card"
+            class="collection-card"
+            :class="{ disabled: !deckBuilder.canAdd(card.id) }"
+            @click="
+              () => {
+                if (!isEditing) return;
+                if (deckBuilder.canAdd(card.id)) {
+                  deckBuilder.addCard(card.id);
+                }
               }
-            }
-          "
-        />
-        <button v-if="!isEditing" @click="screenshot(card.id, $event)">
+            "
+          />
+        </Transition>
+        <button
+          v-if="!isEditing"
+          @click="screenshot(card.id, $event)"
+          class="absolute bottom-0"
+        >
           Screenshot
         </button>
       </li>
@@ -189,6 +273,7 @@ const saveDeck = () => {
           @click="createDeck"
         />
       </template>
+
       <div class="deck" v-else>
         <div class="flex gap-2">
           <Icon icon="material-symbols:edit-outline" />
@@ -241,6 +326,7 @@ const saveDeck = () => {
         </div>
       </div>
     </aside>
+    <footer>TODO Mana filters</footer>
   </div>
 </template>
 
@@ -251,22 +337,80 @@ const saveDeck = () => {
   pointer-events: auto;
   display: grid;
   grid-template-columns: 1fr var(--size-xs);
+  grid-template-rows: auto 1fr auto;
 
-  > nav {
+  > header {
+    grid-column: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-block: var(--size-3);
+    padding-inline: var(--size-5);
+  }
+  > footer {
     grid-column: 1 / -1;
+  }
+}
+
+.affinity-filter {
+  display: flex;
+  gap: var(--size-1);
+
+  button {
+    border: solid var(--border-size-2) transparent;
+    display: flex;
+    align-items: center;
+    gap: var(--size-2);
+    padding: var(--size-2);
+    border-radius: var(--radius-pill);
+    &.active {
+      background-color: hsl(from var(--color) h s l / 0.25);
+      border-color: var(--color);
+    }
   }
 }
 
 aside {
   padding: var(--size-3);
   overflow-y: hidden;
+  grid-row: 1 / -1;
+  grid-column: 2;
 }
+
 .cards {
+  --pixel-scale: 2;
+  --min-column-size: 19rem;
   gap: var(--size-6);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(var(--min-column-size), 1fr));
   justify-items: center;
   overflow-y: auto;
+
+  &.small {
+    --pixel-scale: 1;
+    --min-column-size: 10rem;
+    .collection-card {
+      transform: scale(0.5);
+      transform-origin: top left;
+    }
+  }
+
+  li {
+    position: relative;
+    width: calc(var(--card-width) * var(--pixel-scale));
+    height: calc(var(--card-height) * var(--pixel-scale));
+  }
+}
+
+.collection-card {
+  &:is(.v-enter-active, .v-leave-active) {
+    transition: all 0.7s var(--ease-spring-3);
+  }
+
+  &:is(.v-enter-from, .v-leave-to) {
+    transform: translateY(15px);
+    opacity: 0.5;
+  }
 }
 
 .card.disabled {
@@ -321,10 +465,6 @@ aside {
       center center,
       calc(100% + 50px) -85px;
   }
-}
-
-li {
-  position: relative;
 }
 
 .mana-cost {

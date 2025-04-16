@@ -41,6 +41,6 @@ export const fireShrineOfKnowledge: UnitBlueprint = {
   },
   onInit() {},
   onPlay(game, card) {
-    card.player.cards.draw(4);
+    card.player.cards.draw(5);
   }
 };

@@ -34,7 +34,7 @@ export const crusaderOfCreation: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
   atk: 3,
-  maxHp: 4,
+  maxHp: 5,
   job: CARD_JOBS.GUARDIAN,
   getFollowup: () => {
     return new MinionFollowup();

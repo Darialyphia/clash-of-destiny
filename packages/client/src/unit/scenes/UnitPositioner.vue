@@ -37,6 +37,30 @@ useBattleEvent(GAME_EVENTS.UNIT_AFTER_MOVE, async e => {
   await tl.play();
 });
 
+useBattleEvent(GAME_EVENTS.UNIT_AFTER_TELEPORT, async e => {
+  if (!unit.equals(e.unit)) return;
+
+  const tl = gsap.timeline();
+  let currentPos = e.previousPosition;
+
+  e.path.forEach(point => {
+    const start = currentPos;
+    const end = point;
+    // const midPoint = {
+    //   x: (start.x + end.x) / 2,
+    //   y: (start.y + end.y) / 2 - config.MOVEMENT_BOUNCE_HEIGHT
+    // };
+    currentPos = point;
+
+    tl.to(unit.position, {
+      motionPath: [start, end],
+      duration: config.MOVEMENT_SPEED_PER_TILE
+    });
+  });
+
+  await tl.play();
+});
+
 const attackAnimation = async (e: { unit: SerializedUnit; target: Point }) => {
   if (!unit.equals(e.unit)) return;
 

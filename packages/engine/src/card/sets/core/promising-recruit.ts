@@ -32,7 +32,7 @@ export const promisingRecruit: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
   atk: 2,
-  maxHp: 2,
+  maxHp: 3,
   job: CARD_JOBS.GUARDIAN,
   getFollowup: () => {
     return new MinionFollowup();

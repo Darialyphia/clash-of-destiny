@@ -35,7 +35,7 @@ export const iceQueen: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [floatingDestiny],
   atk: 1,
-  maxHp: 3,
+  maxHp: 4,
   job: CARD_JOBS.SPELLCASTER,
   getFollowup: () => {
     return new MinionFollowup();

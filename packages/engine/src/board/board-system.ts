@@ -9,6 +9,7 @@ import { Cell } from './cell';
 import { pointToCellId } from './board-utils';
 import { System } from '../system';
 import type { MapBlueprint } from './map-blueprint';
+import type { Unit } from '../unit/entities/unit.entity';
 
 export type BoardSystemOptions = {
   map: MapBlueprint;
@@ -90,5 +91,23 @@ export class BoardSystem
       this.getCellAt({ x: point.x + 1, y: point.y }),
       this.getCellAt({ x: point.x + 1, y: point.y + 1 })
     ].filter(isDefined);
+  }
+
+  getCellBehind(unit: Unit) {
+    const { x, y } = unit.position;
+    if (unit.player.isPlayer1) {
+      return this.getCellAt({ x: x - 1, y });
+    } else {
+      return this.getCellAt({ x: x + 1, y });
+    }
+  }
+
+  getCellInFront(unit: Unit) {
+    const { x, y } = unit.position;
+    if (unit.player.isPlayer1) {
+      return this.getCellAt({ x: x + 1, y });
+    } else {
+      return this.getCellAt({ x: x - 1, y });
+    }
   }
 }
