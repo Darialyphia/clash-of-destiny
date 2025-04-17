@@ -48,6 +48,11 @@ import { waterfallFoxPriestess } from './waterfall-fox-priestess';
 import { ceruleanWaveDisciple } from './cerulean-wave-disciple';
 import { playfulEels } from './playful-eels';
 import { shoalOfEels } from './shoal-of-eels';
+import { elanaLv1 } from './elana-rising-flower';
+import { elanaLv2 } from './elana-alluring-rose';
+import { elanaLv3 } from './elana-of-a-thousand-petals';
+import { petalBlade } from './petal-blade';
+import { iceBolt } from './ice-bolt';
 
 export const coreSet: CardSet = {
   id: CARD_SETS.CORE,
@@ -61,6 +66,9 @@ export const coreSet: CardSet = {
     ceruleanWaveDisciple,
     crusaderOfCreation,
     earthShrineOfKnowledge,
+    elanaLv1,
+    elanaLv2,
+    elanaLv3,
     enjiOneManArmy,
     equalityPendant,
     esteemedErudite,
@@ -74,12 +82,14 @@ export const coreSet: CardSet = {
     frostNova,
     garrisonMarksman,
     heatWave,
+    iceBolt,
     iceQueen,
     icyBreath,
     insight,
     luminescentMystic,
     nagaSkirmisher,
     novicePyromancy,
+    petalBlade,
     philosopherStone,
     pilferingBlade,
     playfulEels,

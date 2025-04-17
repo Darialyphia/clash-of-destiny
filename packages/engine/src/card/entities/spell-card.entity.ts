@@ -160,6 +160,7 @@ export class SpellCard extends Card<
       maxTargets: this.followupTargets.length,
       modifiers: this.modifiers.map(modifier => modifier.id),
       aoe: this.getSerializedAoe(),
+      canBeBanishedForDestiny: this.canBeBanishedForDestiny,
       range:
         this.player.currentlyPlayedCard?.equals(this) &&
         this.game.interaction.context.state === INTERACTION_STATES.SELECTING_TARGETS

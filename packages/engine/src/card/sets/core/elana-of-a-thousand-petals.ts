@@ -1,0 +1,89 @@
+import { PointAOEShape } from '../../../aoe/point.aoe-shape';
+import type { UnitBlueprint } from '../../card-blueprint';
+import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
+import {
+  AFFINITIES,
+  CARD_DECK_SOURCES,
+  CARD_JOBS,
+  CARD_KINDS,
+  CARD_SETS,
+  RARITIES,
+  UNIT_KINDS
+} from '../../card.enums';
+import { NoFollowup } from '../../followups/no-followup';
+import { DazzlingBloomModifier } from '../../../modifier/modifiers/dazzling-bloom.modifier';
+import { AnywhereFollowup } from '../../followups/anywhere-followup';
+import { SwiftModifier } from '../../../modifier/modifiers/swift.modifier';
+import { ElusiveModifier } from '../../../modifier/modifiers/elusive.modifier';
+
+export const elanaLv3: UnitBlueprint = {
+  id: 'elana-of-a-thousand-petals',
+  kind: CARD_KINDS.UNIT,
+  unitKind: UNIT_KINDS.HERO,
+  affinity: AFFINITIES.HARMONY,
+  name: 'Elana Of a Thousand Petals',
+  getDescription: () => {
+    return `@Elana Lineage@.\n@Swift@, @Elusive@.`;
+  },
+  staticDescription: `@Elana Lineage@.`,
+  setId: CARD_SETS.CORE,
+  cardIconId: 'unit-elana-lv3',
+  spriteId: 'elana-lv3',
+  spriteParts: {},
+  rarity: RARITIES.LEGENDARY,
+  collectable: true,
+  destinyCost: 3,
+  deckSource: CARD_DECK_SOURCES.DESTINY_DECK,
+  abilities: [
+    {
+      id: 'elena-of-a-thousand-petals',
+      getDescription(game, card) {
+        return 'Remove all stacks of Dazzling Bloom from this unit to take control of an enemy minion with Health less or equal to the stacks removed.';
+      },
+      staticDescription:
+        'Remove all stacks of Dazzling Bloom from this unit to take control of an enemy minion with Health less or equal to the stacks removed.',
+      canUse(game, card) {
+        if (!card.unit) return false;
+        const dazzlingBloom = card.unit.getModifier(DazzlingBloomModifier);
+        if (!dazzlingBloom) return false;
+        const enemyMinions = card.player.enemyUnits.filter(u => u.isMinion);
+        return enemyMinions.some(minion => {
+          return minion.hp.current <= dazzlingBloom.stacks;
+        });
+      },
+      getFollowup(game, card) {
+        return new AnywhereFollowup({
+          targetingType: TARGETING_TYPE.ENEMY_MINION,
+          filter(point) {
+            const unit = game.unitSystem.getUnitAt(point)!;
+            const dazzlingBloom = card.unit.getModifier(DazzlingBloomModifier);
+            if (!dazzlingBloom) return false;
+            return unit.hp.current <= dazzlingBloom.stacks;
+          }
+        });
+      },
+      isCardAbility: false,
+      label: '-1 Attack',
+      manaCost: 0,
+      shouldExhaust: false,
+      onResolve(game, card, targets) {}
+    }
+  ],
+  atk: 2,
+  maxHp: 20,
+  spellpower: 2,
+  level: 3,
+  job: CARD_JOBS.WANDERER,
+  lineage: 'Elana',
+  getFollowup: () => {
+    return new NoFollowup();
+  },
+  getAoe(game, card) {
+    return new PointAOEShape(game, card.player, TARGETING_TYPE.UNIT);
+  },
+  onInit() {},
+  onPlay(game, card) {
+    card.unit.addModifier(new SwiftModifier(game, card));
+    card.unit.addModifier(new ElusiveModifier(game, card));
+  }
+};

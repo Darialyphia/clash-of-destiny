@@ -131,6 +131,10 @@ export class CardViewModel {
     return this.data.canPlay;
   }
 
+  get canBeBanishedForDestiny() {
+    return this.data.canBeBanishedForDestiny;
+  }
+
   getPlayer() {
     return this.getEntities()[this.data.player] as PlayerViewModel;
   }

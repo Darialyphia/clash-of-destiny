@@ -7,13 +7,6 @@ import {
 } from '../stores/battle.store';
 import { useResizeObserver } from '@vueuse/core';
 import { throttle } from 'lodash-es';
-import {
-  HoverCardContent,
-  HoverCardRoot,
-  HoverCardTrigger,
-  HoverCardPortal,
-  VisuallyHidden
-} from 'reka-ui';
 import FancyButton from '@/ui/components/FancyButton.vue';
 import UiModal from '@/ui/components/UiModal.vue';
 import { useBattleUiStore } from '../stores/battle-ui.store';
@@ -75,6 +68,10 @@ watch(
     selectedIndices.value = [];
   }
 );
+
+const cards = computed(() =>
+  player.value.getHand().filter(card => card.canBeBanishedForDestiny)
+);
 </script>
 
 <template>
@@ -94,7 +91,7 @@ watch(
         ref="root"
         :class="{ hidden: !ui.isDestinyResourceActionModalOpened }"
       >
-        <label v-for="(card, index) in player.getHand()" :key="card.id">
+        <label v-for="(card, index) in cards" :key="card.id">
           <BattleCard :card="card" class="card-miniature" />
           <input
             class="hidden"

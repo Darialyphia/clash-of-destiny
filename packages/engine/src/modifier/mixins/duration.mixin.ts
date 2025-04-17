@@ -5,8 +5,10 @@ import type { Game } from '../../game/game';
 import type { Unit } from '../../unit/entities/unit.entity';
 import { GAME_EVENTS } from '../../game/game.events';
 
-export class DurationModifierMixin extends ModifierMixin<Unit | AnyCard> {
-  private modifier!: Modifier<Unit | AnyCard>;
+export class DurationModifierMixin<
+  T extends Unit | AnyCard = Unit | AnyCard
+> extends ModifierMixin<T> {
+  private modifier!: Modifier<T>;
 
   private initialDuration: number;
   constructor(
@@ -25,7 +27,7 @@ export class DurationModifierMixin extends ModifierMixin<Unit | AnyCard> {
     }
   }
 
-  onApplied(target: Unit | AnyCard, modifier: Modifier<Unit | AnyCard>): void {
+  onApplied(target: T, modifier: Modifier<T>): void {
     this.modifier = modifier;
     this.game.on(GAME_EVENTS.PLAYER_END_TURN, this.onTurnEnd);
   }

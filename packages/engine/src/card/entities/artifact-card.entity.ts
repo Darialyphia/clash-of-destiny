@@ -94,6 +94,7 @@ export class ArtifactCard extends Card<
       modifiers: this.modifiers.map(modifier => modifier.id),
       durability: this.blueprint.durability,
       canPlay: this.player.canPlayCard(this),
+      canBeBanishedForDestiny: this.canBeBanishedForDestiny,
       abilities: this.abilities.map(ability => ({
         id: ability.id,
         manaCost: ability.manaCost,

@@ -21,9 +21,9 @@ export const aidenLv2: UnitBlueprint = {
   affinity: AFFINITIES.NORMAL,
   name: 'Aiden, Stormrider',
   getDescription: () => {
-    return `@Aiden Lineage@\n@On Attack@: Put a @Storm Flash@ in your hand.`;
+    return `@Aiden Lineage@\n@Inherited Effect@: @On Attack@: Put a @Storm Flash@ in your hand.`;
   },
-  staticDescription: `@Aiden Lineage@\n@On Attack@: Put a @Storm Flash@ in your hand.`,
+  staticDescription: `@Aiden Lineage@\n@Inherited Effect@: @On Attack@: Put a @Storm Flash@ in your hand.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'unit-aiden-lv2',
   spriteId: 'aiden-lv2',

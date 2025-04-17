@@ -13,6 +13,7 @@ import {
 import type { InputDispatcher } from '@game/engine/src/input/input-system';
 import type { CardViewModel } from '@/card/card.model';
 import type { PlayerViewModel } from '@/player/player.model';
+import { GAME_PHASES } from '@game/engine/src/game/game.enums';
 
 export type BattleControllerOptions = {
   cardPlayIntent: Ref<Nullable<CardViewModel>>;
@@ -131,7 +132,7 @@ export class BattleController implements UiController {
       return;
     }
 
-    if (!isElligible) {
+    if (!isElligible && this.gameState.phase === GAME_PHASES.MAIN) {
       this.options.dispatcher({
         type: 'cancelPlayCard',
         payload: {

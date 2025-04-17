@@ -14,6 +14,7 @@ export class AnywhereFollowup implements Followup<AnyCard> {
     private options: {
       targetingType: TargetingType;
       skippable?: boolean;
+      filter?: (point: Point) => boolean;
     }
   ) {
     this.canCommit = this.canCommit.bind(this);
@@ -24,12 +25,15 @@ export class AnywhereFollowup implements Followup<AnyCard> {
       {
         type: 'cell' as const,
         isElligible: (point: Point) => {
-          return isValidTargetingType(
+          const isValid = isValidTargetingType(
             game,
             point,
             card.player,
             this.options.targetingType
           );
+          if (!this.options.filter) return isValid;
+
+          return isValid && this.options.filter(point);
         }
       }
     ];

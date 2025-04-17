@@ -13,6 +13,7 @@ import { Position } from '../../../utils/position.component';
 import { CompositeAOEShape } from '../../../aoe/composite.aoe-shape';
 import { PointAOEShape } from '../../../aoe/point.aoe-shape';
 import { playfulEels } from './playful-eels';
+import { floatingDestiny } from '../../abilities/floating-destiny';
 
 export const shoalOfEels: SpellBlueprint = {
   id: 'shoal-of-eels',
@@ -20,20 +21,20 @@ export const shoalOfEels: SpellBlueprint = {
   affinity: AFFINITIES.WATER,
   name: 'Shoal of Eels',
   getDescription: () => {
-    return `Summon 3 joined @Playful Eels@.`;
+    return `Summon  @[spellpower]@ + 2 joined @Playful Eels@.`;
   },
-  staticDescription: `Summon 3 joined @Playful Eels@.`,
+  staticDescription: `Summon @[spellpower]@ + 2 joined @Playful Eels@.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'spell-shoal-of-eels',
   rarity: RARITIES.COMMON,
   collectable: true,
-  manaCost: 3,
+  manaCost: 2,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   job: CARD_JOBS.SUMMONER,
-  abilities: [],
+  abilities: [floatingDestiny],
   getFollowup: (game, card) => {
     return new JoinedFollowup({
-      max: 3,
+      max: card.player.hero.spellpower + 2,
       originTargetingStrategy: {
         canTargetAt(point) {
           const position = Position.fromPoint(point);

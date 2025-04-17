@@ -111,7 +111,7 @@ until(descriptionBox)
     let innerHeight = inner.clientHeight;
 
     while (innerHeight > outerHeight) {
-      textSize.value--;
+      textSize.value -= 0.5;
       box.style.fontSize = `${textSize.value}px`;
 
       innerHeight = inner.clientHeight;

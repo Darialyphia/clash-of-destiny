@@ -32,7 +32,7 @@ export const esteemedErudite: UnitBlueprint = {
   collectable: true,
   manaCost: 2,
   atk: 0,
-  maxHp: 4,
+  maxHp: 3,
   abilities: [
     {
       id: 'esteemed-erudite-draw',

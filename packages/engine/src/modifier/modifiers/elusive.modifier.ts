@@ -5,14 +5,20 @@ import type { Game } from '../../game/game';
 import type { Unit } from '../../unit/entities/unit.entity';
 import { UNIT_EVENTS } from '../../unit/unit-enums';
 import { UnitSelfEventModifierMixin } from '../mixins/self-event.mixin';
+import type { ModifierMixin } from '../modifier-mixin';
 import { Modifier } from '../modifier.entity';
 
 export class ElusiveModifier extends Modifier<Unit> {
-  constructor(game: Game, card: AnyCard) {
+  constructor(
+    game: Game,
+    card: AnyCard,
+    options?: { otherMixins?: Array<ModifierMixin<Unit>> }
+  ) {
     super(KEYWORDS.ELUSIVE.id, game, card, {
       stackable: false,
       name: KEYWORDS.ELUSIVE.name,
       description: KEYWORDS.ELUSIVE.description,
+      icon: 'keyword-elusive',
       mixins: [
         new UnitSelfEventModifierMixin(game, {
           eventName: UNIT_EVENTS.BEFORE_RECEIVE_DAMAGE,
@@ -39,7 +45,8 @@ export class ElusiveModifier extends Modifier<Unit> {
 
             target.teleport(behind);
           }
-        })
+        }),
+        ...(options?.otherMixins ?? [])
       ]
     });
   }

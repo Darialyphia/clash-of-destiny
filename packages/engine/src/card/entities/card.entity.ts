@@ -29,12 +29,14 @@ export type CardInterceptors = {
   manaCost: Interceptable<number | null>;
   destinyCost: Interceptable<number | null>;
   abilities: Interceptable<Ability<AnyCard>[]>;
+  canBeBanishedForDestiny: Interceptable<boolean>;
 };
 
 export const makeCardInterceptors = (): CardInterceptors => ({
   manaCost: new Interceptable(),
   destinyCost: new Interceptable(),
-  abilities: new Interceptable()
+  abilities: new Interceptable(),
+  canBeBanishedForDestiny: new Interceptable()
 });
 
 export type SerializedCard = {
@@ -54,6 +56,7 @@ export type SerializedCard = {
   destinyCost: number | null;
   affinity: Affinity;
   modifiers: string[];
+  canBeBanishedForDestiny: boolean;
   abilities: Array<{
     id: string;
     manaCost: number;
@@ -148,6 +151,10 @@ export abstract class Card<
 
   get rarity() {
     return this.blueprint.rarity;
+  }
+
+  get canBeBanishedForDestiny() {
+    return this.interceptors.canBeBanishedForDestiny.getValue(true, {});
   }
 
   get abilities() {
