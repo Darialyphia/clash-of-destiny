@@ -30,13 +30,15 @@ export type CardInterceptors = {
   destinyCost: Interceptable<number | null>;
   abilities: Interceptable<Ability<AnyCard>[]>;
   canBeBanishedForDestiny: Interceptable<boolean>;
+  player: Interceptable<Player>;
 };
 
 export const makeCardInterceptors = (): CardInterceptors => ({
   manaCost: new Interceptable(),
   destinyCost: new Interceptable(),
   abilities: new Interceptable(),
-  canBeBanishedForDestiny: new Interceptable()
+  canBeBanishedForDestiny: new Interceptable(),
+  player: new Interceptable()
 });
 
 export type SerializedCard = {
@@ -77,7 +79,7 @@ export abstract class Card<
 
   blueprint: TBlueprint;
 
-  player: Player;
+  originalPlayer: Player;
 
   protected keywordManager = new KeywordManagerComponent();
 
@@ -91,10 +93,14 @@ export abstract class Card<
   ) {
     super(options.id, interceptors);
     this.game = game;
-    this.player = player;
+    this.originalPlayer = player;
     // @ts-expect-error
     this.blueprint = options.blueprint;
     this.modifierManager = new ModifierManager(this);
+  }
+
+  get player() {
+    return this.interceptors.player.getValue(this.originalPlayer, {});
   }
 
   get manaCost() {

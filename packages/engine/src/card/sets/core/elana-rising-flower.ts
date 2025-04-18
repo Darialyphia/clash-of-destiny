@@ -83,7 +83,7 @@ export const elanaLv1: UnitBlueprint = {
     }
   ],
   atk: 1,
-  maxHp: 16,
+  maxHp: 18,
   spellpower: 0,
   level: 1,
   job: CARD_JOBS.WANDERER,
@@ -104,8 +104,8 @@ export const elanaLv1: UnitBlueprint = {
           new GameEventModifierMixin(game, {
             eventName: GAME_EVENTS.PLAYER_AFTER_PLAY_CARD,
             handler(event) {
+              if (!event.data.player.equals(card.player)) return;
               const { card: playedCard } = event.data.event.data;
-              if (!event.data.player.equals(playedCard.player)) return;
               const isSpellOrSecret =
                 playedCard.kind === CARD_KINDS.SPELL ||
                 playedCard.kind === CARD_KINDS.SECRET;

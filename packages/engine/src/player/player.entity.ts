@@ -313,11 +313,13 @@ export class Player
     const card = this.generateCard(blueprintId) as MinionCard;
     if (!card.canSummonAt(position)) return;
     card.playWithTargets([{ type: 'cell', cell: position }]);
+    return card.unit;
   }
 
   summonMinionFromCard(card: MinionCard, position: Point) {
     if (!card.canSummonAt(position)) return;
     card.playWithTargets([{ type: 'cell', cell: position }]);
+    return card.unit;
   }
 
   canPerformResourceAction() {

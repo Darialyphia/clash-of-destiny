@@ -53,6 +53,10 @@ import { elanaLv2 } from './elana-alluring-rose';
 import { elanaLv3 } from './elana-of-a-thousand-petals';
 import { petalBlade } from './petal-blade';
 import { iceBolt } from './ice-bolt';
+import { sandsOfTime } from './sands-of-time';
+import { bookOfKnowledge } from './book-of-knowledge';
+import { rainbowPhoenix } from './rainbow-phoenix';
+import { rainbowBlade } from './rainbow-blade';
 
 export const coreSet: CardSet = {
   id: CARD_SETS.CORE,
@@ -61,6 +65,7 @@ export const coreSet: CardSet = {
     aidenLv1,
     aidenLv2,
     aidenLv3,
+    bookOfKnowledge,
     bubblySlime,
     ceasefire,
     ceruleanWaveDisciple,
@@ -95,6 +100,9 @@ export const coreSet: CardSet = {
     playfulEels,
     primordialHerald,
     promisingRecruit,
+    rainbowPhoenix,
+    rainbowBlade,
+    sandsOfTime,
     shieldMaiden,
     shoalOfEels,
     shroudedSorcerer,

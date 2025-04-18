@@ -31,7 +31,7 @@ export const earthShrineOfKnowledge: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.DESTINY_DECK,
   abilities: [],
   atk: 0,
-  maxHp: 12,
+  maxHp: 15,
   level: 0,
   getFollowup: () => {
     return new NoFollowup();

@@ -21,7 +21,7 @@ export const equalityPendant: ArtifactBlueprint = {
   affinity: AFFINITIES.NORMAL,
   name: 'Equality Pendant',
   getDescription: () => {
-    return `@Trinket@.\nAfter your draw phase, if you have less cards in hand than your opponent, draw a card and this artifact loses 1 durability.`;
+    return `@Trinket@.\nAt the start of your turn, if you have less cards in hand than your opponent, draw a card and this artifact loses 1 durability.`;
   },
   staticDescription: `@Trinket@.\nAfter your draw phase, if you have less cards in hand than your opponent, draw a card and this artifact loses 1 durability.`,
   setId: CARD_SETS.CORE,
@@ -33,7 +33,7 @@ export const equalityPendant: ArtifactBlueprint = {
   job: CARD_JOBS.WANDERER,
   abilities: [],
   artifactKind: ARTIFACT_KINDS.RELIC,
-  durability: 4,
+  durability: 3,
   getFollowup: () => {
     return new NoFollowup();
   },
@@ -45,10 +45,9 @@ export const equalityPendant: ArtifactBlueprint = {
         stackable: false,
         mixins: [
           new GameEventModifierMixin(game, {
-            eventName: GAME_EVENTS.BEFORE_GAME_PHASE_CHANGE,
+            eventName: GAME_EVENTS.PLAYER_START_TURN,
             handler(event) {
-              if (event.data.from !== GAME_PHASES.DRAW) return;
-              if (!game.gamePhaseSystem.turnPlayer.equals(card.player)) return;
+              if (!event.data.player.equals(card.player)) return;
 
               if (
                 card.player.cards.hand.length < card.player.opponent.cards.hand.length

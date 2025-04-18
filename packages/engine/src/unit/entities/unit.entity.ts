@@ -81,7 +81,6 @@ export type SerializedUnit = {
 export type UnitOptions = {
   id: string;
   position: Point;
-  player: Player;
 };
 
 export class Unit
@@ -89,8 +88,6 @@ export class Unit
   implements Serializable<SerializedUnit>
 {
   private game: Game;
-
-  readonly originalPlayer: Player;
 
   private readonly modifierManager: ModifierManager<Unit>;
 
@@ -113,7 +110,6 @@ export class Unit
   ) {
     super(`${options.id}`, makeUnitInterceptors());
     this.game = game;
-    this.originalPlayer = options.player;
     this.modifierManager = new ModifierManager(this);
     this.keywordManager = new KeywordManagerComponent();
     this.hp = new HealthComponent({
@@ -236,7 +232,7 @@ export class Unit
   }
 
   get player() {
-    return this.interceptors.player.getValue(this.originalPlayer, {});
+    return this._card.player;
   }
 
   get spellpower() {

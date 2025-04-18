@@ -46,6 +46,12 @@ export const KEYWORDS = {
     description: 'Does something when this card is destroyed.',
     aliases: []
   },
+  ON_DESTROYED: {
+    id: 'on-destroyed',
+    name: 'On Destroyed',
+    description: 'Does something when this card is destroyed.',
+    aliases: []
+  },
   ON_ATTACK: {
     id: 'on-attack',
     name: 'On Attack',
@@ -125,7 +131,7 @@ export const KEYWORDS = {
     id: 'elusive',
     name: 'Elusive',
     description:
-      'When this receives combat damage, move this unit backwards if able. If you do, negate the damage.',
+      "When this receives combat damage during the opponent's turn, move this unit backwards if able. If you do, negate the damage.",
     aliases: []
   },
   FROZEN: {

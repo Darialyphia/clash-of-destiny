@@ -12,6 +12,8 @@ import {
 } from '../../card.enums';
 import { AnywhereFollowup } from '../../followups/anywhere-followup';
 import { SpellDamage } from '../../../combat/damage';
+import { Modifier } from '../../../modifier/modifier.entity';
+import { SpellCardInterceptorModifierMixin } from '../../../modifier/mixins/interceptor.mixin';
 
 export const petalBlade: SpellBlueprint = {
   id: 'petal-blade',
@@ -19,7 +21,7 @@ export const petalBlade: SpellBlueprint = {
   affinity: AFFINITIES.NORMAL,
   name: 'Petal Blade',
   getDescription: () => {
-    return `Deal 1 damage to a unit.`;
+    return `Deal 1 damage to a unit. Cannot be banished for Destiny.`;
   },
   staticDescription: `Deal 1 damage to a unit. Cannot be banished for Destiny.`,
   setId: CARD_SETS.CORE,
@@ -36,7 +38,21 @@ export const petalBlade: SpellBlueprint = {
   getAoe(game, card) {
     return new PointAOEShape(game, card.player, TARGETING_TYPE.UNIT);
   },
-  onInit() {},
+  onInit(game, card) {
+    card.addModifier(
+      new Modifier('petal-blade', game, card, {
+        stackable: false,
+        name: 'Petal Blade',
+        description: 'Cannot be banished for Destiny.',
+        mixins: [
+          new SpellCardInterceptorModifierMixin(game, {
+            key: 'canBeBanishedForDestiny',
+            interceptor: () => false
+          })
+        ]
+      })
+    );
+  },
   onPlay(game, card, affectedCells, affectedUnits) {
     const [target] = affectedUnits;
     if (!target) return;

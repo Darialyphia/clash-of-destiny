@@ -72,7 +72,6 @@ export class UnitSystem extends System<UnitSystemOptions> {
     const id = `unit_${++this.nextUnitId}`;
     const unit = new Unit(this.game, card, {
       id,
-      player: card.player,
       position
     });
     this.unitMap.set(unit.id, unit);

@@ -1,5 +1,6 @@
 import { PointAOEShape } from '../../../aoe/point.aoe-shape';
-import { OnAttackModifier } from '../../../modifier/modifiers/on-attack.modifier';
+import { OnEnterModifier } from '../../../modifier/modifiers/on-enter.modifier';
+import { SwiftModifier } from '../../../modifier/modifiers/swift.modifier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
 import type { UnitBlueprint } from '../../card-blueprint';
 import {
@@ -11,8 +12,7 @@ import {
   RARITIES,
   UNIT_KINDS
 } from '../../card.enums';
-import { NoFollowup } from '../../followups/no-followup';
-import { stormFlash } from './storm-flash';
+import { AnywhereFollowup } from '../../followups/anywhere-followup';
 
 export const aidenLv2: UnitBlueprint = {
   id: 'aiden-stormrider',
@@ -21,7 +21,7 @@ export const aidenLv2: UnitBlueprint = {
   affinity: AFFINITIES.NORMAL,
   name: 'Aiden, Stormrider',
   getDescription: () => {
-    return `@Aiden Lineage@\n@Inherited Effect@: @On Attack@: Put a @Storm Flash@ in your hand.`;
+    return `@Aiden Lineage@\n @On Enter@: Give an allied minion @Swift@.`;
   },
   staticDescription: `@Aiden Lineage@\n@Inherited Effect@: @On Attack@: Put a @Storm Flash@ in your hand.`,
   setId: CARD_SETS.CORE,
@@ -34,26 +34,28 @@ export const aidenLv2: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.DESTINY_DECK,
   abilities: [],
   atk: 2,
-  maxHp: 20,
+  maxHp: 21,
   spellpower: 1,
   level: 2,
   job: CARD_JOBS.AVENGER,
   lineage: 'Aiden',
   getFollowup: () => {
-    return new NoFollowup();
+    return new AnywhereFollowup({
+      targetingType: TARGETING_TYPE.ALLY_MINION,
+      skippable: true
+    });
   },
   getAoe(game, card) {
     return new PointAOEShape(game, card.player, TARGETING_TYPE.UNIT);
   },
-  onInit() {},
-  onPlay(game, card) {
-    card.unit.addModifier(
-      new OnAttackModifier(game, card, {
-        handler() {
-          const generatedCard = card.player.generateCard(stormFlash.id);
-          card.player.cards.addToHand(generatedCard);
-        }
+  onInit(game, card) {
+    card.addModifier(
+      new OnEnterModifier(game, card, event => {
+        const [target] = event.data.affectedUnits;
+        if (!target) return;
+        target.addModifier(new SwiftModifier(game, card));
       })
     );
-  }
+  },
+  onPlay() {}
 };

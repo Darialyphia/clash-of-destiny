@@ -1,4 +1,3 @@
-import { PointAOEShape } from '../../../aoe/point.aoe-shape';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
 import type { SpellBlueprint } from '../../card-blueprint';
 import {
@@ -27,7 +26,7 @@ export const heatWave: SpellBlueprint = {
   cardIconId: 'spell-heatwave',
   rarity: RARITIES.RARE,
   collectable: true,
-  manaCost: 1,
+  manaCost: 2,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   job: CARD_JOBS.SPELLCASTER,
   abilities: [floatingDestiny],

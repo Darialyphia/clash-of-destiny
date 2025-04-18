@@ -46,7 +46,7 @@ export class InterceptorModifierMixin<
     game: Game,
     private options: {
       key: TKey;
-      prioriry?: number;
+      priority?: number;
       interceptor: (
         value: inferInterceptorValue<TInterceptorMap[TKey]>,
         ctx: inferInterceptorCtx<TInterceptorMap[TKey]>,
@@ -71,7 +71,7 @@ export class InterceptorModifierMixin<
     target.addInterceptor(
       this.options.key,
       this.interceptor as any,
-      this.options.prioriry
+      this.options.priority
     );
   }
 
@@ -80,7 +80,7 @@ export class InterceptorModifierMixin<
     target.removeInterceptor(
       this.options.key,
       this.interceptor as any,
-      this.options.prioriry
+      this.options.priority
     );
   }
 

@@ -25,11 +25,13 @@ export class ProvokedModifier extends Modifier<Unit> {
               unit.position.isNearby(this.target.position) &&
               unit.hasModifier(ProvokeModifier)
             );
-          }
+          },
+          priority: 10
         }),
         new UnitInterceptorModifierMixin(game, {
           key: 'canMove',
-          interceptor: () => false
+          interceptor: () => false,
+          priority: 10
         }),
         ...otherMixins
       ]

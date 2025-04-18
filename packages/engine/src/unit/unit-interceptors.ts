@@ -45,8 +45,6 @@ export type UnitInterceptors = {
   maxMovementsPerTurn: Interceptable<number>;
   maxCounterattacksPerTurn: Interceptable<number>;
 
-  player: Interceptable<Player>;
-
   damageDealt: Interceptable<number, { source: AnyCard; target: Unit }>;
   damageReceived: Interceptable<
     number,
@@ -90,8 +88,6 @@ export const makeUnitInterceptors = (): UnitInterceptors => {
     maxAttacksPerTurn: new Interceptable<number>(),
     maxMovementsPerTurn: new Interceptable<number>(),
     maxCounterattacksPerTurn: new Interceptable<number>(),
-
-    player: new Interceptable<Player>(),
 
     damageDealt: new Interceptable<number, { source: AnyCard; target: Unit }>(),
     damageReceived: new Interceptable<

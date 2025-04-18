@@ -32,10 +32,10 @@ export const iceBolt: SpellBlueprint = {
   job: CARD_JOBS.SPELLCASTER,
   abilities: [],
   getFollowup: () => {
-    return new AnywhereFollowup({ targetingType: TARGETING_TYPE.UNIT });
+    return new AnywhereFollowup({ targetingType: TARGETING_TYPE.ENEMY_MINION });
   },
   getAoe(game, card) {
-    return new PointAOEShape(game, card.player, TARGETING_TYPE.UNIT);
+    return new PointAOEShape(game, card.player, TARGETING_TYPE.ENEMY_MINION);
   },
   onInit() {},
   onPlay(game, card, affectedCells, affectedUnits) {

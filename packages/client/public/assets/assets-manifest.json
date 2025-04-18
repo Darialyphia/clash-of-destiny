@@ -175,6 +175,19 @@
       "assets": [
         {
           "alias": [
+            "icon-artifact-book-of-knowledge"
+          ],
+          "src": [
+            "/assets/icons/artifact-book-of-knowledge.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-artifact-equality-pendant"
           ],
           "src": [
@@ -205,6 +218,19 @@
           ],
           "src": [
             "/assets/icons/artifact-pilfering-blade.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-artifact-rainbow-blade"
+          ],
+          "src": [
+            "/assets/icons/artifact-rainbow-blade.png"
           ],
           "data": {
             "tags": {
@@ -344,6 +370,19 @@
         },
         {
           "alias": [
+            "icon-keyword-dazzling-bloom"
+          ],
+          "src": [
+            "/assets/icons/keyword-dazzling-bloom.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-keyword-defiant"
           ],
           "src": [
@@ -374,6 +413,19 @@
           ],
           "src": [
             "/assets/icons/keyword-double-attack.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-keyword-elusive"
+          ],
+          "src": [
+            "/assets/icons/keyword-elusive.png"
           ],
           "data": {
             "tags": {
@@ -774,6 +826,19 @@
         },
         {
           "alias": [
+            "icon-spell-eternal-flame"
+          ],
+          "src": [
+            "/assets/icons/spell-eternal-flame.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-spell-fireball"
           ],
           "src": [
@@ -826,10 +891,36 @@
         },
         {
           "alias": [
+            "icon-spell-inner-fire"
+          ],
+          "src": [
+            "/assets/icons/spell-inner-fire.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-spell-insight"
           ],
           "src": [
             "/assets/icons/spell-insight.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-spell-lightning-bolt"
+          ],
+          "src": [
+            "/assets/icons/spell-lightning-bolt.png"
           ],
           "data": {
             "tags": {
@@ -856,6 +947,32 @@
           ],
           "src": [
             "/assets/icons/spell-petal-blade.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-spell-pillars-of-frost"
+          ],
+          "src": [
+            "/assets/icons/spell-pillars-of-frost.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-spell-sands-of-time"
+          ],
+          "src": [
+            "/assets/icons/spell-sands-of-time.png"
           ],
           "data": {
             "tags": {
@@ -908,6 +1025,19 @@
           ],
           "src": [
             "/assets/icons/spell-storm-flash.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-spell-tidal-wave"
+          ],
+          "src": [
+            "/assets/icons/spell-tidal-wave.png"
           ],
           "data": {
             "tags": {
@@ -1298,6 +1428,19 @@
           ],
           "src": [
             "/assets/icons/unit-promising-recruit.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-unit-rainbow-phoenix"
+          ],
+          "src": [
+            "/assets/icons/unit-rainbow-phoenix.png"
           ],
           "data": {
             "tags": {
@@ -3757,6 +3900,33 @@
           ],
           "src": [
             "/assets/units/promising-recruit.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "rainbow-phoenix"
+          ],
+          "src": [
+            "/assets/units/rainbow-phoenix.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "rainbow-phoenix.png"
+          ],
+          "src": [
+            "/assets/units/rainbow-phoenix.png"
           ],
           "data": {
             "tags": {
