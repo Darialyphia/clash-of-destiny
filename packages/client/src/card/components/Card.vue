@@ -10,8 +10,7 @@ import {
 } from '@game/engine/src/card/card.enums';
 import { clamp, isDefined, mapRange } from '@game/shared';
 import CardText from '@/card/components/CardText.vue';
-import { until, useElementBounding, useMouse } from '@vueuse/core';
-import { autoTextSize } from 'auto-text-size';
+import { until, useMouse } from '@vueuse/core';
 
 const { card } = defineProps<{
   card: {
@@ -288,6 +287,18 @@ const isMultiLine = computed(() => {
   top: 0;
   left: 50%;
   transform: translateX(-50%);
+
+  /* &::after {
+    position: absolute;
+    inset: 0;
+    content: '';
+    background: v-bind(imageBg);
+    background-size: cover;
+    background-position: center;
+    filter: blur(10px) sepia(60%) hue-rotate(40deg);
+    transform: translateY(-10px);
+    mix-blend-mode: screen;
+  } */
 
   .unit & {
     background-position: center -10px;

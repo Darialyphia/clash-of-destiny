@@ -17,13 +17,13 @@ export const bookOfKnowledge: ArtifactBlueprint = {
   id: 'book-of-knowledge',
   kind: CARD_KINDS.ARTIFACT,
   affinity: AFFINITIES.NORMAL,
-  name: 'Searing Blade',
+  name: 'Book of Knowledge',
   getDescription: () => {
     return `Your Hero has +1 Spellpower.`;
   },
   staticDescription: `Your Hero has +1 Spellpower.`,
   setId: CARD_SETS.CORE,
-  cardIconId: 'artifact-test',
+  cardIconId: 'artifact-book-of-knowledge',
   rarity: RARITIES.COMMON,
   collectable: true,
   destinyCost: 1,

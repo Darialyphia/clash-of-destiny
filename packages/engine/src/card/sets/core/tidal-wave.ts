@@ -24,7 +24,7 @@ export const tidalWave: SpellBlueprint = {
   getDescription: () => {
     return `Deal 3 damage to all units on a row.`;
   },
-  staticDescription: `Deal 3 damage to all units on a row.`,
+  staticDescription: `Deal 3 damage to all units in a row.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'spell-tidal-wave',
   rarity: RARITIES.EPIC,

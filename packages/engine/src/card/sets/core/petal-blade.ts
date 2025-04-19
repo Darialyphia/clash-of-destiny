@@ -27,7 +27,7 @@ export const petalBlade: SpellBlueprint = {
   setId: CARD_SETS.CORE,
   cardIconId: 'spell-petal-blade',
   rarity: RARITIES.COMMON,
-  collectable: true,
+  collectable: false,
   manaCost: 0,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   job: CARD_JOBS.WANDERER,

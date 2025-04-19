@@ -145,7 +145,7 @@ useResizeObserver(
 
       <footer class="flex mt-7 gap-10 justify-center">
         <FancyButton
-          text="Banish"
+          text="Confirm"
           :disabled="selectedIds.length < minChoices"
           @click="commit"
         />

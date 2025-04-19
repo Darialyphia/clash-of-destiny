@@ -813,6 +813,19 @@
         },
         {
           "alias": [
+            "icon-spell-call-of-the-champion"
+          ],
+          "src": [
+            "/assets/icons/spell-call-of-the-champion.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-spell-ceasefire"
           ],
           "src": [
@@ -1116,6 +1129,19 @@
           ],
           "src": [
             "/assets/icons/unit-archmage.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "icon-unit-ardent-monk"
+          ],
+          "src": [
+            "/assets/icons/unit-ardent-monk.png"
           ],
           "data": {
             "tags": {
@@ -3333,6 +3359,33 @@
           ],
           "src": [
             "/assets/units/aiden-lv3.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "ardent-monk"
+          ],
+          "src": [
+            "/assets/units/ardent-monk.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "ardent-monk.png"
+          ],
+          "src": [
+            "/assets/units/ardent-monk.png"
           ],
           "data": {
             "tags": {

@@ -182,7 +182,7 @@ export class GameSnaphotSystem extends System<EmptyObject> {
       interactionState: this.game.interaction.serialize(),
       phase: this.game.phase,
       board: this.game.boardSystem.serialize(),
-      units: this.game.unitSystem.units.map(unit => unit.id),
+      units: this.game.unitSystem.unitsOnBoard.map(unit => unit.id),
       interactables: this.game.interactableSystem.interactables.map(unit => unit.id),
       players: this.game.playerSystem.players.map(player => player.id) as [
         string,

@@ -15,9 +15,11 @@ import { KeywordManagerComponent } from '../../card/components/keyword-manager.c
 import {
   HeroAfterEvolveEvent,
   HeroBeforeEvolveEvent,
+  UnitAfterBounceEvent,
   UnitAfterDestroyEvent,
   UnitAfterMoveEvent,
   UnitAttackEvent,
+  UnitBeforeBounceEvent,
   UnitBeforeDestroyEvent,
   UnitBeforeMoveEvent,
   UnitCreatedEvent,
@@ -551,6 +553,10 @@ export class Unit
     return this.movement.getPathTo.bind(this.movement);
   }
 
+  get isOnBoard() {
+    return !this.isDead && this.position.x >= 0 && this.position.y >= 0;
+  }
+
   getPossibleMoves() {
     if (!this.canMove) return [];
     return this.movement.getAllPossibleMoves(this.speed).filter(move => {
@@ -645,6 +651,35 @@ export class Unit
   removeFromBoard() {
     this.player.cards.sendToDiscardPile(this._card);
     this.game.unitSystem.removeUnit(this);
+  }
+
+  bounce() {
+    this.emitter.emit(UNIT_EVENTS.BEFORE_BOUNCE, new UnitBeforeBounceEvent({}));
+    this.game.unitSystem.removeUnit(this);
+    this.player.cards.addToHand(this._card);
+    this.emitter.emit(
+      UNIT_EVENTS.AFTER_BOUNCE,
+      new UnitAfterBounceEvent({ successful: true })
+    );
+    for (const modifier of this.modifiers) {
+      this.removeModifier(modifier);
+    }
+  }
+
+  putOnTopOfDeck() {
+    this.game.unitSystem.removeUnit(this);
+    this.player.cards.destinyDeck.addToTop(this._card);
+    for (const modifier of this.modifiers) {
+      this.removeModifier(modifier);
+    }
+  }
+
+  putOnBottomOfDeck() {
+    this.game.unitSystem.removeUnit(this);
+    this.player.cards.destinyDeck.addToBottom(this._card);
+    for (const modifier of this.modifiers) {
+      this.removeModifier(modifier);
+    }
   }
 
   destroy(source: AnyCard) {

@@ -68,7 +68,8 @@ export const lileeSinTheArdentMonk: UnitBlueprint = {
         const targetUnit = game.unitSystem.getUnitAt(target.cell);
         if (!targetUnit) return;
 
-        const direction = card.unit.position.clone().sub(target.cell);
+        const direction = Position.fromPoint(target.cell).sub(card.unit.position);
+        console.log(direction);
         const knockbackPosition = Position.fromPoint(target.cell).add(
           direction.normalize().scale({ x: 2, y: 2 })
         );
@@ -97,7 +98,7 @@ export const lileeSinTheArdentMonk: UnitBlueprint = {
     }
   ],
   atk: 3,
-  maxHp: 3,
+  maxHp: 2,
   job: CARD_JOBS.GUARDIAN,
   getFollowup: () => {
     return new MinionFollowup();

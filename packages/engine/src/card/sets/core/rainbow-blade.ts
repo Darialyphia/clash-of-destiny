@@ -21,13 +21,13 @@ export const rainbowBlade: ArtifactBlueprint = {
   affinity: AFFINITIES.HARMONY,
   name: 'Rainbow Blade',
   getDescription: () => {
-    return `Your Hero has +2 Attack.\n@On Death@: Summon a @Rainbow Phoenix@ in front of your hero and exhaust it.`;
+    return `Your Hero has +2 Attack.\n@On Destroyed@: Summon a @Rainbow Phoenix@ in front of your hero and exhaust it.`;
   },
-  staticDescription: `Your Hero has +2 Attack.\n@On Death@: Summon a @Rainbow Phoenix@ in front of your hero and exhaust it.`,
+  staticDescription: `Your Hero has +2 Attack.\n@On Destroyed@: Summon a @Rainbow Phoenix@ in front of your hero and exhaust it.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'artifact-rainbow-blade',
   rarity: RARITIES.LEGENDARY,
-  collectable: true,
+  collectable: false,
   manaCost: 5,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   job: CARD_JOBS.SUMMONER,

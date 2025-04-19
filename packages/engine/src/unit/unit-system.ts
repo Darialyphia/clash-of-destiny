@@ -24,7 +24,9 @@ export class UnitSystem extends System<UnitSystemOptions> {
   }
 
   get unitsOnBoard() {
-    return this.units.filter(unit => !unit.isDead);
+    return this.units.filter(
+      unit => !unit.isDead && unit.position.x >= 0 && unit.position.y >= 0
+    );
   }
 
   getUnitById(id: string) {

@@ -1,8 +1,6 @@
 import { PointAOEShape } from '../../../aoe/point.aoe-shape';
 import { ElusiveModifier } from '../../../modifier/modifiers/elusive.modifier';
-import { FrozenModifier } from '../../../modifier/modifiers/frozen-modifier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
-import { floatingDestiny } from '../../abilities/floating-destiny';
 import type { UnitBlueprint } from '../../card-blueprint';
 import {
   AFFINITIES,
@@ -35,7 +33,7 @@ export const waterfallFoxPriestess: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
   atk: 2,
-  maxHp: 3,
+  maxHp: 2,
   job: CARD_JOBS.WANDERER,
   getFollowup: () => {
     return new MinionFollowup();

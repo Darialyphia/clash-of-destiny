@@ -60,6 +60,9 @@ import { rainbowBlade } from './rainbow-blade';
 import { avatarOfPeace } from './avatar-of-peace';
 import { lileeSinTheArdentMonk } from './lilee-sin-the-ardent-monk';
 import { tidalWave } from './tidal-wave';
+import { callOfTheChampion } from './call-of-the-champion';
+import { kouzuiAquamancer } from './kouzui-aquamancer';
+import { combustion } from './spell-combustion';
 
 export const coreSet: CardSet = {
   id: CARD_SETS.CORE,
@@ -71,8 +74,10 @@ export const coreSet: CardSet = {
     avatarOfPeace,
     bookOfKnowledge,
     bubblySlime,
+    callOfTheChampion,
     ceasefire,
     ceruleanWaveDisciple,
+    combustion,
     crusaderOfCreation,
     earthShrineOfKnowledge,
     elanaLv1,
@@ -95,6 +100,7 @@ export const coreSet: CardSet = {
     iceQueen,
     icyBreath,
     insight,
+    kouzuiAquamancer,
     lileeSinTheArdentMonk,
     luminescentMystic,
     nagaSkirmisher,

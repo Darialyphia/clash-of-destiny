@@ -4,6 +4,7 @@ import { Modifier } from '../../../modifier/modifier.entity';
 import { OnDeathModifier } from '../../../modifier/modifiers/on-death.modifier';
 import { OnEnterModifier } from '../../../modifier/modifiers/on-enter.modifier';
 import { SimpleAttackBuffModifier } from '../../../modifier/modifiers/simple-attack-buff.modifier';
+import { UniqueModifier } from '../../../modifier/modifiers/unique.modifier';
 import { VigilantModifier } from '../../../modifier/modifiers/vigilant.modifier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
 import { UNIT_EVENTS } from '../../../unit/unit-enums';
@@ -50,6 +51,7 @@ export const rainbowPhoenix: UnitBlueprint = {
     return new PointAOEShape(game, card.player, TARGETING_TYPE.UNIT);
   },
   onInit(game, card) {
+    card.addModifier(new UniqueModifier(game, card));
     card.addModifier(
       new OnEnterModifier(game, card, () => {
         card.player.units.forEach(unit => {

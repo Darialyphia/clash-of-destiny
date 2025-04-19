@@ -53,13 +53,16 @@ export class UnitAfterMoveEvent extends TypedSerializableEvent<
   }
 }
 
-export class UnitBeforeBounce extends TypedSerializableEvent<EmptyObject, EmptyObject> {
+export class UnitBeforeBounceEvent extends TypedSerializableEvent<
+  EmptyObject,
+  EmptyObject
+> {
   serialize() {
     return {};
   }
 }
 
-export class UnitAfterBounce extends TypedSerializableEvent<
+export class UnitAfterBounceEvent extends TypedSerializableEvent<
   { successful: boolean },
   { successful: boolean }
 > {
@@ -208,8 +211,8 @@ export type UnitEventMap = {
   [UNIT_EVENTS.AFTER_RECEIVE_HEAL]: UnitReceiveHealEvent;
   [UNIT_EVENTS.BEFORE_DESTROY]: UnitBeforeDestroyEvent;
   [UNIT_EVENTS.AFTER_DESTROY]: UnitAfterDestroyEvent;
-  [UNIT_EVENTS.BEFORE_BOUNCE]: UnitBeforeBounce;
-  [UNIT_EVENTS.AFTER_BOUNCE]: UnitAfterBounce;
+  [UNIT_EVENTS.BEFORE_BOUNCE]: UnitBeforeBounceEvent;
+  [UNIT_EVENTS.AFTER_BOUNCE]: UnitAfterBounceEvent;
   [UNIT_EVENTS.BEFORE_EXHAUST]: UnitExhaustEvent;
   [UNIT_EVENTS.AFTER_EXHAUST]: UnitExhaustEvent;
   [UNIT_EVENTS.BEFORE_WAKE_UP]: UnitWakeUpEvent;

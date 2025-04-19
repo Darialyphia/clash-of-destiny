@@ -25,7 +25,7 @@ export const aidenLv3: UnitBlueprint = {
   getDescription: () => {
     return `@Aiden Lineage@\nAll your units have @Swift@.\n @On Enter@: Equip a @Wrath of the Skies@`;
   },
-  staticDescription: `@Aiden Lineage@\n@Your allies can move one more space.\nOn Enter@: Equip a @Wrath of the Skies@`,
+  staticDescription: `@Aiden Lineage@\nAll your units have @Swift@.\nOn Enter@: Equip a @Wrath of the Skies@`,
   setId: CARD_SETS.CORE,
   cardIconId: 'unit-aiden-lv3',
   spriteId: 'aiden-lv3',
