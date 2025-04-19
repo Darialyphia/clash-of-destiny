@@ -36,7 +36,7 @@ export const aidenLv3: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.DESTINY_DECK,
   abilities: [],
   atk: 3,
-  maxHp: 24,
+  maxHp: 21,
   spellpower: 1,
   level: 3,
   job: CARD_JOBS.AVENGER,

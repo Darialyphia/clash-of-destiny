@@ -1,6 +1,12 @@
 import type { Point } from '@game/shared';
 
-export const bresenham = (start: Point, end: Point): Point[] => {
+export const bresenham = (
+  start: Point,
+  end: Point,
+  options: { includeStart: boolean } = {
+    includeStart: true
+  }
+): Point[] => {
   const cells: Point[] = [];
 
   let { x: x0, y: y0 } = start;
@@ -14,7 +20,9 @@ export const bresenham = (start: Point, end: Point): Point[] => {
 
   // eslint-disable-next-line no-constant-condition
   while (true) {
-    cells.push({ x: x0, y: y0 });
+    if (options.includeStart || x0 !== start.x || y0 !== start.y) {
+      cells.push({ x: x0, y: y0 });
+    }
 
     if (x0 === x1 && y0 === y1) break;
 

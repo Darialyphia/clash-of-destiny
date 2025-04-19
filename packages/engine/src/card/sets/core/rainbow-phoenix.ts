@@ -27,9 +27,9 @@ export const rainbowPhoenix: UnitBlueprint = {
   affinity: AFFINITIES.HARMONY,
   name: 'Rainbow Phoenix',
   getDescription: () => {
-    return `@On Enter@ Heal allies for 2.\n@On Death@: Equip a @Rainbow Blade@ to your hero.`;
+    return `@Unique@.\n@On Enter@ : Deal 2 damage to all enemies and heal all allies for 2.\n@On Death@: Equip a @Rainbow Blade@ to your hero.`;
   },
-  staticDescription: `@On Enter@ Heal allies for 2.\n@On Death@: Equip a @Rainbow Blade@ to your hero.`,
+  staticDescription: `@Unique@.\n@On Enter@ : Deal 2 damage to all enemies and heal allies for 2.\n@On Death@: Equip a @Rainbow Blade@ to your hero.`,
   setId: CARD_SETS.CORE,
   cardIconId: 'unit-rainbow-phoenix',
   spriteId: 'rainbow-phoenix',
@@ -41,6 +41,7 @@ export const rainbowPhoenix: UnitBlueprint = {
   atk: 3,
   maxHp: 4,
   job: CARD_JOBS.SUMMONER,
+  unique: true,
   abilities: [],
   getFollowup: () => {
     return new MinionFollowup();

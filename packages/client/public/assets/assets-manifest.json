@@ -1125,6 +1125,19 @@
         },
         {
           "alias": [
+            "icon-unit-avatar-of-peace"
+          ],
+          "src": [
+            "/assets/icons/unit-avatar-of-peace.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-unit-bubbly-slime"
           ],
           "src": [
@@ -3329,6 +3342,33 @@
         },
         {
           "alias": [
+            "avatar-of-peace"
+          ],
+          "src": [
+            "/assets/units/avatar-of-peace.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "avatar-of-peace.png"
+          ],
+          "src": [
+            "/assets/units/avatar-of-peace.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "bubbly-slime"
           ],
           "src": [
@@ -3792,6 +3832,33 @@
           ],
           "src": [
             "/assets/units/luminescent-mystic.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "misleading-wisp"
+          ],
+          "src": [
+            "/assets/units/misleading-wisp.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "misleading-wisp.png"
+          ],
+          "src": [
+            "/assets/units/misleading-wisp.png"
           ],
           "data": {
             "tags": {

@@ -17,6 +17,8 @@ import { SwiftModifier } from '../../../modifier/modifiers/swift.modifier';
 import { ElusiveModifier } from '../../../modifier/modifiers/elusive.modifier';
 import { Modifier } from '../../../modifier/modifier.entity';
 import { MinionCardInterceptorModifierMixin } from '../../../modifier/mixins/interceptor.mixin';
+import { UntilEndOfTurnModifierMixin } from '../../../modifier/mixins/until-end-of-turn.mixin';
+import type { MinionCard } from '../../entities/minion-card.entity';
 
 export const elanaLv3: UnitBlueprint = {
   id: 'elana-of-a-thousand-petals',
@@ -25,7 +27,7 @@ export const elanaLv3: UnitBlueprint = {
   affinity: AFFINITIES.HARMONY,
   name: 'Elana Of a Thousand Petals',
   getDescription: () => {
-    return `@Elana Lineage@.\n@Swift@, @Elusive@.`;
+    return `@Elana Lineage@.\n@Elusive@.`;
   },
   staticDescription: `@Elana Lineage@.`,
   setId: CARD_SETS.CORE,
@@ -40,10 +42,10 @@ export const elanaLv3: UnitBlueprint = {
     {
       id: 'elena-of-a-thousand-petals',
       getDescription() {
-        return 'Remove all stacks of Dazzling Bloom from this unit to take control of an enemy minion with Health less or equal to the stacks removed.';
+        return '@[exhaust]@:  Remove all stacks of Dazzling Bloom from this unit to take control of an enemy minion with Health less or equal to the stacks removed until the end of the turn.';
       },
       staticDescription:
-        'Remove all stacks of Dazzling Bloom from this unit to take control of an enemy minion with Health less or equal to the stacks removed.',
+        '@[exhaust]@: Remove all stacks of Dazzling Bloom from this unit to take control of an enemy minion with Health less or equal to the stacks removed until the end of the turn.',
       canUse(game, card) {
         if (!card.unit) return false;
         const dazzlingBloom = card.unit.getModifier(DazzlingBloomModifier);
@@ -67,7 +69,7 @@ export const elanaLv3: UnitBlueprint = {
       isCardAbility: false,
       label: 'Take control',
       manaCost: 0,
-      shouldExhaust: false,
+      shouldExhaust: true,
       onResolve(game, card, targets) {
         const dazzlingBloom = card.unit.getModifier(DazzlingBloomModifier);
         if (!dazzlingBloom) return;
@@ -75,9 +77,10 @@ export const elanaLv3: UnitBlueprint = {
         const target = targets[0];
         const unit = game.unitSystem.getUnitAt(target.cell)!;
         unit.card.addModifier(
-          new Modifier('elana-lv3-control', game, card, {
+          new Modifier<MinionCard>('elana-lv3-control', game, card, {
             stackable: false,
             mixins: [
+              new UntilEndOfTurnModifierMixin(game),
               new MinionCardInterceptorModifierMixin(game, {
                 key: 'player',
                 interceptor: () => card.player
@@ -89,7 +92,7 @@ export const elanaLv3: UnitBlueprint = {
     }
   ],
   atk: 2,
-  maxHp: 24,
+  maxHp: 21,
   spellpower: 2,
   level: 3,
   job: CARD_JOBS.WANDERER,
@@ -102,7 +105,6 @@ export const elanaLv3: UnitBlueprint = {
   },
   onInit() {},
   onPlay(game, card) {
-    card.unit.addModifier(new SwiftModifier(game, card));
     card.unit.addModifier(new ElusiveModifier(game, card));
   }
 };

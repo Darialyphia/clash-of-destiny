@@ -227,7 +227,7 @@ const viewMode = ref<'normal' | 'small'>('normal');
             v-if="visibleCards.has(card.id)"
             :blueprint="card"
             class="collection-card"
-            :class="{ disabled: !deckBuilder.canAdd(card.id) }"
+            :class="{ disabled: isEditing && !deckBuilder.canAdd(card.id) }"
             @click="
               () => {
                 if (!isEditing) return;

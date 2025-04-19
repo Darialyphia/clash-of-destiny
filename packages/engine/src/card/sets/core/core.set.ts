@@ -57,6 +57,9 @@ import { sandsOfTime } from './sands-of-time';
 import { bookOfKnowledge } from './book-of-knowledge';
 import { rainbowPhoenix } from './rainbow-phoenix';
 import { rainbowBlade } from './rainbow-blade';
+import { avatarOfPeace } from './avatar-of-peace';
+import { lileeSinTheArdentMonk } from './lilee-sin-the-ardent-monk';
+import { tidalWave } from './tidal-wave';
 
 export const coreSet: CardSet = {
   id: CARD_SETS.CORE,
@@ -65,6 +68,7 @@ export const coreSet: CardSet = {
     aidenLv1,
     aidenLv2,
     aidenLv3,
+    avatarOfPeace,
     bookOfKnowledge,
     bubblySlime,
     ceasefire,
@@ -91,6 +95,7 @@ export const coreSet: CardSet = {
     iceQueen,
     icyBreath,
     insight,
+    lileeSinTheArdentMonk,
     luminescentMystic,
     nagaSkirmisher,
     novicePyromancy,
@@ -103,6 +108,7 @@ export const coreSet: CardSet = {
     rainbowPhoenix,
     rainbowBlade,
     sandsOfTime,
+    searingBlade,
     shieldMaiden,
     shoalOfEels,
     shroudedSorcerer,
@@ -110,8 +116,8 @@ export const coreSet: CardSet = {
     spark,
     stalwartVanguard,
     stormFlash,
+    tidalWave,
     swordInstructor,
-    searingBlade,
     waterShrineOfKnowledge,
     waterfallFoxPriestess,
     waterSpringLily,

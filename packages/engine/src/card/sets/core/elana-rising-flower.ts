@@ -83,7 +83,7 @@ export const elanaLv1: UnitBlueprint = {
     }
   ],
   atk: 1,
-  maxHp: 18,
+  maxHp: 15,
   spellpower: 0,
   level: 1,
   job: CARD_JOBS.WANDERER,

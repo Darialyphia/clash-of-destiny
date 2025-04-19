@@ -31,7 +31,7 @@ export const windShrineOfKnowledge: UnitBlueprint = {
   deckSource: CARD_DECK_SOURCES.DESTINY_DECK,
   abilities: [],
   atk: 0,
-  maxHp: 15,
+  maxHp: 12,
   level: 0,
   getFollowup: () => {
     return new NoFollowup();
