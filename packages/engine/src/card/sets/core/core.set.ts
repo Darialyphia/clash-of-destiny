@@ -63,6 +63,7 @@ import { tidalWave } from './tidal-wave';
 import { callOfTheChampion } from './call-of-the-champion';
 import { kouzuiAquamancer } from './kouzui-aquamancer';
 import { combustion } from './spell-combustion';
+import { innerFire } from './inner-fire';
 
 export const coreSet: CardSet = {
   id: CARD_SETS.CORE,
@@ -99,6 +100,7 @@ export const coreSet: CardSet = {
     iceBolt,
     iceQueen,
     icyBreath,
+    innerFire,
     insight,
     kouzuiAquamancer,
     lileeSinTheArdentMonk,

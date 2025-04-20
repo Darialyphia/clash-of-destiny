@@ -13,14 +13,12 @@ import {
   RARITIES
 } from '../../card.enums';
 import { AnywhereFollowup } from '../../followups/anywhere-followup';
-import { MultiTargetFollowup } from '../../followups/multi-target-followup';
-import { RangedFollowup } from '../../followups/ranged-followup';
 
 export const tidalWave: SpellBlueprint = {
   id: 'tidal-wave',
   kind: CARD_KINDS.SPELL,
   affinity: AFFINITIES.WATER,
-  name: 'Storm Flash',
+  name: 'Tidal Wave',
   getDescription: () => {
     return `Deal 3 damage to all units on a row.`;
   },

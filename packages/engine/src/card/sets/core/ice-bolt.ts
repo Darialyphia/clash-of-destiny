@@ -30,7 +30,7 @@ export const iceBolt: SpellBlueprint = {
   manaCost: 1,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   job: CARD_JOBS.SPELLCASTER,
-  abilities: [],
+  abilities: [floatingDestiny],
   getFollowup: () => {
     return new AnywhereFollowup({ targetingType: TARGETING_TYPE.ENEMY_MINION });
   },

@@ -43,10 +43,10 @@ export const lileeSinTheArdentMonk: UnitBlueprint = {
     {
       id: 'lilee-sin-the-ardent-monk',
       getDescription() {
-        return '@[exhaust]@, @[mana] 1@: Knock back an enemy minion 2 tiles. If it is knocked back into another unit, they both take 2 damage.';
+        return '@[exhaust]@ : Knock back an enemy minion 2 tiles. If it is knocked back into another unit, they both take 2 damage.';
       },
       staticDescription:
-        '@[exhaust]@, @[mana] 1@: Knock back an enemy minion 2 tiles. If it is knocked back into another unit, they both take 2 damage.',
+        '@[exhaust]@ : Knock back an enemy minion 2 tiles. If it is knocked back into another unit, they both take 2 damage.',
       canUse() {
         return true;
       },
@@ -58,7 +58,7 @@ export const lileeSinTheArdentMonk: UnitBlueprint = {
         });
       },
       isCardAbility: false,
-      manaCost: 1,
+      manaCost: 0,
       shouldExhaust: true,
       label: 'Knock Back',
 

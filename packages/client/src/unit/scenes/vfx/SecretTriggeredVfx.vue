@@ -3,6 +3,7 @@ import { useBattleUiStore } from '@/battle/stores/battle-ui.store';
 import { useBattleEvent } from '@/battle/stores/battle.store';
 import type { UnitViewModel } from '@/unit/unit.model';
 import { GAME_EVENTS } from '@game/engine/src/game/game.events';
+import { waitFor } from '@game/shared';
 import { Sprite2d, AFFINE } from 'pixi-projection';
 import { PTransition, EasePresets } from 'vue3-pixi';
 
@@ -15,9 +16,8 @@ useBattleEvent(GAME_EVENTS.PLAYER_BEFORE_TRIGGER_SECRET, async e => {
   if (!unit.getPlayer().equals(e.player)) return;
 
   isDisplayed.value = true;
-  setTimeout(() => {
-    isDisplayed.value = false;
-  }, 1500);
+  await waitFor(1500);
+  isDisplayed.value = false;
 });
 const isDisplayed = ref(false);
 </script>

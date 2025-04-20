@@ -27,7 +27,7 @@ export const combustion: SpellBlueprint = {
   cardIconId: 'spell-eternal-flame',
   rarity: RARITIES.EPIC,
   collectable: true,
-  manaCost: 4,
+  manaCost: 5,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   job: CARD_JOBS.SPELLCASTER,
   abilities: [],

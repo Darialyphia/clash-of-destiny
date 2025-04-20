@@ -19,6 +19,7 @@ import { INTERACTION_STATES } from '@game/engine/src/game/systems/interaction.sy
 import OpponentHand from './OpponentHand.vue';
 import SelectCardInteractionUi from './SelectCardInteractionUi.vue';
 import ErrorUi from './ErrorUi.vue';
+import TriggeredSecret from './TriggeredSecret.vue';
 
 const ui = useBattleUiStore();
 const userPlayer = useUserPlayer();
@@ -53,6 +54,7 @@ const { state } = useGameState();
     <PlayIntent />
     <TurnIndicator />
     <DestinyPhaseUi />
+    <TriggeredSecret />
     <ErrorUi />
     <TargetingUi />
     <SelectCardInteractionUi />

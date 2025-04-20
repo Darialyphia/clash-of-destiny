@@ -1,13 +1,9 @@
 import { PointAOEShape } from '../../../aoe/point.aoe-shape';
-import { UnitSelfEventModifierMixin } from '../../../modifier/mixins/self-event.mixin';
-import { Modifier } from '../../../modifier/modifier.entity';
+import { AbilityDamage } from '../../../combat/damage';
 import { OnDeathModifier } from '../../../modifier/modifiers/on-death.modifier';
 import { OnEnterModifier } from '../../../modifier/modifiers/on-enter.modifier';
-import { SimpleAttackBuffModifier } from '../../../modifier/modifiers/simple-attack-buff.modifier';
 import { UniqueModifier } from '../../../modifier/modifiers/unique.modifier';
-import { VigilantModifier } from '../../../modifier/modifiers/vigilant.modifier';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
-import { UNIT_EVENTS } from '../../../unit/unit-enums';
 import type { UnitBlueprint } from '../../card-blueprint';
 import {
   AFFINITIES,
@@ -37,7 +33,7 @@ export const rainbowPhoenix: UnitBlueprint = {
   spriteParts: {},
   rarity: RARITIES.LEGENDARY,
   collectable: true,
-  manaCost: 6,
+  manaCost: 5,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   atk: 3,
   maxHp: 4,
@@ -64,10 +60,27 @@ export const rainbowPhoenix: UnitBlueprint = {
     card.unit.addModifier(
       new OnDeathModifier(game, card, {
         handler() {
-          const blade = card.player.generateCard(rainbowBlade.id);
-          blade.play();
+          // we schedula to make sure the action happens after other possible damage sources that would happen due to the death of the unit
+          // exemple: overheat chain reactions
+          game.inputSystem.schedule(() => {
+            const blade = card.player.generateCard(rainbowBlade.id);
+            blade.play();
+          });
         }
       })
     );
+
+    card.player.units.forEach(unit => {
+      unit.heal(card, 2);
+    });
+    card.player.opponent.units.forEach(unit => {
+      unit.takeDamage(
+        card,
+        new AbilityDamage({
+          source: card,
+          baseAmount: 2
+        })
+      );
+    });
   }
 };

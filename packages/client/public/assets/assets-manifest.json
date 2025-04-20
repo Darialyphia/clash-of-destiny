@@ -1385,6 +1385,19 @@
         },
         {
           "alias": [
+            "icon-unit-kozui-aquamancer"
+          ],
+          "src": [
+            "/assets/icons/unit-kozui-aquamancer.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
             "icon-unit-luminescent-mystic"
           ],
           "src": [
@@ -3858,6 +3871,33 @@
           ],
           "src": [
             "/assets/units/ice-queen.png"
+          ],
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "kozui-aquamancer"
+          ],
+          "src": [
+            "/assets/units/kozui-aquamancer.json"
+          ],
+          "loadParser": "aseprite_loader",
+          "data": {
+            "tags": {
+              "m": true
+            }
+          }
+        },
+        {
+          "alias": [
+            "kozui-aquamancer.png"
+          ],
+          "src": [
+            "/assets/units/kozui-aquamancer.png"
           ],
           "data": {
             "tags": {
