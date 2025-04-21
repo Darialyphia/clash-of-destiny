@@ -29,7 +29,7 @@ export const waterfallFoxPriestess: UnitBlueprint = {
   spriteParts: {},
   rarity: RARITIES.RARE,
   collectable: true,
-  manaCost: 3,
+  manaCost: 2,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   abilities: [],
   atk: 2,

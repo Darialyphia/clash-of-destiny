@@ -29,10 +29,11 @@ export const kouzuiAquamancer: UnitBlueprint = {
   affinity: AFFINITIES.WATER,
   name: 'Kouzui, Aquamancer',
   getDescription: () => {
-    return `@Unique@.\n@On Enter@: Put target minion on top of its owner's deck.`;
+    return `@Unique@.\n@On Enter@: Put up to 2 minions on top of its owner's deck. They cost 1 more.`;
   },
-  staticDescription: `@Unique@.\n@On Enter@: Put target minion on top of its owner's deck.`,
+  staticDescription: `@Unique@.\n@On Enter@: Put up to 2 minions on top of its owner's deck. They cost 1 more.`,
   setId: CARD_SETS.CORE,
+  unique: true,
   cardIconId: 'unit-kozui-aquamancer',
   spriteId: 'kozui-aquamancer',
   spriteParts: {},
@@ -47,6 +48,7 @@ export const kouzuiAquamancer: UnitBlueprint = {
   getFollowup: (game, card) => {
     return new MultiTargetFollowup(game, card, [
       new MinionFollowup(),
+      new AnywhereFollowup({ targetingType: TARGETING_TYPE.MINION, skippable: true }),
       new AnywhereFollowup({ targetingType: TARGETING_TYPE.MINION, skippable: true })
     ]);
   },
@@ -70,10 +72,13 @@ export const kouzuiAquamancer: UnitBlueprint = {
     card.addModifier(new UniqueModifier(game, card));
     card.addModifier(
       new OnEnterModifier(game, card, event => {
-        const [, target] = event.data.affectedUnits; // first target is the minion being summoned
-        if (target) {
-          target.putOnTopOfDeck();
-        }
+        const [, ...targets] = event.data.affectedUnits; // first target is the minion being summoned
+        targets.forEach(target => {
+          if (target) {
+            target.putOnTopOfDeck();
+            target.card.addInterceptor('manaCost', cost => cost! + 1);
+          }
+        });
       })
     );
   },

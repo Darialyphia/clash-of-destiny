@@ -36,7 +36,7 @@ export const nagaSkirmisher: UnitBlueprint = {
   manaCost: 3,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   atk: 2,
-  maxHp: 4,
+  maxHp: 3,
   job: CARD_JOBS.FIGHTER,
   abilities: [],
   getFollowup: () => {

@@ -1,6 +1,4 @@
-import { CompositeAOEShape } from '../../../aoe/composite.aoe-shape';
-import { PointAOEShape } from '../../../aoe/point.aoe-shape';
-import { RowAOEShape } from '../../../aoe/row.aoe-shape';
+import { EverywhereAOEShape } from '../../../aoe/everywhere.aoe-shape';
 import { SpellDamage } from '../../../combat/damage';
 import { TARGETING_TYPE } from '../../../targeting/targeting-strategy';
 import type { SpellBlueprint } from '../../card-blueprint';
@@ -20,27 +18,32 @@ export const tidalWave: SpellBlueprint = {
   affinity: AFFINITIES.WATER,
   name: 'Tidal Wave',
   getDescription: () => {
-    return `Deal 3 damage to all units on a row.`;
+    return `Deal 2 damage to all enemies and knock them back one tile.`;
   },
-  staticDescription: `Deal 3 damage to all units in a row.`,
+  staticDescription: `Deal 2 damage to all enemies and knock them back one tile`,
   setId: CARD_SETS.CORE,
   cardIconId: 'spell-tidal-wave',
   rarity: RARITIES.EPIC,
   collectable: true,
-  manaCost: 4,
+  manaCost: 5,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
-  job: CARD_JOBS.AVENGER,
+  job: CARD_JOBS.SPELLCASTER,
   abilities: [],
   getFollowup: () => {
     return new AnywhereFollowup({ targetingType: TARGETING_TYPE.ANYWHERE });
   },
   getAoe(game, card) {
-    return new RowAOEShape(game, card.player, { targetingType: TARGETING_TYPE.UNIT });
+    return new EverywhereAOEShape(game, card.player, TARGETING_TYPE.ENEMY_UNIT);
   },
   onInit() {},
   onPlay(game, card, affectedCells, affectedUnits) {
+    const damage = new SpellDamage({ source: card, baseAmount: 2 });
     affectedUnits.forEach(unit => {
-      unit.takeDamage(card, new SpellDamage({ source: card, baseAmount: 3 }));
+      unit.takeDamage(card, damage);
+      unit.teleport({
+        x: card.player.isPlayer1 ? unit.position.x + 1 : unit.position.x - 1,
+        y: unit.position.y
+      });
     });
   }
 };

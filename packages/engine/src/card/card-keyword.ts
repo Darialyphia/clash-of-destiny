@@ -152,6 +152,12 @@ export const KEYWORDS = {
     name: 'Inherited Effect',
     description: 'This effect is preserved when your hero levels up.',
     aliases: []
+  },
+  DISCOVER: {
+    id: 'discover',
+    name: 'Discover',
+    description: 'pick one card among three choices to add to your hand.',
+    aliases: []
   }
 } as const satisfies Record<string, Keyword>;
 

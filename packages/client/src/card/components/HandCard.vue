@@ -11,6 +11,7 @@ import {
   TooltipContent
 } from 'reka-ui';
 import { isDefined } from '@game/shared';
+import { useDispatcher } from '@/battle/stores/battle.store';
 
 const { card } = defineProps<{ card: CardViewModel }>();
 
@@ -23,7 +24,7 @@ const clickedPosition = ref({ x: 0, y: 0 });
 
 const isSelected = computed(() => ui.selectedCard?.equals(card));
 const SELECTION_THRESHOLD = 10;
-
+const dispatch = useDispatcher();
 const startDragging = () => {
   const stopDragging = () => {
     document.body.removeEventListener('mouseup', onMouseup);
@@ -31,6 +32,7 @@ const startDragging = () => {
   const onMouseup = () => {
     if (!ui.selectedCard?.canPlay || !ui.hoveredCell) {
       ui.unselectCard();
+
       return;
     }
     ui.cardPlayIntent = ui.selectedCard;
@@ -57,7 +59,6 @@ const onMouseDown = (e: MouseEvent) => {
 
   const target = e.currentTarget as HTMLElement;
   const cardElement = target.querySelector('.card') as HTMLElement;
-  let isPlayed = false;
   const onMousemove = (e: MouseEvent) => {
     if (!isClicking.value) return;
 

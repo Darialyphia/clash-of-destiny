@@ -33,7 +33,7 @@ export const rainbowPhoenix: UnitBlueprint = {
   spriteParts: {},
   rarity: RARITIES.LEGENDARY,
   collectable: true,
-  manaCost: 5,
+  manaCost: 6,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   atk: 3,
   maxHp: 4,

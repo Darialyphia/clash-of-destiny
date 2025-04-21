@@ -35,5 +35,7 @@ export const sandsOfTime: SpellBlueprint = {
     return new NoAOEShape();
   },
   onInit() {},
-  onPlay(game, card) {}
+  onPlay(game, card) {
+    console.log('not implemented');
+  }
 };

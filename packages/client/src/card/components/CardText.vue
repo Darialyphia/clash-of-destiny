@@ -89,7 +89,7 @@ const tokens = computed<Token[]>(() => {
         SpellPower
       </template>
 
-      <HoverCardRoot v-else :open-delay="500" :close-delay="0">
+      <HoverCardRoot v-else :open-delay="250" :close-delay="0">
         <HoverCardTrigger>
           <span tabindex="0">
             {{ token.text }}
