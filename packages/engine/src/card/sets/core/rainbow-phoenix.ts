@@ -53,6 +53,15 @@ export const rainbowPhoenix: UnitBlueprint = {
         card.player.units.forEach(unit => {
           unit.heal(card, 2);
         });
+        card.player.opponent.units.forEach(unit => {
+          unit.takeDamage(
+            card,
+            new AbilityDamage({
+              source: card,
+              baseAmount: 2
+            })
+          );
+        });
       })
     );
   },
@@ -60,7 +69,8 @@ export const rainbowPhoenix: UnitBlueprint = {
     card.unit.addModifier(
       new OnDeathModifier(game, card, {
         handler() {
-          // we schedula to make sure the action happens after other possible damage sources that would happen due to the death of the unit
+          // we schedule to make sure the action happens after other possible damage sources that would happen due to the death of the unit
+          // to avoid the sword losing durability instantly
           // exemple: overheat chain reactions
           game.inputSystem.schedule(() => {
             const blade = card.player.generateCard(rainbowBlade.id);
@@ -69,18 +79,5 @@ export const rainbowPhoenix: UnitBlueprint = {
         }
       })
     );
-
-    card.player.units.forEach(unit => {
-      unit.heal(card, 2);
-    });
-    card.player.opponent.units.forEach(unit => {
-      unit.takeDamage(
-        card,
-        new AbilityDamage({
-          source: card,
-          baseAmount: 2
-        })
-      );
-    });
   }
 };

@@ -40,6 +40,14 @@ export const tidalWave: SpellBlueprint = {
     const damage = new SpellDamage({ source: card, baseAmount: 2 });
     affectedUnits.forEach(unit => {
       unit.takeDamage(card, damage);
+      const destination = {
+        x: card.player.isPlayer1 ? unit.position.x + 1 : unit.position.x - 1,
+        y: unit.position.y
+      };
+      const cell = game.boardSystem.getCellAt(destination);
+      if (!cell || !cell.isWalkable || cell.unit) {
+        return;
+      }
       unit.teleport({
         x: card.player.isPlayer1 ? unit.position.x + 1 : unit.position.x - 1,
         y: unit.position.y
