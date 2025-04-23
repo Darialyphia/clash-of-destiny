@@ -39,7 +39,7 @@ export class OnKillModifier<TTrigger extends 'before' | 'after'> extends Modifie
               : GAME_EVENTS.UNIT_BEFORE_DESTROY,
           handler: event => {
             if (event.data.event.data.source.equals(this.target.card)) {
-              options.handler(event.data.event as any, this);
+              options.handler(event as any, this);
             }
           }
         }),

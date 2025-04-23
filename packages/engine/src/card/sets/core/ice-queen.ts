@@ -33,7 +33,7 @@ export const iceQueen: UnitBlueprint = {
   collectable: true,
   manaCost: 4,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
-  abilities: [floatingDestiny],
+  abilities: [],
   atk: 1,
   maxHp: 4,
   job: CARD_JOBS.SPELLCASTER,

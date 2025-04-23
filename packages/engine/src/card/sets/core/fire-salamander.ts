@@ -35,7 +35,7 @@ export const fireSalamander: UnitBlueprint = {
   rarity: RARITIES.EPIC,
   collectable: true,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
-  manaCost: 5,
+  manaCost: 4,
   atk: 3,
   maxHp: 4,
   job: CARD_JOBS.SUMMONER,

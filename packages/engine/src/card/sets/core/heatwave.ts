@@ -29,7 +29,7 @@ export const heatWave: SpellBlueprint = {
   manaCost: 2,
   deckSource: CARD_DECK_SOURCES.MAIN_DECK,
   job: CARD_JOBS.SPELLCASTER,
-  abilities: [floatingDestiny],
+  abilities: [],
   getFollowup: () => {
     return new AnywhereFollowup({ targetingType: TARGETING_TYPE.ANYWHERE });
   },
